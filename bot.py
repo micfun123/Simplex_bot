@@ -20,6 +20,10 @@ async def ping(ctx):
 async def hello(ctx):
     await ctx.send('Hi')
 
+@client.command()
+async def contribute(ctx):
+    await ctx.send('If you want to help can take a look here https://github.com/micfun123/Simplex_bot')
+
 
 @client.command(aliases=["8ball", "eightball", "eight_ball", "Eight_ball"])
 async def _8ball(ctx, *, question):
