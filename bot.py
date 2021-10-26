@@ -94,10 +94,7 @@ async def joke(ctx):
    embed.set_footer(text=jokejson['joke'])
    await ctx.send(embed=embed) 
     
-@client.event
-async def on_message(message):
-    if 'happy birthday' in message.content.lower():
-        await message.channel.send('Happy Birthday! 🎈🎉')
+
 
 
 client.run('')
