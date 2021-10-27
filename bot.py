@@ -101,7 +101,7 @@ async def joke(ctx):
 @commands.has_permissions(kick_members=True)
 @client.command()
 async def warn(ctx, user: discord.User, *, message=None):
-    message = message or "This Message is sent via DM"
+    message = message or "This Message is a warning"
     await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
 
 
