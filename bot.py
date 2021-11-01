@@ -56,6 +56,12 @@ async def kick(ctx, user: discord.Member, *, reason="No reason provided"):
         await ctx.message.delete()
         await ctx.channel.send(embed=kick)
         await user.send(embed=kick)
+        
+@commands.has_permissions(kick_members=True)
+@client.command()
+async def warn(ctx, user: discord.User, *, message=None):
+    message = message or "This Message is a warning"
+    await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
 
 @client.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact")
 async def dog(ctx):
@@ -98,11 +104,7 @@ async def joke(ctx):
    embed.set_footer(text=jokejson['joke'])
    await ctx.send(embed=embed) 
     
-@commands.has_permissions(kick_members=True)
-@client.command()
-async def warn(ctx, user: discord.User, *, message=None):
-    message = message or "This Message is a warning"
-    await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
+
 
 
 
