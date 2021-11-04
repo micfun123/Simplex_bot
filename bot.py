@@ -25,7 +25,7 @@ async def contribute(ctx):
     await ctx.send('If you want to help can take a look here https://github.com/micfun123/Simplex_bot')
 
 
-@client.command(aliases=["8ball", "eightball", "eight_ball", "Eight_ball"])
+@client.command(aliases=["8ball", "eightball", "eight_ball", "Eight_ball"]) #8ball game
 async def _8ball(ctx, *, question):
     responses = ['magic eight ball maintains Signs point to yes.',
                  'magicball affirms My reply is no.',
@@ -43,12 +43,12 @@ async def _8ball(ctx, *, question):
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
 
 
-@client.command(aliases=["purge"])
-@commands.has_permissions(administrator=True) # Making sure the person executing the command has the permissions
+@client.command(aliases=["purge"])  # clear command
+@commands.has_permissions(administrator=True) 
 async def clear(ctx, amount=5):
     await ctx.channel.purge(limit=amount + 1)
 
-@commands.has_permissions(kick_members=True)
+@commands.has_permissions(kick_members=True)  #kicks a person
 @client.command(help = "kicks a person from server")
 async def kick(ctx, user: discord.Member, *, reason="No reason provided"):
         await user.kick(reason=reason)
@@ -57,13 +57,13 @@ async def kick(ctx, user: discord.Member, *, reason="No reason provided"):
         await ctx.channel.send(embed=kick)
         await user.send(embed=kick)
         
-@commands.has_permissions(kick_members=True)
+@commands.has_permissions(kick_members=True)  #warn a user with Dms
 @client.command()
 async def warn(ctx, user: discord.User, *, message=None):
     message = message or "This Message is a warning"
     await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
 
-@client.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact")
+@client.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
 async def dog(ctx):
    async with aiohttp.ClientSession() as session:
       request = await session.get('https://some-random-api.ml/img/dog')
@@ -77,7 +77,7 @@ async def dog(ctx):
    embed.set_footer(text=factjson['fact'])
    await ctx.send(embed=embed)
 
-@client.command(help = "It shows you a cat photo as well as a fact")
+@client.command(help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
 async def cat(ctx):
    async with aiohttp.ClientSession() as session:
       request = await session.get('https://some-random-api.ml/img/cat')
@@ -92,7 +92,7 @@ async def cat(ctx):
    await ctx.send(embed=embed)
 
 
-@client.command(aliases=["Joke", "jokes", "Jokes"], help = "It tells a joke")
+@client.command(aliases=["Joke", "jokes", "Jokes"], help = "It tells a joke")  #tells a joke
 async def joke(ctx):
    async with aiohttp.ClientSession() as session:
       # This time we'll get the joke request as well!
