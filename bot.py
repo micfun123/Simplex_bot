@@ -128,5 +128,12 @@ async def info(ctx, user: discord.Member):
 async def unban(ctx, user: discord.User, *, reason=None):
     await ctx.guild.unban(user, reason=reason)
 
+@client.command(hidden = True)
+async def bond(ctx):
+    await ctx.send('Hello Mr.Bond I was not expecting you, currenty Misfire does not have a secret service. I hear Artica is lovely this time of year.')
 
+@client.command(hidden = True)
+async def easter_egg(ctx):
+    await ctx.send("Did you think i would just give you the easter eggs. have fun finding them and good luck.")
+    
 client.run('')
