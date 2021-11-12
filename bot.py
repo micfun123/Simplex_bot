@@ -12,7 +12,6 @@ intents.all
 
 client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True)
 
-
 @client.event
 async def on_ready():
     print("we have powered on, I an alive.")
