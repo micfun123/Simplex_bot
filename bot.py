@@ -142,4 +142,8 @@ async def bond(ctx):
 async def easter_egg(ctx):
     await ctx.send("Did you think i would just give you the easter eggs. have fun finding them and good luck.")
     
+@client.command()
+async def discord(ctx):
+    await ctx.send("https://discord.gg/d2gjWqFsTP")
+
 client.run('')
