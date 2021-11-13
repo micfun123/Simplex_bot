@@ -4,5 +4,6 @@ This is a open source Disord bot for everyone to help contribute and use. Make a
 
 The goal is to provides numerous utilities and other tools / entertainment to help keep the server running like a well-oiled machine. If you want to invite the bot you can here https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=bot
 
+want to join the discord https://discord.gg/d2gjWqFsTP
 
 Please not I do not have much time so pull requests make take a week if its importent contact me using twitter i am @michaelrbparker.  Thank you for your time
