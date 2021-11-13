@@ -5,7 +5,12 @@ import aiohttp
 
 from discord.ext import commands
 
-client = commands.Bot(command_prefix = '.')
+intents = discord.Intents.all()
+intents.presences = True
+intents.members = True
+intents.all
+
+client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True)
 
 @client.event
 async def on_ready():
@@ -123,4 +128,18 @@ async def donate(ctx):
 
 
 
+#unban user 
+@client.command(help = "Unbans a user from the server")
+@commands.has_permissions(kick_members=True)
+async def unban(ctx, user: discord.User, *, reason=None):
+    await ctx.guild.unban(user, reason=reason)
+
+@client.command(hidden = True)
+async def bond(ctx):
+    await ctx.send('Hello Mr.Bond I was not expecting you, currenty Misfire does not have a secret service. I hear Artica is lovely this time of year.')
+
+@client.command(hidden = True)
+async def easter_egg(ctx):
+    await ctx.send("Did you think i would just give you the easter eggs. have fun finding them and good luck.")
+    
 client.run('')
