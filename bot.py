@@ -14,6 +14,8 @@ client = commands.Bot(command_prefix = '.', intents=intents, presences = True, m
 
 @client.event
 async def on_ready():
+    # Setting `Playing ` status
+    await bot.change_presence(activity=discord.Game(name=".help is a thing"))
     print("we have powered on, I an alive.")
 
 @client.command()
