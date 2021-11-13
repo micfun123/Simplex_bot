@@ -152,4 +152,8 @@ async def easter_egg(ctx):
 async def invite(ctx):
     await ctx.send("Invite the bot here https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=bot")
 
+@client.command(hidden=True)
+async def echo(ctx, *, content:str):
+    await ctx.send(content)
+
 client.run('')
