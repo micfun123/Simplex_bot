@@ -122,6 +122,11 @@ async def info(ctx, user: discord.Member):
     embed.set_thumbnail(url=user.avatar_url)
     await ctx.send(embed=embed)
 
+@client.command(aliases=["Support, support"])
+async def donate(ctx):
+    await ctx.send("This Bot was made by Michael you can find him as @michaelrbparker on Twitter if you want a bot. Want to support him buy him a coffee https://www.buymeacoffee.com/Michaelrbparker The support allows the bot to stay online as well as means that the bot keeps getting updates")
+
+
 
 #unban user 
 @client.command(help = "Unbans a user from the server")
@@ -137,4 +142,8 @@ async def bond(ctx):
 async def easter_egg(ctx):
     await ctx.send("Did you think i would just give you the easter eggs. have fun finding them and good luck.")
     
+@client.command()
+async def discord(ctx):
+    await ctx.send("https://discord.gg/d2gjWqFsTP")
+
 client.run('')
