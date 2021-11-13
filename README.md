@@ -10,7 +10,7 @@ want to join the discord https://discord.gg/d2gjWqFsTP
 
 1. make a fork
 2. do you code
-3. make a pull / merge request
+3. make a pull 
 4. if its good i will add it
 
 Please not I do not have much time so pull requests make take a week if its importent contact me using twitter i am @michaelrbparker.  Thank you for your time
