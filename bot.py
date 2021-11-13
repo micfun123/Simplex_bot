@@ -29,6 +29,17 @@ async def hello(ctx):
 async def contribute(ctx):
     await ctx.send('If you want to help can take a look here https://github.com/micfun123/Simplex_bot')
 
+@client.command(help = "tells you about the maker of the bot", aliases=["maker"])
+async def Maker(ctx):
+    await ctx.send("This Bot was made by Michael you can find him as @michaelrbparker on Twitter if you want a bot.  His discord is Mic#8372. Want to support him buy him a coffee https://www.buymeacoffee.com/Michaelrbparker")
+
+@client.command(help = "Link to the discord")
+async def link(ctx):
+    await ctx.send("This Bot was made by Michael you can find him as @michaelrbparker on Twitter if you want a bot. Want to support him buy him a coffee https://www.buymeacoffee.com/Michaelrbparker. This will help get faster updates as well as keeping the bot online")
+
+@client.command()
+async def server(ctx):
+    await ctx.send('Want to join the sever join here https://discord.gg/d2gjWqFsTP ')
 
 @client.command(aliases=["8ball", "eightball", "eight_ball", "Eight_ball"]) #8ball game
 async def _8ball(ctx, *, question):
