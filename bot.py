@@ -23,6 +23,10 @@ async def ping(ctx):
     await ctx.send(f'Pong! {round(client.latency * 1000)}ms ping time')
     
 
+@client.command()
+async def vote(ctx):
+    await ctx.send("Like the bot vote here https://top.gg/bot/902240397273743361")
+    
 @client.command(aliases=["Hello", "hi", "Hi"])
 async def hello(ctx):
     await ctx.send('Hi')
