@@ -4,6 +4,7 @@ import random
 import aiohttp
 from os import listdir
 from os.path import isfile, join
+import json
 
 from discord.ext import commands
 
@@ -164,6 +165,19 @@ async def invite(ctx):
 async def echo(ctx, *, content:str):
     await ctx.send(content)
 
+@client.event
+async def on_raw_reaction_add(payload):
+    if payload.member.bot:
+        return
+    with open("react.json") as f:
+        data = json.load(f)
+        for x in data:
+            if x['emoji'] == payload.emoji.name and x["message_id"] == payload.message_id:
+                role = discord.utils.get(client.get_guild(
+                    payload.guild_id).roles, id=x['role_id'])
+                await payload.member.add_roles(role)
+            else:
+                pass
 
 def start_bot(client):
     lst = [f for f in listdir("cogs/") if isfile(join("cogs/", f))]
