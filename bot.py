@@ -73,14 +73,7 @@ async def _8ball(ctx, *, question):
 async def clear(ctx, amount=5):
     await ctx.channel.purge(limit=amount + 1)
 
-@commands.has_permissions(kick_members=True)  #kicks a person
-@client.command(help = "kicks a person from server")
-async def kick(ctx, user: discord.Member, *, reason="No reason provided"):
-        await user.kick(reason=reason)
-        kick = discord.Embed(title=f":boot: Kicked {user.name}!", description=f"Reason: {reason}\nBy: {ctx.author.mention}")
-        await ctx.message.delete()
-        await ctx.channel.send(embed=kick)
-        await user.send(embed=kick)
+
         
 @commands.has_permissions(kick_members=True)  #warn a user with Dms
 @client.command()
@@ -189,7 +182,7 @@ def start_bot(client):
             print(f"Loaded {cogs}")
 
         print("\nAll Cogs Loaded\n===============\nLogging into Discord...")
-        client.run('') # Token
+        client.run('Token') # Token
 
     except Exception as e:
         print(
