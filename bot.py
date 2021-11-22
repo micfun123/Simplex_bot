@@ -157,6 +157,18 @@ async def invite(ctx):
 @client.command(hidden=True)
 async def echo(ctx, *, content:str):
     await ctx.send(content)
+    
+@commands.is_owner()
+@client.command(pass_context=True)
+async def broadcast(ctx, *, msg):
+    for server in client.guilds:
+        for channel in server.text_channels:
+            try:
+                await channel.send(msg)
+            except Exception:
+                continue
+            else:
+                break
 
 @client.event
 async def on_raw_reaction_add(payload):
