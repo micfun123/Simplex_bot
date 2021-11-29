@@ -5,6 +5,7 @@ import aiohttp
 from os import listdir
 from os.path import isfile, join
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
+import json
 
 from discord.ext import commands
 
