@@ -4,13 +4,11 @@ import random
 import aiohttp
 from os import listdir
 from os.path import isfile, join
+from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 
 from discord.ext import commands
 
 intents = discord.Intents.all()
-intents.presences = True
-intents.members = True
-intents.all
 
 client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True)
 
@@ -164,6 +162,32 @@ async def invite(ctx):
 async def echo(ctx, *, content:str):
     await ctx.send(content)
 
+
+lvlembed = discord.Embed()
+lvlembed.set_author(name=LevelUpAnnouncement.Member.name, icon_url=LevelUpAnnouncement.Member.avatar_url)
+lvlembed.description = f'Congrats {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} 😎'
+
+announcement = LevelUpAnnouncement(lvlembed)
+
+lvl = DiscordLevelingSystem(rate=1, per=60, level_up_announcement=announcement)
+lvl.connect_to_database_file('<file-path>databases.db')
+
+@client.event
+async def on_message(message):
+    await lvl.award_xp(amount=15, message=message)
+    await client.process_commands(message)
+
+@client.command()
+async def rank(ctx):
+    data = await lvl.get_data_for(ctx.author)
+    await ctx.send(f'You are level {data.level} and your rank is {data.rank}')
+
+
+@client.command()
+async def leaderboard(ctx):
+    data = await lvl.each_member_data(ctx.guild, sort_by='rank')
+    # show the leaderboard whichever way you'd like
+    
 
 def start_bot(client):
     lst = [f for f in listdir("cogs/") if isfile(join("cogs/", f))]
