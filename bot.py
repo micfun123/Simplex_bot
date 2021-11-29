@@ -11,9 +11,10 @@ from discord.ext import commands
 intents = discord.Intents.all()
 intents.presences = True
 intents.members = True
+intents.guilds=True
 intents.all
 
-client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True)
+client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True)
 
 @client.event
 async def on_ready():
