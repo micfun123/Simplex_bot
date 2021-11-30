@@ -9,6 +9,7 @@ import json
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 
 
+
 from discord.ext import commands
 
 intents = discord.Intents.all()
@@ -195,7 +196,7 @@ lvlembed.description = f'Congrats {LevelUpAnnouncement.Member.mention}! You are 
 announcement = LevelUpAnnouncement(lvlembed)
 
 lvl = DiscordLevelingSystem(rate=1, per=60, level_up_announcement=announcement)
-lvl.connect_to_database_file('<file-path>databases.db')
+lvl.connect_to_database_file('databases\DiscordLevelingSystem.db')
 
 @client.event
 async def on_message(message):
@@ -211,6 +212,14 @@ async def rank(ctx):
 @client.command()
 async def leaderboard(ctx):
     data = await lvl.each_member_data(ctx.guild, sort_by='rank')
+    em = discord.Embed(title="Leaderboard")
+    n = 0
+    for i in data:
+      em.add_field(name=f'{i.rank}: {i.name}', value=f'Level: {i.level}, Total XP: {i.total_xp}', inline=False)
+      n += 1
+      if n == 10:
+        break 
+    await ctx.send(embed=em)
     # show the leaderboard whichever way you'd like
     
 
