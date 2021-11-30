@@ -4,14 +4,20 @@ import random
 import aiohttp
 from os import listdir
 from os.path import isfile, join
-from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 import json
+
+from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
+
 
 from discord.ext import commands
 
 intents = discord.Intents.all()
+intents.presences = True
+intents.members = True
+intents.guilds=True
+intents.all
 
-client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True)
+client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True)
 
 @client.event
 async def on_ready():
@@ -71,14 +77,7 @@ async def _8ball(ctx, *, question):
 async def clear(ctx, amount=5):
     await ctx.channel.purge(limit=amount + 1)
 
-@commands.has_permissions(kick_members=True)  #kicks a person
-@client.command(help = "kicks a person from server")
-async def kick(ctx, user: discord.Member, *, reason="No reason provided"):
-        await user.kick(reason=reason)
-        kick = discord.Embed(title=f":boot: Kicked {user.name}!", description=f"Reason: {reason}\nBy: {ctx.author.mention}")
-        await ctx.message.delete()
-        await ctx.channel.send(embed=kick)
-        await user.send(embed=kick)
+
         
 @commands.has_permissions(kick_members=True)  #warn a user with Dms
 @client.command()
@@ -162,7 +161,32 @@ async def invite(ctx):
 @client.command(hidden=True)
 async def echo(ctx, *, content:str):
     await ctx.send(content)
+    
+@commands.is_owner()
+@client.command(pass_context=True)
+async def broadcast(ctx, *, msg):
+    for server in client.guilds:
+        for channel in server.text_channels:
+            try:
+                await channel.send(msg)
+            except Exception:
+                continue
+            else:
+                break
 
+@client.event
+async def on_raw_reaction_add(payload):
+    if payload.member.bot:
+        return
+    with open("react.json") as f:
+        data = json.load(f)
+        for x in data:
+            if x['emoji'] == payload.emoji.name and x["message_id"] == payload.message_id:
+                role = discord.utils.get(client.get_guild(
+                    payload.guild_id).roles, id=x['role_id'])
+                await payload.member.add_roles(role)
+            else:
+                pass
 
 lvlembed = discord.Embed()
 lvlembed.set_author(name=LevelUpAnnouncement.Member.name, icon_url=LevelUpAnnouncement.Member.avatar_url)
@@ -200,7 +224,7 @@ def start_bot(client):
             print(f"Loaded {cogs}")
 
         print("\nAll Cogs Loaded\n===============\nLogging into Discord...")
-        client.run('') # Token
+        client.run('Token') # Token
 
     except Exception as e:
         print(
