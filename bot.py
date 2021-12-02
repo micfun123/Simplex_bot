@@ -2,6 +2,7 @@ from typing import Text
 import discord
 import random
 import aiohttp
+import os
 from os import listdir
 from os.path import isfile, join
 import json
