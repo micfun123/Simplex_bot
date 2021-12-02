@@ -5,7 +5,7 @@ import aiohttp
 from os import listdir
 from os.path import isfile, join
 import json
-import easy-pil
+from easy_pil import Editor, Canvas, Font, load_image, Text
 
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 
