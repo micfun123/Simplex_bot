@@ -24,13 +24,13 @@ class Randomapi(commands.Cog):
     async def cat(self, ctx):
         async with aiohttp.ClientSession() as session:
             request = await session.get('https://some-random-api.ml/img/cat')
-            dogjson = await request.json()
+            catjson = await request.json()
             # This time we'll get the fact request as well!
             request2 = await session.get('https://some-random-api.ml/facts/cat')
             factjson = await request2.json()
 
         embed = discord.Embed(title="Cat!", color=discord.Color.purple())
-        embed.set_image(url=dogjson['link'])
+        embed.set_image(url=catjson['link'])
         embed.set_footer(text=factjson['fact'])
         await ctx.send(embed=embed)
 
