@@ -6,7 +6,11 @@ import os
 from os import listdir
 from os.path import isfile, join
 import json
+import os
+from dotenv import load_dotenv
 from easy_pil import Editor, Canvas, Font, load_image, Text
+
+load_dotenv()
 
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 
@@ -76,7 +80,7 @@ async def _8ball(ctx, *, question):
                  "Its not looking so good"]
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
     
-  @client.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
+@client.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
 async def dog(ctx):
    async with aiohttp.ClientSession() as session:
       request = await session.get('https://some-random-api.ml/img/dog')
@@ -305,6 +309,7 @@ async def leaderboard(ctx):
     await ctx.send(embed=em)
     # show the leaderboard whichever way you'd like
     
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 def start_bot(client):
     lst = [f for f in listdir("cogs/") if isfile(join("cogs/", f))]
@@ -316,7 +321,7 @@ def start_bot(client):
             print(f"Loaded {cogs}")
 
         print("\nAll Cogs Loaded\n===============\nLogging into Discord...")
-        client.run('Token') # Token
+        client.run(TOKEN) # Token do not change it here. Change it in the .env if you do not have a .env make a file and put DISCORD_TOKEN=Token 
 
     except Exception as e:
         print(
