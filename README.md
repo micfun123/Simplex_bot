@@ -13,5 +13,5 @@ Want to join the discord? [Link](https://discord.gg/d2gjWqFsTP)
 3. make a pull 
 4. if its good i will merge it
 
-Please know I do not have much time so pull requests may take a week. If its important contact me using twitter i am @michaelrbparker or though the discord.
+Please know I do not have much time so pull requests may take a week. If its important contact me using twitter i am [@michaelrbparker](https://twitter.com/michaelrbparker) or though the discord.
 Thank you for your time
