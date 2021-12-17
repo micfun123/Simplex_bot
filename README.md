@@ -16,4 +16,3 @@ Want to join the discord? [Link](https://discord.gg/d2gjWqFsTP)
 Please know I do not have much time so pull requests may take a week. If its important contact me using twitter i am [@michaelrbparker](https://twitter.com/michaelrbparker) or through the discord.
 Thank you for your time
 
-[![Discord Bots](https://top.gg/api/widget/902240397273743361.svg)(https://top.gg/bot/902240397273743361)
