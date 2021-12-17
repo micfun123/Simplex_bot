@@ -36,6 +36,8 @@ async def ping(ctx):
 @client.command()
 async def vote(ctx):
     await ctx.send("Like the bot vote here https://top.gg/bot/902240397273743361")
+    await ctx.send("Like the bot vote here https://discordbotlist.com/bots/simplex-bot")
+    
     
 @client.command(aliases=["Hello", "hi", "Hi"])
 async def hello(ctx):
