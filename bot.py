@@ -154,7 +154,7 @@ async def unban(ctx, user: discord.User, *, reason=None):
 
 @client.command(hidden = True)
 async def bond(ctx):
-    await ctx.send('Hello Mr.Bond I was not expecting you, currenty Misfire does not have a secret service. I hear Artica is lovely this time of year.')
+    await ctx.send('Hello Mr. Bond I was not expecting you, currenty Misfire does not have a secret service. I hear Artica is lovely this time of year.')
 
 @client.command(hidden = True)
 async def easter_egg(ctx):
