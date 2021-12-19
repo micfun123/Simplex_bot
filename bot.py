@@ -121,21 +121,7 @@ async def joke(ctx):
    embed.set_footer(text=jokejson['joke'])
    await ctx.send(embed=embed) 
 
-
-@client.command(aliases=["purge"])  # clear command
-@commands.has_permissions(administrator=True) 
-async def clear(ctx, amount=5):
-    await ctx.channel.purge(limit=amount + 1)
-
-
-        
-@commands.has_permissions(kick_members=True)  #warn a user with Dms
-@client.command()
-async def warn(ctx, user: discord.User, *, message=None):
-    message = message or "This Message is a warning"
-    await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
-
-   
+           
 
 #gets user info of user on the discord
 @client.command(aliases=["userinfo"] ,help = "Finds info about users on the discord.")
