@@ -295,6 +295,7 @@ async def leaderboard(ctx):
     await ctx.send(embed=em)
     # show the leaderboard whichever way you'd like
     
+    
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 def start_bot(client):
