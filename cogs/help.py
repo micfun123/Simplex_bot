@@ -44,7 +44,7 @@ class Help(commands.Cog):
             with open('help.json', 'w') as f:
                 json.dump(data, f, indent=4)
             
-            await ctx.send(f"Command created successfully. You can view it using `.help {name}`")
+            await ctx.send(embed=discord.Embed(title=f"Command created successfully.", description="You can view it using `.help {name}`"))
 
         else:
             await ctx.send("You dont have permission to use this command")
