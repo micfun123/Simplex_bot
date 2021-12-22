@@ -18,8 +18,9 @@ class Help(commands.Cog):
             
         if ctx.author.id in dev_ids:
 
-            await ctx.send(embed=discord.Embed(title="Please enter the command name:"))
+            await ctx.send(delete_after=5, embed=discord.Embed(title="Please enter the command name:"))
             name = await self.client.wait_for("message", check=check)
+            await name.delete()
             name = str(name.content)
 
             for cmd in data:
@@ -27,12 +28,14 @@ class Help(commands.Cog):
                     await ctx.send("This command already exists")
                     return
 
-            await ctx.send(embed=discord.Embed(title="Please enter the description:"))
+            await ctx.send(delete_after=5, embed=discord.Embed(title="Please enter the description:"))
             desc = await self.client.wait_for("message", check=check)
+            await desc.delete()
             desc = str(desc.content)
 
-            await ctx.send(embed=discord.Embed(title="Please enter the usage:"))
+            await ctx.send(delete_after=5, embed=discord.Embed(title="Please enter the usage:"))
             use = await self.client.wait_for("message", check=check)
+            await use.delete()
             use = str(use.content)
             help_command = {
                 "name": name,
