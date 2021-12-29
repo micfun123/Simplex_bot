@@ -24,7 +24,7 @@ intents.members = True
 intents.guilds=True
 intents.all
 
-client = commands.Bot(command_prefix = '%', intents=intents, presences = True, members = True, guilds=True)
+client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True)
 
 @client.event
 async def on_ready():
