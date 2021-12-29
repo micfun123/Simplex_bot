@@ -1,6 +1,7 @@
 import discord
 import random
 from discord.ext import commands
+import qrcode
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -19,6 +20,21 @@ class Fun(commands.Cog):
         """
         t_rev = text[::-1].replace("@", "@\u200B").replace("&", "&\u200B")
         await ctx.send(f"🔁 {t_rev}")
+
+    @commands.command(aliases=['qr'])
+    async def qrcode(self, ctx, *, url):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(str(url))
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black",
+                            back_color="white").convert('RGB')
+        img.save('qrcode.png')
+        await ctx.send(file=discord.File('qrcode.png'))
 
 
 def setup(bot):
