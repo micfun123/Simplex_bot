@@ -29,8 +29,11 @@ client = commands.Bot(command_prefix = '.', intents=intents, presences = True, m
 @client.event
 async def on_ready():
     # Setting `Playing ` status
-    await client.change_presence(activity=discord.Game(name=".help is a thing")) # changed from bot - client
+    await client.change_presence(activity=discord.Game(name="on " + str(len(client.guilds)) + " Servers.", type=0)) # changed from bot - client
     print("we have powered on, I an alive.")
+
+
+
 
 @client.command()
 async def ping(ctx):
@@ -46,6 +49,7 @@ async def vote(ctx):
 @client.command(aliases=["Hello", "hi", "Hi"])
 async def hello(ctx):
     await ctx.send('Hi')
+
 
 @client.command()
 async def contribute(ctx):
