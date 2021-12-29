@@ -24,7 +24,7 @@ intents.members = True
 intents.guilds=True
 intents.all
 
-client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True)
+client = commands.Bot(command_prefix = '%', intents=intents, presences = True, members = True, guilds=True)
 
 @client.event
 async def on_ready():
@@ -34,11 +34,16 @@ async def on_ready():
 
 
 
-
 @client.command()
 async def ping(ctx):
     await ctx.send(f'Pong! {round(client.latency * 1000)}ms ping time')
-    
+
+
+@client.event
+async def on_command_error(ctx, error):
+    channel = client.get_channel(923268659009421342)
+    await channel.send(f"An error occured: {str(error)}")
+
 
 @client.command()
 async def vote(ctx):
