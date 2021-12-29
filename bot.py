@@ -31,6 +31,8 @@ async def on_ready():
     # Setting `Playing ` status
     await client.change_presence(activity=discord.Game(name="on " + str(len(client.guilds)) + " Servers.", type=0)) # changed from bot - client
     print("we have powered on, I an alive.")
+    channel = client.get_channel(925787897527926805)
+    await channel.send("Online")
 
 
 
