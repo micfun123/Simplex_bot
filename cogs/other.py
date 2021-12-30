@@ -1,7 +1,11 @@
 from discord.ext import commands
 import asyncio
 
+
 class utilities(commands.Cog):
+    def __init__(self, client): 
+        self.client = client 
+    
 
     @commands.command(aliases=['sug'])
     async def suggest(self, ctx, *, suggestion):
