@@ -1,3 +1,5 @@
 discordLevelingSystem
 easy-pil
 qrcode
+python-dotenv
+os-sys
