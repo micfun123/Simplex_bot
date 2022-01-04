@@ -50,6 +50,13 @@ class Moderation(commands.Cog):
         message = await ctx.channel.fetch_message(id)
         await message.clear_reactions()
         await ctx.send("Removed")
+        
+    @commands.command()
+    @commands.is_owner()
+    async def reload(ctx, extension):
+        bot.reload_extension(f"cogs.{extension}")
+        embed = discord.Embed(title='Reload', description=f'{extension} successfully reloaded', color=0xff00c8)
+        await ctx.send(embed=embed)    
 
 def setup(client):
     client.add_cog(Moderation(client))
