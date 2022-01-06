@@ -44,6 +44,14 @@ class Moderation(commands.Cog):
         message = message or "This Message is a warning"
         await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
 
-    
+    @commands.command(name="removereactions",help="Clear reactions from a message in the current channel")
+    @commands.has_permissions(manage_messages=True)
+    async def removereactions(self, ctx, id:int):
+        message = await ctx.channel.fetch_message(id)
+        await message.clear_reactions()
+        await ctx.send("Removed")
+        
+      
+
 def setup(client):
     client.add_cog(Moderation(client))
