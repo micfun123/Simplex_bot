@@ -4,7 +4,7 @@ from discord.ext import commands
 import json
 
 async def get_counting_channel(guild):
-    with open("./databases/counting.json") as f:
+    with open("./databasess/counting.json") as f:
         data = json.load(f)
     for i in data:
         if i["guild"] == guild.id:
@@ -22,7 +22,7 @@ async def counting(msg, guild, channel, m):
     if cc is None:
         return
     if channel.id == cc:
-        with open("./database/counting.json") as f:
+        with open("./databases/counting.json") as f:
             data = json.load(f)
         for i in data:
             if i['guild'] == guild.id:
@@ -34,7 +34,7 @@ async def counting(msg, guild, channel, m):
                     await m.add_reaction("❌")
                     em = discord.Embed(title="You ruined it!", description="Count reset to zero")
                     await channel.send(embed=em)
-        with open("database/counting.json", 'w') as f:
+        with open("databases/counting.json", 'w') as f:
             json.dump(data, f, indent=4)
 
 
@@ -44,12 +44,12 @@ class Counting(commands.Cog):
 
     @commands.command()
     async def setcountchannel(self, ctx, channel:discord.TextChannel):
-        with open("./database/counting.json") as f:
+        with open("./databases/counting.json") as f:
             data = json.load(f)
         for i in data:
             if i['guild'] == ctx.guild.id:
                 i['counting_channel'] = channel.id
-        with open("./database/counting.json", 'w') as f:
+        with open("./databases/counting.json", 'w') as f:
             json.load(data, f, indent=4)
 
 
@@ -62,10 +62,10 @@ class Counting(commands.Cog):
                 "counting_channel":None,
                 "count":0
             }
-            with open("./database/counting.json") as f:
+            with open("./databases/counting.json") as f:
                 data = json.load(f)
             data.append(insert)
-            with open("./database/counting.json", 'w') as f:
+            with open("./databases/counting.json", 'w') as f:
                 json.dump(data, f, indent=4)
 
     @commands.Cog.listener()
