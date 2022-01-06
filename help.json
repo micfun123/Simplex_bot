@@ -1,0 +1,7 @@
+[
+    {
+        "name": "coinflip",
+        "description": "Flips a coin",
+        "usage": ".coinflip"
+    }
+]
