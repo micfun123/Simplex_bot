@@ -22,7 +22,7 @@ class Weather(commands.Cog):
     
     
 
-    @commands.command()
+    @commands.command(help="Get the weather for a city")
     async def weather(self, ctx, *, CITY):
         weather_key = os.getenv("WEATHER_KEY")
         BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
