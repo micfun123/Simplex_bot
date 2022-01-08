@@ -41,10 +41,6 @@ async def ping(ctx):
     await ctx.send(f'Pong! {round(client.latency * 1000)}ms ping time')
 
 
-@client.event
-async def on_command_error(ctx, error):
-    channel = client.get_channel(923268659009421342)
-    await channel.send(f"An error occured: {str(error)} + {ctx.author.name}\nID: {ctx.author.id}")
 
 
 @client.command()
