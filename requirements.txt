@@ -4,3 +4,5 @@ qrcode
 python-dotenv
 os-sys
 git+https://github.com/Pycord-Development/pycord
+geopy
+nominatim

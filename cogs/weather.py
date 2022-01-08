@@ -22,7 +22,7 @@ class Weather(commands.Cog):
     
     
 
-    @commands.command(help="Get the weather for a city")
+    @commands.command()
     async def weather(self, ctx, *, CITY):
         weather_key = os.getenv("WEATHER_KEY")
         BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
@@ -61,7 +61,6 @@ class Weather(commands.Cog):
         else:
             # showing the error message
             await ctx.send("I've had a connection issue, Sir. Should be fixed momentarily")
-
 
 def setup(client):
     client.add_cog(Weather(client))
