@@ -6,3 +6,5 @@ os-sys
 git+https://github.com/Pycord-Development/pycord
 geopy
 nominatim
+mcstatus
+functools
