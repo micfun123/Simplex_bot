@@ -8,3 +8,6 @@ geopy
 nominatim
 mcstatus
 functools
+timezonefinder
+geopy
+nominatim
