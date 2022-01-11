@@ -1,7 +1,7 @@
 [
    {
-    "guild":123,
-    "counting_channel":1234,
-    "count":0
+    "guild":"Example/Test",
+    "counting_channel":"Example/Test",
+    "count":"Example/Test"
    }
 ]

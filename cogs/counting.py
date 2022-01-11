@@ -58,7 +58,7 @@ class Counting(commands.Cog):
     async def setallcountingchannels(self, ctx):
         for i in self.client.guilds:
             insert = {
-                "guild":i.guild.id,
+                "guild":i.id,
                 "counting_channel":None,
                 "count":0
             }
