@@ -13,9 +13,6 @@ from easy_pil import Editor, Canvas, Font, load_image, Text
 load_dotenv()
 
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
-
-
-
 from discord.ext import commands
 
 intents = discord.Intents.all()
