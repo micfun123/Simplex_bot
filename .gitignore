@@ -3,3 +3,4 @@
 *.exe
 *.db
 qrcode.png
+databases/counting.json
