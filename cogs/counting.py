@@ -42,6 +42,7 @@ class Counting(commands.Cog):
     def __init__(self, client):
         self.client = client 
 
+    @commands.has_permissions(administrator=True) 
     @commands.command()
     async def setcountchannel(self, ctx, channel:discord.TextChannel):
         with open("./databases/counting.json") as f:
