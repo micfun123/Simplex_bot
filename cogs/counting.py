@@ -28,10 +28,10 @@ async def counting(msg, guild, channel, m):
             if i['guild'] == guild.id:
                 if (i['count'] +1) == msg:
                     i['count'] +=1 
-                    await m.add_reaction("✅")
+                    await m.add_reaction("âœ…")
                 else:
                     i['count'] = 0
-                    await m.add_reaction("❌")
+                    await m.add_reaction("âŒ")
                     em = discord.Embed(title="You ruined it!", description="Count reset to zero")
                     await channel.send(embed=em)
         with open("./databases/counting.json", 'w') as f:
@@ -42,6 +42,7 @@ class Counting(commands.Cog):
     def __init__(self, client):
         self.client = client 
 
+    @commands.has_permissions(administrator=True) 
     @commands.command()
     async def setcountchannel(self, ctx, channel:discord.TextChannel):
         with open("./databases/counting.json") as f:
