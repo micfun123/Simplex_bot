@@ -251,7 +251,7 @@ async def rank(ctx, member:discord.Member=None):
     }
 
     background = Editor(Canvas((934, 282), "#23272a"))
-    profile_image = load_image(str(member.avatar_url))
+    profile_image = load_image(str(member.display_avatar.url))
     profile = Editor(profile_image).resize((150, 150)).circle_image()
 
 
