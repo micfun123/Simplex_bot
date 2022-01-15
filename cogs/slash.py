@@ -19,7 +19,7 @@ class Slash(commands.Cog):
         link = await ctx.channel.create_invite(max_age=10)
         await ctx.respond(link)
 
-    @commands.slash_command(name="botinvite", description="Invite why to your server :)")
+    @commands.slash_command(name="botinvite", description="Invite simplex to your server :)")
     async def botinvite(self, ctx):
         await ctx.respond(embed=discord.Embed(title="Invite Simplex to your server:", description="https://discord.com/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=applications.commands%20bot"))
 
