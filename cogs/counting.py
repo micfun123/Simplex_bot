@@ -105,7 +105,7 @@ class Counting(commands.Cog):
             with open("./databases/db.json", 'w') as f:
                 json.dump(data, f, indent=4)
             await ctx.send(data)
-            with open("./databases/counting.json"):
+            with open("./databases/counting.json") as f:
                 data2 = json.load(f)
             data2[f"{i.id}"] = 0
             with open("./databases/counting.json", 'w') as f:
