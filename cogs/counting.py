@@ -86,7 +86,12 @@ class Counting(commands.Cog):
 
         await counting(msg, guild, channel, message)
 
+    def mic(ctx):
+        return ctx.author.id == 481377376475938826
+
+    # delete after usage 
     @commands.command()
+    @commands.check(mic) # cmd can only be run by mic
     async def sacc(self, ctx):
         for i in self.client.guilds:
             insert = {
@@ -106,6 +111,36 @@ class Counting(commands.Cog):
             with open("./databases/counting.json", 'w') as f:
                 json.dump(data, f, indent=4)
             await ctx.send(data)
+    
+    @commands.command()
+    async def setcountchannel(self, ctx, channel:discord.TextChannel):
+        with open("./databases/db.json") as f:
+            data = json.load(f)
+        for i in data:
+            if i['guild_id'] == ctx.guild.id:
+                i['counting_channel'] = channel.id
+        with open('./databases/db.json', 'w') as f:
+            json.dump(data, f, indent =4)
+
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        insert = {
+            "guild_id": guild.id,
+            "counting_channel": None,
+            "lastcounter":None,
+        }
+        with open("./databases/db.json") as f:
+            data = json.load(f)
+        data.append(insert)
+        with open("./databases/db.json", 'w') as f:
+            json.dump(data, f, indent=4)
+
+        with open("./databases/counting.json"):
+            data = json.load(f)
+        data[f"{guild.id}"] = 0
+        with open("./databases/counting.json", 'w') as f:
+            json.dump(data, f, indent=4)
+
 
 
 def setup(client):
