@@ -7,7 +7,6 @@ from discord import Option
 import json
 import random
 import os
-import aiohttp
 
 class Slash(commands.Cog):
     def __init__(self, client):
@@ -21,9 +20,9 @@ class Slash(commands.Cog):
 
     @commands.slash_command(name="botinvite", description="Invite simplex to your server :)")
     async def botinvite(self, ctx):
-        await ctx.respond(embed=discord.Embed(title="Invite Simplex to your server:", description="https://discord.com/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=applications.commands%20bot"))
+        await ctx.respond(embed=discord.Embed(title="Invite **Why?** to your server:", description="https://discord.com/api/oauth2/authorize?client_id=896932646846885898&permissions=8&scope=bot%20applications.commands"))
 
-    @commands.slash_command(name="suggest", description="Suggest something for Simplex")
+    @commands.slash_command(name="suggest", description="Suggest something for why bot")
     async def suggest(self, ctx, *, suggestion):
         sid = await self.client.fetch_channel(908969607266730005)
         await sid.send(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
@@ -35,7 +34,7 @@ class Slash(commands.Cog):
 
 
     #gets user info of user on the discord
-    @commands.slash_command(description = "Finds info about users on the discord.")
+    @commands.slash_command(aliases=["userinfo"] ,help = "Finds info about users on the discord.")
     async def info(ctx, user: discord.Member):
          embed = discord.Embed(title=f"{user}'s info", description=f"Here's {user}'s info", color=0x00ff00)
          embed.add_field(name="Username:", value=user.name, inline=True)
@@ -45,9 +44,6 @@ class Slash(commands.Cog):
          embed.add_field(name="Joined:", value=user.joined_at, inline=True)
          embed.set_thumbnail(url=user.avatar_url)
          await ctx.send(embed=embed)
-
-
-
 
 def setup(client):
     client.add_cog(Slash(client))

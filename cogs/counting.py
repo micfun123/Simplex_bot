@@ -3,13 +3,17 @@ import discord
 from discord.ext import commands
 import json
 
+
 async def get_counting_channel(guild):
-    with open("./databases/counting.json") as f:
+    with open("./databases/db.json") as f:
         data = json.load(f)
     for i in data:
-        if i["guild"] == guild.id:
+        if i["guild_id"] == guild.id:
             return int(i["counting_channel"])
     return None
+
+# Counting
+
 
 async def counting(msg, guild, channel, m):
     try:
@@ -18,56 +22,60 @@ async def counting(msg, guild, channel, m):
         return
 
     cc = await get_counting_channel(guild)
-    
+
     if cc is None:
         return
     if channel.id == cc:
         with open("./databases/counting.json") as f:
             data = json.load(f)
-        for i in data:
-            if i['guild'] == guild.id:
-                if (i['count'] +1) == msg:
-                    i['count'] +=1 
-                    await m.add_reaction("âœ…")
+        with open('./databases/db.json') as f:
+            dataa = json.load(f)
+        for i in dataa:
+            if i['guild_id'] == guild.id:
+                if i['lastcounter'] == None:
+                    i['lastcounter'] = m.author.id
+                    break
+                elif i['lastcounter'] == m.author.id:
+                    data[f"{guild.id}"] = 0
+                    i['lastcounter'] = None
+                    await m.add_reaction("❌")
+                    em = discord.Embed(title=f"{m.author.name}, You ruined it!", description="Only one person at a time\nCount reset to zero")
+                    with open("./databases/counting.json", 'w') as f:
+                        json.dump(data, f, indent=4)
+                    with open("./databases/db.json", 'w') as f:
+                        json.dump(dataa, f, indent=4)
+                    return await channel.send(embed=em)
                 else:
-                    i['count'] = 0
-                    await m.add_reaction("âŒ")
-                    em = discord.Embed(title="You ruined it!", description="Count reset to zero")
-                    await channel.send(embed=em)
+                    i['lastcounter'] = m.author.id
+                    break
+                    
+        if (data[f"{guild.id}"] + 1) == msg:
+            data[f"{guild.id}"] += 1
+            await m.add_reaction("✅")
+        else:
+            await m.add_reaction("❌")
+            em = discord.Embed(title=f"{m.author.name}, You ruined it!", description=f"You were supposed to type `{(data[f'{guild.id}']+1)}`\nCount reset to zero")
+            i['lastcounter'] = None
+            data[f"{guild.id}"] = 0
+            await channel.send(embed=em)
         with open("./databases/counting.json", 'w') as f:
             json.dump(data, f, indent=4)
+        with open("./databases/db.json", 'w') as f:
+            json.dump(dataa, f, indent=4)
 
 
 class Counting(commands.Cog):
     def __init__(self, client):
-        self.client = client 
-
-    @commands.has_permissions(administrator=True) 
-    @commands.command()
-    async def setcountchannel(self, ctx, channel:discord.TextChannel):
-        with open("./databases/counting.json") as f:
+        self.client = client
+        
+    @commands.command(aliases=['num'])
+    async def numrn(self, ctx):
+        guild = ctx.guild
+        with open('./databases/counting.json') as f:
             data = json.load(f)
-        for i in data:
-            if i['guild'] == ctx.guild.id:
-                i['counting_channel'] = channel.id
-        with open("./databases/counting.json", 'w') as f:
-            json.dump(data, f, indent=4)
-
-
-    # run this once then delete this after
-    @commands.command()
-    async def setallcountingchannels(self, ctx):
-        for i in self.client.guilds:
-            insert = {
-                "guild":i.id,
-                "counting_channel":None,
-                "count":0
-            }
-            with open("./databases/counting.json") as f:
-                data = json.load(f)
-            data.append(insert)
-            with open("./databases/counting.json", 'w') as f:
-                json.dump(data, f, indent=4)
+        guildid = f'{guild.id}'
+        numrn = data[guildid]
+        await ctx.send(f"Current number is {numrn}")
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -77,6 +85,63 @@ class Counting(commands.Cog):
         guild = message.guild
 
         await counting(msg, guild, channel, message)
+
+    def mic(ctx):
+        return ctx.author.id == 481377376475938826
+
+    # delete after usage 
+    @commands.command()
+    @commands.check(mic) # cmd can only be run by mic
+    async def sacc(self, ctx):
+        for i in self.client.guilds:
+            insert = {
+                "guild_id": i.id,
+                "counting_channel": None,
+                "lastcounter":None,
+            }
+            with open("./databases/db.json") as f:
+                data = json.load(f)
+            data.append(insert)
+            with open("./databases/db.json", 'w') as f:
+                json.dump(data, f, indent=4)
+            await ctx.send(data)
+            with open("./databases/counting.json"):
+                data = json.load(f)
+            data[f"{i.id}"] = 0
+            with open("./databases/counting.json", 'w') as f:
+                json.dump(data, f, indent=4)
+            await ctx.send(data)
+    
+    @commands.command()
+    async def setcountchannel(self, ctx, channel:discord.TextChannel):
+        with open("./databases/db.json") as f:
+            data = json.load(f)
+        for i in data:
+            if i['guild_id'] == ctx.guild.id:
+                i['counting_channel'] = channel.id
+        with open('./databases/db.json', 'w') as f:
+            json.dump(data, f, indent =4)
+
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        insert = {
+            "guild_id": guild.id,
+            "counting_channel": None,
+            "lastcounter":None,
+        }
+        with open("./databases/db.json") as f:
+            data = json.load(f)
+        data.append(insert)
+        with open("./databases/db.json", 'w') as f:
+            json.dump(data, f, indent=4)
+
+        with open("./databases/counting.json"):
+            data = json.load(f)
+        data[f"{guild.id}"] = 0
+        with open("./databases/counting.json", 'w') as f:
+            json.dump(data, f, indent=4)
+
+
 
 def setup(client):
     client.add_cog(Counting(client))
