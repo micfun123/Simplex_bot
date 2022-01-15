@@ -106,10 +106,10 @@ class Counting(commands.Cog):
                 json.dump(data, f, indent=4)
             await ctx.send(data)
             with open("./databases/counting.json"):
-                data = json.load(f)
-            data[f"{i.id}"] = 0
+                data2 = json.load(f)
+            data2[f"{i.id}"] = 0
             with open("./databases/counting.json", 'w') as f:
-                json.dump(data, f, indent=4)
+                json.dump(data2, f, indent=4)
             await ctx.send(data)
     
     @commands.command()
@@ -136,10 +136,10 @@ class Counting(commands.Cog):
             json.dump(data, f, indent=4)
 
         with open("./databases/counting.json"):
-            data = json.load(f)
-        data[f"{guild.id}"] = 0
+            data2 = json.load(f)
+        data2[f"{guild.id}"] = 0
         with open("./databases/counting.json", 'w') as f:
-            json.dump(data, f, indent=4)
+            json.dump(data2, f, indent=4)
 
 
 
