@@ -197,6 +197,22 @@ async def on_raw_reaction_add(payload):
                 await payload.member.add_roles(role)
             else:
                 pass
+            
+@client.event
+async def on_raw_reaction_add(payload):
+    if not payload.guild_id:
+      return
+    if payload.member.bot:
+        return
+    with open("react.json") as f:
+        data = json.load(f)
+    for x in data:
+        if x['emoji'] == payload.emoji.name and x["message_id"] == payload.message_id:
+            guild = await client.fetch_guild(payload.guild_id)
+            role = guild.get_role(x['role_id'])
+            await payload.member.add_roles(role)
+        else:
+            pass
 
 lvlembed = discord.Embed()
 lvlembed.set_author(name=LevelUpAnnouncement.Member.name, icon_url=LevelUpAnnouncement.Member.avatar_url)
