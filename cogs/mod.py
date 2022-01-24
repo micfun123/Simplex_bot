@@ -51,7 +51,7 @@ class Moderation(commands.Cog):
         await message.clear_reactions()
         await ctx.send("Removed")
         
-      
+
 
 def setup(client):
     client.add_cog(Moderation(client))

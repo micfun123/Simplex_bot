@@ -1,5 +1,5 @@
 import imp
-
+import psutil
 
 import discord
 from discord.ext import commands
@@ -40,7 +40,6 @@ class utilities(commands.Cog):
         embed.add_field(name="Member Count", value=memberCount, inline=True)
 
         await ctx.send(embed=embed)
-
 
 def setup(bot):
     bot.add_cog(utilities(bot))
