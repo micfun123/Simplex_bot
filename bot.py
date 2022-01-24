@@ -32,7 +32,7 @@ async def update_activity(client):
 async def on_ready():
     # Setting `Playing ` status
     print("we have powered on, I an alive.")
-    update_activity(client)
+    await update_activity(client)
     channel = client.get_channel(925787897527926805)
     await channel.send("Online")
 
