@@ -1,10 +1,5 @@
 import imp
-<<<<<<< HEAD
 from datetime import datetime, timedelta
-=======
-import psutil
-
->>>>>>> 5dae97baa2fa239deacdcea8f91ab9d351862b3e
 import discord
 from discord.ext import commands
 import asyncio
@@ -45,7 +40,6 @@ class utilities(commands.Cog):
 
         await ctx.send(embed=embed)
 
-<<<<<<< HEAD
 
     
 
@@ -88,7 +82,5 @@ class utilities(commands.Cog):
 
             await ctx.send(embed=embed)
 
-=======
->>>>>>> 5dae97baa2fa239deacdcea8f91ab9d351862b3e
 def setup(bot):
     bot.add_cog(utilities(bot))
