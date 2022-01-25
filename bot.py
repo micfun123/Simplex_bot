@@ -25,22 +25,16 @@ client = commands.Bot(command_prefix = '.', intents=intents, presences = True, m
 
 
 async def update_activity(client):
-    await client.change_presence(activity=discord.Game(f"On {len(client.guilds)} servers! | ?help"))
+    await client.change_presence(activity=discord.Game(f"On {len(client.guilds)} servers! | .help"))
     print("Updated presence")
 
 @client.event
 async def on_ready():
     # Setting `Playing ` status
     print("we have powered on, I an alive.")
+    await update_activity(client)
     channel = client.get_channel(925787897527926805)
     await channel.send("Online")
-
-@tasks.loop(hours=10)
-async def update_servers():
-    print("Updating Servers")
-    await client.change_presence(activity=discord.Game(name="on " + str(len(client.guilds)) + " Servers.", type=0)) # changed from bot - client
-
-
 
 
 @client.command()

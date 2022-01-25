@@ -20,9 +20,9 @@ class Slash(commands.Cog):
 
     @commands.slash_command(name="botinvite", description="Invite simplex to your server :)")
     async def botinvite(self, ctx):
-        await ctx.respond(embed=discord.Embed(title="Invite **Why?** to your server:", description="https://discord.com/api/oauth2/authorize?client_id=896932646846885898&permissions=8&scope=bot%20applications.commands"))
+        await ctx.respond(embed=discord.Embed(title="Invite **'Simplex'?** to your server:", description="https://discord.com/api/oauth2/authorize?client_id=896932646846885898&permissions=8&scope=bot%20applications.commands"))
 
-    @commands.slash_command(name="suggest", description="Suggest something for why bot")
+    @commands.slash_command(name="suggest", description="Suggest something for Simplex bot")
     async def suggest(self, ctx, *, suggestion):
         sid = await self.client.fetch_channel(908969607266730005)
         await sid.send(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
