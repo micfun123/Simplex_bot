@@ -78,5 +78,11 @@ class Moderation(commands.Cog):
         await ctx.send(f"Connected on {str(len(servers))} servers:")
         await ctx.send('\n'.join(guild.name for guild in servers))
 
+    @commands.command()
+    @commands.check(mic)
+    async def dmid(self, ctx, id:int, *, message):
+      user = await self.client.fetch_user(id)
+      await user.send(message)
+
 def setup(client):
     client.add_cog(Moderation(client))
