@@ -1,6 +1,18 @@
+import imp
 import discord
 from discord.ext import commands
 import json
+import os
+
+def mic(ctx):
+    return ctx.author.id == 481377376475938826
+
+cogs = []
+for i in os.listdir("cogs/"):
+    if i == "__pycache__":
+        pass
+    else:
+        print(i[:-3])
 
 class Moderation(commands.Cog):
     def __init__(self, client): 
@@ -51,7 +63,20 @@ class Moderation(commands.Cog):
         await message.clear_reactions()
         await ctx.send("Removed")
         
-
+    @commands.command()
+    @commands.check(mic)
+    async def reload(self, ctx, extension):
+        self.client.reload_extension(f"cogs.{extension}")
+        embed = discord.Embed(
+            title='Reload', description=f'{extension} successfully reloaded', color=0xff00c8)
+        await ctx.send(embed=embed)
+  
+    @commands.command()
+    @commands.check(mic)
+    async def serverlist(self, ctx):
+        servers = list(self.client.guilds)
+        await ctx.send(f"Connected on {str(len(servers))} servers:")
+        await ctx.send('\n'.join(guild.name for guild in servers))
 
 def setup(client):
     client.add_cog(Moderation(client))
