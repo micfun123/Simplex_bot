@@ -93,15 +93,15 @@ class Weather(commands.Cog):
             # weather report
             report = data['weather']
             #print
-            await ctx.send(f"{city:-^30}")
-            await ctx.send(f"Temperature: {x} degrees celcius")
-            await ctx.send(f"Feels Like {y} degrees celcius")
-            await ctx.send(f"Humidity: {humidity}")
-            await ctx.send(f"Pressure: {pressure}")
-            await ctx.send(f"Weather Report: {report[0]['main']}")
+            await ctx.respond(f"{city:-^30}")
+            await ctx.respond(f"Temperature: {x} degrees celcius")
+            await ctx.respond(f"Feels Like {y} degrees celcius")
+            await ctx.respond(f"Humidity: {humidity}")
+            await ctx.respond(f"Pressure: {pressure}")
+            await ctx.respond(f"Weather Report: {report[0]['main']}")
         else:
             # showing the error message
-            await ctx.send("I've had a connection issue, Sir. Should be fixed momentarily")
+            await ctx.respond("I've had a connection issue, Sir. Should be fixed momentarily")
 
 def setup(client):
     client.add_cog(Weather(client))
