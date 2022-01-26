@@ -21,7 +21,7 @@ intents.members = True
 intents.guilds=True
 intents.all
 
-client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True)
+client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True, case_insensitive=True)
 
 
 async def update_activity(client):
@@ -50,7 +50,7 @@ async def vote(ctx):
     await ctx.send("Like the bot vote here https://discordbotlist.com/bots/simplex-bot")
     
     
-@client.command(aliases=["Hello", "hi", "Hi"])
+@client.command(aliases=["hi"])
 async def hello(ctx):
     await ctx.send('Hi')
 
@@ -59,8 +59,8 @@ async def hello(ctx):
 async def contribute(ctx):
     await ctx.send('If you want to help can take a look here https://github.com/micfun123/Simplex_bot')
 
-@client.command(help = "tells you about the maker of the bot", aliases=["maker"])
-async def Maker(ctx):
+@client.command(help = "tells you about the maker of the bot")
+async def maker(ctx):
     await ctx.send("This Bot was made by Michael you can find him as @michaelrbparker on Twitter if you want a bot.  His discord is Mic#8372. Want to support him buy him a coffee https://www.buymeacoffee.com/Michaelrbparker")
 
 @client.command(help = "Link to the discord")
@@ -117,7 +117,7 @@ async def cat(ctx):
    await ctx.send(embed=embed)
 
 
-@client.command(aliases=["Joke", "jokes", "Jokes"], help = "It tells a joke")  #tells a joke
+@client.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
 async def joke(ctx):
    async with aiohttp.ClientSession() as session:
       # This time we'll get the joke request as well!
@@ -132,7 +132,7 @@ async def joke(ctx):
            
 
 #gets user info of user on the discord
-@client.command(aliases=["userinfo"] ,help = "Finds info about users on the discord.")
+@client.command(aliases=["userinfo", "ui"] ,help = "Finds info about users on the discord.")
 async def info(ctx, user: discord.Member):
     embed = discord.Embed(title=f"{user}'s info", description=f"Here's {user}'s info", color=0x00ff00)
     embed.add_field(name="Username:", value=user.name, inline=True)
