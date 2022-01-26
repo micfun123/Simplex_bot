@@ -8,6 +8,16 @@ import json
 import random
 import os
 
+def mic(ctx):
+    return ctx.author.id == 481377376475938826
+
+cogs = []
+for i in os.listdir("cogs/"):
+    if i == "__pycache__":
+        pass
+    else:
+        print(i[:-3])
+
 class Slash(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -44,6 +54,14 @@ class Slash(commands.Cog):
          embed.add_field(name="Joined:", value=user.joined_at, inline=True)
          embed.set_thumbnail(url=user.avatar_url)
          await ctx.send(embed=embed)
+
+    @slash_command(name="reload", description="reloads a cog")
+    @commands.check(mic)
+    async def reload(self, ctx, extension:Option(str, "Cog Name", required=True, choices=cogs)):
+        self.client.reload_extension(f"cogs.{extension}")
+        embed = discord.Embed(
+            title='Reload', description=f'{extension} successfully reloaded', color=0xff00c8)
+        await ctx.respond(embed=embed)
 
 def setup(client):
     client.add_cog(Slash(client))
