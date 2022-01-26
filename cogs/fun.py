@@ -2,6 +2,8 @@ import discord
 import random
 from discord.ext import commands
 import qrcode
+import numexpr as ne
+import numpy
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -36,6 +38,12 @@ class Fun(commands.Cog):
         img.save('qrcode.png')
         await ctx.send(file=discord.File('qrcode.png'))
 
+
+    @commands.command(aliases=["calculator"])
+    async def calc(self, ctx, *, text: str):
+        calc = ne.evaluate(text)
+        msg = int(calc)
+        await ctx.send(msg)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
