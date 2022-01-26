@@ -78,11 +78,12 @@ class Moderation(commands.Cog):
         await ctx.send(f"Connected on {str(len(servers))} servers:")
         await ctx.send('\n'.join(guild.name for guild in servers))
 
-    @commands.command()
+    @commands.command(aliases=['sendmsg'])
     @commands.check(mic)
-    async def dmid(self, ctx, id:int, *, message):
-      user = await self.client.fetch_user(id)
-      await user.send(message)
+    async def dm(self, ctx, member: discord.Member, *, message):
+        await ctx.message.delete()
+        embeddm = discord.Embed(title=message)
+        await member.send(embed=embeddm)
 
 def setup(client):
     client.add_cog(Moderation(client))
