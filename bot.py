@@ -140,7 +140,7 @@ async def info(ctx, user: discord.Member):
     embed.add_field(name="Status:", value=user.status, inline=True)
     embed.add_field(name="Highest Role:", value=user.top_role, inline=True)
     embed.add_field(name="Joined:", value=user.joined_at, inline=True)
-    embed.set_thumbnail(url=user.avatar_url)
+    embed.set_thumbnail(url=user.avatar.url)
     await ctx.send(embed=embed)
 
 
