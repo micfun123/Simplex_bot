@@ -353,6 +353,7 @@ async def on_message(message):
             title="New DM", description=f"From {message.author.name}")
         em.add_field(name="Content", value=f"{message.content}")
         msg = await cha.send(content=f"{message.author.id}", embed=em)
+    await client.process_commands(message)
 
     
     
