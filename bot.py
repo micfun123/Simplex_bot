@@ -71,7 +71,7 @@ async def link(ctx):
 async def server(ctx):
     await ctx.send('Want to join the sever join here https://discord.gg/d2gjWqFsTP ')
 
-@client.command(aliases=["8ball", "eightball", "eight_ball", "Eight_ball"]) #8ball game
+@client.command(aliases=["8ball", "eightball", "eight_ball"]) #8ball game
 async def _8ball(ctx, *, question):
     responses = ['magic eight ball maintains Signs point to yes.',
                  'magicball affirms My reply is no.',
