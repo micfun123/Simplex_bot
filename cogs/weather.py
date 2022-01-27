@@ -93,12 +93,7 @@ class Weather(commands.Cog):
             # weather report
             report = data['weather']
             #print
-            await ctx.respond(f"{city:-^30}")
-            await ctx.respond(f"Temperature: {x} degrees celcius")
-            await ctx.respond(f"Feels Like {y} degrees celcius")
-            await ctx.respond(f"Humidity: {humidity}")
-            await ctx.respond(f"Pressure: {pressure}")
-            await ctx.respond(f"Weather Report: {report[0]['main']}")
+            await ctx.respond(f"{city:-^30} \n Temperature: {x} degrees celcius \n Feels Like {y} degrees celcius \n Humidity: {humidity} \n Pressure: {pressure} \n Weather Report: {report[0]['main']}")
         else:
             # showing the error message
             await ctx.respond("I've had a connection issue, Sir. Should be fixed momentarily")
