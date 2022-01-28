@@ -12,6 +12,9 @@ from easy_pil import Editor, Canvas, Font, load_image, Text
 
 load_dotenv()
 
+def mic(ctx):
+    return ctx.author.id == 481377376475938826
+
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 from discord.ext import commands, tasks
 
@@ -306,19 +309,20 @@ async def rank(ctx, member:discord.Member=None):
 
 
 @client.command()
-@commands.is_owner()
+@commands.check(mic)
 async def removexp(ctx, member:discord.Member, amount:int):
     await ctx.message.delete()
     await lvl.remove_xp(member=member, amount=amount)
 
 
 @client.command()
-@commands.is_owner()
+@commands.check(mic)
 async def setlvl(ctx, member:discord.Member, level:int):
     await ctx.message.delete()
     await lvl.set_level(member=member, level=level)
 
 @client.command()
+@commands.check(mic)
 async def givexp(ctx, member:discord.Member, amount:int):
     await lvl.remove_xp(member=ctx.author, amount=amount)
     await lvl.add_xp(member=member, amount=amount)
