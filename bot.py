@@ -324,9 +324,8 @@ async def setlvl(ctx, member:discord.Member, level:int):
 @client.command()
 @commands.check(mic)
 async def givexp(ctx, member:discord.Member, amount:int):
-    await lvl.remove_xp(member=ctx.author, amount=amount)
     await lvl.add_xp(member=member, amount=amount)
-    await ctx.send(f"Gave {amount} xp to {member.name}, Removed {amount} xp from {ctx.author.name}")
+    await ctx.send(f"Gave {amount} xp to {member.name}")
 
 @client.command(aliases=["purge"], help = "Command were clear given number of messages if no number given 5 messages will be cleared as well as limited to 5")  # clear command
 @commands.has_permissions(administrator=True) 
