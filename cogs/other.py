@@ -127,6 +127,7 @@ class utilities(commands.Cog):
         em.add_field(name = 'Memory Usage', value = f'{psutil.virtual_memory().percent}%', inline = False)
         em.add_field(name = 'Available Memory', value = f'{round(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)}%', inline = False)
         em.add_field(name="Python code", value=f"{get_lines()} of code")
+        em.add_field(name="commands", value=f"{len(self.client.commands)} of commands")
         await ctx.send(embed = em)
 
 def setup(bot):
