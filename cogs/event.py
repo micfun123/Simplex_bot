@@ -25,5 +25,6 @@ class Events(commands.Cog):
         cha = self.client.get_channel(925787897527926805)
         await cha.send(embed=discord.Embed(title="Leave", description=f"Left: {guild.name}"))
 
-def setup(client):
-    client.add_cog(Events(client))
+def setup(bot):
+    bot.add_cog(Events(bot))
+
