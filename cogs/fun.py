@@ -25,6 +25,7 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=['qr'])
     async def qrcode(self, ctx, *, url):
+        await ctx.message.delete()
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_H,
