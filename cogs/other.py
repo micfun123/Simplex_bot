@@ -35,7 +35,7 @@ class utilities(commands.Cog):
         embed.set_thumbnail(url=ctx.guild.icon.url)
         embed.add_field(name="Owner", value=owner, inline=True)
         embed.add_field(name="Server ID", value=id, inline=True)
-        embed.add_field(name="Region", value=region, inline=True)
+        embed.add_field(name="Created: ", value=f"<:t{ctx.guild.created_at}>", inline=True)
         embed.add_field(name="Member Count", value=memberCount, inline=True)
 
         await ctx.send(embed=embed)
