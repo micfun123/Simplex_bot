@@ -19,7 +19,7 @@ async def get_counting_channel(guild):
 async def counting(msg, guild, channel, m):
     
     try:
-        if msg.startswith('this'):
+        if msg.startswith('this', 'that'):
          return
         msg = int(msg)
     except:
