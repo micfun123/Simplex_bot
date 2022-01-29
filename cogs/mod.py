@@ -100,5 +100,12 @@ class Moderation(commands.Cog):
         self.client.load_extension(f"cogs.{extension}")
         await ctx.send(f"The module {extension} has been loaded successfully!")
 
+
+    @commands.command()
+    @commands.check(mic)
+    async def unload(self, ctx, extension):
+        self.client.unload_extension(f"cogs.{extension}")
+        await ctx.send(f"The module '{extension}' has been unloaded successfully!")
+
 def setup(client):
     client.add_cog(Moderation(client))
