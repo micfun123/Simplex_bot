@@ -12,6 +12,7 @@ from easy_pil import Editor, Canvas, Font, load_image, Text
 
 load_dotenv()
 
+
 def mic(ctx):
     return ctx.author.id == 481377376475938826
 
@@ -24,7 +25,7 @@ intents.members = True
 intents.guilds=True
 intents.all
 
-client = commands.Bot(command_prefix = '%', intents=intents, presences = True, members = True, guilds=True, case_insensitive=True)
+client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False))
 
 
 async def update_activity(client):
