@@ -85,5 +85,11 @@ class Moderation(commands.Cog):
         embeddm = discord.Embed(title=message)
         await member.send(embed=embeddm)
 
+    @commands.command(hidden = True)
+    @commands.check(mic)
+    async def pull(ctx):
+        await ctx.send("it is updated remeber to reload :)") 
+        os.system("git pull")
+
 def setup(client):
     client.add_cog(Moderation(client))
