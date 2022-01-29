@@ -4,7 +4,25 @@ import discord
 from discord.ext import commands
 import asyncio
 import time
+import os
+import psutil
 
+def get_lines():
+    lines = 0
+    files = []
+    for i in os.listdir():
+        if i.endswith(".py"):
+            files.append(i)
+    for i in os.listdir("cogs/"):
+        if i.endswith(".py"):
+            files.append(f"cogs/{i}")
+    for i in files:
+        count = 0
+        with open(i, 'r',encoding="utf8") as f:
+            for line in f:
+                count += 1
+        lines += count
+    return lines
 
 class utilities(commands.Cog):
     def __init__(self, client): 
@@ -93,6 +111,24 @@ class utilities(commands.Cog):
             embed.add_field(name="­", value=f"Channel health: {healthiness}", inline=False)
 
             await ctx.send(embed=embed)
+
+
+    @commands.command()
+    async def botinfo(self, ctx):
+        em = discord.Embed(title = 'Simplex')
+        em.add_field(inline = False,name="Server Count", value=f"{len(self.client.guilds)}")
+        mlist = []
+        for i in list(self.client.get_all_members()):
+            mlist.append(i.name)
+        em.add_field(inline = False,name="User Count", value=len(mlist))
+        em.add_field(inline = False,name="Ping", value=f"{round(self.client.latency * 1000)}ms")
+        em.set_footer(text="Made by the Simplex Dev Team")
+        em.add_field(name = 'CPU Usage', value = f'{psutil.cpu_percent()}%', inline = False)
+        em.add_field(name = 'Memory Usage', value = f'{psutil.virtual_memory().percent}%', inline = False)
+        em.add_field(name = 'Available Memory', value = f'{round(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)}%', inline = False)
+        em.add_field(name="Python code", value=f"{get_lines()} of code",inline = False)
+        em.add_field(name="Commands", value=f"{len(self.client.commands)} of commands")
+        await ctx.send(embed = em)
 
 def setup(bot):
     bot.add_cog(utilities(bot))
