@@ -92,11 +92,13 @@ class Moderation(commands.Cog):
         os.system("git pull")
 
 
+
+
     @commands.command()
     @commands.check(mic)
-    async def load(ctx, extension):
-        commands.load_extension(f'cogs.{extension}')
-        await commands.send(f' We have loaded cogs.{extension}')
+    async def load(self, ctx, extension):
+        self.client.load_extension(f"cogs.{extension}")
+        await ctx.send(f"The module {extension} has been loaded successfully!")
 
 def setup(client):
     client.add_cog(Moderation(client))
