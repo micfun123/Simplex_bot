@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import json
 from datetime import datetime
-from utils import log
+
 
 
 async def update_activity(client):
