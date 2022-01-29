@@ -46,7 +46,7 @@ class Fun(commands.Cog):
         await ctx.send(msg)
 
 
-    @commands.command(aliases=['rockpaperscissors'])
+    @commands.command(aliases=['rockpaperscissors'], help="Play Rock Paper Scissors")
     async def rps(self, ctx, rps: str):
         choices = ["rock", "paper", "scissors"]
         cpu_choice = random.choice(choices)
