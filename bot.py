@@ -134,19 +134,6 @@ async def joke(ctx):
 
            
 
-#gets user info of user on the discord
-@client.command(aliases=["userinfo", "ui"] ,help = "Finds info about users on the discord.")
-async def info(ctx, user: discord.Member):
-    embed = discord.Embed(title=f"{user}'s info", description=f"Here's {user}'s info", color=0x00ff00)
-    embed.add_field(name="Username:", value=user.name, inline=True)
-    embed.add_field(name="ID:", value=user.id, inline=True)
-    embed.add_field(name="Status:", value=user.status, inline=True)
-    embed.add_field(name="Highest Role:", value=user.top_role, inline=True)
-    embed.add_field(name="Joined:", value=user.joined_at, inline=True)
-    embed.set_thumbnail(url=user.avatar.url)
-    await ctx.send(embed=embed)
-
-
 #unban user 
 @client.command(help = "Unbans a user from the server")
 @commands.has_permissions(kick_members=True)

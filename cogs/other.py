@@ -41,7 +41,18 @@ class utilities(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    
+    #gets user info of user on the discord
+    @commands.command(aliases=["userinfo", "ui"] ,help = "Finds info about users on the discord.")
+    async def info(self,ctx, user: discord.Member):
+        embed = discord.Embed(title=f"{user}'s info", description=f"Here's {user}'s info", color=0x00ff00)
+        embed.add_field(name="Username:", value=user.name, inline=True)
+        embed.add_field(name="ID:", value=user.id, inline=True)
+        embed.add_field(name="Status:", value=user.status, inline=True)
+        embed.add_field(name="Highest Role:", value=user.top_role, inline=True)
+        embed.add_field(name="Joined Server:", value=user.joined_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
+        embed.add_field(name="Created Account:", value=user.created_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
+        embed.set_thumbnail(url=user.avatar.url)
+        await ctx.send(embed=embed)
 
 
     @commands.command(aliases=["channel_stats", "channel_health", "channel_info", "channel_information"])
