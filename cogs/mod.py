@@ -87,7 +87,7 @@ class Moderation(commands.Cog):
 
     @commands.command(hidden = True)
     @commands.check(mic)
-    async def pull(ctx):
+    async def pull(self, ctx):
         await ctx.send("it is updated remeber to reload :)") 
         os.system("git pull")
 
