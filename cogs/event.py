@@ -15,7 +15,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        cha = self.client.get_channel(925513395883606129)
+        cha = self.client.get_channel(925787897527926805)
         await cha.send(embed=discord.Embed(title="Join", description=f"Joined: {guild.name}"))
         await update_activity(self.client)
        
@@ -24,7 +24,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_remove(self,guild):
         await update_activity(self.client)
-        cha = self.client.get_channel(925513395883606129)
+        cha = self.client.get_channel(925787897527926805)
         await cha.send(embed=discord.Embed(title="Leave", description=f"Left: {guild.name}"))
 
 def setup(client):
