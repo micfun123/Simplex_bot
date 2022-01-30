@@ -59,7 +59,7 @@ async def hello(ctx):
     await ctx.send('Hi')
 
 
-@client.command()
+@client.command(aliases=["source"])
 async def contribute(ctx):
     await ctx.send('If you want to help can take a look here https://github.com/micfun123/Simplex_bot')
 
