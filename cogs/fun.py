@@ -48,7 +48,7 @@ class Fun(commands.Cog):
         await ctx.send(msg)
 
     @commands.command(Hidden=True)
-    async def say(self, ctx, *, text: str):
+    async def say(self, ctx, *, text):
         await ctx.message.delete()
         await ctx.send(text)
 
