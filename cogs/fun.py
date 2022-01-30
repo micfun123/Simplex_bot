@@ -1,3 +1,4 @@
+from tkinter import HIDDEN
 import discord
 import random
 from discord.ext import commands
@@ -45,6 +46,12 @@ class Fun(commands.Cog):
         calc = ne.evaluate(text)
         msg = int(calc)
         await ctx.send(msg)
+
+    @commands.command(Hidden=True)
+    async def say(self, ctx, *, text: str):
+        await ctx.message.delete()
+        await ctx.send(text)
+
 
 
     @commands.command(aliases=['rockpaperscissors'], help="Play Rock Paper Scissors")
