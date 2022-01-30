@@ -138,7 +138,7 @@ class Fun(commands.Cog):
                  "Approximately 10-20% of U.S. power outages are caused by squirrels."
                 ]
 
-        fact_file = open("/cogs/facts.txt", mode="r", encoding="utf8")
+        fact_file = open("/databases/facts.txt", mode="r", encoding="utf8")
         fact_file_facts = fact_file.read().split("\n")
         fact_file.close()
 
