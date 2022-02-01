@@ -7,6 +7,10 @@ import os
 def mic(ctx):
     return ctx.author.id == 481377376475938826
 
+def sid(ctx):
+    return ctx.author.id == 624076054969188363
+  
+
 cogs = []
 for i in os.listdir("cogs/"):
     if i == "__pycache__":
@@ -143,6 +147,14 @@ class Moderation(commands.Cog):
             else:
                 await ctx.message.delete()
             await channel.send(embed=discord.Embed(title="This channel is no longer under lockdown.", color=discord.Colour.orange()))
+
+
+    @commands.command()
+    @commands.check(mic)
+    async def logs(self, ctx):
+      file = discord.File("./other/log.txt")
+      await ctx.author.send(file=file)
+
 
 def setup(client):
     client.add_cog(Moderation(client))
