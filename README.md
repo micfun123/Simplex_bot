@@ -1,6 +1,6 @@
 # The Everything Discord Bot
 
-![](https://img.shields.io/codefactor/grade/github/micfun123/Simplex_bot?style=for-the-badge) 
+![](https://img.shields.io/codefactor/grade/github/repo/micfun123/Simplex_bot?style=for-the-badge) 
 
 This is a open source Disord bot for everyone to help contribute and use. Make a pull request and if its an improvement I will accept it.
 
