@@ -1,6 +1,6 @@
 # The Everything Discord Bot
 
-
+[![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
 
 This is a open source Disord bot for everyone to help contribute and use. Make a pull request and if its an improvement I will accept it.
 
