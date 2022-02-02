@@ -3,10 +3,21 @@ import discord
 from discord.ext import commands
 import json
 import os
-
+from os import listdir
+from os.path import isfile, join
+import datetime
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
+
+
+def log(log):
+    now = datetime.now()
+    timern = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    with open('./other/log.txt', 'a') as f:
+        f.write('\n')
+        f.write(f"{timern} | {log}")
 
   
 
@@ -88,27 +99,6 @@ class Moderation(commands.Cog):
         embeddm = discord.Embed(title=message)
         await member.send(embed=embeddm)
 
-    @commands.command(hidden = True)
-    @commands.check(micsid)
-    async def pull(self, ctx):
-        await ctx.send("it is updated remeber to reload :)") 
-        os.system("git pull")
-
-
-
-
-    @commands.command()
-    @commands.check(micsid)
-    async def load(self, ctx, extension):
-        self.client.load_extension(f"cogs.{extension}")
-        await ctx.send(f"The module {extension} has been loaded successfully!")
-
-
-    @commands.command()
-    @commands.check(micsid)
-    async def unload(self, ctx, extension):
-        self.client.unload_extension(f"cogs.{extension}")
-        await ctx.send(f"The module '{extension}' has been unloaded successfully!")
 
 
     @commands.command()
@@ -147,33 +137,7 @@ class Moderation(commands.Cog):
                 await ctx.message.delete()
             await channel.send(embed=discord.Embed(title="This channel is no longer under lockdown.", color=discord.Colour.orange()))
 
-    @commands.command(aliases=['dmr'])
-    @commands.check(micsid)
-    async def dmreply(self, ctx, *, msg):
-        if ctx.message.reference is None:
-          return
-        else:
-            await ctx.message.delete()
-            id = ctx.message.reference.message_id
-            id = await ctx.channel.fetch_message(id)
-            await id.reply(msg)
-            id = int(id.content)
-        person = await self.client.fetch_user(id)
-        await person.send(msg)
 
-    @commands.command()
-    @commands.check(micsid)
-    async def logs(self, ctx):
-      file = discord.File("./other/log.txt")
-      await ctx.author.send(file=file)
-
-    @commands.command()
-    @commands.check(micsid)
-    async def msgserver(self, ctx, id:int, *, message):
-        for guild in self.client.guilds:
-            if guild.id == id:
-                return await guild.text_channels[0].send(message)
-        await ctx.send("guild not found")
 
 def setup(client):
     client.add_cog(Moderation(client))
