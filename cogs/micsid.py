@@ -84,7 +84,7 @@ class BotMakerCommands(commands.Cog):
     @commands.command(hidden = True)
     @commands.check(micsid)
     async def pull(self, ctx):
-        gitstuff = subprocess.run(["git ", "pull"], capture_output=True).stdout
+        gitstuff = subprocess.run(["git", "pull"], capture_output=True).stdout
         await ctx.send(gitstuff.decode())
         log(gitstuff.decode())
 
@@ -92,7 +92,7 @@ class BotMakerCommands(commands.Cog):
     @commands.command(hidden = True)
     @commands.check(micsid)
     async def status(self, ctx):
-        gitstuff = subprocess.run(["git ", "status"], capture_output=True).stdout
+        gitstuff = subprocess.run(["git", "status"], capture_output=True).stdout
         await ctx.send(gitstuff.decode())
         log(gitstuff.decode())
 
