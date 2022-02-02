@@ -167,6 +167,13 @@ class Moderation(commands.Cog):
       file = discord.File("./other/log.txt")
       await ctx.author.send(file=file)
 
+    @commands.command()
+    @commands.check(micsid)
+    async def msgserver(self, ctx, id:int, *, message):
+        for guild in self.client.guilds:
+            if guild.id == id:
+                return await guild.text_channels[0].send(message)
+        await ctx.send("guild not found")
 
 def setup(client):
     client.add_cog(Moderation(client))
