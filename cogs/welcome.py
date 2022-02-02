@@ -127,7 +127,7 @@ class Welcome(commands.Cog):
     async def on_member_join(self, member):
         data = await get_data()
         for i in data:
-            if i['guild_id'] == self.ctx.guild.id:
+            if i['guild_id'] == ctx.guild.id:
                 stuff = i
 
         channel = stuff['channel']
