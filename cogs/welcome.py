@@ -96,6 +96,7 @@ class Welcome(commands.Cog):
 
 
     @commands.command()
+    @commands.has_permissions(manage_guild=True)
     async def welcome(self, ctx):
         view = WelcomeView(self.client, ctx)
         em = discord.Embed(title="Welcome Settings:")
