@@ -5,7 +5,8 @@ import json
 import os
 from os import listdir
 from os.path import isfile, join
-import datetime
+from datetime import datetime
+import subprocess
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -83,10 +84,17 @@ class BotMakerCommands(commands.Cog):
     @commands.command(hidden = True)
     @commands.check(micsid)
     async def pull(self, ctx):
-        await ctx.send("it is updated remeber to reload :)") 
-        os.system("git pull")
+        gitstuff = subprocess.run(["git ", "pull"], capture_output=True).stdout
+        await ctx.send(gitstuff.decode())
+        log(gitstuff.decode())
 
 
+    @commands.command(hidden = True)
+    @commands.check(micsid)
+    async def status(self, ctx):
+        gitstuff = subprocess.run(["git ", "status"], capture_output=True).stdout
+        await ctx.send(gitstuff.decode())
+        log(gitstuff.decode())
 
     @commands.command()
     @commands.check(micsid)
