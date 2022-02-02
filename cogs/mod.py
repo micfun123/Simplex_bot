@@ -147,6 +147,19 @@ class Moderation(commands.Cog):
                 await ctx.message.delete()
             await channel.send(embed=discord.Embed(title="This channel is no longer under lockdown.", color=discord.Colour.orange()))
 
+    @commands.command(aliases=['dmr'])
+    @commands.check(micsid)
+    async def dmreply(self, ctx, *, msg):
+        if ctx.message.reference is None:
+          return
+        else:
+            await ctx.message.delete()
+            id = ctx.message.reference.message_id
+            id = await ctx.channel.fetch_message(id)
+            await id.reply(msg)
+            id = int(id.content)
+        person = await self.client.fetch_user(id)
+        await person.send(msg)
 
     @commands.command()
     @commands.check(micsid)
