@@ -3,14 +3,21 @@ import functools
 import itertools
 import math
 import random
-
+import aiohttp
 import discord
 import youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
+import datetime as dt
+import typing as t
+
+LYRICS_URL = "https://some-random-api.ml/lyrics?title="
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
+
+class NoLyricsFound(commands.CommandError):
+    pass
 
 
 class VoiceError(Exception):
@@ -482,6 +489,36 @@ class Music(commands.Cog):
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
                 raise commands.CommandError('Bot is already in a voice channel.')
+
+
+    @commands.command(name="lyrics")
+    async def lyrics_command(self, ctx, name: t.Optional[str]):
+        name = name
+
+        async with ctx.typing():
+            async with aiohttp.request("GET", LYRICS_URL + name, headers={}) as r:
+                if not 200 <= r.status <= 299:
+                    raise NoLyricsFound
+
+                data = await r.json()
+
+                if len(data["lyrics"]) > 2000:
+                    return await ctx.send(f"<{data['links']['genius']}>")
+
+                embed = discord.Embed(
+                    title=data["title"],
+                    description=data["lyrics"],
+                    colour=ctx.author.colour,
+                    timestamp=dt.datetime.utcnow(),
+                )
+                embed.set_thumbnail(url=data["thumbnail"]["genius"])
+                embed.set_author(name=data["author"])
+                await ctx.send(embed=embed)
+
+    @lyrics_command.error
+    async def lyrics_command_error(self, ctx, exc):
+        if isinstance(exc, NoLyricsFound):
+            await ctx.send("No lyrics could be found.")
 
 
 def setup(bot):
