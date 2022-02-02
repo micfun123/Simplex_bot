@@ -6,13 +6,13 @@ import discord.ui
 
 
 async def get_data():
-    with open("./database/welcome.json") as f:
+    with open("./databases/welcome.json") as f:
         data = json.load(f)
     return data
 
 
 async def dump_data(data):
-    with open("./database/welcome.json", "w") as f:
+    with open("./databases/welcome.json", "w") as f:
         json.dump(data, f, indent=4)
 
 
