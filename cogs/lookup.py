@@ -1,6 +1,5 @@
 import imp
 from pydoc import describe
-from this import s
 from discord import Embed
 import wikipedia
 from discord.ext import commands
@@ -8,16 +7,9 @@ import json
 import os
 import discord
 import imp
-import traceback
 from tools import log
 
-def printError(error):
-    etype = type(error)
-    trace = error.__traceback__
-    lines = traceback.format_exception(etype, error, trace)
-    traceback_text = ''.join(lines)
-    print(traceback_text)
-    log(traceback_text)
+
 class lookup(commands.Cog):
     def __init__(self, client): 
         self.client = client 
