@@ -4,7 +4,7 @@ from discord.ext import commands
 import qrcode
 import numexpr as ne
 import numpy
-
+import aiohttp
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -110,7 +110,78 @@ class Fun(commands.Cog):
         await msg.add_reaction('👍')
         await msg.add_reaction('👎')
 
+    @commands.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
+    async def dog(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/dog')
+            dogjson = await request.json()
+            # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/dog')
+            factjson = await request2.json()
 
+        embed = discord.Embed(title="Doggo!", color=discord.Color.purple())
+        embed.set_image(url=dogjson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.send(embed=embed)
+
+    @commands.command(help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
+    async def cat(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/cat')
+            catjson = await request.json()
+        # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/cat')
+            factjson = await request2.json()
+
+        embed = discord.Embed(title="Cat!", color=discord.Color.purple())
+        embed.set_image(url=catjson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.send(embed=embed)
+
+
+    @commands.command(help = "It shows you a panda photo as well as a fact") #shows cat photo and fact
+    async def panda(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/panda')
+            Pandajson = await request.json()
+        # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/panda')
+            factjson = await request2.json()
+
+        embed = discord.Embed(title="Panda!", color=discord.Color.purple())
+        embed.set_image(url=Pandajson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.send(embed=embed)
+
+
+    @commands.command(help = "It shows you a koala photo as well as a fact") #shows cat photo and fact
+    async def koala(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/koala')
+            koalajson = await request.json()
+        # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/koala')
+            factjson = await request2.json()
+
+        embed = discord.Embed(title="koala!", color=discord.Color.purple())
+        embed.set_image(url=koalajson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.send(embed=embed)
+
+
+    @commands.command(help = "It shows you a fox photo as well as a fact") #shows cat photo and fact
+    async def fox(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/fox')
+            foxjson = await request.json()
+        # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/fox')
+            factjson = await request2.json()
+
+        embed = discord.Embed(title="fox!", color=discord.Color.purple())
+        embed.set_image(url=foxjson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.send(embed=embed)
 
 
 def setup(bot):

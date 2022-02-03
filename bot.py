@@ -92,33 +92,6 @@ async def _8ball(ctx, *, question):
                  "Its not looking so good"]
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
     
-@client.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
-async def dog(ctx):
-   async with aiohttp.ClientSession() as session:
-      request = await session.get('https://some-random-api.ml/img/dog')
-      dogjson = await request.json()
-      # This time we'll get the fact request as well!
-      request2 = await session.get('https://some-random-api.ml/facts/dog')
-      factjson = await request2.json()
-
-   embed = discord.Embed(title="Doggo!", color=discord.Color.purple())
-   embed.set_image(url=dogjson['link'])
-   embed.set_footer(text=factjson['fact'])
-   await ctx.send(embed=embed)
-
-@client.command(help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
-async def cat(ctx):
-   async with aiohttp.ClientSession() as session:
-      request = await session.get('https://some-random-api.ml/img/cat')
-      catjson = await request.json()
-      # This time we'll get the fact request as well!
-      request2 = await session.get('https://some-random-api.ml/facts/cat')
-      factjson = await request2.json()
-
-   embed = discord.Embed(title="Cat!", color=discord.Color.purple())
-   embed.set_image(url=catjson['link'])
-   embed.set_footer(text=factjson['fact'])
-   await ctx.send(embed=embed)
 
 
 @client.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
