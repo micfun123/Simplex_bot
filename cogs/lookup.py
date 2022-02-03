@@ -28,9 +28,9 @@ class lookup(commands.Cog):
     @commands.command()
     async def wiki(self, ctx, *, query):
         embed = Embed(title="Wikipedia", description="Searching for {}".format(query), color=0x00ff00)
-        page = wikipedia.summary(query, chars=1000)
+        page = wikipedia.summary(query, sentences=250)
         url = wikipedia.page(query).url
-        embed.add_field(name="Description", value=page)
+        embed.description = page
         embed.add_field(name="Link", value=url ,inline=False)
         await ctx.send(embed=embed)
        
