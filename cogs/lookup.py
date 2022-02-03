@@ -17,15 +17,18 @@ class lookup(commands.Cog):
 
 
 
-    @commands.command()
+    @commands.command(aliases=['wikipedia'])
     async def wiki(self, ctx, *, query):
         embed = Embed(title="Wikipedia", description="Searching for {}".format(query), color=0x00ff00)
-        page = wikipedia.summary(query, sentences=250)
+        page = wikipedia.summary(query, sentences=500)
         url = wikipedia.page(query).url
         embed.description = page
         embed.add_field(name="Link", value=url ,inline=False)
         await ctx.send(embed=embed)
        
+    @commands.command()
+    async def wikisearch(self, ctx, *, query):
+        await ctx.send(wikipedia.search(query))
 
 def setup(client):
     client.add_cog(lookup(client))
