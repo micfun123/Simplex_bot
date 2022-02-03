@@ -183,6 +183,20 @@ class Fun(commands.Cog):
         embed.set_footer(text=factjson['fact'])
         await ctx.send(embed=embed)
 
+    @commands.command(help = "It shows you a bird photo as well as a fact") #shows cat photo and fact
+    async def bird(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/birb')
+            birdjson = await request.json()
+        # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/bird')
+            factjson = await request2.json()
+
+        embed = discord.Embed(title="bird!", color=discord.Color.purple())
+        embed.set_image(url=birdjson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
