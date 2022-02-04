@@ -29,7 +29,7 @@ class utilities(commands.Cog):
         self.client = client 
     
 
-    @commands.command(aliases=['sug'])
+    @commands.command(aliases=['sug', 'suggestion'])
     async def suggest(self, ctx, *, suggestion):
         sid = await self.client.fetch_channel(908969607266730005)
         await sid.send(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
