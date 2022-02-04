@@ -198,5 +198,23 @@ class Fun(commands.Cog):
         await ctx.send(embed=embed)
 
 
+    @commands.command(aliases=["8ball", "eightball", "eight_ball"]) #8ball game
+    async def _8ball(self, ctx, *, question):
+        responses = ['magic eight ball maintains Signs point to yes.',
+                 'magicball affirms My reply is no.',
+                 'magic ball answers Signs point to yes.',
+                 'magicball affirms Yes definitely.',
+                 'magicball affirms Yes.',
+                 '8 ball magic said Most likely.',
+                 'magic ball answers Very doubtful.',
+                 'magic 8 ball answers Without a doubt.',
+                 'mystic eight ball said Most likely.',
+                 "magic ball answers Don't count on it.",
+                 'Magic ball says 100% No',
+                 'Magic ball does not know have you tryed google?',
+                 "Its not looking so good"]
+        await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
+    
+
 def setup(bot):
     bot.add_cog(Fun(bot))

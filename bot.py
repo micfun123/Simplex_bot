@@ -9,12 +9,20 @@ import json
 import os
 from dotenv import load_dotenv
 from easy_pil import Editor, Canvas, Font, load_image, Text
+from pygame import HIDDEN
 
 load_dotenv()
 
 
 def mic(ctx):
     return ctx.author.id == 481377376475938826
+
+
+def get_prefix(client, message): ##first we define get_prefix
+    with open('prefixes.json', 'r') as f: ##we open and read the prefixes.json, assuming it's in the same file
+        prefixes = json.load(f) #load the json as prefixes
+    return prefixes[str(message.guild.id)] #recieve the prefix for the guild id given
+
 
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 from discord.ext import commands, tasks
@@ -25,12 +33,50 @@ intents.members = True
 intents.guilds=True
 intents.all
 
-client = commands.Bot(command_prefix = '.', intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False))
+client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False))
 
 
 async def update_activity(client):
     await client.change_presence(activity=discord.Game(f"On {len(client.guilds)} servers! | .help"))
     print("Updated presence")
+
+
+@client.event
+async def on_guild_join(guild): #when the bot joins the guild
+    with open('prefixes.json', 'r') as f: #read the prefix.json file
+        prefixes = json.load(f) #load the json file
+
+    prefixes[str(guild.id)] = '.'#default prefix
+
+    with open('prefixes.json', 'w') as f: #write in the prefix.json "message.guild.id": "."
+        json.dump(prefixes, f, indent=4) #the indent is to make everything look a bit neater
+
+@client.event
+async def on_guild_remove(guild): #when the bot is removed from the guild
+    with open('prefixes.json', 'r') as f: #read the file
+        prefixes = json.load(f)
+
+    prefixes.pop(str(guild.id)) #find the guild.id that bot was removed from
+
+    with open('prefixes.json', 'w') as f: #deletes the guild.id as well as its prefix
+        json.dump(prefixes, f, indent=4)
+
+
+@client.command(pass_context=True)
+async def changeprefix(ctx, prefix): #command: bl!changeprefix ...
+    with open('prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+
+    prefixes[str(ctx.guild.id)] = prefix
+
+    with open('prefixes.json', 'w') as f: #writes the new prefix into the .json
+        json.dump(prefixes, f, indent=4)
+
+    await ctx.send(f'Prefix changed to: {prefix}') #confirms the prefix it's been changed to
+#next step completely optional: changes bot nickname to also have prefix in the nickname
+    name=f'{prefix}BotBot'
+
+
 
 @client.event
 async def on_ready():
@@ -39,6 +85,19 @@ async def on_ready():
     await update_activity(client)
     channel = client.get_channel(925787897527926805)
     await channel.send("Online")
+
+
+@client.command(hidden = True)
+@commands.check(mic)
+async def prefix(ctx):
+    with open('prefixes.json', 'r') as f: 
+        prefixes = json.load(f)
+
+    for guild in client.guilds:
+               prefixes[str(guild.id)] = '.'
+    
+    with open('prefixes.json', 'w') as f: 
+            json.dump(prefixes, f, indent=4)
 
 
 @client.command()
@@ -75,23 +134,6 @@ async def link(ctx):
 async def server(ctx):
     await ctx.send('Want to join the sever join here https://discord.gg/d2gjWqFsTP ')
 
-@client.command(aliases=["8ball", "eightball", "eight_ball"]) #8ball game
-async def _8ball(ctx, *, question):
-    responses = ['magic eight ball maintains Signs point to yes.',
-                 'magicball affirms My reply is no.',
-                 'magic ball answers Signs point to yes.',
-                 'magicball affirms Yes definitely.',
-                 'magicball affirms Yes.',
-                 '8 ball magic said Most likely.',
-                 'magic ball answers Very doubtful.',
-                 'magic 8 ball answers Without a doubt.',
-                 'mystic eight ball said Most likely.',
-                 "magic ball answers Don't count on it.",
-                 'Magic ball says 100% No',
-                 'Magic ball does not know have you tryed google?',
-                 "Its not looking so good"]
-    await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
-    
 
 
 @client.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
