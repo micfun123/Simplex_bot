@@ -9,7 +9,6 @@ import json
 import os
 from dotenv import load_dotenv
 from easy_pil import Editor, Canvas, Font, load_image, Text
-from pygame import HIDDEN
 
 load_dotenv()
 
