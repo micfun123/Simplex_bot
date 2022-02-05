@@ -100,7 +100,11 @@ class BotMakerCommands(commands.Cog):
     @commands.check(micsid)
     async def load(self, ctx, extension):
         self.client.load_extension(f"cogs.{extension}")
-        await ctx.send(f"The module {extension} has been loaded successfully!")
+        embed = discord.Embed(
+            title='Load', description=f'{extension} successfully loaded', color=0xff00c8)
+        await ctx.send(embed=embed)
+
+    
 
 
     @commands.command()
