@@ -5,6 +5,7 @@ import qrcode
 import numexpr as ne
 import numpy
 import aiohttp
+
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -47,6 +48,7 @@ class Fun(commands.Cog):
         await ctx.send(msg)
 
     @commands.command(Hidden=True)
+    @commands.has_guild_permissions(administrator=True)
     async def say(self, ctx, *, text):
         await ctx.message.delete()
         await ctx.send(text)
