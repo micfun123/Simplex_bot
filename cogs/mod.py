@@ -55,7 +55,7 @@ class Moderation(commands.Cog):
 
     @commands.has_permissions(kick_members=True)  #kicks a person
     @commands.command(help = "kicks a person from server")
-    async def kick(ctx, user: discord.Member, *, reason="No reason provided"):
+    async def kick(self, ctx, user: discord.Member, *, reason="No reason provided"):
         await user.kick(reason=reason)
         kick = discord.Embed(title=f":boot: Kicked {user.name}!", description=f"Reason: {reason}\nBy: {ctx.author.mention}")
         await ctx.message.delete()
@@ -66,7 +66,7 @@ class Moderation(commands.Cog):
 
     @commands.has_permissions(kick_members=True)  #warn a user with Dms
     @commands.command(help = "Dms the User with a warning")
-    async def warn(ctx, user: discord.User, *, message=None):
+    async def warn(self, ctx, user: discord.User, *, message=None):
         message = message or "This Message is a warning"
         await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
 
