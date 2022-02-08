@@ -6,13 +6,13 @@ import discord.ui
 
 
 async def get_data():
-    with open("./database/welcome.json") as f:
+    with open("./databases/welcome.json") as f:
         data = json.load(f)
     return data
 
 
 async def dump_data(data):
-    with open("./database/welcome.json", "w") as f:
+    with open("./databases/welcome.json", "w") as f:
         json.dump(data, f, indent=4)
 
 
@@ -96,6 +96,7 @@ class Welcome(commands.Cog):
 
 
     @commands.command()
+    @commands.has_permissions(manage_guild=True)
     async def welcome(self, ctx):
         view = WelcomeView(self.client, ctx)
         em = discord.Embed(title="Welcome Settings:")
@@ -127,7 +128,7 @@ class Welcome(commands.Cog):
     async def on_member_join(self, member):
         data = await get_data()
         for i in data:
-            if i['guild_id'] == self.ctx.guild.id:
+            if i['guild_id'] == member.guild.id:
                 stuff = i
 
         channel = stuff['channel']

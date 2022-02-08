@@ -4,7 +4,7 @@
 
 This is a open source Disord bot for everyone to help contribute and use. Make a pull request and if its an improvement I will accept it.
 
-The goal is to provides numerous utilities and other tools / entertainment to help keep the server running like a well-oiled machine. If you want to invite the bot you can [here](https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=bot)
+The goal is to provides numerous utilities and other tools / entertainment to help keep the server running like a well-oiled machine. If you want to invite the bot you can [here](https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=bot%20applications.commands)
 
 Want to join the discord? [Link](https://discord.gg/d2gjWqFsTP)  List of suggestions here
 

@@ -3,12 +3,22 @@ import discord
 from discord.ext import commands
 import json
 import os
+from os import listdir
+from os.path import isfile, join
+import datetime
 
-def mic(ctx):
-    return ctx.author.id == 481377376475938826
+def micsid(ctx):
+    return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
 
-def sid(ctx):
-    return ctx.author.id == 624076054969188363
+
+def log(log):
+    now = datetime.now()
+    timern = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    with open('./other/log.txt', 'a') as f:
+        f.write('\n')
+        f.write(f"{timern} | {log}")
+
   
 
 cogs = []
@@ -68,7 +78,7 @@ class Moderation(commands.Cog):
         await ctx.send("Removed")
         
     @commands.command()
-    @commands.check(mic)
+    @commands.check(micsid)
     async def reload(self, ctx, extension):
         self.client.reload_extension(f"cogs.{extension}")
         embed = discord.Embed(
@@ -76,40 +86,19 @@ class Moderation(commands.Cog):
         await ctx.send(embed=embed)
   
     @commands.command()
-    @commands.check(mic)
+    @commands.check(micsid)
     async def serverlist(self, ctx):
         servers = list(self.client.guilds)
         await ctx.send(f"Connected on {str(len(servers))} servers:")
         await ctx.send('\n'.join(guild.name+' | '+str(guild.member_count) +' | ' for guild in servers))
 
     @commands.command(aliases=['sendmsg'])
-    @commands.check(mic)
+    @commands.check(micsid)
     async def dm(self, ctx, member: discord.Member, *, message):
         await ctx.message.delete()
         embeddm = discord.Embed(title=message)
         await member.send(embed=embeddm)
 
-    @commands.command(hidden = True)
-    @commands.check(mic)
-    async def pull(self, ctx):
-        await ctx.send("it is updated remeber to reload :)") 
-        os.system("git pull")
-
-
-
-
-    @commands.command()
-    @commands.check(mic)
-    async def load(self, ctx, extension):
-        self.client.load_extension(f"cogs.{extension}")
-        await ctx.send(f"The module {extension} has been loaded successfully!")
-
-
-    @commands.command()
-    @commands.check(mic)
-    async def unload(self, ctx, extension):
-        self.client.unload_extension(f"cogs.{extension}")
-        await ctx.send(f"The module '{extension}' has been unloaded successfully!")
 
 
     @commands.command()
@@ -148,12 +137,6 @@ class Moderation(commands.Cog):
                 await ctx.message.delete()
             await channel.send(embed=discord.Embed(title="This channel is no longer under lockdown.", color=discord.Colour.orange()))
 
-
-    @commands.command()
-    @commands.check(mic)
-    async def logs(self, ctx):
-      file = discord.File("./other/log.txt")
-      await ctx.author.send(file=file)
 
 
 def setup(client):
