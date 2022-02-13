@@ -3,10 +3,10 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
 
 <p align="center">
-	<a href="https://discordapp.com/oauth2/authorize?permissions=314432&scope=bot&client_id=213476188037971968">
+	<a href="https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=1644972474359&scope=applications.commands%20bot">
 		<img alt="Servers" src="https://img.shields.io/badge/dynamic/json.svg?style=for-the-badge&label=servers&url=http%3A%2F%2Fdillerm.io%2Fdata%2Fmangobyte%2Fshieldstats.json&query=%24.servers&colorB=#4c1">
 	</a>
-	<a href="https://discordapp.com/oauth2/authorize?permissions=314432&scope=bot&client_id=213476188037971968">
+	<a href="https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=1644972474359&scope=applications.commands%20bot">
 		<img alt="Registered Users" src="https://img.shields.io/badge/dynamic/json.svg?style=for-the-badge&label=registered%20users&url=http%3A%2F%2Fdillerm.io%2Fdata%2Fmangobyte%2Fshieldstats.json&query=%24.registered_users&colorB=#4c1">
 	</a>
 	<br>
