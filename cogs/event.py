@@ -139,6 +139,7 @@ class Events(commands.Cog):
         elif isinstance(error, discord.errors.Forbidden):
             await ctx.message.add_reaction("📛")
             message = "Bot doesn't have the permissions needed."
+            log(message)
         # notowner
         elif isinstance(error, commands.NotOwner):
             await ctx.message.add_reaction("📛")
