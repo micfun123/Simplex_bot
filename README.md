@@ -40,6 +40,8 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 |    currentgames| currentgames        | Lists games currently being played  |
 |    poll| poll <question>        | Interactively creates a poll with the following question.  |
 |    pokidex | pokedex <name>| Finds info on a pokemon  |
+ |    clear     | clear [amount]        | Delete messages   |
+|    suggest     | suggest [suggestion]        | Suggest something to be developed   |
 
 
 Github command list will update soon
