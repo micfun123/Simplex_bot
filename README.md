@@ -29,10 +29,17 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 # Commands
 
 
+
 |     Name      |     Usage     | Description | 
 | ------------- | ------------- | --------    |
 |    Changeprefix     | changeprefix <prefix>   | Changes the bot prefix for the server   |
 |    Rank  | rank [member]      | Shows yours or another users rank   |
 |    leaderboard     | leaderboard   | Shows the servers rank leaderboard        |
+|    info     | info [@user]        | Returns info on a user   |
+|    Wiki            | wiki <query>        | Gives a summary of a wiki page   |
+|    currentgames| currentgames        | Lists games currently being played  |
+|    poll| poll <question>        | Interactively creates a poll with the following question.  |
+|    pokidex | pokedex <name>| Finds info on a pokemon  |
 
-coming soon
+
+Github command list will update soon
