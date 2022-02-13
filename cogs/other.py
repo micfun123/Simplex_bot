@@ -130,5 +130,14 @@ class utilities(commands.Cog):
         em.add_field(name="Commands", value=f"{len(self.client.commands)} of commands")
         await ctx.send(embed = em)
 
+    @commands.command(aliases=["av", "pfp"])
+    async def avatar(self, ctx, *, member: discord.Member = None):
+        if not member:member=ctx.message.author
+
+        message = discord.Embed(title=str(member), color=discord.Colour.orange())
+        message.set_image(url=member.avatar.url)
+
+        await ctx.send(embed=message)
+
 def setup(bot):
     bot.add_cog(utilities(bot))
