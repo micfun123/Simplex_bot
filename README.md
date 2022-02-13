@@ -2,6 +2,20 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
 
+<p align="center">
+	<a href="https://discordapp.com/oauth2/authorize?permissions=314432&scope=bot&client_id=213476188037971968">
+		<img alt="Servers" src="https://img.shields.io/badge/dynamic/json.svg?style=for-the-badge&label=servers&url=http%3A%2F%2Fdillerm.io%2Fdata%2Fmangobyte%2Fshieldstats.json&query=%24.servers&colorB=#4c1">
+	</a>
+	<a href="https://discordapp.com/oauth2/authorize?permissions=314432&scope=bot&client_id=213476188037971968">
+		<img alt="Registered Users" src="https://img.shields.io/badge/dynamic/json.svg?style=for-the-badge&label=registered%20users&url=http%3A%2F%2Fdillerm.io%2Fdata%2Fmangobyte%2Fshieldstats.json&query=%24.registered_users&colorB=#4c1">
+	</a>
+	<br>
+	<a href="https://discord.gg/ZYGygsPm5V">
+		<img alt="Discord Help Server" src="https://discordapp.com/api/guilds/908963077125459989/embed.png?style=banner2">
+	</a>
+</p>
+
+
 This is a open source Disord bot for everyone to help contribute and use. Make a pull request and if its an improvement I will accept it.
 
 The goal is to provides numerous utilities and other tools / entertainment to help keep the server running like a well-oiled machine. If you want to invite the bot you can [here](https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=bot%20applications.commands)
