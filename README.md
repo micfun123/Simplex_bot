@@ -2,7 +2,7 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
 
-<iframe src="https://discord.com/widget?id=908963077125459989&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
 
 
 This is a open source Disord bot for everyone to help contribute and use. Make a pull request and if its an improvement I will accept it.
