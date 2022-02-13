@@ -11,10 +11,12 @@
 	</a>
 	<br>
 	<a href="https://discord.gg/ZYGygsPm5V">
-		<img alt="Discord Help Server" src="https://discordapp.com/api/guilds/908963077125459989/embed.png?style=banner2">
+		<img alt="Discord Help Server" src="https://discord.com/api/guilds/908963077125459989/embed.png?style=banner2">
 		
-	 <iframe src="https://discord.com/widget?id=908963077125459989&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
 	</a>
+	
+	<iframe src="https://discord.com/widget?id=908963077125459989&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
 </p>
 
 
