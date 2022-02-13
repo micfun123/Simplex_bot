@@ -42,6 +42,43 @@ class Slash(commands.Cog):
     async def ping(self, ctx):
         await ctx.respond(f"{round(self.client.latency * 1000)}ms")
 
+    @commands.slash_command(name="rps", description="Plays rock paper scissors with the bot")
+    async def rps(self, ctx, rps: str):
+        choices = ["rock", "paper", "scissors"]
+        cpu_choice = random.choice(choices)
+        em = discord.Embed(title="Rock Paper Scissors")
+        rps = rps.lower()
+        if rps == 'rock':
+            if cpu_choice == 'rock':
+                em.description = "It's a tie!"
+            elif cpu_choice == 'scissors':
+                em.description = "You win!"
+            elif cpu_choice == 'paper':
+                em.description = "You lose!"
+
+        elif rps == 'paper':
+            if cpu_choice == 'paper':
+                em.description = "It's a tie!"
+            elif cpu_choice == 'rock':
+                em.description = "You win!"
+            elif cpu_choice == 'scissors':
+                em.description = "You lose!"
+
+        elif rps == 'scissors':
+            if cpu_choice == 'scissors':
+                em.description = "It's a tie!"
+            elif cpu_choice == 'paper':
+                em.description = "You win!"
+            elif cpu_choice == 'rock':
+                em.description = "You lose!"
+
+        else:
+            em.description = "Invalid Input"
+
+        em.add_field(name="Your Choice", value=rps)
+        em.add_field(name="Bot Choice", value=cpu_choice)
+        await ctx.respond(embed=em)
+
 
     
     @slash_command(name="reload", description="reloads a cog")
