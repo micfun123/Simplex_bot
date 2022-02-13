@@ -5,6 +5,8 @@ import qrcode
 import numexpr as ne
 import numpy
 import aiohttp
+import asyncio
+import datetime
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -217,6 +219,42 @@ class Fun(commands.Cog):
                  "Its not looking so good"]
         await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
     
+    
+    @commands.command(aliases=['pie'])
+    async def catch(self,ctx):
+        """Catch the pie, by reacting. Dont't drop it!"""
+        em = discord.Embed(color=discord.Color.orange())
+        em.add_field(name='🥧  __Catch The Pie Game__  🥧', value='To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nHere we go in 3...', inline=False)
+        pie1 = await ctx.send(embed=em)
+
+        await asyncio.sleep(1)
+
+        em = discord.Embed(color=discord.Color.orange())
+        em.add_field(name='🥧  __Catch The Pie Game__  🥧', value='To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nHere we go in 2..', inline=False)
+        await pie1.edit(embed=em)
+
+        await asyncio.sleep(1)
+
+        em = discord.Embed(color=discord.Color.orange())
+        em.add_field(name='🥧  __Catch The Pie Game__  🥧', value='To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nHere we go in 1.', inline=False)
+        await pie1.edit(embed=em)
+
+        await asyncio.sleep(1)
+        await pie1.add_reaction('🥧')
+
+        def check(reaction, user):
+            self.reacted = reaction.emoji
+            return user == ctx.author and str(reaction.emoji)
+
+        before_wait = datetime.datetime.now()
+        reaction, user = await self.bot.wait_for('reaction_add', timeout=30.0, check=check)
+        after_wait = datetime.datetime.now()
+        time_delta = after_wait - before_wait
+        time_taken = time_delta.total_seconds()
+
+        em = discord.Embed(color=discord.Color.orange())
+        em.add_field(name='🥧  __Catch The Pie Game__  🥧', value=f'To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nYou caught it in **{round(time_taken, 3)} seconds**', inline=False)
+        await pie1.edit(embed=em)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
