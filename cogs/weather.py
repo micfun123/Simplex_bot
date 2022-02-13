@@ -3,7 +3,7 @@ from datetime import datetime
 from time import sleep
 from geopy.geocoders import nominatim
 from pip._vendor.requests import structures
-from pip._vendor.urllib3.util import url
+
 import time
 import geopy
 import requests
