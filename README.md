@@ -31,6 +31,8 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 
 |     Name      |     Usage     | Description | 
 | ------------- | ------------- | --------    |
-|    changeprefix     | changeprefix <prefix>   | Changes the bot prefix for the server   |
+|    Changeprefix     | changeprefix <prefix>   | Changes the bot prefix for the server   |
+|    Rank  | rank [member]      | Shows yours or another users rank   |
+|    leaderboard     | leaderboard   | Shows the servers rank leaderboard        |
 
 coming soon
