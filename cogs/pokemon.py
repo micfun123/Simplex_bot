@@ -13,7 +13,7 @@ class pokemon(commands.Cog):
         self.client = client
         self.first_move = True
 
-    @commands.command(aliases=['pokedex'])
+    @commands.command(aliases=['pokedex'], help = "This will show you the pokedex of the pokemon", description="Shows you the pokedex of the pokemon")	
     async def pokidex(self, ctx, *, name):
         if len(name.split(" ")) == 1:
             try:
