@@ -28,4 +28,9 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 
 # Commands
 
+
+|     Name      |     Usage     | Description | 
+| ------------- | ------------- | --------    |
+|    changeprefix     | changeprefix <prefix>   | Changes the bot prefix for the server   |
+
 coming soon
