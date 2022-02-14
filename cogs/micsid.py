@@ -117,7 +117,7 @@ class BotMakerCommands(commands.Cog):
     @commands.command(hidden = True)
     @commands.check(micsid)
     async def newrankdb(self,ctx):
-        DiscordLevelingSystem.create_database_file(r'databases/')
+        DiscordLevelingSystem.create_database_file(r'databases')
 
 
 
