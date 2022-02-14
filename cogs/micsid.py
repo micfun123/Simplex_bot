@@ -7,6 +7,7 @@ from os import listdir
 from os.path import isfile, join
 from datetime import datetime
 import subprocess
+from discordLevelingSystem import DiscordLevelingSystem
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -112,6 +113,15 @@ class BotMakerCommands(commands.Cog):
     async def unload(self, ctx, extension):
         self.client.unload_extension(f"cogs.{extension}")
         await ctx.send(f"The module '{extension}' has been unloaded successfully!")
+
+    @commands.command(hidden = True)
+    @commands.check(micsid)
+    async def newrankdb(self, ctx, extension):
+        DiscordLevelingSystem.create_database_file(r'databases')
+
+
+
+    
 
 
 
