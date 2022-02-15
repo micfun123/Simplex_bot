@@ -114,10 +114,6 @@ class BotMakerCommands(commands.Cog):
         self.client.unload_extension(f"cogs.{extension}")
         await ctx.send(f"The module '{extension}' has been unloaded successfully!")
 
-    @commands.command(hidden = True)
-    @commands.check(micsid)
-    async def newrankdb(self,ctx):
-        DiscordLevelingSystem.create_database_file(r'databases')
 
 
 
