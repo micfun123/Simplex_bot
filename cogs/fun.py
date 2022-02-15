@@ -1,3 +1,4 @@
+from ast import alias
 import discord
 import random
 from discord.ext import commands
@@ -248,7 +249,7 @@ class Fun(commands.Cog):
 
 
     
-    @commands.command()
+    @commands.command(aliases=['hack'])
     async def hecker(self, ctx, member: discord.Member):
         """Hack someone and get their details."""
         used_words = ['Nerd','Sucker','Noob','Sup','Yo','Wassup','Nab','Nub','fool','stupid','b1tch','fvck','idiot']
