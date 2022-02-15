@@ -32,7 +32,7 @@ intents.members = True
 intents.guilds=True
 intents.all
 
-client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False))
+client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False), help_command=None)
 
 
 async def update_activity(client):
@@ -346,20 +346,6 @@ async def leaderboard(ctx):
         break 
     await ctx.send(embed=em)
     # show the leaderboard whichever way you'd like
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return  # if bot - no
-
-    if isinstance(message.channel, discord.DMChannel):
-        cha = await client.fetch_channel(935891510367494154)
-        em = discord.Embed(
-            title="New DM", description=f"From {message.author.name}")
-        em.add_field(name="Content", value=f"{message.content}")
-        msg = await cha.send(content=f"{message.author.id}", embed=em)
-    await client.process_commands(message)
-
     
     
 TOKEN = os.getenv("DISCORD_TOKEN")
