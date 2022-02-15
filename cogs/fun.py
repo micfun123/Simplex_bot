@@ -246,5 +246,39 @@ class Fun(commands.Cog):
         em.add_field(name='🥧  __Catch The Pie Game__  🥧', value=f'To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nYou caught it in **{round(time_taken, 5)} seconds**', inline=False)
         await pie1.edit(embed=em)
 
+
+    
+    @commands.command()
+    async def hecker(self, ctx, member: discord.Member):
+        """Hack someone and get their details."""
+        used_words = ['Nerd','Sucker','Noob','Sup','Yo','Wassup','Nab','Nub','fool','stupid','b1tch','fvck','idiot']
+        mails = ['@gmail.com','@hotmail.com','@yahoo.com']
+
+        hacking = await ctx.send(f"Hacking {member.name}....")
+        await asyncio.sleep(1.55)
+        await hacking.edit(content='Finding info....')
+        await asyncio.sleep(1.55)
+        await hacking.edit(content=f"Discord email address: {member.name}{random.choice(mails)}")
+        await asyncio.sleep(2)
+        await hacking.edit(content=f"Password: x2yz{member.name}xxy65")
+        await asyncio.sleep(2)
+        await hacking.edit(content=f'Most used words: {random.choice(used_words)}')
+        await asyncio.sleep(1.55)
+        await hacking.edit(content='IP address: 127.0.0.1:50')
+        await asyncio.sleep(1.55)
+        await hacking.edit(content='Selling information to the government....')
+        await asyncio.sleep(2)
+        await hacking.edit(content=f'Reporting {member.name} to Discord for violating ToS')
+        await asyncio.sleep(2)
+        await hacking.edit(content='Hacking medical records.....')
+        await asyncio.sleep(1.55)
+        await hacking.edit(content=f"{ctx.author.mention} successfully hacked {member.mention}")
+        await ctx.send("The ultimate, totally real hacking has been completed!")
+
+    @commands.command(aliases=["ss"])
+    async def screenshot(self, ctx, *, url):
+        """Takes a screenshot from a given URL."""
+        await ctx.send(f"https://image.thum.io/get/https://{url}")
+
 def setup(bot):
     bot.add_cog(Fun(bot))
