@@ -222,8 +222,7 @@ lvl = DiscordLevelingSystem(rate=1, per=60, level_up_announcement=announcement)
 lvl.connect_to_database_file(r'databases/DiscordLevelingSystem.db')
 
 async def level_on(guild):
-    guild_id = guild.id
-    guild_id = str(guild_id)
+    guild_id = str(guild)
 
     with open("databases/leveling.json") as f:
         data = json.load(f)
