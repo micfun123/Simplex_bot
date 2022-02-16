@@ -221,9 +221,28 @@ announcement = LevelUpAnnouncement(lvlembed)
 lvl = DiscordLevelingSystem(rate=1, per=60, level_up_announcement=announcement)
 lvl.connect_to_database_file(r'databases/DiscordLevelingSystem.db')
 
+async def level_on(guild):
+    guild_id = str(guild.id)
+
+    with open("leveling.json") as f:
+        data = json.load(f)
+
+    if guild_id not in data:
+        data[guild_id] = True
+        return True
+
+    if data[guild_id]:
+        return True
+        
+    else:
+        return False
+    
+
 @client.event
 async def on_message(message):
-    await lvl.award_xp(amount=15, message=message)
+    level_toggle =  await level_on(message.guild.id)
+    if level_toggle:
+        await lvl.award_xp(amount=15, message=message)
     await client.process_commands(message)
 
 @client.command(aliases=['lvl'])
