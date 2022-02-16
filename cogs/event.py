@@ -155,6 +155,6 @@ class Events(commands.Cog):
             raise error
             
 
-def setup(bot):
-    bot.add_cog(Events(bot))
+def setup(client):
+    client.add_cog(Events(client))
 
