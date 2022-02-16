@@ -240,8 +240,9 @@ async def level_on(guild):
         return False
     
 @client.command()
+@commands.has_permissions(adminstrator=True)
 async def toggle_leveling(ctx):
-    
+
     with open("databases/leveling.json") as f:
         data = json.load(f)
     if str(ctx.guild.id) not in data:
