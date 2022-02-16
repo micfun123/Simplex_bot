@@ -122,6 +122,7 @@ class utilities(commands.Cog):
         for i in list(self.client.get_all_members()):
             mlist.append(i.name)
         em.add_field(inline = False,name="User Count", value=len(mlist))
+        em.add_field(inline = False,name="Active users", value=f"{len(set(mlist))}")
         em.add_field(inline = False,name="Ping", value=f"{round(self.client.latency * 1000)}ms")
         em.set_footer(text="Made by the Simplex Dev Team")
         em.add_field(name = 'CPU Usage', value = f'{psutil.cpu_percent()}%', inline = False)
@@ -129,6 +130,7 @@ class utilities(commands.Cog):
         em.add_field(name = 'Available Memory', value = f'{round(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)}%', inline = False)
         em.add_field(name="Python code", value=f"{get_lines()} of code",inline = False)
         em.add_field(name="Commands", value=f"{len(self.client.commands)} of commands")
+
         await ctx.send(embed = em)
 
     @commands.command(aliases=["av", "pfp"])
