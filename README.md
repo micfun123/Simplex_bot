@@ -50,6 +50,19 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 | setcountchannel | setcountchannel <#channel> | sets up counting | 
 | countingoff  | countingoff  | Disable counting | 
 | numrn | numrn | Shows current counting number | 
+| ascii | ascii <text> | Makes Ascii art of the text | 
+| slantascii | slantascii <text> | Makes Slanted Ascii art of text | 
+| calc | calc <Maths and more maths> | Its a calculator | 
+|  catch |  catch | Reaction time game | 
+| coinflip | coinflip | Flips a coin | 
+| screenshot | screenshot <www.onwards> | Takes a screen shot and posts the photo
+|  qrcode  |  qrcode <thing you want to qr code> | Makes a QR code
+| lockdown | lockdown  | Stops non administrator talking in the channel | 
+| reactrole | reactrole <emoji> <role> <message> | makes a reaction role | 
+| removereactions | removereactions <id> | remove the reactions on that message | 
+| kick | Kick <user> [Reason, no reason provided] | Kicks the user and Dms them the reason | 
+ 
+
 
 
 
