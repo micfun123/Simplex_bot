@@ -229,6 +229,8 @@ async def level_on(guild):
 
     if guild_id not in data:
         data[guild_id] = True
+        with open("leveling.json", 'w') as f:
+            json.dump(data, f, indent=4)
         return True
 
     if data[guild_id]:
@@ -237,7 +239,22 @@ async def level_on(guild):
     else:
         return False
     
+@client.command()
+async def toggle_leveling(ctx, toggle:str):
+    if toggle.lower() != "yes" or toggle.lower() != "no":
+        return await ctx.send("Only 2 choices: Yes or no")
+    with open("leveling.json") as f:
+        data = json.load(f)
+    if toggle.lower() == "yes":
+        data[str(ctx.guild.id)] = True
+        await ctx.send("Leveling On")
+    else:
+        data[str(ctx.guild.id)] = False
+        await ctx.send("Leveling Off")
+    with open("leveling.json", 'w') as f:
+        json.dump(data, f, indent=4)
 
+    
 @client.event
 async def on_message(message):
     level_toggle =  await level_on(message.guild.id)
