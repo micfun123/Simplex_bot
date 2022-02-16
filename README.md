@@ -42,6 +42,7 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 |    pokidex | pokedex <name>| Finds info on a pokemon  |
  |    clear     | clear [amount]        | Delete messages   |
 |    suggest     | suggest [suggestion]        | Suggest something to be developed   |
+| Bored     | bored | Gives you some ideas to cure your boredom |
 
 
 Github command list will update soon

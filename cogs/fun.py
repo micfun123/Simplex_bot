@@ -9,6 +9,7 @@ import aiohttp
 import asyncio
 import datetime
 from random import randrange
+import requests
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -280,6 +281,34 @@ class Fun(commands.Cog):
     async def screenshot(self, ctx, *, url):
         """Takes a screenshot from a given URL."""
         await ctx.send(f"https://image.thum.io/get/https://{url}")
+
+
+    @commands.command()
+    async def bored(self,ctx):
+        BASE_URL = "https://www.boredapi.com/api/activity?"
+        response = requests.get(BASE_URL)
+        if response.status_code == 200:
+            data = response.json()
+            activity = data['activity']
+            accessibility = data['accessibility']
+            type = data['type']
+            participants = data['participants']
+            price = data['price']
+        
+
+            e = discord.Embed(
+                title=f"If your bored, you should try {activity}",
+                color=discord.Colour.blue() )
+            e.add_field(name="Accessibility", value=accessibility)
+            e.add_field(name="Type", value=type)
+            e.add_field(name="Participants", value=participants)
+            e.add_field(name="Price", value=price)
+            await ctx.send(embed=e)
+        
+        else:
+            # showing the error message
+            await ctx.send("I've had a connection issue Sir.")
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
