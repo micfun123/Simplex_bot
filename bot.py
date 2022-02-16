@@ -32,7 +32,7 @@ intents.members = True
 intents.guilds=True
 intents.all
 
-client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False), help_command=None)
+client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False))
 
 
 async def update_activity(client):
