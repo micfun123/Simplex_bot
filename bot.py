@@ -222,14 +222,15 @@ lvl = DiscordLevelingSystem(rate=1, per=60, level_up_announcement=announcement)
 lvl.connect_to_database_file(r'databases/DiscordLevelingSystem.db')
 
 async def level_on(guild):
-    guild_id = str(guild.id)
+    guild_id = guild.id
+    guild_id = str(guild_id)
 
-    with open("leveling.json") as f:
+    with open("databases/leveling.json") as f:
         data = json.load(f)
 
     if guild_id not in data:
         data[guild_id] = True
-        with open("leveling.json", 'w') as f:
+        with open("databases/leveling.json", 'w') as f:
             json.dump(data, f, indent=4)
         return True
 
@@ -243,7 +244,7 @@ async def level_on(guild):
 async def toggle_leveling(ctx, toggle:str):
     if toggle.lower() != "yes" or toggle.lower() != "no":
         return await ctx.send("Only 2 choices: Yes or no")
-    with open("leveling.json") as f:
+    with open("databases/leveling.json") as f:
         data = json.load(f)
     if toggle.lower() == "yes":
         data[str(ctx.guild.id)] = True
@@ -251,8 +252,11 @@ async def toggle_leveling(ctx, toggle:str):
     else:
         data[str(ctx.guild.id)] = False
         await ctx.send("Leveling Off")
-    with open("leveling.json", 'w') as f:
+    with open("databases/leveling.json", 'w') as f:
         json.dump(data, f, indent=4)
+    if data[str(ctx.guild.id)]:
+        return True
+    return False
 
     
 @client.event
