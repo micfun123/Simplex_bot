@@ -10,6 +10,7 @@ import asyncio
 import datetime
 from random import randrange
 import requests
+from pyfiglet import figlet_format, FontError, FontNotFound
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -308,6 +309,22 @@ class Fun(commands.Cog):
         else:
             # showing the error message
             await ctx.send("I've had a connection issue Sir.")
+
+    @commands.group(pass_context=True, invoke_without_command=True)
+    async def ascii(self, ctx, *, msg):
+        """Convert text to ascii art. Ex: [p]ascii stuff [p]help ascii for more info."""
+        if ctx.invoked_subcommand is None:
+            if msg:
+                font = "big"
+                msg = str(figlet_format(msg.strip(), font=font))
+                if len(msg) > 2000:
+                    await ctx.send('Message too long, RIP.')
+                else:
+                    await ctx.message.delete()
+                    await ctx.send('```\n{}\n```'.format(msg))
+            else:
+                await ctx.send(
+                               'Please input text to convert to ascii art. Ex: ``>ascii stuff``')
 
 
 def setup(bot):
