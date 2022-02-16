@@ -283,7 +283,7 @@ class Fun(commands.Cog):
         await ctx.send(f"https://image.thum.io/get/https://{url}")
 
 
-    @commands.command()
+    @commands.command(aliases=["boredom"])
     async def bored(self,ctx):
         BASE_URL = "https://www.boredapi.com/api/activity?"
         response = requests.get(BASE_URL)
