@@ -99,18 +99,6 @@ class Fun(commands.Cog):
         await ctx.send(embed=em)
 
 
-    @commands.command()
-    async def roll(ctx, dice: str):
-        """Rolls a dice in NdN format."""
-        try:
-            rolls, limit = map(int, dice.split("d"))
-        except Exception:
-            await ctx.send("Format has to be in NdN!")
-            return
-
-        result = ", ".join(str(random.randint(1, limit)) for r in range(rolls))
-        await ctx.send(result)
-
 
     @commands.command(aliases=['yahornah', 'yn'], extras={"category":"Fun"}, usage="yesorno [question]", help="This command makes a small poll which users can vote either yes, or no", description="Makes a Yah or Nah poll")
     async def yesorno(self, ctx, *, message):
