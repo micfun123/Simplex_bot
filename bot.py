@@ -240,7 +240,7 @@ async def level_on(guild):
         return False
     
 @client.command()
-@commands.has_permissions(adminstrator=True)
+@commands.has_permissions(administrator=True)
 async def toggle_leveling(ctx):
 
     with open("databases/leveling.json") as f:
