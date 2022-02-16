@@ -326,6 +326,22 @@ class Fun(commands.Cog):
                 await ctx.send(
                                'Please input text to convert to ascii art. Ex: ``>ascii stuff``')
 
+    @commands.group(pass_context=True, invoke_without_command=True)
+    async def slantascii(self, ctx, *, msg):
+        """Convert text to ascii art."""
+        if ctx.invoked_subcommand is None:
+            if msg:
+                font = "slant"
+                msg = str(figlet_format(msg.strip(), font=font))
+                if len(msg) > 2000:
+                    await ctx.send('Message too long, RIP.')
+                else:
+                    await ctx.message.delete()
+                    await ctx.send('```\n{}\n```'.format(msg))
+            else:
+                await ctx.send(
+                               'Please input text to convert to ascii art. Ex: ``>ascii stuff``')
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
