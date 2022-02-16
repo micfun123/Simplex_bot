@@ -2,7 +2,7 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
 ![CodeFactor](https://img.shields.io/github/issues-raw/micfun123/Simplex_bot)
-[![Discord Bots](https://top.gg/api/widget/902240397273743361.svg)(https://top.gg/bot/902240397273743361)
+[![Discord Bots](https://top.gg/api/widget/902240397273743361.svg)(https://top.gg/bot/902240397273743361)]
 
 
 
