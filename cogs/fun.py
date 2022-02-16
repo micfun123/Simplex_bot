@@ -312,7 +312,7 @@ class Fun(commands.Cog):
 
     @commands.group(pass_context=True, invoke_without_command=True)
     async def ascii(self, ctx, *, msg):
-        """Convert text to ascii art. Ex: [p]ascii stuff [p]help ascii for more info."""
+        """Convert text to ascii art."""
         if ctx.invoked_subcommand is None:
             if msg:
                 font = "big"
