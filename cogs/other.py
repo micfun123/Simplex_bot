@@ -1,5 +1,6 @@
 import imp
-from datetime import datetime, timedelta
+from datetime import timedelta 
+import datetime
 import discord
 from discord.ext import commands
 import asyncio
@@ -141,6 +142,24 @@ class utilities(commands.Cog):
         message.set_image(url=member.avatar.url)
 
         await ctx.send(embed=message)
+
+    
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print(f'{self} has been loaded') 
+        global startTime 
+        startTime = time.time()
+
+    @commands.command(name='Uptime')
+    async def _uptime(self,ctx):
+
+        # what this is doing is creating a variable called 'uptime' and assigning it
+        # a string value based off calling a time.time() snapshot now, and subtracting
+        # the global from earlier
+        uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
+        e = discord.Embed(title="Uptime", description=uptime, color=0x8BE002)
+        await ctx.send(embed=e)
+
 
 def setup(bot):
     bot.add_cog(utilities(bot))
