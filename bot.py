@@ -30,7 +30,6 @@ intents = discord.Intents.all()
 intents.presences = True
 intents.members = True
 intents.guilds=True
-intents.all
 
 client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False))
 
@@ -380,6 +379,25 @@ async def givexp(ctx, member:discord.Member, amount:int):
 @commands.has_permissions(administrator=True) 
 async def clear(ctx, amount=5):
     await ctx.channel.purge(limit=amount + 1)
+
+@tasks.loop(hours=48.0)
+async def clear_stuff():
+    """
+    This is a loop that runs every 2h
+    It clears out all the files in the temporary storage directory
+    """
+    _dir = 'tempstorage/'
+    for f in os.listdir(_dir):  
+      os.remove(os.path.join(_dir, f))
+      
+@client.event
+async def on_message(message):
+    if client.user.mentioned_in(message) and message.mention_everyone is False:
+        prefix= get_prefix(client, message)
+        await message.channel.send(f"My prefix is {prefix}")
+
+    await client.process_commands(message) 
+
 
 @client.command()
 async def leaderboard(ctx):
