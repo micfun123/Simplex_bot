@@ -10,7 +10,7 @@ import json
 
 load_dotenv()
 
-API_KEY = os.environ['NASA']
+API_KEY = os.environ['Nasa']
 
 class Nasa(commands.Cog):
     def __init__(self, client):
