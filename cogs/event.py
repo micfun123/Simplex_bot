@@ -25,6 +25,16 @@ class Events(commands.Cog):
         cha = self.client.get_channel(925787897527926805)
         await cha.send(embed=discord.Embed(title="Join", description=f"Joined: {guild.name}"))
         await update_activity(self.client)
+        embed = discord.Embed(color=discord.Color.blue())
+        embed.set_author(name="Here's some stuff to get you started:")
+        embed.add_field(name="Default Prefix: `.`", value="This can be changed later using `.changeprefix`")
+        embed.add_field(name="Disable Leveling", value="To disable leveling, use `toggle_leveling`")
+        embed.add_field(name="Set Welcome", value="You can use `.welcome` to set a welcome message and channgel ")
+        embed.add_field(name="Support", value="If you need support feel free to dm Me (the bot) and a human will reply to you ASAP or join the [Support Server](https://discord.gg/DCQWucrh2G) ")
+        embed.set_footer( text=f"Thank You - Simplex is now on {len(self.client.guilds)} servers!")
+        
+
+        await guild.system_channel.send(content="**Thanks for inviting me! :wave: **", embed=embed)
        
             
 
@@ -80,80 +90,7 @@ class Events(commands.Cog):
             await ctx.send(embed=em)
 
 
-    @commands.Cog.listener()
-    async def on_command_error(
-        self, ctx: commands.Context, error: commands.CommandError
-    ):
-        """Error handler.
-        Args:
-            ctx (commands.Context): Provided by system.
-            error (commands.CommandError): The error object.
-        Raises:
-            error: Raises error if undocumented.
-        """
-        toRaise = False
-        # raise error
-        # Command not found
-        if isinstance(error, commands.CommandNotFound):
-            if self.bot.command_prefix == '.':
-                if ctx.message.content[1] == "@":
-                    return
-                if ctx.message.content[1] == "#":
-                    return
-                if ctx.message.content[1] == ":":
-                    return
-                if ctx.message.content[1] == "a":
-                    return
-            await ctx.message.add_reaction("⁉️")
-            message = "Command not found."
-            log(message)
-        # On cooldown
-        elif isinstance(error, commands.CommandOnCooldown):
-            await ctx.message.add_reaction("❌")
-            message = f"This command is on cooldown. Please try again after {round(error.retry_after, 1)} seconds."
-            log(message)
-        # User doesn't have permissions
-        elif isinstance(error, commands.MissingPermissions):
-            await ctx.message.add_reaction("🔐")
-            message = "No permissions."
-            log(message)
-        elif isinstance(error, commands.BadArgument):
-            await ctx.message.add_reaction("🤏")
-            message = "Bad arguement."
-            log(message)
-        # Not enough args
-        elif isinstance(error, commands.UserInputError):
-            await ctx.message.add_reaction("🤏")
-            message = f"Not all required arguements were passed, do `{self.bot.command_prefix}help {ctx.message.content[len(self.bot.command_prefix):]}`"
-            log(message)
-        elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.message.add_reaction("🤏")
-            message = f"Not all required arguements were passed, do `{self.bot.command_prefix}help {ctx.message.content[len(self.bot.command_prefix):]}`"
-            log(message)
-        # Mentioned member not found
-        elif isinstance(error, commands.MemberNotFound):
-            await ctx.message.add_reaction("🤷‍♂️")
-            message = "Couldn't find that member."
-            log(message)
-        # Bot doesn't have permissions
-        elif isinstance(error, discord.errors.Forbidden):
-            await ctx.message.add_reaction("📛")
-            message = "Bot doesn't have the permissions needed."
-            log(message)
-        # notowner
-        elif isinstance(error, commands.NotOwner):
-            await ctx.message.add_reaction("📛")
-            message = "You are not the bot owner."
-            log(message)
-        else:
-            message = "This is an undocumented error, it has been reported and will be patched in the next update."
-            toRaise = True
-            log(message)
-        await ctx.reply(embed=discord.Embed(title=message, color=0x992D22))
-        if toRaise:
-            # If this is an undocumented error, the code in this block will be run.
-            raise error
-            
+
 
 def setup(client):
     client.add_cog(Events(client))
