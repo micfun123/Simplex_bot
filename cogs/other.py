@@ -9,6 +9,7 @@ import time
 import os
 import psutil
 import requests
+import qrcode
 
 def get_lines():
     lines = 0
@@ -161,6 +162,21 @@ class utilities(commands.Cog):
         e = discord.Embed(title="Uptime", description=uptime, color=0x8BE002)
         await ctx.send(embed=e)
 
+    @commands.command(aliases=['qr'], help = "Generate a QR code")
+    async def qrcode(self, ctx, *, url):
+        await ctx.message.delete()
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(str(url))
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black",
+                            back_color="white").convert('RGB')
+        img.save('qrcode.png')
+        await ctx.send(file=discord.File('qrcode.png'))
 
 def setup(bot):
     bot.add_cog(utilities(bot))
