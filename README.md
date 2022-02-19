@@ -61,6 +61,10 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 | reactrole | reactrole <emoji> <role> <message> | makes a reaction role | 
 | removereactions | removereactions <id> | remove the reactions on that message | 
 | kick | Kick <user> [Reason, no reason provided] | Kicks the user and Dms them the reason | 
+|  Uptime  |  Uptime  | Gets the servers Uptime | 
+|  covid |  covid <country> | Gets the covid infomation of a country | 
+|  serverinfo | serverinfo  |   Gets the infomation about that server |
+|  channel_status | channel_status [channel]  | Gets the health of a channel and the amount of active members | 
  
 
 
