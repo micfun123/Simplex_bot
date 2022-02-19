@@ -228,7 +228,7 @@ async def level_on(guild):
     else:
         return False
     
-@client.command()
+@client.command(help = "Toggles the leveling system on or off")
 @commands.has_permissions(administrator=True)
 async def toggle_leveling(ctx):
 
