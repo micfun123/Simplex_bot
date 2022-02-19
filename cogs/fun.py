@@ -17,7 +17,7 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["flip", "coin"])
+    @commands.command(aliases=["flip", "coin"], help = "Flip a coin")	
     async def coinflip(self, ctx):
         """ Coinflip! """
         coinsides = ["Heads", "Tails"]
@@ -208,7 +208,7 @@ class Fun(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @commands.command(aliases=["8ball", "eightball", "eight_ball"]) #8ball game
+    @commands.command(aliases=["8ball", "eightball", "eight_ball"], help = "8ball proves a answer") #8ball game
     async def _8ball(self, ctx, *, question):
         responses = ['magic eight ball maintains Signs point to yes.',
                  'magicball affirms My reply is no.',
