@@ -65,6 +65,8 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 |  covid |  covid <country> | Gets the covid infomation of a country | 
 |  serverinfo | serverinfo  |   Gets the infomation about that server |
 |  channel_status | channel_status [channel]  | Gets the health of a channel and the amount of active members | 
+| avatar | avatar <user> | Gets the avatar of a user |
+| toggle_leveling | toggle_leveling | toggles the levling and xp system | 
  
 
 
