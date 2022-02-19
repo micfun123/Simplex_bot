@@ -9,6 +9,7 @@ import json
 import os
 from dotenv import load_dotenv
 from easy_pil import Editor, Canvas, Font, load_image, Text
+from pretty_help import DefaultMenu, PrettyHelp
 
 load_dotenv()
 
@@ -31,8 +32,18 @@ intents.presences = True
 intents.members = True
 intents.guilds=True
 
-client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False))
+client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False),  help_command=PrettyHelp())
 
+
+# Custom ending note
+menu = DefaultMenu(page_left="\U0001F44D", page_right="👎", remove=":discord:743511195197374563", active_time=5)
+
+# Custom ending note
+ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me"
+
+client.help_command = PrettyHelp(menu=menu, ending_note=ending_note)
+
+client.help_command = PrettyHelp( ending_note=ending_note)
 
 async def update_activity(client):
     await client.change_presence(activity=discord.Game(f"On {len(client.guilds)} servers! | .help"))

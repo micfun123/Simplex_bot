@@ -253,6 +253,8 @@ class Fun(commands.Cog):
         await asyncio.sleep(2)
         await hacking.edit(content=f"Password: x2yz{member.name}xxy65")
         await asyncio.sleep(2)
+        await hacking.edit(content=f"Injecting trojan horse")
+        await asyncio.sleep(2)
         await hacking.edit(content=f'Most used words: {random.choice(used_words)}')
         await asyncio.sleep(1.55)
         await hacking.edit(content='IP address: 127.0.0.1:50')
