@@ -14,10 +14,10 @@ from time import sleep
 
 
 class MinecraftPingCommands(commands.Cog):
-
+    """All the info needed on a Minecraft server"""
     def __init__(self, bot):
+        
         self.bot = bot
-
         self.ses = aiohttp.ClientSession()
 
     def cog_unload(self):
