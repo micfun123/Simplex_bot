@@ -36,7 +36,7 @@ client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences 
 
 
 # Custom ending note
-menu = DefaultMenu(page_left="\U0001F44D", page_right="👎", remove=":discord:743511195197374563", active_time=5, )
+menu = DefaultMenu(page_left="◀", page_right="▶", remove="❌", active_time=5, )
 
 # Custom ending note
 ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n "
@@ -228,7 +228,7 @@ async def level_on(guild):
     else:
         return False
     
-@client.command(help = "Toggles the leveling system on or off")
+@client.command()
 @commands.has_permissions(administrator=True)
 async def toggle_leveling(ctx):
 
@@ -424,5 +424,4 @@ def start_bot(client):
 
 
 start_bot(client)
-
 
