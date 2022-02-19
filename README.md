@@ -67,6 +67,7 @@ If you want to support the bot with out coding feel free to leave us somthing.  
 |  channel_status | channel_status [channel]  | Gets the health of a channel and the amount of active members | 
 | avatar | avatar <user> | Gets the avatar of a user |
 | toggle_leveling | toggle_leveling | toggles the levling and xp system | 
+| 8ball | 8ball <question> | gives a answer| 
  
 
 
