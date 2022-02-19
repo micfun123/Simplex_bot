@@ -13,6 +13,7 @@ import requests
 from pyfiglet import figlet_format, FontError, FontNotFound
 
 class Fun(commands.Cog):
+    """Games fun and silly commands"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -59,7 +60,20 @@ class Fun(commands.Cog):
         await ctx.message.delete()
         await ctx.send(text)
 
+    
 
+    @commands.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
+    async def joke(ctx):
+        async with aiohttp.ClientSession() as session:
+            # This time we'll get the joke request as well!
+            request = await session.get('https://some-random-api.ml/joke')
+            jokejson = await request.json()
+
+
+        embed = discord.Embed(title="I know its funny", color=discord.Color.purple())
+        embed.set_footer(text=jokejson['joke'])
+        await ctx.send(embed=embed) 
+           
 
     @commands.command(aliases=['rockpaperscissors'], help="Play Rock Paper Scissors")
     async def rps(self, ctx, rps: str):

@@ -36,14 +36,12 @@ client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences 
 
 
 # Custom ending note
-menu = DefaultMenu(page_left="\U0001F44D", page_right="👎", remove=":discord:743511195197374563", active_time=5)
+menu = DefaultMenu(page_left="\U0001F44D", page_right="👎", remove=":discord:743511195197374563", active_time=5, )
 
 # Custom ending note
-ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me"
+ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n "
 
-client.help_command = PrettyHelp(menu=menu, ending_note=ending_note)
-
-client.help_command = PrettyHelp( ending_note=ending_note)
+client.help_command = PrettyHelp(menu=menu, ending_note=ending_note, color=0x20BEFF)
 
 async def update_activity(client):
     await client.change_presence(activity=discord.Game(f"On {len(client.guilds)} servers! | .help"))
@@ -110,25 +108,19 @@ async def prefix(ctx):
             json.dump(prefixes, f, indent=4)
 
 
-@client.command()
+@client.command(help = "Gives you the ping of the bot")
 async def ping(ctx):
     await ctx.send(f'Pong! {round(client.latency * 1000)}ms ping time')
 
 
 
 
-@client.command()
+@client.command(help = "Provides the voting link for the bot. This helps the bot")
 async def vote(ctx):
     await ctx.send("Like the bot vote here https://top.gg/bot/902240397273743361")
-    await ctx.send("Like the bot vote here https://discordbotlist.com/bots/simplex-bot")
-    
-    
-@client.command(aliases=["hi"])
-async def hello(ctx):
-    await ctx.send('Hi')
+    await ctx.send("Like the bot vote here https://discordbotlist.com/bots/simplex-bot")    
 
-
-@client.command(aliases=["source"])
+@client.command(aliases=["source"], help = "Gives you the source code of the bot")
 async def contribute(ctx):
     await ctx.send('If you want to help can take a look here https://github.com/micfun123/Simplex_bot')
 
@@ -145,20 +137,6 @@ async def server(ctx):
     await ctx.send('Want to join the sever join here https://discord.gg/d2gjWqFsTP ')
 
 
-
-@client.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
-async def joke(ctx):
-   async with aiohttp.ClientSession() as session:
-      # This time we'll get the joke request as well!
-      request = await session.get('https://some-random-api.ml/joke')
-      jokejson = await request.json()
-
-
-   embed = discord.Embed(title="I know its funny", color=discord.Color.purple())
-   embed.set_footer(text=jokejson['joke'])
-   await ctx.send(embed=embed) 
-
-           
 
 #unban user 
 @client.command(help = "Unbans a user from the server")
