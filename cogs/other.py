@@ -76,6 +76,11 @@ class utilities(commands.Cog):
         embed.set_thumbnail(url=user.avatar.url)
         await ctx.send(embed=embed)
 
+    @commands.command(aliases=['Report'])
+    async def bug(self, ctx, *, bug):
+        channelbug = await self.client.fetch_channel(911996728167759902)
+        await channelbug.send(f"Bug report:\n{bug}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
+        await ctx.send("Thank you for reporting this bug!")
 
     @commands.command(aliases=["channel_stats", "channel_health", "channel_info", "channel_information"])
     async def channel_status(self, ctx, channel: discord.TextChannel = None):
