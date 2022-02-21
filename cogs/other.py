@@ -9,6 +9,8 @@ import os
 import psutil
 import requests
 import qrcode
+import io
+from PIL import Image
 
 def get_lines():
     lines = 0
@@ -120,6 +122,32 @@ class utilities(commands.Cog):
 
             await ctx.send(embed=embed)
 
+    @commands.command(pass_context=True, aliases=['getcolor'])
+    async def getcolour(self, ctx, *, colour_codes):
+        """Posts color of given hex"""
+        await ctx.message.delete()
+        colour_codes = colour_codes.split()
+        size = (60, 80) if len(colour_codes) > 1 else (200, 200)
+        if len(colour_codes) > 5:
+            return await ctx.send(self.bot.bot_prefix + "Sorry, 5 colour codes maximum")
+        for colour_code in colour_codes:
+            if not colour_code.startswith("#"):
+                colour_code = "#" + colour_code
+            image = Image.new("RGB", size, colour_code)
+            with io.BytesIO() as file:
+                image.save(file, "PNG")
+                file.seek(0)
+                await ctx.send("Colour with hex code {}:".format(colour_code), file=discord.File(file, "colour_file.png"))
+            await asyncio.sleep(1) 
+
+
+    @commands.has_permissions(change_nickname=True)
+    @commands.command(aliases=['nick'], pass_context=True, no_pm=True)
+    async def nickname(self, ctx, *, txt=None):
+        """Change your nickname on a server. Leave empty to remove nick."""
+        await ctx.message.delete()
+        await ctx.message.author.edit(nick=txt)
+        await ctx.send(self.bot.bot_prefix + 'Changed nickname to: `%s`' % txt)
 
     @commands.command()
     async def botinfo(self, ctx):
