@@ -1,15 +1,14 @@
 # The Everything Discord Bot
 
 
-[![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
-[![CodeFactor](https://img.shields.io/github/issues-raw/micfun123/Simplex_bot)]
+[![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)(https://www.codefactor.io/repository/github/micfun123/simplex_bot)
+[![CodeFactor](https://img.shields.io/github/issues-raw/micfun123/Simplex_bot)
 
-[![Known Vulnerabilities](https://snyk.io/test/github/micfun123/Simplex_bot/badge.svg)]
-
-[stars-url]: https://github.com/micfun123/Simplex_bot/stargazers
+![Known Vulnerabilities](https://snyk.io/test/github/micfun123/Simplex_bot/badge.svg)
 
 
-[![Discord Bots](https://top.gg/api/widget/902240397273743361.svg)](https://top.gg/bot/902240397273743361)]
+
+[![Discord Bots](https://top.gg/api/widget/902240397273743361.svg)](https://top.gg/bot/902240397273743361)
 
 
 This is a open source Disord bot for everyone to help contribute and use. Make a pull request and if its an improvement I will accept it.
