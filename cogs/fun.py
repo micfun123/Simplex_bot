@@ -2,7 +2,7 @@ from ast import alias
 import discord
 import random
 from discord.ext import commands
-
+import re
 import numexpr as ne
 import numpy
 import aiohttp
@@ -31,7 +31,28 @@ class Fun(commands.Cog):
         t_rev = text[::-1].replace("@", "@\u200B").replace("&", "&\u200B")
         await ctx.send(f"🔁 {t_rev}")
 
-    
+    @commands.command(pass_context=True)
+    async def dice(self, ctx, *, msg="1"):
+        """Roll dice. Optionally input # of dice and # of sides. Ex: [p]dice 5 12"""
+        await ctx.message.delete()
+        invalid = 'Invalid syntax. Ex: `>dice 4` - roll four normal dice. `>dice 4 12` - roll four 12 sided dice.'
+        dice_rolls = []
+        dice_roll_ints = []
+        try:
+            dice, sides = re.split("[d\s]", msg)
+        except ValueError:
+            dice = msg
+            sides = "6"
+        try:
+            for roll in range(int(dice)):
+                result = random.randint(1, int(sides))
+                dice_rolls.append(str(result))
+                dice_roll_ints.append(result)
+        except ValueError:
+            return await ctx.send(self.bot.bot_prefix + invalid)
+        embed = discord.Embed(title="Dice rolls:", description=' '.join(dice_rolls))
+        embed.add_field(name="Total:", value=sum(dice_roll_ints))
+        await ctx.send("", embed=embed)
 
     @commands.command(aliases=["calculator"])
     async def calc(self, ctx, *, text: str):
