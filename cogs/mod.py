@@ -91,7 +91,7 @@ class Moderation(commands.Cog):
         servers = list(self.client.guilds)
         guild = self.client.get_guild(id)
         await ctx.send(f"Connected on {str(len(servers))} servers:")
-        await ctx.send('\n'.join(guild.name +' | '+str(guild.member_count) +' | ' + str(guild.owner.name) +' | ' + str(guild.owner.id) for guild in servers))
+        await ctx.send('\n'.join(guild.name +' | '+str(guild.member_count) +' | ' + str(guild.owner.name) + ' | ' + str(guild.owner.id) for guild in servers))
 
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
