@@ -82,7 +82,7 @@ class Moderation(commands.Cog):
     async def reload(self, ctx, extension):
         self.client.reload_extension(f"cogs.{extension}")
         embed = discord.Embed(
-            title='Reload', description=f'{extension} successfully reloaded', color=0xff00c8)
+            title='Reload', description=f'{extension} successfully reloaded', color=0x20BEFF)
         await ctx.send(embed=embed)
   
     @commands.command()
@@ -91,7 +91,7 @@ class Moderation(commands.Cog):
         servers = list(self.client.guilds)
         guild = self.client.get_guild(id)
         serprint = '\n'.join(guild.name +' | '+str(guild.member_count) +' | ' + str(guild.owner.name) + ' | ' + str(guild.owner.id) for guild in servers)
-        embed = discord.Embed(title=f"Connected on {str(len(servers))} servers:" , description=f"{serprint}", color=0xff00c8)
+        embed = discord.Embed(title=f"Connected on {str(len(servers))} servers:" , description=f"{serprint}", color=0x20BEFF)
        
         await ctx.send(embed=embed)
 
