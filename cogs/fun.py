@@ -66,7 +66,20 @@ class Fun(commands.Cog):
         await ctx.message.delete()
         await ctx.send(text)
 
-    
+    @commands.command()
+    async def pressf(self, ctx, *, object):
+        """Pay respect to something/someone by pressing the reaction."""
+        try:
+            message = await ctx.send(f'Press F to pay respect to `{object}`')
+            await message.add_reaction('<:key_f:945289545526677514>')
+            while True:
+                def check(r, u):
+                    return str(r.emoji) == '<:key_f:945289545526677514>' and r.message == message and u.id != self.bot.user.id
+                reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=30.0)
+                if reaction:
+                    await ctx.send(f'**{user.name}** has paid their respects.')
+        except asyncio.TimeoutError:
+            await ctx.send('Timed out.')
 
     @commands.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
     async def joke(ctx):

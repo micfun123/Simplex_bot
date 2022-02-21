@@ -28,8 +28,8 @@ class Events(commands.Cog):
         embed = discord.Embed(color=discord.Color.blue())
         embed.set_author(name="Here's some stuff to get you started:")
         embed.add_field(name="Default Prefix: `.`", value="This can be changed later using `.changeprefix`")
-        embed.add_field(name="Disable Leveling", value="To disable leveling, use `toggle_leveling`")
-        embed.add_field(name="Set Welcome", value="You can use `.welcome` to set a welcome message and channgel ")
+        embed.add_field(name="Disable Leveling", value="To disable leveling, use `.toggle_leveling`")
+        embed.add_field(name="Set Welcome", value="You can use `.welcome` to set a welcome message and channel ")
         embed.add_field(name="Support", value="If you need support feel free to dm Me (the bot) and a human will reply to you ASAP or join the [Support Server](https://discord.gg/DCQWucrh2G) ")
         embed.set_footer( text=f"Thank You - Simplex is now on {len(self.client.guilds)} servers!")
         
