@@ -346,24 +346,6 @@ async def rank(ctx, member:discord.Member=None):
     os.remove(f"rank{member.id}.png")
 
 
-@client.command()
-@commands.check(mic)
-async def removexp(ctx, member:discord.Member, amount:int):
-    await ctx.message.delete()
-    await lvl.remove_xp(member=member, amount=amount)
-
-
-@client.command()
-@commands.check(mic)
-async def setlvl(ctx, member:discord.Member, level:int):
-    await ctx.message.delete()
-    await lvl.set_level(member=member, level=level)
-
-@client.command()
-@commands.check(mic)
-async def givexp(ctx, member:discord.Member, amount:int):
-    await lvl.add_xp(member=member, amount=amount)
-    await ctx.send(f"Gave {amount} xp to {member.name}")
 
 @client.command(aliases=["purge"], help = "Command were clear given number of messages if no number given 5 messages will be cleared as well as limited to 5")  # clear command
 @commands.has_permissions(administrator=True) 
