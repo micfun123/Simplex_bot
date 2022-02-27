@@ -27,6 +27,7 @@ def get_prefix(client, message): ##first we define get_prefix
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 from discord.ext import commands, tasks
 
+
 intents = discord.Intents.all()
 intents.presences = True
 intents.members = True
@@ -137,12 +138,6 @@ async def server(ctx):
     await ctx.send('Want to join the sever join here https://discord.gg/d2gjWqFsTP ')
 
 
-
-#unban user 
-@client.command(help = "Unbans a user from the server")
-@commands.has_permissions(kick_members=True)
-async def unban(ctx, user: discord.User, *, reason=None):
-    await ctx.guild.unban(user, reason=reason)
 
 @client.command(hidden = True)
 async def bond(ctx):
