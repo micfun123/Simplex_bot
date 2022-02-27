@@ -180,7 +180,7 @@ class Moderation(commands.Cog):
             reason = "No reason provided"
         time = humanfriendly.parse_timespan(time)
         await member.timeout(until=discord.utils.utcnow() + datetime.timedelta(seconds=time), reason=reason)
-        await ctx.send(f"{member.mention} has been muted for {time}.\nReason: {reason}")
+        await ctx.send(f"{member.mention} has been muted for {time} seconds.\nReason: {reason}")
 
 
     @commands.command(aliases=["sn"])
