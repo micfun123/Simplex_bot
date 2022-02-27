@@ -1,4 +1,5 @@
 import imp
+import typing
 import discord
 from discord.ext import commands
 import json
@@ -140,7 +141,93 @@ class Moderation(commands.Cog):
                 await ctx.message.delete()
             await channel.send(embed=discord.Embed(title="This channel is no longer under lockdown.", color=discord.Colour.orange()))
 
+    @commands.command(aliases=["sm", "slowdown"])
+    @commands.guild_only()
+    @commands.has_permissions(manage_channels=True)
+    async def slowmode(ctx, seconds: int):
+        """
+        Sets slowmode for the current channel.
+        """
+        try:
+            if seconds > 21600:
+                await ctx.send("Slowmode cannot be more than 6 hours.")
+                return
+            elif seconds < 0:
+                await ctx.send("Slowmode cannot be less than 0.")
+                return
+            elif seconds == 0:
+                await ctx.channel.edit(slowmode_delay=0)
+                await ctx.send("Slowmode has been disabled.")
+                return
 
+            await ctx.channel.edit(slowmode_delay=seconds)
+            await ctx.send(f"Slowmode set to {seconds} seconds.")
+
+        except discord.Forbidden:
+            await ctx.send("I don't have permission to manage this channel.")
+
+    @commands.command(aliases=["mute"])
+    @commands.guild_only()
+    @commands.has_guild_permissions(moderate_members=True)
+    @commands.bot_has_permissions(moderate_members=True)
+    async def timeout(self, ctx, member: discord.Member, time, *, reason=None):
+        """
+        Timeouts a user for a set amount of time.
+        Use 5m for 5 minutes, 1h for 1 hour, etc.
+        """
+        if reason is None:
+            reason = "No reason provided"
+        time = humanfriendly.parse_timespan(time)
+        await member.timeout(until=discord.utils.utcnow() + datetime.timedelta(seconds=time), reason=reason)
+        await ctx.send(f"{member.mention} has been muted for {time}.\nReason: {reason}")
+
+
+    @commands.command(aliases=["sn"])
+    @commands.guild_only()
+    @commands.has_guild_permissions(manage_nicknames=True)
+    @commands.bot_has_permissions(manage_nicknames=True)
+    async def setnick(self, ctx, member: discord.Member, *, nick):
+        """
+        Set a custom nick-name.
+        """
+        await member.edit(nick=nick)
+        await ctx.send(f"Nickname for {member.name} was changed to {member.mention}")
+
+    # make the ban command here
+
+    @commands.command(aliases=["mb"])
+    @commands.guild_only()
+    @commands.has_guild_permissions(ban_members=True)
+    @commands.bot_has_permissions(ban_members=True)
+    async def massban(self, ctx, members:commands.Greedy[discord.Member], *, reason):
+        """
+        Mass bans multiple members from the server. Reason is required.
+        """
+        if not len(members):
+            await ctx.send("One or more required arguments are missing.")
+
+        else:
+            for target in members:
+                await target.ban(reason=reason, delete_message_days=0)
+                await ctx.send(f"Banned `{target}`")
+
+    @commands.command(aliases=['ub'])
+    @commands.guild_only()
+    @commands.has_guild_permissions(ban_members=True)
+    @commands.bot_has_permissions(ban_members=True)
+    async def unban(self, ctx, id: int):
+        """
+        Unbans a member from the server using their ID.
+        """
+        try:
+            user = self.bot.get_user(id)
+            await ctx.guild.unban(discord.Object(id=id), reason=f'Unbanned by {ctx.author}')
+            await ctx.send(f'Unbanned `{user}`')
+
+        except discord.NotFound:
+            await ctx.send('Member not found.')
+
+    
 
 def setup(client):
     client.add_cog(Moderation(client))
