@@ -33,11 +33,12 @@ class lookup(commands.Cog):
 
     @commands.command()
     async def covid(self, ctx,*, country):
+        x = country.replace(" ", "%20")
         """
         Get Covid-19 stats from a country or the world.
         """
         try:
-            url = f"https://coronavirus-19-api.herokuapp.com/countries/{country}"
+            url = f"https://coronavirus-19-api.herokuapp.com/countries/{x}"
             stats = requests.get(url)
             json_stats = stats.json()
             country = json_stats["country"]
