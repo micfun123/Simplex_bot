@@ -36,7 +36,7 @@ class Nasa(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.slash_command(name="apod", description="NASA Astronomy Picture of the Day")
-    async def apod(self, ctx, extra:str=None):
+    async def apod_(self, ctx, extra:str=None):
         """
         NASA Astronomy Picture of the Day
         """
