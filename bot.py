@@ -360,8 +360,9 @@ async def clear_stuff():
 @client.event
 async def on_message(message):
     if client.user.mentioned_in(message) and message.mention_everyone is False:
-        prefix= get_prefix(client, message)
-        await message.channel.send(f"My prefix is {prefix}")
+        if message.reference is None:
+            prefix= get_prefix(client, message)
+            await message.channel.send(f"My prefix is {prefix}")
 
     await client.process_commands(message) 
 
