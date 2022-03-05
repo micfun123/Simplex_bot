@@ -2,7 +2,8 @@ from urllib.request import proxy_bypass
 import discord
 import datetime
 import requests
-from discord.ext import commands
+from discord.ext import commands 
+from discord.commands import slash_command
 from dotenv import load_dotenv
 import os
 import json
@@ -17,7 +18,7 @@ class Nasa(commands.Cog):
         self.client = client
 
     @commands.command(name="apod", description="NASA Astronomy Picture of the Day")
-    async def apod(self, ctx, extra:str=None):
+    async def apod(self, ctx):
         """
         NASA Astronomy Picture of the Day
         """
@@ -35,8 +36,8 @@ class Nasa(commands.Cog):
         embed.set_footer(text=f'{date}')
         await ctx.send(embed=embed)
 
-    @commands.slash_command(name="apod", description="NASA Astronomy Picture of the Day")
-    async def apod_(self, ctx, extra:str=None):
+    @slash_command(name="apod", description="NASA Astronomy Picture of the Day")
+    async def apod(self, ctx):
         """
         NASA Astronomy Picture of the Day
         """
@@ -52,7 +53,7 @@ class Nasa(commands.Cog):
                 embed.set_image(url=data['thumbnail'])
         embed.add_field(name='Link to image of the day/video', value=data['url'], inline=False)
         embed.set_footer(text=f'{date}')
-        await ctx.reply(embed=embed)
+        await ctx.respond(embed=embed)
         
         
 def setup(client):
