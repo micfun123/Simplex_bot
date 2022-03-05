@@ -16,7 +16,7 @@ class Nasa(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command()
+    @commands.command(name="apod", description="NASA Astronomy Picture of the Day")
     async def apod(self, ctx, extra:str=None):
         """
         NASA Astronomy Picture of the Day
