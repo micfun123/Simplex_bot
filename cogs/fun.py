@@ -12,6 +12,25 @@ from random import randrange
 import requests
 from pyfiglet import figlet_format, FontError, FontNotFound
 
+async def post_get_json(url, data=None):
+    """
+    This function makes a POST request to a url and returns the json
+    Args:
+        url (str) : The url to make a request to
+        data (Dict, optional) : This is a dictionary of any extra params to send the request
+    
+    Returns:
+        Dict : The json response
+    """
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, data=data) as resp:
+            try:
+                response = await resp.json()
+            except Exception as e: 
+                print(e)
+                response = resp
+    return response
+
 class Fun(commands.Cog):
     """Games fun and silly commands"""
     def __init__(self, bot):
@@ -306,6 +325,21 @@ class Fun(commands.Cog):
         """Takes a screenshot from a given URL."""
         await ctx.send(f"https://image.thum.io/get/https://{url}")
 
+    @commands.command(usage = "runcode [language] [code]", description = "Runs code", help = "This command is used to run code. It supports many languages.")
+    async def runcode(self, ctx, lang:str, *, code):
+        code = code.replace("`", "")
+        data = {
+            "language": lang,
+            "source" : f"""{code}"""
+        }
+        url = "https://emkc.org/api/v1/piston/execute"
+
+        data = await post_get_json(url, data)
+        print(data)
+        if data['ran'] == True:
+            await ctx.send(f"```py\n{data['output']}```")
+        if data['stderr'] != "":
+            await ctx.send(f"```Errors\n{data['stderr']}```")
 
     @commands.command(aliases=["boredom"])
     async def bored(self,ctx):
