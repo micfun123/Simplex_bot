@@ -67,7 +67,7 @@ class Weather(commands.Cog):
 
 
     @commands.slash_command()
-    async def _weather(self, ctx, *, city):
+    async def weather_(self, ctx, *, city):
         weather_key = os.getenv("WEATHER_KEY")
         BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
         URL = BASE_URL + "q=" + city + "&appid=" + weather_key + "&units=metric"
@@ -96,7 +96,15 @@ class Weather(commands.Cog):
             # weather report
             report = data['weather']
             #print
-            await ctx.respond(f"{city:-^30} \n Temperature: {x} degrees celcius \n Feels Like {y} degrees celcius \n Humidity: {humidity} \n Pressure: {pressure} \n Weather Report: {report[0]['main']}")
+            e = discord.Embed(title="Weather Report", description="", color=0x00ff00)
+            e.add_field(name="Temperature", value=str(x) + str(" degrees celcius"), inline=True)
+            e.add_field(name="Feels Like", value=str(y) +  str(" degrees celcius"), inline=True)
+            e.add_field(name="Humidity", value=humidity, inline=True)
+            e.add_field(name="Pressure", value=pressure, inline=True)
+            e.add_field(name="Weather", value=report[0]['description'], inline=True)
+            e.set_thumbnail(url="https://static01.nyt.com/images/2014/12/11/technology/personaltech/11machin-illo/11machin-illo-articleLarge-v3.jpg?quality=75&auto=webp&disable=upscale")
+            e.set_footer(text="Time: " + str(datetime.now()))
+            await ctx.respond(embed=e)
         else:
             # showing the error message
             await ctx.respond("I've had a connection issue, Sir. Should be fixed momentarily")
