@@ -22,7 +22,7 @@ class Weather(commands.Cog):
     
     
 
-    @commands.command()
+    @commands.command(name = "weather", help = "Get the weather in your location")
     async def weather(self, ctx, *, CITY):
         weather_key = os.getenv("WEATHER_KEY")
         BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
@@ -66,7 +66,7 @@ class Weather(commands.Cog):
             await ctx.send("I've had a connection issue, Sir. Should be fixed momentarily")
 
 
-    @commands.slash_command()
+    @commands.slash_command(name = "weather", help = "Get the weather in your location")
     async def weather_(self, ctx, *, city):
         weather_key = os.getenv("WEATHER_KEY")
         BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
