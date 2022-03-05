@@ -23,7 +23,7 @@ class Weather(commands.Cog):
     
 
     @commands.command(name = "weather", help = "Get the weather in your location")
-    async def weather(self, ctx, *, CITY):
+    async def weather_(self, ctx, *, CITY):
         weather_key = os.getenv("WEATHER_KEY")
         BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
         URL = BASE_URL + "q=" + CITY + "&appid=" + weather_key + "&units=metric"
@@ -67,7 +67,7 @@ class Weather(commands.Cog):
 
 
     @commands.slash_command(name = "weather", help = "Get the weather in your location")
-    async def weather_(self, ctx, *, city):
+    async def weather(self, ctx, *, city):
         weather_key = os.getenv("WEATHER_KEY")
         BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
         URL = BASE_URL + "q=" + city + "&appid=" + weather_key + "&units=metric"
