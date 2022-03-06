@@ -8,8 +8,8 @@ class emoji(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["emofy"])
-    async def emojify(self, ctx, *, text: str):
+    @commands.command(aliases=["emofy"] , name="emojify", description="Converts text to emojis")
+    async def emojify_(self, ctx, *, text: str):
         """
         Turns text into emojis
         """
