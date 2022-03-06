@@ -75,6 +75,19 @@ class BotMakerCommands(commands.Cog):
         await ctx.send(gitstuff.decode())
         log(gitstuff.decode())
 
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def clearlog(self,ctx):
+        file = discord.File("./other/log.txt")
+        await ctx.author.send(file=file)
+        dirs = 'other/'
+        for f in os.listdir(dirs):  
+            os.remove(os.path.join(dirs, f))
+        dirs = 'tempstorage/'
+        for f in os.listdir(dirs):  
+            os.remove(os.path.join(dirs, f))
+        await ctx.send("Cleared")
+        await log("Cleared at " + datetime.now().strftime("%d/%m/%Y %H:%M:%S"))	
 
     @commands.command(hidden = True)
     @commands.check(micsid)
