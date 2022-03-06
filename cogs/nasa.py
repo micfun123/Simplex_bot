@@ -39,7 +39,7 @@ class Nasa(commands.Cog):
     @slash_command(name="apod", description="NASA Astronomy Picture of the Day")
     async def apod(self, ctx):
         """
-        NASA Astronomy Picture of the Day
+        NASA Astronomy Picture of the Day (Slash Command)
         """
         
         date = datetime.datetime.now().strftime('%Y-%m-%d')
