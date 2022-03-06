@@ -5,6 +5,8 @@ from discord.ext import commands
 from discord.ui import Button, View
 from discord import Option, SlashCommand
 import json
+import asyncio
+import qrcode
 import random
 import os
 
@@ -120,6 +122,22 @@ class Slash(commands.Cog):
                 emojis.append(char)
 
         await ctx.respond("".join(emojis))
+
+
+    @slash_command(name = "qrcode", help = "Generate a QR code")
+    async def qrcode(self, ctx, *, url):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(str(url))
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black",
+                            back_color="white").convert('RGB')
+        img.save('qrcode.png')
+        await ctx.respond(file=discord.File('qrcode.png'))
 
 def setup(client):
     client.add_cog(Slash(client))
