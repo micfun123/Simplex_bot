@@ -69,8 +69,8 @@ class Fun(commands.Cog):
         await ctx.message.delete()
         await ctx.send(text)
 
-    @commands.command()
-    async def pressf(self, ctx, *, object):
+    @commands.command(name="pressf", help = "Press F to pay respects {reson}")
+    async def pressf_(self, ctx, *, object):
         """Pay respect to something/someone by pressing the reaction."""
         try:
             message = await ctx.send(f'Press F to pay respect to `{object}`')
