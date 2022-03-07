@@ -143,7 +143,7 @@ class Slash(commands.Cog):
         await ctx.respond(file=discord.File('qrcode.png'))
 
     @slash_command(name = "joke", description = "It tells a joke")  #tells a joke
-    async def joke(ctx):
+    async def joke(self, ctx):
         async with aiohttp.ClientSession() as session:
             # This time we'll get the joke request as well!
             request = await session.get('https://some-random-api.ml/joke')
@@ -152,7 +152,7 @@ class Slash(commands.Cog):
 
         embed = discord.Embed(title="I know its funny", color=discord.Color.purple())
         embed.set_footer(text=jokejson['joke'])
-        await ctx.send(embed=embed) 
+        await ctx.respond(embed=embed) 
 
 def setup(client):
     client.add_cog(Slash(client))
