@@ -21,7 +21,7 @@ class cards(commands.Cog):
         embed.set_footer(text="Time: " + str(datetime.now()))
         await ctx.send(embed=embed)
 
-    @slash_command(name="randomcard", help="Gets you a random card")
+    @slash_command(name="randomcard", description="Gets you a random card")
     async def randomcard(self, ctx):
         url = 'https://deckofcardsapi.com/api/deck/new/draw/?count=1'
         response = requests.get(url)

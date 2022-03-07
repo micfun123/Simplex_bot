@@ -23,7 +23,7 @@ class chess(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @slash_command(name = "todayschess", help = "Gets you todays chess challenge")
+    @slash_command(name = "todayschess", description = "Gets you todays chess challenge")
     async def todaysChess(self, ctx):
         url = 'https://api.chess.com/pub/puzzle/random'
         response = requests.get(url)
