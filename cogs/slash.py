@@ -1,4 +1,6 @@
 # Slash commands
+import imp
+from pydoc import describe
 import discord
 from discord.commands import slash_command
 from discord.ext import commands
@@ -9,6 +11,7 @@ import asyncio
 import qrcode
 import random
 import os
+import aiohttp
 
 def mic(ctx):
     return ctx.author.id == 481377376475938826
@@ -124,7 +127,7 @@ class Slash(commands.Cog):
         await ctx.respond("".join(emojis))
 
 
-    @slash_command(name = "qrcode", help = "Generate a QR code")
+    @slash_command(name = "qrcode", description = "Generate a QR code")
     async def qrcode(self, ctx, *, url):
         qr = qrcode.QRCode(
             version=1,
@@ -138,6 +141,18 @@ class Slash(commands.Cog):
                             back_color="white").convert('RGB')
         img.save('qrcode.png')
         await ctx.respond(file=discord.File('qrcode.png'))
+
+    @slash_command(name = "joke", description = "It tells a joke")  #tells a joke
+    async def joke(ctx):
+        async with aiohttp.ClientSession() as session:
+            # This time we'll get the joke request as well!
+            request = await session.get('https://some-random-api.ml/joke')
+            jokejson = await request.json()
+
+
+        embed = discord.Embed(title="I know its funny", color=discord.Color.purple())
+        embed.set_footer(text=jokejson['joke'])
+        await ctx.send(embed=embed) 
 
 def setup(client):
     client.add_cog(Slash(client))
