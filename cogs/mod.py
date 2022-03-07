@@ -8,6 +8,7 @@ from os import listdir
 from os.path import isfile, join
 import datetime
 import humanfriendly
+from tools import mic
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -98,7 +99,7 @@ class Moderation(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['sendmsg'])
-    @commands.check(micsid)
+    @commands.check(mic)
     async def dm(self, ctx, member: discord.Member, *, message):
         await ctx.message.delete()
         embeddm = discord.Embed(title=message)
