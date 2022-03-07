@@ -39,8 +39,8 @@ class Slash(commands.Cog):
 
     @commands.slash_command(name="suggest", description="Suggest something for Simplex bot")
     async def suggest(self, ctx, *, suggestion):
-        sid = await self.client.fetch_channel(908969607266730005)
-        await sid.respond(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
+        send = await self.client.fetch_channel(908969607266730005)
+        await send.respond(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
         await ctx.respond("Thank you for you suggestion!")
 
     @commands.slash_command(name="ping", description="shows you the bots ping")
@@ -142,17 +142,7 @@ class Slash(commands.Cog):
         img.save('qrcode.png')
         await ctx.respond(file=discord.File('qrcode.png'))
 
-    @slash_command(name = "joke", description = "It tells a joke")  #tells a joke
-    async def joke(self, ctx):
-        async with aiohttp.ClientSession() as session:
-            # This time we'll get the joke request as well!
-            request = await session.get('https://some-random-api.ml/joke')
-            jokejson = await request.json()
 
-
-        embed = discord.Embed(title="I know its funny", color=discord.Color.purple())
-        embed.set_footer(text=jokejson['joke'])
-        await ctx.respond(embed=embed) 
 
 def setup(client):
     client.add_cog(Slash(client))

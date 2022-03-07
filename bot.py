@@ -347,15 +347,6 @@ async def rank(ctx, member:discord.Member=None):
 async def clear(ctx, amount=5):
     await ctx.channel.purge(limit=amount + 1)
 
-@tasks.loop(hours=48.0)
-async def clear_stuff():
-    """
-    This is a loop that runs every 2h
-    It clears out all the files in the temporary storage directory
-    """
-    _dir = 'tempstorage/'
-    for f in os.listdir(_dir):  
-      os.remove(os.path.join(_dir, f))
       
 @client.event
 async def on_message(message):
