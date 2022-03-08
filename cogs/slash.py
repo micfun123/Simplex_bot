@@ -1,14 +1,12 @@
+# Slash commands
 import discord
 from discord.commands import slash_command
 from discord.ext import commands
 from discord.ui import Button, View
 from discord import Option, SlashCommand
 import json
-import asyncio
-import qrcode
 import random
 import os
-import aiohttp
 
 def mic(ctx):
     return ctx.author.id == 481377376475938826
@@ -36,8 +34,8 @@ class Slash(commands.Cog):
 
     @commands.slash_command(name="suggest", description="Suggest something for Simplex bot")
     async def suggest(self, ctx, *, suggestion):
-        send = await self.client.fetch_channel(908969607266730005)
-        await send.respond(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
+        sid = await self.client.fetch_channel(908969607266730005)
+        await sid.respond(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
         await ctx.respond("Thank you for you suggestion!")
 
     @commands.slash_command(name="ping", description="shows you the bots ping")
@@ -122,24 +120,6 @@ class Slash(commands.Cog):
                 emojis.append(char)
 
         await ctx.respond("".join(emojis))
-
-
-    @slash_command(name = "qrcode", description = "Generate a QR code")
-    async def qrcode(self, ctx, *, url):
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_H,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(str(url))
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="black",
-                            back_color="white").convert('RGB')
-        img.save('qrcode.png')
-        await ctx.respond(file=discord.File('qrcode.png'))
-
-
 
 def setup(client):
     client.add_cog(Slash(client))

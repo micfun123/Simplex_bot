@@ -194,8 +194,8 @@ class utilities(commands.Cog):
         e = discord.Embed(title="Uptime", description=uptime, color=0x8BE002)
         await ctx.send(embed=e)
 
-    @commands.command(name = "qrcode" , aliases=['qr'], help = "Generate a QR code")
-    async def qrcode_(self, ctx, *, url):
+    @commands.command(aliases=['qr'], help = "Generate a QR code")
+    async def qrcode(self, ctx, *, url):
         await ctx.message.delete()
         qr = qrcode.QRCode(
             version=1,

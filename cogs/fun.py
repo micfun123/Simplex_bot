@@ -84,8 +84,8 @@ class Fun(commands.Cog):
         except asyncio.TimeoutError:
             await ctx.send('Timed out.')
 
-    @commands.command(name = "joke", help = "It tells a joke")  #tells a joke
-    async def joke(self,ctx):
+    @commands.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
+    async def joke(ctx):
         async with aiohttp.ClientSession() as session:
             # This time we'll get the joke request as well!
             request = await session.get('https://some-random-api.ml/joke')
