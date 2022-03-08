@@ -1,6 +1,3 @@
-# Slash commands
-import imp
-from pydoc import describe
 import discord
 from discord.commands import slash_command
 from discord.ext import commands
