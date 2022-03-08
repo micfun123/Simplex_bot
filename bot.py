@@ -33,11 +33,11 @@ intents.presences = True
 intents.members = True
 intents.guilds=True
 
-client = commands.Bot( command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False),  help_command=PrettyHelp())
+client = commands.Bot(command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False),  help_command=PrettyHelp())
 
 
 # Custom ending note
-menu = DefaultMenu(page_left="◀", page_right="▶", remove="❌", active_time=5)
+menu = DefaultMenu(page_left="◀", page_right="▶", remove="❌", active_time=10)
 
 # Custom ending note
 ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n "
