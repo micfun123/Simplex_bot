@@ -394,6 +394,16 @@ class Fun(commands.Cog):
         embed.set_image(url=teajason['img_url'])
         await ctx.send(embed=embed)
 
+    @commands.command(help = "It shows coffee photo") 
+    async def coffee(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://hotbeverage.herokuapp.com/json/coffee')
+            teajason = await request.json()
+        
+        embed = discord.Embed(title="coffee!", color=discord.Color.purple())
+        embed.set_image(url=teajason['img_url'])
+        await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
