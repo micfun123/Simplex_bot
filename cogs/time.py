@@ -20,7 +20,7 @@ class Time(commands.Cog):
 
     @commands.command( help="Get the current date and shows it in a human readable format. in the readers time zone")
     async def ftime(self, ctx , * ,message):
-        t = calendar.timegm(time.strptime(message, '%H:%M:%S'))
+        t = calendar.timegm(time.strptime(message, '%H:%M'))
         await ctx.send(f"The time and date will be <t:{t}:t>")
 
     @commands.command(name='timezone', help="Get the current time and shows it in a human readable format. in the readers time zone")
