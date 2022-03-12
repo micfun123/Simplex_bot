@@ -245,6 +245,21 @@ class Moderation(commands.Cog):
 
             await ctx.send(f"{user} has invited {total_invites} member{'' if total_invites == 1 else 's'} to the server!")
 
+     
+    @commands.command()
+    async def inviteslb(self, ctx, user:discord.Member=None):
+        em = discord.Embed(title="Leaderboard")
+        total_invites = {}
+        for invite in await ctx.guild.invites():
+            try:
+                total_invites[invite.inviter.name] += invite.uses
+            except KeyError:
+                total_invites[invite.inviter.name] = invite.uses
+        total_invites = dict(sorted(total_invites.items(), reverse=True,  key=lambda item: item[1]))
+        fields = [em.add_field(name=k, value=v, inline=False) for k, v in total_invites.items()]
+        
+        await ctx.send(embed=em)
+
     
 
 def setup(client):
