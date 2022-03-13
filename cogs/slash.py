@@ -33,10 +33,16 @@ class Slash(commands.Cog):
     async def botinvite(self, ctx):
         await ctx.respond(embed=discord.Embed(title="Invite **'Simplex'?** to your server:", description="https://discord.com/api/oauth2/authorize?client_id=896932646846885898&permissions=8&scope=bot%20applications.commands"))
 
-    @commands.slash_command(name="suggest", description="Suggest something for Simplex bot")
-    async def suggest(self, ctx, *, suggestion):
+    
+    @slash_command(name="suggest", description="Suggest something for Simplex")
+    async def suggest(self, ctx, suggestion: Option(str, "The suggestion", required=True)):
         sid = await self.client.fetch_channel(908969607266730005)
-        await sid.respond(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
+        em = discord.Embed(
+            title= "Suggestion:",
+            description=f"By: {ctx.author.name}\n\n{suggestion}",
+            color=discord.Color.random()
+        )
+        await sid.send(embed=em, content=ctx.author.id)
         await ctx.respond("Thank you for you suggestion!")
 
     @commands.slash_command(name="ping", description="shows you the bots ping")
@@ -90,7 +96,16 @@ class Slash(commands.Cog):
             title='Reload', description=f'{extension} successfully reloaded', color=0xff00c8)
         await ctx.respond(embed=embed)
 
-
+    @slash_command()
+    async def donations(self,ctx):
+        em = discord.Embed(title = 'Donation', description = 'Donate to the bot to help keep it running!', color = 0x8BE002)
+        em.add_field(name = ':BTC :', value = '**3Fi97A4fLw8Yycv7F3DwSfMgBJ3zjB1AFL**')
+        em.add_field(name = ':ETH :', value = '**0x7Cfa740738ab601DCa9740024ED8DB585E2ed7478**')
+        em.add_field(name = ':Doge :', value = '**DQVkWKqGoTGUY9MeN3HiUt49JfcC9aE7fp**')
+        em.add_field(name = ':MPL  :', value = '**0xbDBb6403CA6D1681F0ef7A2603aD65a9F09AF138**')
+        em.add_field(name = ':XMR  :', value = '**43rsynRD1qtCA1po9myFsc7ti5havFcXUZPdSZuMexU4DnEyno55TE16eWqFkMLMbwZ7DuRW4ow5kcWzQQYu96NH7XMk6cE**')
+        
+        await ctx.respond(embed = em)
  
     @slash_command(name="emojify", description="Converts text to emojis")
     async def emojify(self, ctx, *, text: str):

@@ -1,6 +1,7 @@
 import imp
 from datetime import timedelta 
 import datetime
+from lib2to3.pgen2.token import AWAIT
 import discord
 from discord.ext import commands
 import asyncio
@@ -209,6 +210,18 @@ class utilities(commands.Cog):
                             back_color="white").convert('RGB')
         img.save('qrcode.png')
         await ctx.send(file=discord.File('qrcode.png'))
+
+    @commands.command()
+    async def donation(self,ctx):
+        em = discord.Embed(title = 'Donation', description = 'Donate to the bot to help keep it running!', color = 0x8BE002)
+        em.add_field(name = ':BTC :', value = '**3Fi97A4fLw8Yycv7F3DwSfMgBJ3zjB1AFL**')
+        em.add_field(name = ':ETH :', value = '**0x7Cfa740738ab601DCa9740024ED8DB585E2ed7478**')
+        em.add_field(name = ':Doge :', value = '**DQVkWKqGoTGUY9MeN3HiUt49JfcC9aE7fp**')
+        em.add_field(name = ':MPL  :', value = '**0xbDBb6403CA6D1681F0ef7A2603aD65a9F09AF138**')
+        em.add_field(name = ':XMR  :', value = '**43rsynRD1qtCA1po9myFsc7ti5havFcXUZPdSZuMexU4DnEyno55TE16eWqFkMLMbwZ7DuRW4ow5kcWzQQYu96NH7XMk6cE**')
+        
+        await ctx.send(embed = em)
+        
 
 def setup(bot):
     bot.add_cog(utilities(bot))
