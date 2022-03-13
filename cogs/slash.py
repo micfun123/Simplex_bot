@@ -139,7 +139,6 @@ class Slash(commands.Cog):
 
     @slash_command(name="qrcode", description = "Generate a QR code")
     async def qrcode_slash(self, ctx, *, url):
-        await ctx.message.delete()
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_H,
