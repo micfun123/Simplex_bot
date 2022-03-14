@@ -169,8 +169,8 @@ class utilities(commands.Cog):
 
         await ctx.send(embed = em)
 
-    @commands.command(aliases=["av", "pfp"])
-    async def avatar(self, ctx, *, member: discord.Member = None):
+    @commands.command(name="avatar",aliases=["av", "pfp"])
+    async def avatar_(self, ctx, *, member: discord.Member = None):
         if not member:member=ctx.message.author
 
         message = discord.Embed(title=str(member), color=discord.Colour.orange())
