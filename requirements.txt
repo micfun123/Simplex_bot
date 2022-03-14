@@ -25,3 +25,6 @@ youtube-dl
 youtube-search-python
 wikipedia
 rsa>=4.7 # not directly required, pinned by Snyk to avoid a vulnerability
+mistune>=2.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
+pillow>=9.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
+pyyaml>=5.4 # not directly required, pinned by Snyk to avoid a vulnerability
