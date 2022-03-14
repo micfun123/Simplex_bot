@@ -116,7 +116,7 @@ class Minecraft(commands.Cog):
 
             return {"online": False, "player_count": 0, "players": None, "ping": None, "version": None}
 
-    @commands.command(name="mcping", aliases=["mcstatus"])
+    @commands.command(name="mcping", aliases=["mcstatus"], help= "Gets the status of a Minecraft server, Ping and player count")
     @commands.guild_only()
     async def mc_ping(self, ctx, server: str, port: int = None):
         async with ctx.typing():
