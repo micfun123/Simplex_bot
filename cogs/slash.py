@@ -159,7 +159,7 @@ class Slash(commands.Cog):
         message = discord.Embed(title=str(member), color=discord.Colour.orange())
         message.set_image(url=member.avatar.url)
 
-        await ctx.send(embed=message)
+        await ctx.respond(embed=message)
 
 def setup(client):
     client.add_cog(Slash(client))
