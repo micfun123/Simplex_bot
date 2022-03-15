@@ -185,7 +185,7 @@ class Minecraft(commands.Cog):
             await ctx.respond(embed=embed)
 
 
-    @commands.command(help="Gets a skin of a minecraft player")
+    @commands.command(name= "mchead",help="Gets a skin of a minecraft player")
     async def mchead(self, ctx, *, player: str):
         async with ctx.typing():
             resp = await self.ses.get(f"https://api.mojang.com/users/profiles/minecraft/{player}")
@@ -198,6 +198,21 @@ class Minecraft(commands.Cog):
             await ctx.send(embed=embed)
             embed.set_image(url=side_head_url)
             await ctx.send(embed=embed)
+
+
+    @commands.slash_command(name= "mchead",description="Gets a skin of a minecraft player")
+    async def mchead_(self, ctx, *, player: str):
+        async with ctx.typing():
+            resp = await self.ses.get(f"https://api.mojang.com/users/profiles/minecraft/{player}")
+            jj = await resp.json()
+            uuid = jj.get("id")
+            head_url = f"https://mc-heads.net/avatar/{uuid}" 
+            side_head_url = f"https://mc-heads.net/head/{uuid}"
+            embed = discord.Embed(color=discord.Color.green())
+            embed.set_image(url=head_url)
+            await ctx.respond(embed=embed)
+            embed.set_image(url=side_head_url)
+            await ctx.respond(embed=embed)
 
             
 def setup(bot):

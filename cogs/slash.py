@@ -153,9 +153,8 @@ class Slash(commands.Cog):
         await ctx.respond(file=discord.File('qrcode.png'))
 
     @slash_command(name="avatar")
-    async def avatar(self, ctx, *, member: discord.Member = None):
-        if not member:member=ctx.message.author
-
+    async def avatar(self, ctx, *, member):
+        
         message = discord.Embed(title=str(member), color=discord.Colour.orange())
         message.set_image(url=member.avatar.url)
 
