@@ -1,3 +1,4 @@
+from pydoc import describe
 import aiohttp
 import asyncio
 import concurrent.futures
@@ -155,6 +156,47 @@ class Minecraft(commands.Cog):
                             inline=False)
 
         await ctx.send(embed=embed)
+
+
+    @commands.command(name="mcping",description= "Gets the status of a Minecraft server, Ping and player count")
+    @commands.guild_only()
+    async def mc_ping(self, ctx, server: str, port: int = None):
+        async with ctx.typing():
+            status = await self.unified_mc_ping(server, port)
+
+        title = f"<:a:730460448339525744> {server}{(':' + str(port)) if port is not None else ''} is online."
+
+        if status.get("online") is False:
+            embed = discord.Embed(color=discord.Color.green(),
+                                  title=f"<:b:730460448197050489> {server}{(':' + str(port)) if port is not None else ''} is offline.")
+            await ctx.send(embed=embed)
+            return
+
+        ps_list = status.get("players")
+
+        embed = discord.Embed(color=discord.Color.green(), title=title)
+
+        ping = status.get("ping", "Not Available")
+
+        if ps_list is None:
+            embed.add_field(name="Players Online", value=status.get("player_count"))
+            embed.add_field(name="Latency/Ping", value=ping if ping != "None" and ping is not None else "Not Available")
+            embed.add_field(name="Version", value=status.get('version'), inline=False)
+        else:
+            embed.add_field(name="Latency/Ping", value=ping if ping != "None" and ping is not None else "Not Available")
+            embed.add_field(name="Version", value=status.get('version'))
+            ps_list_cut = ps_list[:20]
+            if len(ps_list_cut) == 0:
+                ps_list_cut.append("No players online.")
+
+            if len(ps_list_cut) < len(ps_list):
+                ps_list_cut.append(f"and {len(ps_list)-len(ps_list_cut)} others...")
+
+            embed.add_field(name=f"Players Online ({len(ps_list)} Total)",
+                            value=discord.utils.escape_markdown(', '.join(ps_list_cut)),
+                            inline=False)
+
+        await ctx.respond(embed=embed)
 
     @commands.command(name="mcskin", help="Gets a skin of a minecraft player")
     async def mcskin(self, ctx, *, player: str):
