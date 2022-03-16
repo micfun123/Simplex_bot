@@ -158,9 +158,8 @@ class Minecraft(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @commands.command(name="mcping",description= "Gets the status of a Minecraft server, Ping and player count")
-    @commands.guild_only()
-    async def mc_ping(self, ctx, server: str, port: int = None):
+    @commands.slash_command(name="mcping",description= "Gets the status of a Minecraft server, Ping and player count")
+    async def mc_ping_(self, ctx, server: str, port: int = None):
         async with ctx.typing():
             status = await self.unified_mc_ping(server, port)
 
