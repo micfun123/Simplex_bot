@@ -150,8 +150,8 @@ class utilities(commands.Cog):
         await ctx.message.author.edit(nick=txt)
         await ctx.send(self.bot.bot_prefix + 'Changed nickname to: `%s`' % txt)
 
-    @commands.command()
-    async def botinfo(self, ctx):
+    @commands.command(name = "botinfo", help = "Finds info about the bot.")
+    async def botinfo_(self, ctx):
         em = discord.Embed(title = 'Simplex')
         em.add_field(inline = False,name="Server Count", value=f"{len(self.client.guilds)}")
         mlist = []
@@ -168,6 +168,26 @@ class utilities(commands.Cog):
         em.add_field(name="Commands", value=f"{len(self.client.commands)} of commands")
 
         await ctx.send(embed = em)
+
+
+    @commands.slash_command(name = "botinfo", description = "Finds info about the bot.")
+    async def botinfo(self, ctx):
+        em = discord.Embed(title = 'Simplex')
+        em.add_field(inline = False,name="Server Count", value=f"{len(self.client.guilds)}")
+        mlist = []
+        for i in list(self.client.get_all_members()):
+            mlist.append(i.name)
+        em.add_field(inline = False,name="User Count", value=len(mlist))
+        em.add_field(inline = False,name="Active users", value=f"{len(set(mlist))}")
+        em.add_field(inline = False,name="Ping", value=f"{round(self.client.latency * 1000)}ms")
+        em.set_footer(text="Made by the Simplex Dev Team")
+        em.add_field(name = 'CPU Usage', value = f'{psutil.cpu_percent()}%', inline = False)
+        em.add_field(name = 'Memory Usage', value = f'{psutil.virtual_memory().percent}%', inline = False)
+        em.add_field(name = 'Available Memory', value = f'{round(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)}%', inline = False)
+        em.add_field(name="Python code", value=f"{get_lines()} of code",inline = False)
+        em.add_field(name="Commands", value=f"{len(self.client.commands)} of commands")
+
+        await ctx.respond(embed = em)
 
     @commands.command(name="avatar",aliases=["av", "pfp"])
     async def avatar_(self, ctx, *, member: discord.Member = None):
