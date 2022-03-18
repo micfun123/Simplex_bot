@@ -12,7 +12,7 @@ from random import randrange
 import requests
 from pyfiglet import figlet_format, FontError, FontNotFound
 from tools import get, log
-
+from io import BytesIO
 
 
 class Fun(commands.Cog):
@@ -402,6 +402,17 @@ class Fun(commands.Cog):
         
         embed = discord.Embed(title="coffee!", color=discord.Color.purple())
         embed.set_image(url=teajason['img_url'])
+        await ctx.send(embed=embed)
+
+    @commands.command(help = "It shows coffee photo") 
+    async def MCTEXT(self, ctx, * , message):
+
+        
+        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
+        text = message.replace(" ", "%20")
+        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/mctext/?Text={}" .format(text))
+        
+        
         await ctx.send(embed=embed)
 
 
