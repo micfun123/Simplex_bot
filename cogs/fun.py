@@ -403,7 +403,7 @@ class Fun(commands.Cog):
         embed.set_image(url=teajason['img_url'])
         await ctx.send(embed=embed)
 
-    @commands.command(name = "mctext", help = "It shows coffee photo") 
+    @commands.command(name = "mctext", help = "Prints your message in the minecraft font") 
     async def MCTEXT_(self, ctx, * , message):
 
         
@@ -414,13 +414,36 @@ class Fun(commands.Cog):
         
         await ctx.send(embed=embed)
 
-    @commands.slash_command(name = "mctext",description = "It shows coffee photo") 
+    @commands.slash_command(name = "mctext",description = "Prints your message in the minecraft font") 
     async def MCTEXT(self, ctx, * , message):
 
         
         embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
         text = message.replace(" ", "%20")
         embed.set_image(url="https://michaelstextapi.herokuapp.com/api/text/Minecraft?Text={}" .format(text))
+        
+        
+        await ctx.respond(embed=embed)
+
+
+    @commands.command(name = "pokemontext", help = "Prints your message in the pokemon font") 
+    async def pokemontext_(self, ctx, * , message):
+
+        
+        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
+        text = message.replace(" ", "%20")
+        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/text/pokemon?Text={}" .format(text))
+        
+        
+        await ctx.send(embed=embed)
+
+    @commands.slash_command(name = "pokemontext",description = "Prints your message in the pokemon font") 
+    async def pokemontext(self, ctx, * , message):
+
+        
+        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
+        text = message.replace(" ", "%20")
+        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/text/pokemon?Text=={}" .format(text))
         
         
         await ctx.respond(embed=embed)
