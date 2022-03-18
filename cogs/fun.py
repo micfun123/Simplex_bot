@@ -1,5 +1,3 @@
-from ast import alias
-from functools import _Descriptor
 import discord
 import random
 from discord.ext import commands
