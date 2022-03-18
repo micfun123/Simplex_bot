@@ -1,4 +1,5 @@
 from ast import alias
+from functools import _Descriptor
 import discord
 import random
 from discord.ext import commands
@@ -404,8 +405,8 @@ class Fun(commands.Cog):
         embed.set_image(url=teajason['img_url'])
         await ctx.send(embed=embed)
 
-    @commands.command(help = "It shows coffee photo") 
-    async def MCTEXT(self, ctx, * , message):
+    @commands.command(name = "mctext", help = "It shows coffee photo") 
+    async def MCTEXT_(self, ctx, * , message):
 
         
         embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
@@ -414,6 +415,17 @@ class Fun(commands.Cog):
         
         
         await ctx.send(embed=embed)
+
+    @commands.slash_command(name = "mctext",description = "It shows coffee photo") 
+    async def MCTEXT(self, ctx, * , message):
+
+        
+        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
+        text = message.replace(" ", "%20")
+        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/mctext/?Text={}" .format(text))
+        
+        
+        await ctx.respond(embed=embed)
 
 
 def setup(bot):
