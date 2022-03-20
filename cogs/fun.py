@@ -19,11 +19,18 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["flip", "coin"], help = "Flip a coin")	
+    @commands.command(name="coinflip", help = "Flip a coin")	
+    async def coinflipcommands(self, ctx):
+        """ Coinflip! """
+        coinsides = ["Heads", "Tails"]
+        await ctx.send(f"**{ctx.author.name}** flipped a coin and got **{random.choice(coinsides)}**!")
+
+    @commands.slash_command(name="coinflip", help = "Flip a coin")	
     async def coinflip(self, ctx):
         """ Coinflip! """
         coinsides = ["Heads", "Tails"]
         await ctx.send(f"**{ctx.author.name}** flipped a coin and got **{random.choice(coinsides)}**!")
+
 
     @commands.command()
     async def reverse(self, ctx, *, text: str):
