@@ -21,7 +21,7 @@ class Moderationsettings(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    #This bit not working \/   \/
+
 
     @commands.Cog.listener()
     async def on_message_delete(self,message):
@@ -41,7 +41,6 @@ class Moderationsettings(commands.Cog):
         await channel.send(embed=embed) 
 
 
-#This bit not working^^
 
     @commands.command()
     async def setLogChannel(self, ctx, channel: discord.TextChannel):
