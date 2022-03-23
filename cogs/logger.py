@@ -53,6 +53,7 @@ class Moderationsettings(commands.Cog):
         await ctx.send(f"Set log channel to {channel.mention}")
 
     @commands.command()
+    @commands.is_owner()
     async def set_all_log(self, ctx):
         data = await get_data()
         for guild in self.client.guilds:
