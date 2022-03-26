@@ -486,7 +486,7 @@ class Fun(commands.Cog):
 
     @commands.command()
     async def claim(self ,ctx):
-        await ctx.send("Claim 100k Simplex COins", view=MyView())
+        await ctx.send("Claim 100k Simplex Coins", view=MyView())
 
 
 def setup(bot):
