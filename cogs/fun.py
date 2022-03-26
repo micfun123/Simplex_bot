@@ -12,6 +12,19 @@ import requests
 from pyfiglet import figlet_format, FontError, FontNotFound
 from tools import get, log
 from io import BytesIO
+from discord.ui import View
+
+class MyView(View):
+    def __init__(self):
+        super().__init__(timeout=500)
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="Claim", custom_id="b1")
+    async def button1(self, button, interaction):
+        button.style = discord.ButtonStyle.red
+        button.label = "Claimed"
+        button.disabled=True
+        await interaction.response.edit_message(view=self)
+        await interaction.followup.send("https://imgur.com/NQinKJB",ephemeral=True)
 
 
 class Fun(commands.Cog):
@@ -469,6 +482,11 @@ class Fun(commands.Cog):
         
         
         await ctx.respond(embed=embed)
+
+
+    @commands.command()
+    async def claim(self ,ctx):
+        await ctx.send("Claim 100k Simplex COins", view=MyView())
 
 
 def setup(bot):
