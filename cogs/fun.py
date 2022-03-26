@@ -12,6 +12,19 @@ import requests
 from pyfiglet import figlet_format, FontError, FontNotFound
 from tools import get, log
 from io import BytesIO
+from discord.ui import View
+
+class MyView(View):
+    def __init__(self):
+        super().__init__(timeout=500)
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="Claim", custom_id="b1")
+    async def button1(self, button, interaction):
+        button.style = discord.ButtonStyle.red
+        button.label = "Claimed"
+        button.disabled=True
+        await interaction.response.edit_message(view=self)
+        await interaction.followup.send("https://imgur.com/NQinKJB",ephemeral=True)
 
 
 class Fun(commands.Cog):
@@ -87,6 +100,21 @@ class Fun(commands.Cog):
                 reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=30.0)
                 if reaction:
                     await ctx.send(f'**{user.name}** has paid their respects.')
+        except asyncio.TimeoutError:
+            await ctx.send('Timed out.')
+
+    @commands.command(name="pressx", help = "Press X to doubt {reson}")
+    async def pressx_(self, ctx, *, object):
+        """Pay respect to something/someone by pressing the reaction."""
+        try:
+            message = await ctx.send(f'Press X to doubts `{object}`')
+            await message.add_reaction('<:X_:957109093661835264>>')
+            while True:
+                def check(r, u):
+                    return str(r.emoji) == '<:X_:957109093661835264>' and r.message == message and u.id != self.bot.user.id
+                reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=30.0)
+                if reaction:
+                    await ctx.send(f'**{user.name}** has doubts.')
         except asyncio.TimeoutError:
             await ctx.send('Timed out.')
 
@@ -454,6 +482,11 @@ class Fun(commands.Cog):
         
         
         await ctx.respond(embed=embed)
+
+
+    @commands.command()
+    async def freestuff(self ,ctx):
+        await ctx.send("Claim a Free gift", view=MyView())
 
 
 def setup(bot):

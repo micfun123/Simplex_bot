@@ -21,28 +21,26 @@ class Moderationsettings(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    #This bit not working \/   \/
+
 
     @commands.Cog.listener()
-    async def on_message_delete(self,message,member):
+    async def on_message_delete(self,message):
         data = await get_data()
         for i in data:
-            if i['guild_id'] == member.guild.id:
+            if i['guild_id'] == message.author.guild.id:
                 stuff = i
 
         channel = stuff['channel']
        
-
         channel = await self.client.fetch_channel(channel)
         embed = discord.Embed(
             title="{}'s message deleted.".format(message.author.name), #message.author is sender of the message
             description=message.content,
-            color="teal"
+            color=discord.Color.red()
         )
-        channel=self.get_channel(channel)
         await channel.send(embed=embed) 
 
-#This bit not working^^
+
 
     @commands.command()
     async def setLogChannel(self, ctx, channel: discord.TextChannel):
@@ -54,6 +52,7 @@ class Moderationsettings(commands.Cog):
         await ctx.send(f"Set log channel to {channel.mention}")
 
     @commands.command()
+    @commands.is_owner()
     async def set_all_log(self, ctx):
         data = await get_data()
         for guild in self.client.guilds:
