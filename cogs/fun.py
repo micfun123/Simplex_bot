@@ -90,6 +90,21 @@ class Fun(commands.Cog):
         except asyncio.TimeoutError:
             await ctx.send('Timed out.')
 
+    @commands.command(name="pressx", help = "Press X to doubt {reson}")
+    async def pressx_(self, ctx, *, object):
+        """Pay respect to something/someone by pressing the reaction."""
+        try:
+            message = await ctx.send(f'Press X to doubts `{object}`')
+            await message.add_reaction('<:X_:957109093661835264>>')
+            while True:
+                def check(r, u):
+                    return str(r.emoji) == '<:X_:957109093661835264>' and r.message == message and u.id != self.bot.user.id
+                reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=30.0)
+                if reaction:
+                    await ctx.send(f'**{user.name}** has doubts.')
+        except asyncio.TimeoutError:
+            await ctx.send('Timed out.')
+
     @commands.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
     async def joke(ctx):
         async with aiohttp.ClientSession() as session:
