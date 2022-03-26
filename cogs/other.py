@@ -32,6 +32,7 @@ def get_lines():
     return lines
 
 class utilities(commands.Cog):
+    ''' All the utilities commands '''
     def __init__(self, client): 
         self.client = client 
     
