@@ -485,8 +485,8 @@ class Fun(commands.Cog):
 
 
     @commands.command()
-    async def claim(self ,ctx):
-        await ctx.send("Claim 100k Simplex Coins", view=MyView())
+    async def freestuff(self ,ctx):
+        await ctx.send("Claim a Free gift", view=MyView())
 
 
 def setup(bot):
