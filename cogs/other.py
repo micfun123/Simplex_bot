@@ -1,3 +1,4 @@
+from ast import alias
 import imp
 from datetime import timedelta 
 import datetime
@@ -231,7 +232,7 @@ class utilities(commands.Cog):
         img.save('qrcode.png')
         await ctx.send(file=discord.File('qrcode.png'))
 
-    @commands.command()
+    @commands.command(alias = "donate", help = "Donate to the bot")
     async def donation(self,ctx):
         em = discord.Embed(title = 'Donation', description = 'Donate to the bot to help keep it running!', color = 0x8BE002)
         em.add_field(name = ':BTC :', value = '**3Fi97A4fLw8Yycv7F3DwSfMgBJ3zjB1AFL**')
@@ -239,6 +240,7 @@ class utilities(commands.Cog):
         em.add_field(name = ':Doge :', value = '**DQVkWKqGoTGUY9MeN3HiUt49JfcC9aE7fp**')
         em.add_field(name = ':MPL  :', value = '**0xbDBb6403CA6D1681F0ef7A2603aD65a9F09AF138**')
         em.add_field(name = ':XMR  :', value = '**43rsynRD1qtCA1po9myFsc7ti5havFcXUZPdSZuMexU4DnEyno55TE16eWqFkMLMbwZ7DuRW4ow5kcWzQQYu96NH7XMk6cE**')
+        em.add_field(name="Buy me a coffee", value="[Click here](https://www.buymeacoffee.com/Michaelrbparker)")
         
         await ctx.send(embed = em)
         
