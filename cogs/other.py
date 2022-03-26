@@ -232,7 +232,7 @@ class utilities(commands.Cog):
         img.save('qrcode.png')
         await ctx.send(file=discord.File('qrcode.png'))
 
-    @commands.command(alias = "donate", help = "Donate to the bot")
+    @commands.command(aliases = "donate", help = "Donate to the bot")
     async def donation(self,ctx):
         em = discord.Embed(title = 'Donation', description = 'Donate to the bot to help keep it running!', color = 0x8BE002)
         em.add_field(name = ':BTC :', value = '**3Fi97A4fLw8Yycv7F3DwSfMgBJ3zjB1AFL**')
