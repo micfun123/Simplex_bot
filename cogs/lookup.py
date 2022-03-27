@@ -76,6 +76,17 @@ class lookup(commands.Cog):
         except:
             await ctx.send(f" Invalid country name or API error! Try again later.")
 
+    @commands.command()
+    async def randomimg(self, ctx):
+        """
+        Get a random image from unsplash.com
+        """
+        url = "https://source.unsplash.com/random"
+        r = requests.get(url)
+        Embed = discord.Embed(title="Random Image", description="Random Image from unsplash.com", color=0x00ff00)
+        Embed.set_image(url=r.url)
+        await ctx.send(embed=Embed)
+
 def setup(client):
     client.add_cog(lookup(client))
     
