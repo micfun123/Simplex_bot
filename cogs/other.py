@@ -1,5 +1,3 @@
-from ast import alias
-import imp
 from datetime import timedelta 
 import datetime
 from lib2to3.pgen2.token import AWAIT
@@ -242,7 +240,6 @@ class utilities(commands.Cog):
         em.add_field(name = ':MPL  :', value = '**0xbDBb6403CA6D1681F0ef7A2603aD65a9F09AF138**')
         em.add_field(name = ':XMR  :', value = '**43rsynRD1qtCA1po9myFsc7ti5havFcXUZPdSZuMexU4DnEyno55TE16eWqFkMLMbwZ7DuRW4ow5kcWzQQYu96NH7XMk6cE**')
         em.add_field(name="Buy me a coffee", value="[Click here](https://www.buymeacoffee.com/Michaelrbparker)")
-        
         await ctx.send(embed = em)
         
 
