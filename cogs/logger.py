@@ -6,6 +6,16 @@ from discord.ext import commands
 import discord.ui 
 
 
+async def get_data_announcement():
+    with open("./databases/announcement.json") as f:
+        data = json.load(f)
+    return data
+
+
+async def dump_data_announcement(data):
+    with open("./databases/announcement.json", "w") as f:
+        json.dump(data, f, indent=4)
+
 async def get_data():
     with open("./databases/log.json") as f:
         data = json.load(f)
@@ -15,12 +25,22 @@ async def get_data():
 async def dump_data(data):
     with open("./databases/log.json", "w") as f:
         json.dump(data, f, indent=4)
-
     
 class Moderationsettings(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    @commands.command()
+    async def announcement(self, ctx, *, message):
+        data = await get_data_announcement()
+        for guild in data:
+            stuff = guild
+
+       
+        channel = await self.client.fetch_channel(channel)
+        channel = stuff['channel']
+    
+        await channel.send(message) 
 
 
     @commands.Cog.listener()
@@ -52,6 +72,15 @@ class Moderationsettings(commands.Cog):
         await ctx.send(f"Set log channel to {channel.mention}")
 
     @commands.command()
+    async def setAnnouncementChannel(self, ctx, channel: discord.TextChannel):
+        data = await get_data_announcement()
+        for i in data:
+            if i['guild_id'] == ctx.guild.id:
+                i['channel'] = channel.id
+        await dump_data_announcement(data)
+        await ctx.send(f"Set log channel to {channel.mention}")
+
+    @commands.command(hidden = True)
     @commands.is_owner()
     async def set_all_log(self, ctx):
         data = await get_data()
@@ -66,6 +95,21 @@ class Moderationsettings(commands.Cog):
         await dump_data(data)
         await ctx.send("Done")
 
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def set_all_announcement(self, ctx):
+        data = await get_data_announcement()
+        for guild in self.client.guilds:
+            append_this = {
+                "guild_id": guild.id,
+                "channel": None,
+        
+            }
+            data.append(append_this)
+
+        await dump_data_announcement(data)
+        await ctx.send("Done")
+
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         data = await get_data()
@@ -78,6 +122,19 @@ class Moderationsettings(commands.Cog):
         data.append(append_this)
 
         await dump_data(data)
+
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        data = await get_data_announcement()
+
+        append_this = {
+            "guild_id": guild.id,
+            "channel": None,
+            
+        }
+        data.append(append_this)
+
+        await dump_data_announcement(data)
 
 def setup(client):
     client.add_cog(Moderationsettings(client))
