@@ -132,6 +132,9 @@ class Counting(commands.Cog):
                 i['counting_channel'] = channel.id
         with open('./databases/db.json', 'w') as f:
             json.dump(data, f, indent =4)
+            await ctx.send("Done")
+
+            
     @commands.command()
     async def countingoff(self, ctx):
             with open("./databases/db.json") as f:
@@ -141,6 +144,7 @@ class Counting(commands.Cog):
                     i['counting_channel'] = None
             with open('./databases/db.json', 'w') as f:
                 json.dump(data, f, indent =4)
+    
             
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
