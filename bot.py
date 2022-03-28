@@ -219,7 +219,6 @@ async def on_message(message):
 
 
     
-    
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 def start_bot(client):

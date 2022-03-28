@@ -15,50 +15,32 @@ announcement = LevelUpAnnouncement(lvlembed)
 lvl = DiscordLevelingSystem(rate=1, per=10.0,level_up_announcement=announcement)
 lvl.connect_to_database_file('databases\DiscordLevelingSystem.db')
 
+
+
+async def level_on(guild):
+    guild_id = str(guild)
+    with open("databases/leveling.json") as f:
+        data = json.load(f)
+    if guild_id not in data:
+        data[guild_id] = True
+        with open("databases/leveling.json", 'w') as f:
+            json.dump(data, f, indent=4)
+        return True
+    if data[guild_id]:
+        return True 
+    else:
+        return False
+
 async def lb(self, ctx):
     data = await lvl.each_member_data(ctx.guild, sort_by='rank')
-
-    leaderboard_image = Editor(Canvas((680, 800)))
-    bg = await load_image_async("https://i.imgur.com/FRJXi4k.png")
-    bg_img = Editor(bg).rotate(90.0)
-    leaderboard_image.rectangle((0, 0), width=680, height=800, fill="#23272A")
-    leaderboard_image.paste(bg_img, (-600, 0))
-    
+    em = discord.Embed(title="Leaderboard")
     n = 0
-    yp = 5
-
     for i in data:
-        try:
-            member = ctx.guild.get_member(i.id_number)
-
-            person = Editor(Canvas((670, 75), color="#5663F7"))
-
-            if member.avatar is None:
-                profile_image = await load_image_async("https://cdn.logojoy.com/wp-content/uploads/20210422095037/discord-mascot.png")
-                person_avatar = Editor(profile_image).resize((60, 60)).circle_image()
-            else:
-                profile_image = await load_image_async(str(member.avatar.url))
-                person_avatar = Editor(profile_image).resize((60, 60)).circle_image()
-
-            person.paste(person_avatar, (7, 7))
-            
-            poppins_medium = Font.poppins(variant="bold", size=25)
-            
-            person.text((100, 20), f"#{n+1}  ●  {member.display_name}  ●  LVL: {i.level}", font=poppins_medium, color="white", align="left")
-
-
-            leaderboard_image.paste(person, (5,yp))
-
-            yp += 80
-            n += 1
-        except Exception as e:
-            print(e)
-        if n == 10:
-            break 
-    
-    leaderboard_image.save(f"./tempstorage/leveling{ctx.author.id}.png")
-
-    await ctx.send(file=discord.File(f"./tempstorage/leveling{ctx.author.id}.png"))
+      em.add_field(name=f'{i.rank}: {i.name}', value=f'Level: {i.level}, Total XP: {i.total_xp}', inline=False)
+      n += 1
+      if n == 10:
+        break 
+    await ctx.send(embed=em)
 
 class Leveling(commands.Cog):
     def __init__(self, client):
@@ -180,13 +162,38 @@ class Leveling(commands.Cog):
         await lvl.add_xp(member=member, amount=amount)
         await ctx.send(f"Gave {amount} xp to {member.name}, Removed {amount} xp from {ctx.author.name}")
 
-    
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def toggle_leveling(ctx):
+
+        with open("databases/leveling.json") as f:
+            data = json.load(f)
+        if str(ctx.guild.id) not in data:
+            data[str(ctx.guild.id)] = True
+            await ctx.send("Leveling On")
+            
+        if data[str(ctx.guild.id)]:
+            data[str(ctx.guild.id)] = False
+            await ctx.send("Leveling Off")
+
+        else:
+            data[str(ctx.guild.id)] = True
+            await ctx.send("Leveling On")
+
+        with open("databases/leveling.json", 'w') as f:
+            json.dump(data, f, indent=4)
+
+        if data[str(ctx.guild.id)]:
+            return True
+
+        return False
 
 
     @commands.Cog.listener()
     async def on_message(self, message):
-          await lvl.award_xp(amount=[15, 25], message=message)
-        
+        await lvl.award_xp(amount=[15, 25], message=message)
+
 
 
     @commands.Cog.listener()
