@@ -35,8 +35,6 @@ class Moderationsettings(commands.Cog):
         data = await get_data_announcement()
         for guild in data:
             stuff = guild
-
-       
         channel = await self.client.fetch_channel(channel)
         channel = stuff['channel']
     
@@ -135,6 +133,25 @@ class Moderationsettings(commands.Cog):
         data.append(append_this)
 
         await dump_data_announcement(data)
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        if after.author.id == self.client.user.id:
+            return
+        em = discord.Embed(color=discord.Color.blue(), 
+            title="Message Edit", description=f"{before.author} edited their message")
+        em.add_field(name="Before", value=before.content)
+        em.add_field(name="After", value=after.content)
+
+        data = await get_data()
+        for i in data:
+            if i['guild_id'] == after.author.guild.id:
+                stuff = i
+
+                y = stuff['channel']
+                channel = await self.client.fetch_channel(y)
+            
+            await channel.send(embed=em)
 
 def setup(client):
     client.add_cog(Moderationsettings(client))
