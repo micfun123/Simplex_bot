@@ -79,7 +79,7 @@ class Moderationsettings(commands.Cog):
             if i['guild_id'] == ctx.guild.id:
                 i['channel'] = channel.id
         await dump_data_announcement(data)
-        await ctx.send(f"Set log channel to {channel.mention}")
+        await ctx.send(f"Set bot announcment channel to {channel.mention}")
 
     @commands.command(hidden = True)
     @commands.is_owner()
