@@ -13,7 +13,7 @@ lvlembed.description = f'Congrats {LevelUpAnnouncement.Member.mention}! You are 
 announcement = LevelUpAnnouncement(lvlembed)
 
 lvl = DiscordLevelingSystem(rate=1, per=30.5,level_up_announcement=announcement)
-lvl.connect_to_database_file('databases\DiscordLevelingSystem.db')
+lvl.connect_to_database_file(r'databases\DiscordLevelingSystem.db')
 
 
 
