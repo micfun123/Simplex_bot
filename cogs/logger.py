@@ -150,8 +150,8 @@ class Moderationsettings(commands.Cog):
 
                 y = stuff['channel']
                 channel = await self.client.fetch_channel(y)
-            
-            await channel.send(embed=em)
+                await channel.send(embed=em)
+                
 
 def setup(client):
     client.add_cog(Moderationsettings(client))
