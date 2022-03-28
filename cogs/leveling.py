@@ -136,8 +136,16 @@ class Leveling(commands.Cog):
         await lb(self, ctx)
     
 
+    @commands.command(hidden = True)
+    @commands.check(mic)
+    async def addxp(self, ctx, member:discord.Member, amount:int):
+        await lvl.add_xp(member=member, amount=amount)
 
 
+    @commands.command(hidden = True)
+    @commands.check(mic)
+    async def removexp(self, ctx, member:discord.Member, amount:int):
+        await lvl.remove_xp(member=member, amount=amount)
 
     @commands.Cog.listener()
     async def on_message(self, message):
