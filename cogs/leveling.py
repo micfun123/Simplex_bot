@@ -134,18 +134,7 @@ class Leveling(commands.Cog):
     @commands.command(aliases=['lb'], help="This command shows the leaderboard for this server.\nIt is sorted by most highest level to lowest.")
     async def leaderboard(self, ctx):
         await lb(self, ctx)
-    
 
-    @commands.command(hidden = True)
-    @commands.check(mic)
-    async def addxp(self, ctx, member:discord.Member, amount:int):
-        await lvl.add_xp(member=member, amount=amount)
-
-
-    @commands.command(hidden = True)
-    @commands.check(mic)
-    async def removexp(self, ctx, member:discord.Member, amount:int):
-        await lvl.remove_xp(member=member, amount=amount)
 
     @commands.Cog.listener()
     async def on_message(self, message):
