@@ -37,12 +37,11 @@ class Moderationsettings(commands.Cog):
         data = await get_data_announcement()
         for guild in data:
             stuff = guild
-        y = stuff['channel']
-        if y == None:
-            return
-        
-        channel = await self.client.fetch_channel(y)
-        await channel.send(message) 
+            y = stuff['channel']
+            if y == None:
+                continue
+            channel = await self.client.fetch_channel(y)
+            await channel.send(message) 
 
 
     @commands.Cog.listener()
@@ -179,6 +178,30 @@ class Moderationsettings(commands.Cog):
         data = await get_data()
         for i in data:
             if i['guild_id'] == before.guild.id:
+                stuff = i
+                y = stuff['channel']
+                channel = await self.client.fetch_channel(y)
+                await channel.send(embed=em)
+
+    @commands.Cog.listener()
+    async def on_member_ban(self, guild, user):
+        em = discord.Embed(color=discord.Color.blue(), 
+            title="Member Banned!", description=f"{user.name} Has been banned from the server", timestamp = datetime.datetime.utcnow())
+        data = await get_data()
+        for i in data:
+            if i['guild_id'] == user.guild.id:
+                stuff = i
+                y = stuff['channel']
+                channel = await self.client.fetch_channel(y)
+                await channel.send(embed=em)
+
+    @commands.Cog.listener()
+    async def on_member_unban(self, guild, user):
+        em = discord.Embed(color=discord.Color.blue(), 
+            title="Member Unbanned!", description=f"{user.name} Has been unbanned from the server", timestamp = datetime.datetime.utcnow())
+        data = await get_data()
+        for i in data:
+            if i['guild_id'] == user.guild.id:
                 stuff = i
                 y = stuff['channel']
                 channel = await self.client.fetch_channel(y)
