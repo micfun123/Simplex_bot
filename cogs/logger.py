@@ -35,10 +35,14 @@ class Moderationsettings(commands.Cog):
         data = await get_data_announcement()
         for guild in data:
             stuff = guild
-        channel = await self.client.fetch_channel(channel)
-        channel = stuff['channel']
-    
+        y = stuff['channel']
+        if y == None:
+            return
+        
+        channel = await self.client.fetch_channel(y)
         await channel.send(message) 
+
+
 
 
     @commands.Cog.listener()
