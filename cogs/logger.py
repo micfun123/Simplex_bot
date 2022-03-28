@@ -1,9 +1,11 @@
     
+import imp
 import json
 from discord import Option
 import discord
 from discord.ext import commands
 import discord.ui 
+import datetime
 
 
 async def get_data_announcement():
@@ -41,8 +43,6 @@ class Moderationsettings(commands.Cog):
         
         channel = await self.client.fetch_channel(y)
         await channel.send(message) 
-
-
 
 
     @commands.Cog.listener()
@@ -155,6 +155,35 @@ class Moderationsettings(commands.Cog):
                 y = stuff['channel']
                 channel = await self.client.fetch_channel(y)
                 await channel.send(embed=em)
+
+    @commands.Cog.listener()
+    async def on_member_update(self, before, after):
+        if before.nick is not None and after.nick is None:
+            em = discord.Embed(color=discord.Color.blue(), title="Nick Change",
+                                description=f"{before.name} has unicked", timestamp = datetime.datetime.utcnow())
+            em.add_field(name="Before:", value=before.nick)
+            em.add_field(name="After:", value="No Nick")
+
+        if before.nick is None and after.nick is not None:
+            em = discord.Embed(color=discord.Color.blue(), title="Nick Change",
+                                description=f"{before.name} Has nicked", timestamp = datetime.datetime.utcnow())
+            em.add_field(name="Before:", value="No Nick")
+            em.add_field(name="After:", value=after.nick)
+
+        elif before.nick != after.nick:
+            em = discord.Embed(color=discord.Color.blue(), 
+                title="Nick Change", description=f"{before.name} Has changed their nick", timestamp = datetime.datetime.utcnow())
+            em.add_field(name="Before:", value=before.nick)
+            em.add_field(name="After:", value=after.nick)
+
+        data = await get_data()
+        for i in data:
+            if i['guild_id'] == before.guild.id:
+                stuff = i
+                y = stuff['channel']
+                channel = await self.client.fetch_channel(y)
+                await channel.send(embed=em)
+
                 
 
 def setup(client):
