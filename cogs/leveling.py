@@ -12,7 +12,7 @@ lvlembed.description = f'Congrats {LevelUpAnnouncement.Member.mention}! You are 
 
 announcement = LevelUpAnnouncement(lvlembed)
 
-lvl = DiscordLevelingSystem(rate=1, per=10.0,level_up_announcement=announcement)
+lvl = DiscordLevelingSystem(rate=1, per=30.5,level_up_announcement=announcement)
 lvl.connect_to_database_file('databases\DiscordLevelingSystem.db')
 
 
@@ -46,7 +46,7 @@ class Leveling(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(aliases=['lvl'], extras={"category":"Leveling"}, usage="rank [@user(optional)]", help="This command shows your rank for the leveling system.", description="Shows your rank image")
+    @commands.command(aliases=['lvl'], usage="rank [@user(optional)]", help="This command shows your rank for the leveling system.", description="Shows your rank image")
     async def rank(self, ctx, member:discord.Member=None):
         if member == None:
             data = await lvl.get_data_for(ctx.author)
@@ -131,7 +131,7 @@ class Leveling(commands.Cog):
         os.remove(f"tempstorage/rank{member.id}.png")
 
 
-    @commands.command(aliases=['lb'], extras={"category":"Leveling"}, usage="leaderboard", help="This command shows the leaderboard for this server.\nIt is sorted by most highest level to lowest.", description="Shows the leaderboard for your server")
+    @commands.command(aliases=['lb'], usage="leaderboard", help="This command shows the leaderboard for this server.\nIt is sorted by most highest level to lowest.", description="Shows the leaderboard for your server")
     async def leaderboard(self, ctx):
         await lb(self, ctx)
     
@@ -192,7 +192,8 @@ class Leveling(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        await lvl.award_xp(amount=[15, 25], message=message)
+            await lvl.award_xp(amount=15, message=message)
+        
 
 
 
