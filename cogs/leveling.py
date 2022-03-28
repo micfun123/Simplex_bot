@@ -46,7 +46,7 @@ class Leveling(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(aliases=['lvl'], usage="rank [@user(optional)]", help="This command shows your rank for the leveling system.", description="Shows your rank image")
+    @commands.command(aliases=['lvl'], help="This command shows your rank for the leveling system.", description="Shows your rank image")
     async def rank(self, ctx, member:discord.Member=None):
         if member == None:
             data = await lvl.get_data_for(ctx.author)
@@ -131,70 +131,17 @@ class Leveling(commands.Cog):
         os.remove(f"tempstorage/rank{member.id}.png")
 
 
-    @commands.command(aliases=['lb'], usage="leaderboard", help="This command shows the leaderboard for this server.\nIt is sorted by most highest level to lowest.", description="Shows the leaderboard for your server")
+    @commands.command(aliases=['lb'], help="This command shows the leaderboard for this server.\nIt is sorted by most highest level to lowest.")
     async def leaderboard(self, ctx):
         await lb(self, ctx)
     
 
-    @commands.command()
-    @commands.check(mic)
-    async def addxp(self, ctx, member:discord.Member, amount:int):
-        await ctx.message.delete()
-        await lvl.add_xp(member=member, amount=amount)
 
-
-    @commands.command()
-    @commands.check(mic)
-    async def removexp(self, ctx, member:discord.Member, amount:int):
-        await ctx.message.delete()
-        await lvl.remove_xp(member=member, amount=amount)
-
-
-    @commands.command()
-    @commands.check(mic)
-    async def setlvl(self,ctx, member:discord.Member, level:int):
-        await ctx.message.delete()
-        await lvl.set_level(member=member, level=level)
-
-    @commands.command()
-    async def givexp(self, ctx, member:discord.Member, amount:int):
-        await lvl.remove_xp(member=ctx.author, amount=amount)
-        await lvl.add_xp(member=member, amount=amount)
-        await ctx.send(f"Gave {amount} xp to {member.name}, Removed {amount} xp from {ctx.author.name}")
-
-
-    @commands.command()
-    @commands.has_permissions(administrator=True)
-    async def toggle_leveling(ctx):
-
-        with open("databases/leveling.json") as f:
-            data = json.load(f)
-        if str(ctx.guild.id) not in data:
-            data[str(ctx.guild.id)] = True
-            await ctx.send("Leveling On")
-            
-        if data[str(ctx.guild.id)]:
-            data[str(ctx.guild.id)] = False
-            await ctx.send("Leveling Off")
-
-        else:
-            data[str(ctx.guild.id)] = True
-            await ctx.send("Leveling On")
-
-        with open("databases/leveling.json", 'w') as f:
-            json.dump(data, f, indent=4)
-
-        if data[str(ctx.guild.id)]:
-            return True
-
-        return False
 
 
     @commands.Cog.listener()
     async def on_message(self, message):
             await lvl.award_xp(amount=15, message=message)
-        
-
 
 
     @commands.Cog.listener()
