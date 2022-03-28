@@ -491,34 +491,30 @@ class Music(commands.Cog):
                 raise commands.CommandError('Bot is already in a voice channel.')
 
 
-    @commands.command(name="lyrics")
-    async def lyrics_command(self, ctx, name: t.Optional[str]):
-        name = name
+    @commands.command(help="This command shows lyrics for a song. You input the title and the bot tries to find the lyrics for that song", extras={"category":"Search"}, usage="lyrics [song name]", description="Song lyrics command")
+    async def lyrics(self, ctx, *, song):
+        url = "https://some-random-api.ml/lyrics"
+        song = song.replace(" ", "+")
+        data = {
+            "title" : song
+        }
 
-        async with ctx.typing():
-            async with aiohttp.request("GET", LYRICS_URL + name, headers={}) as r:
-                if not 200 <= r.status <= 299:
-                    raise NoLyricsFound
+        async with aiohttp.ClientSession() as session:
+                async with session.get(url, data=data) as resp:
+                    r = await resp.json()
+        if 'error' in r:
+            return await ctx.send(r['error'])
+        
+        em = discord.Embed(
+            title=r['title'],
+            description=f"{r['lyrics']}\n\n[Link on genius]({r['links']['genius']})", color=ctx.author.color
+        )
+        em.set_author(name=r['author'])
+        em.set_thumbnail(url=r['thumbnail']['genius'])
+        em.color = ctx.author.color
+        
 
-                data = await r.json()
-
-                if len(data["lyrics"]) > 2000:
-                    return await ctx.send(f"<{data['links']['genius']}>")
-
-                embed = discord.Embed(
-                    title=data["title"],
-                    description=data["lyrics"],
-                    colour=ctx.author.colour,
-                    timestamp=dt.datetime.utcnow(),
-                )
-                embed.set_thumbnail(url=data["thumbnail"]["genius"])
-                embed.set_author(name=data["author"])
-                await ctx.send(embed=embed)
-
-    @lyrics_command.error
-    async def lyrics_command_error(self, ctx, exc):
-        if isinstance(exc, NoLyricsFound):
-            await ctx.send("No lyrics could be found.")
+        await ctx.send(embed=em)
 
 
 def setup(bot):
