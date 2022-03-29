@@ -17,7 +17,7 @@ The goal is to provides numerous utilities and other tools / entertainment to he
 
 Want to join the discord? [Link](https://discord.gg/d2gjWqFsTP)  List of suggestions here
 
-# How to contibute 
+# How to contribute 
 
 1. make a fork
 2. do you code
