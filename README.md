@@ -1,7 +1,9 @@
 # The Everything Discord Bot
 
 
-![![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
+![](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
+
+![](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)
 
 ![CodeFactor](https://img.shields.io/github/issues-raw/micfun123/Simplex_bot)
 
