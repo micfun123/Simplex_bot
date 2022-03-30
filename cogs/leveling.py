@@ -46,6 +46,37 @@ class Leveling(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def toggle_leveling(self, ctx):
+
+        with open("databases/leveling.json") as f:
+            data = json.load(f)
+        if str(ctx.guild.id) not in data:
+            data[str(ctx.guild.id)] = True
+            await ctx.send("Leveling On")
+            
+        if data[str(ctx.guild.id)]:
+            data[str(ctx.guild.id)] = False
+            await ctx.send("Leveling Off")
+
+        else:
+            data[str(ctx.guild.id)] = True
+            await ctx.send("Leveling On")
+
+        with open("databases/leveling.json", 'w') as f:
+            json.dump(data, f, indent=4)
+
+        if data[str(ctx.guild.id)]:
+            return True
+
+        return False
+
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        await lvl.reset_member(member)
+
     @commands.command(aliases=['lvl'], help="This command shows your rank for the leveling system.", description="Shows your rank image")
     async def rank(self, ctx, member:discord.Member=None):
         if member == None:
@@ -138,7 +169,10 @@ class Leveling(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-            await lvl.award_xp(amount=15, message=message)
+            level_toggle =  await level_on(message.guild.id)
+            if level_toggle:
+                await lvl.award_xp(amount=15, message=message)
+    
 
 
     @commands.Cog.listener()
