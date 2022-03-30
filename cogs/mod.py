@@ -260,6 +260,23 @@ class Moderation(commands.Cog):
         
         await ctx.send(embed=em)
 
+    @commands.command(help = "Moves a message across servers or channels. Must use command on channel with the message")
+    async def MoveMessage(self, ctx, channel: discord.TextChannel, message_id: int):
+        """
+        Moves a message to a different channel.
+        """
+        # Fetches the message
+        msg = await ctx.channel.fetch_message(message_id)
+        webhook = await channel.create_webhook(name="Mover")
+
+        await webhook.send(content=msg.content,username=f"{msg.author.name}",avatar_url=f"{msg.author.avatar.url}")
+        # If the message has attachments then send those too
+        if msg.attachments is not None:
+            for i in msg.attachments:
+                await webhook.send(i.url)
+
+        # Delete the webhook
+        await webhook.delete()
     
 
 def setup(client):
