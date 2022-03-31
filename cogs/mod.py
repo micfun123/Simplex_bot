@@ -260,8 +260,9 @@ class Moderation(commands.Cog):
         
         await ctx.send(embed=em)
 
-    @commands.has_permissions(manage_messages=True)
+    
     @commands.command(help = "Moves a message across servers or channels. Must use command on channel with the message")
+    @commands.has_permissions(manage_messages=True)
     async def MoveMessage(self, ctx, channel: discord.TextChannel, message_id: int):
         """
         Moves a message to a different channel.
