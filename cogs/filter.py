@@ -179,10 +179,51 @@ class filter(commands.Cog):
         await ctx.send(file=file)
         os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
 
+    
+    
+    @commands.command(help="This will put a Blurple  effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
+    async def Blurple (self, ctx, member: discord.Member=None):
 
+        if member is None:
+            member = ctx.author
+            
+        data = {
+            "avatar" : member.avatar.url,
+        }
 
+        url = f"https://some-random-api.ml/canvas/blurple2"
 
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, data=data) as resp:
+                    f = await aiofiles.open(f'./tempstorage/overlay{ctx.author.id}.png', mode='wb')
+                    await f.write(await resp.read())
+                    await f.close()
+        file = discord.File(f"./tempstorage/overlay{ctx.author.id}.png")
+        await ctx.send(file=file)
+        os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
 
+    
+    
+    @commands.command(help="This will put a Blurple old effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
+    async def Blurpleold (self, ctx, member: discord.Member=None):
+
+        if member is None:
+            member = ctx.author
+            
+        data = {
+            "avatar" : member.avatar.url,
+        }
+
+        url = f"https://some-random-api.ml/canvas/blurple"
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, data=data) as resp:
+                    f = await aiofiles.open(f'./tempstorage/overlay{ctx.author.id}.png', mode='wb')
+                    await f.write(await resp.read())
+                    await f.close()
+        file = discord.File(f"./tempstorage/overlay{ctx.author.id}.png")
+        await ctx.send(file=file)
+        os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
     
 def setup(client):
     client.add_cog(filter(client))
