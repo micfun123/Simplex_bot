@@ -159,7 +159,7 @@ class filter(commands.Cog):
 
     
     @commands.command(help="This will put a sepia effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
-    async def Greyscale(self, ctx, member: discord.Member=None):
+    async def sepia(self, ctx, member: discord.Member=None):
 
         if member is None:
             member = ctx.author
