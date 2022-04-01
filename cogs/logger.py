@@ -123,9 +123,6 @@ class Moderationsettings(commands.Cog):
         data.append(append_this)
 
         await dump_data(data)
-
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
         data = await get_data_announcement()
 
         append_this = {
@@ -136,6 +133,7 @@ class Moderationsettings(commands.Cog):
         data.append(append_this)
 
         await dump_data_announcement(data)
+       
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
