@@ -232,17 +232,14 @@ class filter(commands.Cog):
         if member is None:
             member = ctx.author
             
-        data = {
-            "avatar" : member.avatar.url,
-        }
-
-        url = f"https://michaelapi.herokuapp.com/filters/wanted"
+        url = f"https://michaelapi.herokuapp.com/filters/wanted?image_url={member.avatar.url}"
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, data=data) as resp:
+            async with session.get(url) as resp:
                     f = await aiofiles.open(f'./tempstorage/overlay{ctx.author.id}.png', mode='wb')
                     await f.write(await resp.read())
                     await f.close()
+
         file = discord.File(f"./tempstorage/overlay{ctx.author.id}.png")
         await ctx.send(file=file)
         os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
