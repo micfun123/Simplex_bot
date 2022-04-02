@@ -226,14 +226,20 @@ class filter(commands.Cog):
         os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
 
 
+<<<<<<< HEAD
     
 
     @commands.command(help="This will put a pixelate old effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
     async def pixelate (self, ctx, member: discord.Member=None):
+=======
+    @commands.command(help="This will put a Wanted old effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
+    async def Wanted (self, ctx, member: discord.Member=None):
+>>>>>>> bfdc26344b3a2d00cdd4de9bafd14e0152a04b52
 
         if member is None:
             member = ctx.author
             
+<<<<<<< HEAD
         data = {
             "avatar" : member.avatar.url,
         }
@@ -245,6 +251,16 @@ class filter(commands.Cog):
                     f = await aiofiles.open(f'./tempstorage/overlay{ctx.author.id}.png', mode='wb')
                     await f.write(await resp.read())
                     await f.close()
+=======
+        url = f"https://michaelapi.herokuapp.com/filters/wanted?image_url={member.avatar.url}"
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                    f = await aiofiles.open(f'./tempstorage/overlay{ctx.author.id}.png', mode='wb')
+                    await f.write(await resp.read())
+                    await f.close()
+
+>>>>>>> bfdc26344b3a2d00cdd4de9bafd14e0152a04b52
         file = discord.File(f"./tempstorage/overlay{ctx.author.id}.png")
         await ctx.send(file=file)
         os.remove(f"./tempstorage/overlay{ctx.author.id}.png")

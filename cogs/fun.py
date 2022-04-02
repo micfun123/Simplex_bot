@@ -444,7 +444,7 @@ class Fun(commands.Cog):
         
         embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
         text = message.replace(" ", "%20")
-        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/text/Minecraft?Text={}" .format(text))
+        embed.set_image(url="https://michaelapi.herokuapp.com/api/text/Minecraft?Text={}" .format(text))
         
         
         await ctx.send(embed=embed)
@@ -455,7 +455,7 @@ class Fun(commands.Cog):
         
         embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
         text = message.replace(" ", "%20")
-        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/text/Minecraft?Text={}" .format(text))
+        embed.set_image(url="https://michaelapi.herokuapp.com/api/text/Minecraft?Text={}" .format(text))
         
         
         await ctx.respond(embed=embed)
@@ -467,7 +467,7 @@ class Fun(commands.Cog):
         
         embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
         text = message.replace(" ", "%20")
-        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/text/pokemon?Text={}" .format(text))
+        embed.set_image(url="https://michaelapi.herokuapp.com/api/text/pokemon?Text={}" .format(text))
         
         
         await ctx.send(embed=embed)
@@ -478,7 +478,7 @@ class Fun(commands.Cog):
         
         embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
         text = message.replace(" ", "%20")
-        embed.set_image(url="https://michaelstextapi.herokuapp.com/api/text/pokemon?Text={}" .format(text))
+        embed.set_image(url="https://michaelapi.herokuapp.com/api/text/pokemon?Text={}" .format(text))
         
         
         await ctx.respond(embed=embed)
