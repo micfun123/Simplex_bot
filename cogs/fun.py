@@ -358,7 +358,8 @@ class Fun(commands.Cog):
             Embed = discord.Embed(title = "Code Output", description = f"```{data['output']}```", color = discord.Color.green())
             await ctx.send(embed = Embed)
         if data['stderr'] != "":
-            await ctx.send(f"```Errors\n{data['stderr']}```")
+            Embed = discord.Embed(title = "Errors", description = f"```{data['stderr']}```", color = discord.Color.red())
+            await ctx.send(embed = Embed)
 
     @commands.command(aliases=["boredom"])
     async def bored(self,ctx):
