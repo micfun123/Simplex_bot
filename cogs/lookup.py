@@ -88,17 +88,6 @@ class lookup(commands.Cog):
         await ctx.send(embed=Embed)
         
 
-#gets most populare news articals from the NYT API
-    @commands.command()
-    def get_news(ctx):
-        url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key={}".format(os.getenv("NYT_API_KEY"))
-        response = requests.get(url)
-        data = response.json()
-        articles = data["results"]
-        embed = discord.Embed(title="Top News", description="Top News from the New York Times", color=0x00ff00)
-        for article in articles:
-            embed.add_field(name=article["title"], value=article["abstract"], inline=False)
-        return embed
         
 
 def setup(client):
