@@ -355,7 +355,8 @@ class Fun(commands.Cog):
         data = await get.post_get_json(url, data)
         print(data)
         if data['ran'] == True:
-            await ctx.send(f"```py\n{data['output']}```")
+            Embed = discord.Embed(title = "Code Output", description = f"```{data['output']}```", color = discord.Color.green())
+            await ctx.send(embed = Embed)
         if data['stderr'] != "":
             await ctx.send(f"```Errors\n{data['stderr']}```")
 
