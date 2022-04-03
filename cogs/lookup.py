@@ -89,7 +89,7 @@ class lookup(commands.Cog):
 
 #gets most populare news articals from the NYT API
 def get_news(ctx):
-    url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key={}".format(os.environ.get("NYT_API_KEY"))
+    url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key={}".format(os.getenv("NYT_API_KEY"))
     response = requests.get(url)
     data = response.json()
     articles = data["results"]
