@@ -13,6 +13,10 @@ from pyfiglet import figlet_format, FontError, FontNotFound
 from tools import get, log
 from io import BytesIO
 from discord.ui import View
+import os
+import aiofiles
+import io 
+import urllib
 
 class MyView(View):
     def __init__(self):
@@ -490,6 +494,16 @@ class Fun(commands.Cog):
     async def freestuff(self ,ctx):
         await ctx.send("Claim a Free gift", view=MyView())
 
+    @commands.command(help="This will put a pixelate effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
+    async def pixelatethis (self, ctx, urls):
+        hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+        URL = "https://some-random-api.ml/canvas/pixelate?avatar={}".format(urls)
+        req = urllib.request.Request(URL, headers=hdr)
+        response = urllib.request.urlopen(req) 
+        f = io.BytesIO(response.read())
+        await ctx.send(file=discord.File(f, "pixelate.png"))
+        
+        
 
 def setup(bot):
     bot.add_cog(Fun(bot))
