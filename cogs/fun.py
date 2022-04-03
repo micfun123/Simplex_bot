@@ -76,11 +76,11 @@ class Fun(commands.Cog):
         embed.add_field(name="Total:", value=sum(dice_roll_ints))
         await ctx.send("", embed=embed)
 
-    @commands.command(aliases=["calculator"])
-    async def calc(self, ctx, *, text: str):
-        calc = ne.evaluate(text)
-        msg = int(calc)
-        await ctx.send(msg)
+    #@commands.command(aliases=["calculator"])
+    #async def calc(self, ctx, *, text: str):
+    #    calc = ne.evaluate(text)
+    #    msg = int(calc)
+    #    await ctx.send(msg)
 
     @commands.command(Hidden=True)
     @commands.has_guild_permissions(administrator=True)
