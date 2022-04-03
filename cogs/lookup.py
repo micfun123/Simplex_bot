@@ -86,18 +86,20 @@ class lookup(commands.Cog):
         Embed = discord.Embed(title="Random Image", description="Random Image from unsplash.com", color=0x00ff00)
         Embed.set_image(url=r.url)
         await ctx.send(embed=Embed)
+        
 
 #gets most populare news articals from the NYT API
-def get_news(ctx):
-    url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key={}".format(os.getenv("NYT_API_KEY"))
-    response = requests.get(url)
-    data = response.json()
-    articles = data["results"]
-    embed = discord.Embed(title="Top News", description="Top News from the New York Times", color=0x00ff00)
-    for article in articles:
-        embed.add_field(name=article["title"], value=article["abstract"], inline=False)
-    return embed
-    await ctx.send(embed=embed)
+    @commands.command()
+    def get_news(ctx):
+        url = "https://api.nytimes.com/svc/topstories/v2/home.json?api-key={}".format(os.getenv("NYT_API_KEY"))
+        response = requests.get(url)
+        data = response.json()
+        articles = data["results"]
+        embed = discord.Embed(title="Top News", description="Top News from the New York Times", color=0x00ff00)
+        for article in articles:
+            embed.add_field(name=article["title"], value=article["abstract"], inline=False)
+        return embed
+        
 
 def setup(client):
     client.add_cog(lookup(client))
