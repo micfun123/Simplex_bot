@@ -89,17 +89,20 @@ class lookup(commands.Cog):
     @commands.command()
     async def NYT(self, ctx):
         """
-        Get a random article from the New York Times
+        Get a most populare articale from the New York Times
         """
-        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key={}".format(os.environ.get("NYT_API_KEY"))
+        url = "https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key={}".format(os.environ.get("NYT_API_KEY"))
         r = requests.get(url)
         json_data = r.json()
-        title = json_data["response"]["docs"][0]["headline"]["main"]
-        url = json_data["response"]["docs"][0]["web_url"]
-        Embed = discord.Embed(title="New York Times", description="Random Article from the New York Times", color=0x00ff00)
+        title = json_data["results"][0]["title"]
+        url = json_data["results"][0]["url"]
+        Embed = discord.Embed(title="Most Popular Article", description="Most Popular Article from the New York Times", color=0x00ff00)
         Embed.add_field(name="Title", value=title, inline=False)
         Embed.add_field(name="Link", value=url, inline=False)
         await ctx.send(embed=Embed)
+        
+
+        
 
         
 
