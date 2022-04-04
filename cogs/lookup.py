@@ -1,4 +1,3 @@
-import imp
 from pydoc import describe
 from discord import Embed
 import wikipedia
@@ -87,6 +86,20 @@ class lookup(commands.Cog):
         Embed.set_image(url=r.url)
         await ctx.send(embed=Embed)
         
+    @commands.command()
+    async def NYT(self, ctx):
+        """
+        Get a random article from the New York Times
+        """
+        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key={}".format(os.environ.get("NYT_API_KEY"))
+        r = requests.get(url)
+        json_data = r.json()
+        title = json_data["response"]["docs"][0]["headline"]["main"]
+        url = json_data["response"]["docs"][0]["web_url"]
+        Embed = discord.Embed(title="New York Times", description="Random Article from the New York Times", color=0x00ff00)
+        Embed.add_field(name="Title", value=title, inline=False)
+        Embed.add_field(name="Link", value=url, inline=False)
+        await ctx.send(embed=Embed)
 
         
 
