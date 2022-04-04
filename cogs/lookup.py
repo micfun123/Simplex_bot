@@ -87,7 +87,7 @@ class lookup(commands.Cog):
         await ctx.send(embed=Embed)
         
     @commands.command()
-    async def NYT(self, ctx):
+    async def nyt_top(self, ctx):
         """
         Get a most populare articale from the New York Times
         """
@@ -97,6 +97,36 @@ class lookup(commands.Cog):
         title = json_data["results"][0]["title"]
         url = json_data["results"][0]["url"]
         Embed = discord.Embed(title="Most Popular Article", description="Most Popular Article from the New York Times", color=0x00ff00)
+        Embed.add_field(name="Title", value=title, inline=False)
+        Embed.add_field(name="Link", value=url, inline=False)
+        await ctx.send(embed=Embed)
+
+    @commands.command()
+    async def nyt_search(self, ctx, *, query):
+        """
+        Search for an article from the New York Times
+        """
+        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q={}&api-key={}".format(query, os.environ.get("NYT_API_KEY"))
+        r = requests.get(url)
+        json_data = r.json()
+        title = json_data["response"]["docs"][0]["headline"]["main"]
+        url = json_data["response"]["docs"][0]["web_url"]
+        Embed = discord.Embed(title="Search Result", description="Search Result from the New York Times", color=0x00ff00)
+        Embed.add_field(name="Title", value=title, inline=False)
+        Embed.add_field(name="Link", value=url, inline=False)
+        await ctx.send(embed=Embed)
+
+    @commands.command()
+    async def nyt_random(self, ctx):
+        """
+        Get a random article from the New York Times
+        """
+        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key={}".format(os.environ.get("NYT_API_KEY"))
+        r = requests.get(url)
+        json_data = r.json()
+        title = json_data["response"]["docs"][0]["headline"]["main"]
+        url = json_data["response"]["docs"][0]["web_url"]
+        Embed = discord.Embed(title="Random Article", description="Random Article from the New York Times", color=0x00ff00)
         Embed.add_field(name="Title", value=title, inline=False)
         Embed.add_field(name="Link", value=url, inline=False)
         await ctx.send(embed=Embed)
