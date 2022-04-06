@@ -504,8 +504,8 @@ class Fun(commands.Cog):
         await ctx.send(file=discord.File(f, "pixelate.png"))
         
 
-    @commands.command(name = "I_wish", help = "Prints your message in the pokemon font") 
-    async def I_wish_(self, ctx, * , message):
+    @commands.command(name = "i_wish", help = "Prints your message in the pokemon font") 
+    async def i_wish_(self, ctx, * , message):
 
         
         embed = discord.Embed(title="Here is your Wish!", color=discord.Color.purple())
@@ -515,8 +515,8 @@ class Fun(commands.Cog):
         
         await ctx.send(embed=embed)
 
-    @commands.slash_command(name = "I_wish",description = "Prints your message in the pokemon font") 
-    async def I_wish(self, ctx, * , message):
+    @commands.slash_command(name = "i_wish",description = "Prints your message in the pokemon font") 
+    async def i_wish(self, ctx, * , message):
 
         
         embed = discord.Embed(title="Here is your Wish!", color=discord.Color.purple())
