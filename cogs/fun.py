@@ -504,18 +504,18 @@ class Fun(commands.Cog):
         await ctx.send(file=discord.File(f, "pixelate.png"))
         
 
-    @commands.command(name = "i_wish", help = "Prints your message in the pokemon font") 
+    @commands.command(name = "i_wish") 
     async def i_wish_(self, ctx, * , message):
 
         
         embed = discord.Embed(title="Here is your Wish!", color=discord.Color.purple())
         text = message.replace(" ", "%20")
-        embed.set_image(url="https://michaelapi.herokuapp.com/api/text/pokemon?Text={}" .format(text))
+        embed.set_image(url="https://michaelapi.herokuapp.com/filters/I_wish?text={}" .format(text))
         
         
         await ctx.send(embed=embed)
 
-    @commands.slash_command(name = "i_wish",description = "Prints your message in the pokemon font") 
+    @commands.slash_command(name = "i_wish") 
     async def i_wish(self, ctx, * , message):
 
         
