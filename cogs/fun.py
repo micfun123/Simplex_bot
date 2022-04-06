@@ -507,7 +507,8 @@ class Fun(commands.Cog):
     @commands.command(name = "i_wish") 
     async def i_wish_(self, ctx, * , message):
             hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
-            URL = "https://michaelapi.herokuapp.com/filters/I_wish?text={}".format(message)
+            text = message.replace(" ", "%20")
+            URL = "https://michaelapi.herokuapp.com/filters/I_wish?text={}".format(text)
             req = urllib.request.Request(URL, headers=hdr)
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
@@ -517,7 +518,8 @@ class Fun(commands.Cog):
     @commands.slash_command(name = "i_wish") 
     async def i_wish(self, ctx, * , message):
             hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
-            URL = "https://michaelapi.herokuapp.com/filters/I_wish?text={}".format(message)
+            text = message.replace(" ", "%20")
+            URL = "https://michaelapi.herokuapp.com/filters/I_wish?text={}".format(text)
             req = urllib.request.Request(URL, headers=hdr)
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
