@@ -515,15 +515,13 @@ class Fun(commands.Cog):
 
 
     @commands.slash_command(name = "i_wish") 
-    async def i_wish(self, ctx, * , message):
-
-        
-        embed = discord.Embed(title="Here is your Wish!", color=discord.Color.purple())
-        text = message.replace(" ", "%20")
-        embed.set_image(url="https://michaelapi.herokuapp.com/filters/I_wish?text={}" .format(text))
-        
-        
-        await ctx.respond(embed=embed)
+    async def i_wish_(self, ctx, * , message):
+            hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+            URL = "https://michaelapi.herokuapp.com/filters/I_wish?text={}".format(message)
+            req = urllib.request.Request(URL, headers=hdr)
+            response = urllib.request.urlopen(req) 
+            f = io.BytesIO(response.read())
+            await ctx.send(file=discord.File(f, "wish.png"))
         
 
 def setup(bot):
