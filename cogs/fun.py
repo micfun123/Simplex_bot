@@ -515,7 +515,7 @@ class Fun(commands.Cog):
 
 
     @commands.slash_command(name = "i_wish") 
-    async def i_wish_(self, ctx, * , message):
+    async def i_wish(self, ctx, * , message):
             hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
             URL = "https://michaelapi.herokuapp.com/filters/I_wish?text={}".format(message)
             req = urllib.request.Request(URL, headers=hdr)
