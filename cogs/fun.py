@@ -524,6 +524,28 @@ class Fun(commands.Cog):
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
             await ctx.send(file=discord.File(f, "wish.png"))
+
+
+    @commands.command(name = "um_dad") 
+    async def um_dad___(self, ctx, * , message):
+            hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+            text = message.replace(" ", "%20")
+            URL = "https://michaelapi.herokuapp.com/Memes/um_dad?text={}".format(text)
+            req = urllib.request.Request(URL, headers=hdr)
+            response = urllib.request.urlopen(req) 
+            f = io.BytesIO(response.read())
+            await ctx.send(file=discord.File(f, "wish.png"))
+
+
+    @commands.slash_command(name = "um_dad") 
+    async def umdad_(self, ctx, * , message):
+            hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+            text = message.replace(" ", "%20")
+            URL = "https://michaelapi.herokuapp.com/Memes/um_dad?text={}".format(text)
+            req = urllib.request.Request(URL, headers=hdr)
+            response = urllib.request.urlopen(req) 
+            f = io.BytesIO(response.read())
+            await ctx.send(file=discord.File(f, "wish.png"))
         
 
 def setup(bot):
