@@ -551,7 +551,7 @@ class Fun(commands.Cog):
     async def um_dad__(self, ctx, * , message):
             text = message.replace(" ", "%20")
             text = text.replace("’", "%E2%80%99")
-            URL = "https://michaelapi.herokuapp.com/Memes/um_dad?textt={}".format(text)
+            URL = "https://michaelapi.herokuapp.com/Memes/um_dad?text={}".format(text)
             req = urllib.request.Request(URL)
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
@@ -562,7 +562,7 @@ class Fun(commands.Cog):
     async def um_dad___S(self, ctx, * , message):
             text = message.replace(" ", "%20")
             text = text.replace("’", "%E2%80%99")
-            URL = "https://michaelapi.herokuapp.com/Memes/um_dad?textt={}".format(text)
+            URL = "https://michaelapi.herokuapp.com/Memes/um_dad?text={}".format(text)
             req = urllib.request.Request(URL)
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
