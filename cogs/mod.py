@@ -1,4 +1,5 @@
 import imp
+from multiprocessing import Manager
 import typing
 import discord
 from discord.ext import commands
@@ -279,6 +280,16 @@ class Moderation(commands.Cog):
 
         # Delete the webhook
         await webhook.delete()
+
+    @commands.has_guild_permissions(manage_messages=True)
+    @commands.command(help = "Delete all messages from a user on the server")
+    async def purgeuser(self, ctx, user: discord.Member):
+        """
+        Purges all messages from a user across all channels.
+        """
+        for channel in ctx.guild.text_channels:
+            await channel.purge(limit=100, check=lambda m: m.author == user)       
+        await ctx.send(f"{user}'s messages have been deleted.")
     
 
 def setup(client):
