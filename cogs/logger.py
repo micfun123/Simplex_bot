@@ -1,5 +1,5 @@
     
-import imp
+from tools import mic
 import json
 from discord import Option
 import discord
@@ -33,6 +33,7 @@ class Moderationsettings(commands.Cog):
         self.client = client
 
     @commands.command()
+    @commands.check(mic)
     async def announcement(self, ctx, *, message):
         data = await get_data_announcement()
         for guild in data:
