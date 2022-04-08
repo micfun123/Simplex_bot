@@ -33,7 +33,7 @@ class Moderationsettings(commands.Cog):
         self.client = client
 
     @commands.command()
-    @commands.check(mic)
+    @commands.is_owner()
     async def announcement(self, ctx, *, message):
         data = await get_data_announcement()
         for guild in data:
