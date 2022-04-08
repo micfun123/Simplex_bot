@@ -291,20 +291,20 @@ class Moderation(commands.Cog):
             await channel.purge(limit=100, check=lambda m: m.author == user)       
         await ctx.send(f"{user}'s messages have been deleted.")
     
-    @commands.has_guild_permissions(manage_messages=True)
-    @commands.command(help = "Delete all messages from a user on the server in time frame")
-    async def timepurgeuser(self, ctx, user: discord.Member, time: int):
-        """
-        Purges all messages from a user across all channels.
-        """
-        dt = datetime.datetime.now() - datetime.timedelta(minutes=time)
-        naive = dt.replace(tzinfo=None)
-        for channel in ctx.guild.text_channels:
-            for messages in await channel.history(limit=300).flatten():
-                discordnaive = messages.created_at.replace(tzinfo=None)
-                if discordnaive < naive:
-                    await channel.purge(limit=100, check=lambda m: m.author == user)       
-        await ctx.send(f"{user}'s messages have been deleted. this was onlty in the last {time} minutes.")
+    #@commands.has_guild_permissions(manage_messages=True)
+    #@commands.command(help = "Delete all messages from a user on the server in time frame")
+    #async def timepurgeuser(self, ctx, user: discord.Member, time: int):
+    #    """
+    #    Purges all messages from a user across all channels.
+    #    """
+    #    dt = datetime.datetime.now() - datetime.timedelta(minutes=time)
+    #    naive = dt.replace(tzinfo=None)
+    #    for channel in ctx.guild.text_channels:
+    #        for messages in await channel.history(limit=100).flatten():
+    #            discordnaive = messages.created_at.replace(tzinfo=None)
+    #            if discordnaive < naive:
+    #                await channel.purge(limit=100, check=lambda m: m.author == user)       
+    #    await ctx.send(f"{user}'s messages have been deleted. this was onlty in the last {time} minutes.")
     
 
 def setup(client):
