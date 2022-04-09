@@ -5,14 +5,21 @@ from discordLevelingSystem import DiscordLevelingSystem, LevelUpAnnouncement
 from easy_pil import Editor, Canvas, Font, load_image_async, Text
 import os
 from tools import log, mic
+import random
+LevelUPresponses = [f'Congrats {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} 😎',
+                 f'Well done {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} have a 🥇',
+                 f'{LevelUpAnnouncement.Member.mention} you are now level {LevelUpAnnouncement.LEVEL}! Keep going ',
+                 f'You are {LevelUpAnnouncement.Member.mention} and now your at level {LevelUpAnnouncement.LEVEL}!',
+                 ]
+
 
 lvlembed = discord.Embed(color=discord.Color.green())
 lvlembed.set_author(name=LevelUpAnnouncement.Member.name)
-lvlembed.description = f'Congrats {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} 😎'
+lvlembed.description = random.choice(LevelUPresponses)
 
 announcement = LevelUpAnnouncement(lvlembed)
 
-lvl = DiscordLevelingSystem(rate=1, per=60.5,level_up_announcement=announcement)
+lvl = DiscordLevelingSystem(rate=1, per=1,level_up_announcement=announcement)
 lvl.connect_to_database_file(r'databases/DiscordLevelingSystem.db')
 
 
