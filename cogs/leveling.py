@@ -19,7 +19,7 @@ lvlembed.description = random.choice(LevelUPresponses)
 
 announcement = LevelUpAnnouncement(lvlembed)
 
-lvl = DiscordLevelingSystem(rate=1, per=1,level_up_announcement=announcement)
+lvl = DiscordLevelingSystem(rate=3, per=60.5,level_up_announcement=announcement)
 lvl.connect_to_database_file(r'databases/DiscordLevelingSystem.db')
 
 
