@@ -281,8 +281,9 @@ class Moderation(commands.Cog):
         # Delete the webhook
         await webhook.delete()
 
-    @commands.has_guild_permissions(manage_messages=True)
+    
     @commands.command(help = "Delete all messages from a user on the server")
+    @commands.has_guild_permissions(manage_messages=True)
     async def purgeuser(self, ctx, user: discord.Member):
         """
         Purges all messages from a user across all channels.
