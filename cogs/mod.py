@@ -288,7 +288,7 @@ class Moderation(commands.Cog):
         Purges all messages from a user across all channels.
         """
         for channel in ctx.guild.text_channels:
-            await channel.purge(limit=100, check=lambda m: m.author == user)       
+            await channel.purge(limit=550, check=lambda m: m.author == user)       
         await ctx.send(f"{user}'s messages have been deleted.")
     
     @commands.has_guild_permissions(manage_messages=True)
@@ -303,7 +303,7 @@ class Moderation(commands.Cog):
             for messages in await channel.history(limit=100).flatten():
                 discordnaive = messages.created_at.replace(tzinfo=None)
                 if discordnaive < naive:
-                    await channel.purge(limit=100, check=lambda m: m.author == user)       
+                    await channel.purge(check=lambda m: m.author == user)       
         await ctx.send(f"{user}'s messages have been deleted. this was only in the last {time} minutes.")
     
 
