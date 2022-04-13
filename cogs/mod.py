@@ -247,7 +247,7 @@ class Moderation(commands.Cog):
             await ctx.send(f"{user} has invited {total_invites} member{'' if total_invites == 1 else 's'} to the server!")
 
      
-    @commands.command()
+    @commands.command(help= "Shows a leaderboard of the most invites on ther server")
     async def inviteslb(self, ctx, user:discord.Member=None):
         em = discord.Embed(title="Leaderboard")
         total_invites = {}
