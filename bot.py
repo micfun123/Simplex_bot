@@ -155,7 +155,7 @@ async def invite(ctx):
 
 @client.command(hidden=True)
 async def echo(ctx, *, content:str):
-    await ctx.send(content)
+    await ctx.send(f"{content} \n \n \n ||This was sent by {ctx.author}||")
     
 @commands.is_owner()
 @client.command(pass_context=True)
