@@ -568,6 +568,28 @@ class Fun(commands.Cog):
             f = io.BytesIO(response.read())
             await ctx.respond(file=discord.File(f, "read.png"))
 
+    @commands.command(name = "headache") 
+    async def headache__(self, ctx, * , message):
+            text = message.replace(" ", "%20")
+            text = text.replace("’", "%E2%80%99")
+            URL = "https://michaelapi.herokuapp.com/Memes/headache?text={}".format(text)
+            req = urllib.request.Request(URL)
+            response = urllib.request.urlopen(req) 
+            f = io.BytesIO(response.read())
+            await ctx.send(file=discord.File(f, "read.png"))
+
+
+    @commands.slash_command(name = "headache") 
+    async def headache___S(self, ctx, * , message):
+            text = message.replace(" ", "%20")
+            text = text.replace("’", "%E2%80%99")
+            URL = "https://michaelapi.herokuapp.com/Memes/headache?text={}".format(text)
+            req = urllib.request.Request(URL)
+            response = urllib.request.urlopen(req) 
+            f = io.BytesIO(response.read())
+            await ctx.respond(file=discord.File(f, "read.png"))
+
+
     
 
 def setup(bot):
