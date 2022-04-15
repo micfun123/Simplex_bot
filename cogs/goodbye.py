@@ -85,7 +85,7 @@ class GoodbyeView(discord.ui.View):
         await dump_data(data)
 
         channel = await self.ctx.guild.fetch_channel(channel_id)
-        em = discord.Embed(title="Welcome Channel",
+        em = discord.Embed(title="Good Bye Channel",
                            description=f"Set to {channel.mention}")
         await interaction.followup.send(embed=em)
 
@@ -99,7 +99,7 @@ class GoodBye(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def GoodBye(self, ctx):
         view = GoodbyeView(self.client, ctx)
-        em = discord.Embed(title="Welcome Settings:")
+        em = discord.Embed(title="Good Bye Settings:")
         message = await ctx.send(embed=em, view=view)
         res = await view.wait()
         if res:
@@ -140,7 +140,7 @@ class GoodBye(commands.Cog):
 
         channel = await self.client.fetch_channel(channel)
 
-        em = discord.Embed(title=f"Welcome {member.name}!", description=text)
+        em = discord.Embed(title=f"Good Bye {member.name}!", description=text)
         await channel.send(embed=em, content=member.mention)
 
 
