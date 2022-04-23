@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 import json
 from simpcalc import simpcalc
+import asyncio
 calculator = simpcalc.Calculate()
 
 async def get_counting_channel(guild):
@@ -17,20 +18,12 @@ async def get_counting_channel(guild):
 
 
 async def counting(msg, guild, channel, m):
-    
     try:
-        if msg.startswith('this'):
-         return
-
-        if msg.startswith('that'):
-         return
-        msg = int(msg)
+      calc = simpcalc.Calculate()
+      ans = await calc.calculate(msg)
+      msg = int(ans)
     except:
-        try:
-          calc = calculator.calculate(msg)
-          msg = int(calc)
-        except:
-         return    
+     return    
 
     cc = await get_counting_channel(guild)
 
