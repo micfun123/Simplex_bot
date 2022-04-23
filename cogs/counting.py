@@ -2,8 +2,8 @@ import discord
 import discord
 from discord.ext import commands
 import json
-import numexpr as ne
-import numpy
+from simpcalc import simpcalc
+calculator = simpcalc.Calculate()
 
 async def get_counting_channel(guild):
     with open("./databases/db.json") as f:
@@ -27,7 +27,7 @@ async def counting(msg, guild, channel, m):
         msg = int(msg)
     except:
         try:
-          calc = ne.evaluate(msg)
+          calc = calculator.calculate(msg)
           msg = int(calc)
         except:
          return    
