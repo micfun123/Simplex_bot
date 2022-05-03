@@ -11,6 +11,9 @@ import requests
 import qrcode
 import io
 from PIL import Image
+from simpcalc import simpcalc
+
+calculator = simpcalc.Calculate()
 
 def get_lines():
     lines = 0
@@ -242,6 +245,12 @@ class utilities(commands.Cog):
         em.add_field(name="Buy me a coffee", value="[Click here](https://www.buymeacoffee.com/Michaelrbparker)")
         await ctx.send(embed = em)
         
+
+    @commands.command(name="calc", aliases=["calculate"], help = "Calculate something")
+    async def _calc__(self, ctx, *, equation):
+        calc = simpcalc.Calculate()
+        ans = await calc.calculate(equation)
+        await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
 def setup(bot):
     bot.add_cog(utilities(bot))
