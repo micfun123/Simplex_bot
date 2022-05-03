@@ -8,6 +8,10 @@ import json
 import random
 import qrcode
 import os
+from simpcalc import simpcalc
+
+calculator = simpcalc.Calculate()
+
 
 def mic(ctx):
     return ctx.author.id == 481377376475938826
@@ -161,6 +165,12 @@ class Slash(commands.Cog):
         message.set_image(url=member.avatar.url)
 
         await ctx.respond(embed=message)
+
+    @slash_command(name="calc", description = "Calculate something")
+    async def _calc_slash(self, ctx, *, equation):
+        calc = simpcalc.Calculate()
+        ans = await calc.calculate(equation)
+        await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
 def setup(client):
     client.add_cog(Slash(client))
