@@ -271,12 +271,12 @@ class Moderation(commands.Cog):
         # Fetches the message
         msg = await ctx.channel.fetch_message(message_id)
         webhook = await channel.create_webhook(name="Mover")
-
-        await webhook.send(content=msg.content,username=f"{msg.author.name}",avatar_url=f"{msg.author.avatar.url}")
-        # If the message has attachments then send those too
-        if msg.attachments is not None:
-            for i in msg.attachments:
-                await webhook.send(i.url)
+        for message in channel.history(limit=100):
+            await webhook.send(content=message.content,username=f"{msg.author.name}",avatar_url=f"{msg.author.avatar.url}")
+            # If the message has attachments then send those too
+            if msg.attachments is not None:
+                for i in msg.attachments:
+                    await webhook.send(i.url)
 
         # Delete the webhook
         await webhook.delete()
@@ -306,6 +306,18 @@ class Moderation(commands.Cog):
                 if discordnaive < naive:
                     await channel.purge(check=lambda m: m.author == user)       
         await ctx.send(f"{user}'s messages have been deleted. this was only in the last {time} minutes.")
+
+    #remove role from all
+    @commands.command(help = "Remove a role from all members")
+    @commands.has_guild_permissions(manage_roles=True)
+    async def removerole(self, ctx, role: discord.Role):
+        """
+        Removes a role from all members.
+        """
+        for member in ctx.guild.members:
+            await member.remove_roles(role)
+        await ctx.send(f"{role} has been removed from all members.")
+        
     
 
 def setup(client):
