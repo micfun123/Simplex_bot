@@ -317,7 +317,18 @@ class Moderation(commands.Cog):
         for member in ctx.guild.members:
             await member.remove_roles(role)
         await ctx.send(f"{role} has been removed from all members.")
-        
+
+
+    #add role to all
+    @commands.command(help = "Add a role to all members")
+    @commands.has_guild_permissions(manage_roles=True)
+    async def addrole(self, ctx, role: discord.Role):
+        """
+        Adds a role to all members.
+        """
+        for member in ctx.guild.members:
+            await member.add_roles(role)
+        await ctx.send(f"{role} has been added to all members.")
     
 
 def setup(client):
