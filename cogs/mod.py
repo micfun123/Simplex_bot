@@ -310,7 +310,7 @@ class Moderation(commands.Cog):
     #remove role from all
     @commands.command(help = "Remove a role from all members")
     @commands.has_guild_permissions(manage_roles=True)
-    async def removerole(self, ctx, role: discord.Role):
+    async def removeroleall(self, ctx, role: discord.Role):
         """
         Removes a role from all members.
         """
@@ -322,7 +322,7 @@ class Moderation(commands.Cog):
     #add role to all
     @commands.command(help = "Add a role to all members")
     @commands.has_guild_permissions(manage_roles=True)
-    async def addrole(self, ctx, role: discord.Role):
+    async def giverollall(self, ctx, role: discord.Role):
         """
         Adds a role to all members.
         """
