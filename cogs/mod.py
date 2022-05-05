@@ -329,6 +329,38 @@ class Moderation(commands.Cog):
         for member in ctx.guild.members:
             await member.add_roles(role)
         await ctx.send(f"{role} has been added to all members.")
+
+    #remove role from user
+    @commands.command(help = "Remove a role from a user")
+    @commands.has_guild_permissions(manage_roles=True)
+    async def removeroleuser(self, ctx, user: discord.Member, role: discord.Role):
+        """
+        Removes a role from a user.
+        """
+        await user.remove_roles(role)
+        await ctx.send(f"{role} has been removed from {user}.")
+
+    #add role to user
+    @commands.command(help = "Add a role to a user")
+    @commands.has_guild_permissions(manage_roles=True)
+    async def giveroleuser(self, ctx, user: discord.Member, role: discord.Role):
+        """
+        Adds a role to a user.
+        """
+        await user.add_roles(role)
+        await ctx.send(f"{role} has been added to {user}.")
+
+    #remove all roles from user
+    @commands.command(help = "Remove all roles from a user")
+    @commands.has_guild_permissions(manage_roles=True)
+    async def removerolesuser(self, ctx, user: discord.Member):
+        """
+        Removes all roles from a user.
+        """
+        for role in user.roles:
+            await user.remove_roles(role)
+        await ctx.send(f"All roles have been removed from {user}.")
+        
     
 
 def setup(client):

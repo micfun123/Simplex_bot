@@ -12,6 +12,8 @@ import qrcode
 import io
 from PIL import Image
 from simpcalc import simpcalc
+from PyDictionary import PyDictionary
+dictionary=PyDictionary()
 
 calculator = simpcalc.Calculate()
 
@@ -251,6 +253,16 @@ class utilities(commands.Cog):
         calc = simpcalc.Calculate()
         ans = await calc.calculate(equation)
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
+
+    @commands.command(name="dict", aliases=["dictionary"], help = "Look up a word")
+    async def _dict__(self, ctx, *, word):
+        try:
+            definition = dictionary.meaning(word)
+            em = discord.Embed(title = word, description = definition, color = 0x8BE002)
+            await ctx.send(embed = em)
+        except:
+            await ctx.send("Word not found")
+
 
 def setup(bot):
     bot.add_cog(utilities(bot))
