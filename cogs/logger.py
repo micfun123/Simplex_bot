@@ -206,7 +206,18 @@ class Moderationsettings(commands.Cog):
                 channel = await self.client.fetch_channel(y)
                 await channel.send(embed=em)
 
-                
+    @commands.Cog.listener()
+    async def on_guild_channel_delete(self,channel):
+        em = discord.Embed(color=discord.Color.blue(), 
+            title="Channel deleted!", description=f"{channel.name} Has been unbanned from the server", timestamp = datetime.datetime.utcnow())
+        data = await get_data()
+        for i in data:
+            if i['guild_id'] == channel.guild.id:
+                stuff = i
+                y = stuff['channel']
+                channel = await self.client.fetch_channel(y)
+                await channel.send(embed=em)
+
 
 def setup(client):
     client.add_cog(Moderationsettings(client))
