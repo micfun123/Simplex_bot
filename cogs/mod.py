@@ -353,7 +353,7 @@ class Moderation(commands.Cog):
     #remove all roles from user
     @commands.command(help = "Remove all roles from a user")
     @commands.has_guild_permissions(manage_roles=True)
-    async def removeroles(self, ctx, user: discord.Member):
+    async def removerole(self, ctx, user: discord.Member):
         """
         Removes all roles from a user.
         """
