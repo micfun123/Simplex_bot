@@ -1,7 +1,10 @@
 # The Everything Discord Bot
 
 
-[![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
+![](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
+
+![](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)
+
 ![CodeFactor](https://img.shields.io/github/issues-raw/micfun123/Simplex_bot)
 
 ![Known Vulnerabilities](https://snyk.io/test/github/micfun123/Simplex_bot/badge.svg)
@@ -17,7 +20,7 @@ The goal is to provides numerous utilities and other tools / entertainment to he
 
 Want to join the discord? [Link](https://discord.gg/d2gjWqFsTP)  List of suggestions here
 
-# How to contibute 
+# How to contribute 
 
 1. make a fork
 2. do you code
