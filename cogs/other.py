@@ -56,7 +56,6 @@ class utilities(commands.Cog):
         id = str(ctx.guild.id)
         region = str(ctx.guild.region)
         memberCount = str(ctx.guild.member_count)
-        activeCount = str(activeCount())
 
 
         embed = discord.Embed(
@@ -69,7 +68,6 @@ class utilities(commands.Cog):
         embed.add_field(name="Server ID", value=id, inline=True)
         embed.add_field(name="Created: ", value=f"<t:{int(time.mktime(ctx.guild.created_at.timetuple()))}>", inline=True)
         embed.add_field(name="Member Count", value=memberCount, inline=True)
-        embed.add_field(name="Active users", value=activeCount, inline=True)
 
         await ctx.send(embed=embed)
 
