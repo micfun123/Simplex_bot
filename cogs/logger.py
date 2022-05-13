@@ -144,7 +144,6 @@ class Moderationsettings(commands.Cog):
             title="Message Edit", description=f"{before.author} edited their message")
         em.add_field(name="Before", value=before.content)
         em.add_field(name="After", value=after.content)
-        em.footer(text=f"Message Link: {after.jump_url}")
 
         data = await get_data()
         for i in data:
