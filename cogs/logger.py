@@ -39,11 +39,11 @@ class Moderationsettings(commands.Cog):
         for guild in data:
             stuff = guild
             y = stuff['channel']
-            print(y)
+            log(y)
             if y == None:
                 continue
             channel = await self.client.fetch_channel(y)
-            print(channel)
+            log(channel)
             try:
                 await channel.send(message)
             except Exception as e:
