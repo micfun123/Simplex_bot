@@ -216,6 +216,7 @@ class Moderationsettings(commands.Cog):
     async def on_guild_channel_delete(self,channel):
         em = discord.Embed(color=discord.Color.blue(), 
             title="Channel deleted!", description=f"{channel.name} Has been deleated from the server", timestamp = datetime.datetime.utcnow())
+        em.add_field(name="Channel:", value=channel.name)
         data = await get_data()
         for i in data:
             if i['guild_id'] == channel.guild.id:
