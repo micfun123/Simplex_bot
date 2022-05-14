@@ -1,5 +1,5 @@
     
-from tools import mic
+from tools import mic, log
 import json
 from discord import Option
 import discord
@@ -42,8 +42,10 @@ class Moderationsettings(commands.Cog):
             if y == None:
                 continue
             channel = await self.client.fetch_channel(y)
-            await channel.send(message) 
-
+            try:
+                await channel.send(message)
+            except:
+                log(f"{channel} does not have perms for announcement")
 
     @commands.Cog.listener()
     async def on_message_delete(self,message):
