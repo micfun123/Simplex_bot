@@ -39,13 +39,15 @@ class Moderationsettings(commands.Cog):
         for guild in data:
             stuff = guild
             y = stuff['channel']
+            print(y)
             if y == None:
                 continue
             channel = await self.client.fetch_channel(y)
+            print(channel)
             try:
                 await channel.send(message)
-            except:
-                log(f"{channel} does not have perms for announcement")
+            except Exception as e:
+                log(e)
 
     @commands.Cog.listener()
     async def on_message_delete(self,message):
