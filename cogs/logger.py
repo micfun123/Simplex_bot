@@ -144,6 +144,9 @@ class Moderationsettings(commands.Cog):
             title="Message Edit", description=f"{before.author} edited their message")
         em.add_field(name="Before", value=before.content)
         em.add_field(name="After", value=after.content)
+        em.add_field(name="Channel", value=after.channel)
+        em.add_field(name="Link", value=f"https://discordapp.com/channels/{after.guild.id}/{after.channel.id}/{after.id}")
+        em.set_footer(text=f"{after.created_at}")
         
 
         data = await get_data()
