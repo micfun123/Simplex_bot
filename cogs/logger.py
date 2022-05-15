@@ -64,6 +64,7 @@ class Moderationsettings(commands.Cog):
             description=message.content,
             color=discord.Color.red()
         )
+        embed.add_field(name="Channel", value=message.channel)
         await channel.send(embed=embed) 
 
 
