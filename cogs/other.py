@@ -90,9 +90,6 @@ class utilities(commands.Cog):
         embed.add_field(name="Highest Role:", value=user.top_role, inline=True)
         embed.add_field(name="Joined Server:", value=user.joined_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
         embed.add_field(name="Created Account:", value=user.created_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
-        embed.add_field(name="Amount of messages sent:", value=user.messages, inline=True)
-        embed.add_field(name="Amount of times mentioned:", value=user.mentions, inline=True)
-      
         embed.set_thumbnail(url=user.avatar.url)
         await ctx.send(embed=embed)
 
