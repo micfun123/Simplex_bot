@@ -66,7 +66,9 @@ class Art(commands.Cog):
             await ctx.send(file=discord.File(file, filename="colour.png"))
 
         em = discord.Embed(title="Palette", color=0x20BEFF)
-        em.add_field(name="RGB of palette", value=f"{color_thief.get_palette(quality=1)}")
+        pallet = color_thief.get_palette(color_count=10)
+        for i in range(len(pallet)):
+            em.add_field(name=f"{i+1}", value=f"{pallet[i]}")
         await ctx.send(embed=em)
 
 
