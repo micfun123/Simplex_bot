@@ -70,7 +70,7 @@ class Art(commands.Cog):
         f = io.BytesIO(fd.read())
         color_thief = ColorThief(f)
         em = discord.Embed(title="Palette", color=0x20BEFF)
-        colorpal = color_thief.get_palette(color_count=10, quality=1)
+        colorpal = color_thief.get_palette(color_count=6, quality=1)
         for i in range(len(colorpal)):
             em.add_field(name=f"{i+1}", value=f"{colorpal[i]}")
             size = (100, 100)
