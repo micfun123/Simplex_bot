@@ -63,7 +63,7 @@ class Art(commands.Cog):
         with io.BytesIO() as file:
             image.save(file, "PNG")
             file.seek(0)
-            em.set_image(file=discord.File(file, "colour_file.png"))
+            await ctx.send(file=discord.File(file, filename="colour.png"))
 
         await ctx.send(file=discord.File("palette.png"))
         
