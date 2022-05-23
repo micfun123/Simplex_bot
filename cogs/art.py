@@ -58,15 +58,13 @@ class Art(commands.Cog):
         em.add_field(name="RGB of dominant colour", value=f"{color_thief.get_color(quality=1)}")
         await ctx.send(embed=em)
 
-    @commands.command(help = "Shows a colour palette from image")
-    async def Palette(self, ctx, *, URL: str):
+    @commands.command(help = "Shows a colour from image")
+    async def DominantColour2(self, ctx, *, URL: str):
         fd = urlopen(URL)
         f = io.BytesIO(fd.read())
         color_thief = ColorThief(f)
-        em = discord.Embed(title="Palette", color=0x20BEFF)
-        colorpal = color_thief.get_palette(color_count=10, quality=1)
-        for i in range(len(colorpal)):
-            em.add_field(name=f"{i+1}", value=f"{colorpal[i]}")
+        em = discord.Embed(title="Dominant colour", color=0x20BEFF)
+        em.add_field(name="RGB of dominant colour", value=f"{color_thief.get_color(quality=2)}")
         await ctx.send(embed=em)
 
 
