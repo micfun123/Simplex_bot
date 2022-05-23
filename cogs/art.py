@@ -4,12 +4,14 @@ from discord.ext import commands
 from PIL import Image
 import sys
 
+
+
 from numpy import size
 
 if sys.version_info < (3, 0):
     from urllib2 import urlopen
 else:
-    from urllib.request import urlopen
+    import urllib.request
 
 import io
 
@@ -50,7 +52,11 @@ class Art(commands.Cog):
         
     @commands.command(help = "Shows a colour from image")
     async def DominantColour(self, ctx, *, URL: str):
-        fd = urlopen(URL)
+        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+        url = URL
+        headers={'User-Agent':user_agent,} 
+        request=urllib.request.Request(url,None,headers)
+        fd = urllib.request.urlopen(request)
         f = io.BytesIO(fd.read())
         color_thief = ColorThief(f)
         em = discord.Embed(title="Dominant colour", color=0x20BEFF)
@@ -66,7 +72,11 @@ class Art(commands.Cog):
 
     @commands.command(help = "Shows a colour palette from image")
     async def Palette(self, ctx, *, URL: str):
-        fd = urlopen(URL)
+        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+        url = URL
+        headers={'User-Agent':user_agent,} 
+        request=urllib.request.Request(url,None,headers)
+        fd = urllib.request.urlopen(request)
         f = io.BytesIO(fd.read())
         color_thief = ColorThief(f)
         em = discord.Embed(title="Palette", color=0x20BEFF)
