@@ -49,29 +49,13 @@ class Art(commands.Cog):
             await ctx.send("Invalid color")
         
     @commands.command(help = "Shows a colour palette from image")
-    async def palette(self, ctx, *, URL: str):
+    async def DominantColour(self, ctx, *, URL: str):
         fd = urlopen(URL)
         f = io.BytesIO(fd.read())
         color_thief = ColorThief(f)
         em = discord.Embed(title="Dominant colour", color=0x20BEFF)
         em.add_field(name="RGB of dominant colour", value=f"{color_thief.get_color(quality=1)}")
         await ctx.send(embed=em)	
-        #turn RGB to image
-        size = (100, 100)
-        colour_code = color_thief.get_color(quality=1)
-        image = Image.new("RGB", size, colour_code)
-        with io.BytesIO() as file:
-            image.save(file, "PNG")
-            file.seek(0)
-            await ctx.send(file=discord.File(file, filename="colour.png"))
-
-        em = discord.Embed(title="Palette", color=0x20BEFF)
-        pallet = color_thief.get_palette(color_count=5)
-        for i in range(len(pallet)):
-            em.add_field(name=f"{i+1}", value=f"{pallet[i]}")
-            
-
-        await ctx.send(embed=em)
 
 
 
