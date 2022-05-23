@@ -21,7 +21,7 @@ class Art(commands.Cog):
         self.client = client 
 
     #colour converter
-    @commands.command(aliases=['colour'])
+    @commands.command()
     async def hextorgb(self, ctx, *, color: str):
         """Converts a hex color to RGB"""
         try:
@@ -35,7 +35,7 @@ class Art(commands.Cog):
             await ctx.send("Invalid color")
 
     #hex converter
-    @commands.command(aliases=['hex'])
+    @commands.command()
     async def RGBtoHex(self, ctx, *, color: str):
         """Converts RGB to hex"""
         try:
