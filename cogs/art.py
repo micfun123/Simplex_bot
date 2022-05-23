@@ -49,7 +49,7 @@ class Art(commands.Cog):
         except:
             await ctx.send("Invalid color")
         
-    @commands.command(help = "Shows a colour palette from image")
+    @commands.command(help = "Shows a colour from image")
     async def DominantColour(self, ctx, *, URL: str):
         fd = urlopen(URL)
         f = io.BytesIO(fd.read())
