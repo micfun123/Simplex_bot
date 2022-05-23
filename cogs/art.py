@@ -70,6 +70,7 @@ class Art(commands.Cog):
         for i in range(len(pallet)):
             em.add_field(name=f"{i+1}", value=f"{pallet[i]}")
             size = (100, 100)
+            print(i)
             colour_code = i
             image = Image.new("RGB", size, colour_code)
             with io.BytesIO() as file:
