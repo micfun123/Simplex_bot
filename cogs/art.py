@@ -37,17 +37,17 @@ class Art(commands.Cog):
     #hex converter
     @commands.command()
     async def RGBtoHex(self, ctx, *, color: str):
-        """Converts RGB to hex"""
+        """Converts RGB to Hex"""
         try:
-            color = int(color, 16)
-            red = color >> 16
-            green = (color >> 8) & 255
-            blue = color & 255
-            embed = discord.Embed(title="Hex", description=f"{color}", color=color)
+            color = color.split(",")
+            red = int(color[0])
+            green = int(color[1])
+            blue = int(color[2])
+            embed = discord.Embed(title="Hex", description=f"#{red:02x}{green:02x}{blue:02x}", color=0x00ff00)
             await ctx.send(embed=embed)
         except:
             await ctx.send("Invalid color")
-    
+        
     @commands.command(help = "Shows a colour palette from image")
     async def palette(self, ctx, *, URL: str):
         fd = urlopen(URL)
@@ -55,6 +55,12 @@ class Art(commands.Cog):
         color_thief = ColorThief(f)
         em = discord.Embed(title="Dominant colour", color=0x20BEFF)
         em.add_field(name="RGB of dominant colour", value=f"{color_thief.get_color(quality=1)}")
+        hex = color_thief.get_color(quality=1)
+        color = int(color, 16)
+            red = color >> 16
+            green = (color >> 8) & 255
+            blue = color & 255
+
         em.add_field(name="HEX of dominant colour", value=f"{color_thief.get_color(quality=1, format='hex')}")
         #turn RGB to image
         size = (100, 100)
