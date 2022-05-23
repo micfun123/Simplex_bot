@@ -1,5 +1,4 @@
 
-from turtle import color
 import discord
 from discord.ext import commands
 from PIL import Image
