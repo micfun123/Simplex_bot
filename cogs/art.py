@@ -55,13 +55,10 @@ class Art(commands.Cog):
         color_thief = ColorThief(f)
         em = discord.Embed(title="Dominant colour", color=0x20BEFF)
         em.add_field(name="RGB of dominant colour", value=f"{color_thief.get_color(quality=1)}")
-        hex = color_thief.get_color(quality=1)
-        color = int(color, 16)
-            red = color >> 16
-            green = (color >> 8) & 255
-            blue = color & 255
+        
 
         em.add_field(name="HEX of dominant colour", value=f"{color_thief.get_color(quality=1, format='hex')}")
+        await ctx.send(embed=em)	
         #turn RGB to image
         size = (100, 100)
         colour_code = color_thief.get_color(quality=1)
@@ -71,7 +68,7 @@ class Art(commands.Cog):
             file.seek(0)
             await ctx.send(file=discord.File(file, filename="colour.png"))
 
-        await ctx.send(file=discord.File("palette.png"))
+        
         
         print(color_thief.get_palette(quality=1))
 
