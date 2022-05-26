@@ -59,6 +59,7 @@ class utilities(commands.Cog):
         channelamount = str(len(ctx.guild.channels))
         vcamounts = str(len(ctx.guild.voice_channels))
         roleamount = str(len(ctx.guild.roles))
+        bots = str(len([m for m in ctx.guild.members if m.bot]))
 
 
         embed = discord.Embed(
@@ -71,6 +72,7 @@ class utilities(commands.Cog):
         embed.add_field(name="Server ID", value=id, inline=True)
         embed.add_field(name="Created: ", value=f"<t:{int(time.mktime(ctx.guild.created_at.timetuple()))}>", inline=True)
         embed.add_field(name="Member Count", value=memberCount, inline=True)
+        embed.add_field(name="Bots", value=bots, inline=True)
         embed.add_field(name="Channel Count", value=channelamount, inline=True)
         embed.add_field(name="Voice Channel Count", value=vcamounts, inline=True)
         embed.add_field(name="Role Count", value=roleamount, inline=True)
