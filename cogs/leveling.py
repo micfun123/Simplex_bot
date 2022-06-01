@@ -50,6 +50,18 @@ async def lb(self, ctx):
         break 
     await ctx.send(embed=em)
 
+
+async def biglb(self, ctx):
+    data = await lvl.each_member_data(ctx.guild, sort_by='rank')
+    em = discord.Embed(title="Leaderboard")
+    n = 0
+    for i in data:
+      em.add_field(name=f'{i.rank}: {i.name}', value=f'Level: {i.level}, Total XP: {i.total_xp}', inline=False)
+      n += 1
+      if n == 50:
+        break 
+    await ctx.send(embed=em)
+
 class Leveling(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -173,6 +185,10 @@ class Leveling(commands.Cog):
     @commands.command(aliases=['lb'], help="This command shows the leaderboard for this server.\nIt is sorted by most highest level to lowest.")
     async def leaderboard(self, ctx):
         await lb(self, ctx)
+
+    @commands.command(aliases=['biglb'], help="This command shows the leaderboard for this server.\nIt is sorted by most highest level to lowest.")
+    async def bigleaderboard(self, ctx):
+        await biglb(self, ctx)
 
 
     @commands.Cog.listener()
