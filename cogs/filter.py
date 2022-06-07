@@ -286,6 +286,25 @@ class filter(commands.Cog):
         await ctx.send(file=file)
         os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
 
+    @commands.command(help="This will put a Trash old effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
+    async def Ghost (self, ctx, member: discord.Member=None):
+
+        if member is None:
+            member = ctx.author
+            
+        url = f"https://michaelapi.herokuapp.com/filters/ghost?url={member.avatar.url}"
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                    f = await aiofiles.open(f'./tempstorage/overlay{ctx.author.id}.png', mode='wb')
+                    await f.write(await resp.read())
+                    await f.close()
+
+        file = discord.File(f"./tempstorage/overlay{ctx.author.id}.png")
+        await ctx.send(file=file)
+        os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
+
+
 def setup(client):
     client.add_cog(filter(client))
     

@@ -492,7 +492,13 @@ class Music(commands.Cog):
 
 
     @commands.command(help="This command shows lyrics for a song. You input the title and the bot tries to find the lyrics for that song", extras={"category":"Search"}, usage="lyrics [song name]", description="Song lyrics command")
-    async def lyrics(self, ctx, *, song):
+    async def lyrics(self, ctx, *, song = None):
+        if song is None:
+            try:
+                song = ctx.voice_state.current.source.title
+            except:
+                return await ctx.send("No song was provided")
+        
         url = "https://some-random-api.ml/lyrics"
         song = song.replace(" ", "+")
         data = {
