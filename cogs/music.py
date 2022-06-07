@@ -400,7 +400,7 @@ class Music(commands.Cog):
                 await ctx.message.add_reaction('⏭')
                 ctx.voice_state.skip()
             else:
-                await ctx.send('Skip vote added, currently at **{}/{votes}**'.format(total_votes))
+                await ctx.send('Skip vote added, currently at **{}/50%**'.format(total_votes))
 
         else:
             await ctx.send('You have already voted to skip this song.')
