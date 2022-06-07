@@ -5,7 +5,7 @@ from discord import Option
 import discord
 from discord.ext import commands
 import discord.ui 
-import datetime
+import calendar, datetime, time
 
 
 async def get_data_announcement():
@@ -146,12 +146,13 @@ class Moderationsettings(commands.Cog):
         if after.author.id == self.client.user.id:
             return
         em = discord.Embed(color=discord.Color.blue(), 
-            title="Message Edit", description=f"{before.author} edited their message")
+            title="Message Edit", description=f"{before.author} edited their message",)
         em.add_field(name="Before", value=before.content)
         em.add_field(name="After", value=after.content)
         em.add_field(name="Channel", value=after.channel)
         em.add_field(name="Link", value=f"https://discordapp.com/channels/{after.guild.id}/{after.channel.id}/{after.id}")
-        em.set_footer(text=f"{after.created_at}")
+        em.footer(text=f"Time (in UCT): {datetime.datetime.utcnow()}")
+        
         
 
         data = await get_data()
