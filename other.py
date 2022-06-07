@@ -277,8 +277,8 @@ class utilities(commands.Cog):
             await ctx.send("Word not found")
 
     #feet to cm
-    @commands.command(name="ftoc", aliases=["ftocm"], help = "Convert feet to cm")
-    async def _ftoc__(self, ctx, *, feet):
+    @commands.command(aliases=["ftocm"], help = "Convert feet to cm")
+    async def ftoc(self, ctx, *, feet):
         try:
             cm = int(feet) * 30.48
             await ctx.send(f"{feet} feet is {cm} cm")
@@ -286,8 +286,8 @@ class utilities(commands.Cog):
             await ctx.send("Invalid input")
 
     #cm to feet
-    @commands.command(name="ctof", aliases=["ctofm"], help = "Convert cm to feet")
-    async def _ctof__(self, ctx, *, cm):
+    @commands.command(aliases=["ctofm"], help = "Convert cm to feet")
+    async def ctof(self, ctx, *, cm):
         try:
             feet = int(cm) / 30.48
             await ctx.send(f"{cm} cm is {feet} feet")
