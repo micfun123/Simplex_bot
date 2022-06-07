@@ -13,9 +13,6 @@ import qrcode
 import io
 from PIL import Image
 from simpcalc import simpcalc
-from PyDictionary import PyDictionary
-dictionary=PyDictionary()
-
 calculator = simpcalc.Calculate()
 
 def get_lines():
@@ -47,13 +44,14 @@ class utilities(commands.Cog):
         await sid.send(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
         await ctx.send("Thank you for you suggestion!")
 
-    @commands.command(name='serverinfo', aliases=['si'])
-    async def serverinfo_command(self,ctx):
+    @commands.command()
+    async def serverinfo(self,ctx):
         name = str(ctx.guild.name)
         description = str(ctx.guild.description)
 
         owner = str(ctx.guild.owner)
         id = str(ctx.guild.id)
+        region = str(ctx.guild.region)
         memberCount = str(ctx.guild.member_count)
         channelamount = str(len(ctx.guild.channels))
         vcamounts = str(len(ctx.guild.voice_channels))
@@ -81,38 +79,6 @@ class utilities(commands.Cog):
 
 
         await ctx.send(embed=embed)
-    
-    @commands.slash_command(name='serverinfo')
-    async def serverinfo__(self,ctx):
-        name = str(ctx.guild.name)
-        description = str(ctx.guild.description)
-
-        owner = str(ctx.guild.owner)
-        id = str(ctx.guild.id)
-        memberCount = str(ctx.guild.member_count)
-        channelamount = str(len(ctx.guild.channels))
-        vcamounts = str(len(ctx.guild.voice_channels))
-        roleamount = str(len(ctx.guild.roles))
-        bots = str(len([m for m in ctx.guild.members if m.bot]))
-        peopleusers = str(len([m for m in ctx.guild.members if not m.bot]))
-
-
-        embed = discord.Embed(
-            title=name + " Server Information",
-            description=description,
-            color=discord.Color.blue()
-        )
-        embed.set_thumbnail(url=ctx.guild.icon.url)
-        embed.add_field(name="Owner", value=owner, inline=True)
-        embed.add_field(name="Server ID", value=id, inline=True)
-        embed.add_field(name="Created: ", value=f"<t:{int(time.mktime(ctx.guild.created_at.timetuple()))}>", inline=True)
-        embed.add_field(name="Member Count: ", value=memberCount, inline=True)
-        embed.add_field(name="Real Users:",value=peopleusers, inline=True)
-        embed.add_field(name="Bots", value=bots, inline=True)
-        embed.add_field(name="Channel Count", value=channelamount, inline=True)
-        embed.add_field(name="Voice Channel Count", value=vcamounts, inline=True)
-        embed.add_field(name="Role Count", value=roleamount, inline=True)
-
 
 
     #gets user info of user on the discord
@@ -298,14 +264,26 @@ class utilities(commands.Cog):
         ans = await calc.calculate(equation)
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
-    @commands.command(name="dict", aliases=["dictionary"], help = "Look up a word")
-    async def _dict__(self, ctx, *, word):
+
+    #feet to cm
+    @commands.command(aliases=["ftocm"], help = "Convert feet to cm")
+    async def ftoc(self, ctx, *, feet):
         try:
-            definition = dictionary.meaning(word)
-            em = discord.Embed(title = word, description = definition, color = 0x8BE002)
-            await ctx.send(embed = em)
+            cm = int(feet) * 30.48
+            await ctx.send(f"{feet} feet is {cm} cm")
         except:
-            await ctx.send("Word not found")
+            await ctx.send("Invalid input")
+
+    #cm to feet
+    @commands.command(name="ctof", aliases=["ctofm"], help = "Convert cm to feet")
+    async def ctof(self, ctx, *, cm):
+        try:
+            feet = int(cm) / 30.48
+            await ctx.send(f"{cm} cm is {feet} feet")
+        except:
+            await ctx.send("Invalid input")
+
+
 
 
 def setup(bot):
