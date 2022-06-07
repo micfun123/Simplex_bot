@@ -377,8 +377,12 @@ class Music(commands.Cog):
     @commands.command(name='skip')
     async def _skip(self, ctx: commands.Context):
         """Vote to skip a song. The requester can automatically skip.
-        3 skip votes are needed for the song to be skipped.
+        50% skip votes are needed for the song to be skipped.
         """
+        #amount of people in vc
+        amount = len(ctx.voice_state.voice.channel.members)
+        #amount of votes needed to skip
+        votes = amount // 2
 
         if not ctx.voice_state.is_playing:
             return await ctx.send('Not playing any music right now...')
@@ -392,11 +396,11 @@ class Music(commands.Cog):
             ctx.voice_state.skip_votes.add(voter.id)
             total_votes = len(ctx.voice_state.skip_votes)
 
-            if total_votes >= 3:
+            if total_votes >= votes:
                 await ctx.message.add_reaction('⏭')
                 ctx.voice_state.skip()
             else:
-                await ctx.send('Skip vote added, currently at **{}/3**'.format(total_votes))
+                await ctx.send('Skip vote added, currently at **{}/{votes}**'.format(total_votes))
 
         else:
             await ctx.send('You have already voted to skip this song.')
