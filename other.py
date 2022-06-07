@@ -277,9 +277,23 @@ class utilities(commands.Cog):
             await ctx.send("Word not found")
 
     #feet to cm
-    @commands.command()
-    async def testtest(self,ctx):
-        await ctx.send(f"{ctx.message.author.id}")
+    @commands.command(aliases=["ftocm"], help = "Convert feet to cm")
+    async def ftoc(self, ctx, *, feet):
+        try:
+            cm = int(feet) * 30.48
+            await ctx.send(f"{feet} feet is {cm} cm")
+        except:
+            await ctx.send("Invalid input")
+
+    #cm to feet
+    @commands.command(name="ctof", aliases=["ctofm"], help = "Convert cm to feet")
+    async def ctof(self, ctx, *, cm):
+        try:
+            feet = int(cm) / 30.48
+            await ctx.send(f"{cm} cm is {feet} feet")
+        except:
+            await ctx.send("Invalid input")
+
 
 
 
