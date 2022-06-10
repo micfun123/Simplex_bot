@@ -8,7 +8,6 @@ import threading
 
 calculator = simpcalc.Calculate()
 
-
 counting_data_lock = threading.Lock()
 db_data_lock = threading.Lock()
 
@@ -113,7 +112,7 @@ class Counting(commands.Cog):
         msg = message.content
         guild = message.guild
 
-        await counting(msg, guild, channel, message, self)
+        await counting(msg, guild, channel, message)
 
     def mic(ctx):
         return ctx.author.id == 481377376475938826
