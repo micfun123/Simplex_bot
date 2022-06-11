@@ -281,6 +281,27 @@ class Moderation(commands.Cog):
         # Delete the webhook
         await webhook.delete()
 
+    #move channel
+    @commands.command(help = "Moves a channel across servers or channels. Must use command on channel with the channel")
+    @commands.has_permissions(manage_channels=True)
+    async def MoveChannel(self, ctx, tochannel: discord.TextChannel, fromchannel: discord.TextChannel):
+        """
+        Moves a messages to a different channel.
+        """
+        # Fetches the message
+        webhook = await tochannel.create_webhook(name="Mover")
+        async for message in fromchannel.history(limit = None):
+            #detect if the message is a empy embed
+            try:
+                    await webhook.send(content=message.content,username=f"{message.author.name}",avatar_url=f"{message.author.avatar.url}")
+            except:
+                    await webhook.send(embed=message.embeds[0])
+            if message.attachments is not None:
+                    for i in message.attachments:
+                        await webhook.send(i.url)
+            
+
+
     
     @commands.command(help = "Delete all messages from a user on the server")
     @commands.has_guild_permissions(manage_messages=True)
@@ -289,7 +310,7 @@ class Moderation(commands.Cog):
         Purges all messages from a user across all channels.
         """
         for channel in ctx.guild.text_channels:
-            await channel.purge(limit=550, check=lambda m: m.author == user)       
+            await channel.purge(limit=None, check=lambda m: m.author == user)       
         await ctx.send(f"{user}'s messages have been deleted.")
     
     @commands.has_guild_permissions(manage_messages=True)
@@ -301,7 +322,7 @@ class Moderation(commands.Cog):
         dt = datetime.datetime.now() - datetime.timedelta(minutes=time)
         naive = dt.replace(tzinfo=None)
         for channel in ctx.guild.text_channels:
-            for messages in await channel.history(limit=100).flatten():
+            for messages in await channel.history(limit=None).flatten():
                 discordnaive = messages.created_at.replace(tzinfo=None)
                 if discordnaive < naive:
                     await channel.purge(check=lambda m: m.author == user)       
