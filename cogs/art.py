@@ -95,12 +95,21 @@ class Art(commands.Cog):
         await ctx.send(embed=em)
 
     #art prompt command
-    @commands.command(help = "Prompts you to draw")
-    async def ArtPrompt(self, ctx):
+    @commands.command(name="artprompt",help = "Prompts you to draw")
+    async def ArtPrompt_command(self, ctx):
         lines = open('databases/ArtPrompt.txt').read().splitlines()
         myline =choice(lines)
         em = discord.Embed(title="Art Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
         await ctx.send(embed=em)
+    
+    @discord.slash_command(name="artprompt")
+    async def artprompt_slashs(self, ctx):
+        lines = open('databases/ArtPrompt.txt').read().splitlines()
+        myline =choice(lines)
+        em = discord.Embed(title="Art Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
+        await ctx.respond(embed=em)
+    
+
 
 
 def setup(client):
