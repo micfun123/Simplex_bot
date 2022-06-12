@@ -408,6 +408,44 @@ class Moderation(commands.Cog):
                 print(f"Can't remove the role {i}")
         await ctx.send(f"All roles have been removed from {member}.")
 
+   #make ticket
+    @commands.command(help = "Make a ticket")
+    @commands.has_guild_permissions(manage_channels=True)
+    async def maketicket(self, ctx):
+        """
+        Makes a ticket.
+        """
+        channel = await ctx.guild.create_text_channel(name=f"ticket-{ctx.author.name}")
+        await channel.set_permissions(ctx.guild.default_role, send_messages=False)
+        await channel.set_permissions(ctx.guild.default_role, read_messages=False)
+        await channel.set_permissions(ctx.author, send_messages=True)
+        await channel.send(f"{ctx.author.mention} You have been assigned a ticket. Please use the ticket channel to communicate with the staff team.")
+        await ctx.send(f"{ctx.author.mention} Your ticket has been created. Please use the ticket channel to communicate with the staff team.")
+        await ctx.message.delete()
+        
+        
+
+    #close ticket command
+    @commands.command(help = "Close a ticket")
+    async def closeticket(self, ctx, *, reason: str):
+        """
+        Closes a ticket.
+        """
+        # Creates a message
+        await ctx.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
+        await ctx.message.delete()
+        await ctx.send(f"Ticket closed. {ctx.author.mention}")
+        # rename the channel old name + archive
+        await ctx.channel.edit(name=f"ticket-{ctx.author.id}-closed")
+        #remove all people from the channel
+        for i in ctx.guild.members:
+                await ctx.channel.set_permissions(i, send_messages=False)
+                await ctx.channel.set_permissions(i, read_messages=False)
+        
+
+        
+
+
         
     
 
