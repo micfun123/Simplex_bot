@@ -65,6 +65,11 @@ class Moderationsettings(commands.Cog):
             color=discord.Color.red()
         )
         embed.add_field(name="Channel", value=message.channel)
+        #try add media/ image
+        try:
+            embed.set_image(url=message.attachments[0].url)
+        except:
+            pass
         await channel.send(embed=embed) 
 
 
