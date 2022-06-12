@@ -410,7 +410,6 @@ class Moderation(commands.Cog):
 
    #make ticket
     @commands.command(help = "Make a ticket")
-    @commands.has_guild_permissions(manage_channels=True)
     async def maketicket(self, ctx):
         """
         Makes a ticket.
@@ -427,6 +426,7 @@ class Moderation(commands.Cog):
 
     #close ticket command
     @commands.command(help = "Close a ticket")
+    @commands.has_guild_permissions(manage_channels=True)
     async def closeticket(self, ctx, *, reason: str):
         """
         Closes a ticket.
