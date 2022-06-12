@@ -94,9 +94,13 @@ class Moderation(commands.Cog):
         servers = list(self.client.guilds)
         guild = self.client.get_guild(id)
         for i in servers:
-            a = join(guild.name +' | '+str(guild.member_count) +' | ' + str(guild.owner.name) + ' | ' + str(guild.owner.id))
-            await ctx.send(a)
+            embed = discord.Embed(title=f"{i.name}", description=f"{i.id}", color=0x20BEFF)
+            await ctx.send(embed=embed)
+
+            
         
+        
+
 
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
