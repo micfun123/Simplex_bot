@@ -99,9 +99,9 @@ class Moderation(commands.Cog):
             await ctx.send(embed=embed)
             
     #embed maker
-    @commands.command()
+    @commands.command(name="embed", help="Creates an embed")
     @commands.has_permissions(manage_messages=True)
-    async def embedmaker(self,ctx,titeltext,descriptiontext,colour):
+    async def embedmaker_command(self,ctx,titeltext,descriptiontext,colour):
         embed = discord.Embed()
         embed.title = titeltext
         embed.description = descriptiontext
@@ -110,6 +110,16 @@ class Moderation(commands.Cog):
         
         await ctx.send(embed=embed)
         
+    @commands.slash_command(name="embed", help="Creates an embed")
+    @commands.has_permissions(manage_messages=True)
+    async def embedmaker_slash(self,ctx,titeltext,descriptiontext,colour):
+        embed = discord.Embed()
+        embed.title = titeltext
+        embed.description = descriptiontext
+        embed.color = int(colour, 16)
+
+        
+        await ctx.respond(embed=embed)
 
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
