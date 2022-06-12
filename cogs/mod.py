@@ -437,13 +437,14 @@ class Moderation(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f"Ticket closed. {ctx.author.mention}")
         # rename the channel old name + archive
-        await ctx.channel.edit(name=f"ticket-{ctx.author.id}-closed")
-        #remove all people from the channel
-        for i in ctx.guild.members:
-                await ctx.channel.set_permissions(i, send_messages=False)
-                await ctx.channel.set_permissions(i, read_messages=False)
+        await ctx.channel.edit(name=f"{ctx.channel.name}-closed")
+        #set channel to read only for all members 
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
+        await ctx.channel.set_permissions(ctx.guild.default_role, read_messages=False)
+        await ctx.channel.set_permissions(ctx.author, send_messages=False)
+        await ctx.channel.set_permissions(ctx.author, read_messages=False)
         
-
+    
         
 
 
