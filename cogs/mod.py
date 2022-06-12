@@ -93,11 +93,11 @@ class Moderation(commands.Cog):
     async def serverlist(self, ctx):
         servers = list(self.client.guilds)
         guild = self.client.get_guild(id)
-        serprint = '\n'.join(guild.name +' | '+str(guild.member_count) +' | ' + str(guild.owner.name) + ' | ' + str(guild.owner.id) for guild in servers)
-        await ctx.send(f"Connected on {str(len(servers))} servers:")
-        await ctx.send(serprint)
-
+        for i in servers:
+            a = join(guild.name +' | '+str(guild.member_count) +' | ' + str(guild.owner.name) + ' | ' + str(guild.owner.id))
+            await ctx.send(a)
         
+
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
     async def dm(self, ctx, member: discord.Member, *, message):
