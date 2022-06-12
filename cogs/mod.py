@@ -1,4 +1,3 @@
-import imp
 from multiprocessing import Manager
 import typing
 import discord
@@ -435,14 +434,15 @@ class Moderation(commands.Cog):
         # Creates a message
         await ctx.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
         await ctx.message.delete()
-        await ctx.send(f"Ticket closed. {ctx.author.mention}")
         # rename the channel old name + archive
         await ctx.channel.edit(name=f"{ctx.channel.name}-closed")
-        #set channel to read only for all members 
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
-        await ctx.channel.set_permissions(ctx.guild.default_role, read_messages=False)
-        await ctx.channel.set_permissions(ctx.author, send_messages=False)
-        await ctx.channel.set_permissions(ctx.author, read_messages=False)
+        #dm members in channel
+        for user in ctx.channel.members:
+            try: 
+                await user.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
+            except:
+                print(f"Can't DM {user}")
+        await ctx.channel.delete()
         
     
         
