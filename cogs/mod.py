@@ -418,6 +418,7 @@ class Moderation(commands.Cog):
         await channel.set_permissions(ctx.guild.default_role, send_messages=False)
         await channel.set_permissions(ctx.guild.default_role, read_messages=False)
         await channel.set_permissions(ctx.author, send_messages=True)
+        await channel.set_permissions(ctx.author, read_messages=True)
         await channel.send(f"{ctx.author.mention} You have been assigned a ticket. Please use the ticket channel to communicate with the staff team.")
         await ctx.send(f"{ctx.author.mention} Your ticket has been created. Please use the ticket channel to communicate with the staff team.")
         await ctx.message.delete()
