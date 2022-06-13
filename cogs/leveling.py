@@ -24,7 +24,6 @@ lvl = DiscordLevelingSystem(rate=1, per=60,level_up_announcement=announcement)
 lvl.connect_to_database_file(r'databases/DiscordLevelingSystem.db')
 
 
-
 async def level_on(guild):
     guild_id = str(guild)
     with open("databases/leveling.json") as f:
@@ -190,6 +189,14 @@ class Leveling(commands.Cog):
     async def bigleaderboard(self, ctx):
         await biglb(self, ctx)
 
+    #reset users xp to 0
+    @commands.command(aliases=['reset'], help="This command resets the xp of a user to 0.")
+    async def resetxp(self, ctx, member:discord.Member=None):
+        if member == None:
+            member = ctx.author
+        await ctx.send(f"{member.mention}'s xp has been reset to 0.")
+        await lvl.reset_member(member)
+        
 
     @commands.Cog.listener()
     async def on_message(self, message):
