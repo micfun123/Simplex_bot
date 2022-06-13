@@ -191,11 +191,21 @@ class Leveling(commands.Cog):
 
     #reset users xp to 0
     @commands.command(aliases=['reset'], help="This command resets the xp of a user to 0.")
+    @commands.has_permissions(administrator=True)
     async def resetxp(self, ctx, member:discord.Member=None):
         if member == None:
             member = ctx.author
         await ctx.send(f"{member.mention}'s xp has been reset to 0.")
         await lvl.reset_member(member)
+        
+    #reset all users on server
+    @commands.command(aliases=['resetall'], help="This command resets all users xp to 0.")
+    @commands.has_permissions(administrator=True)
+    async def resetallxp(self, ctx):
+        await ctx.send("All users xp will be reset 0. This may take a hot second")
+        for member in ctx.guild.members:
+            await lvl.reset_member(member)
+        await ctx.send("All users xp has been reset to 0.")
         
 
     @commands.Cog.listener()
