@@ -418,7 +418,7 @@ class Moderation(commands.Cog):
         await channel.set_permissions(ctx.guild.default_role, read_messages=False)
         await channel.set_permissions(ctx.author, send_messages=True)
         await channel.set_permissions(ctx.author, read_messages=True)
-        await channel.send(f"{ctx.author.mention} You have been assigned a ticket. Please use the ticket channel to communicate with the staff team.")
+        await channel.send(f"{ctx.author.mention} You have been assigned a ticket. Please use the ticket channel to communicate with the staff team. When you or a staff member belives the ticket is solved please use .closeticket <reason> ")
         await ctx.send(f"{ctx.author.mention} Your ticket has been created. Please use the ticket channel to communicate with the staff team.")
         await ctx.message.delete()
         
@@ -426,7 +426,6 @@ class Moderation(commands.Cog):
 
     #close ticket command
     @commands.command(help = "Close a ticket")
-    @commands.has_guild_permissions(manage_channels=True)
     async def closeticket(self, ctx, *, reason: str):
         """
         Closes a ticket.
