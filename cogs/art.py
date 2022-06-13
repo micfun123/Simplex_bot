@@ -124,6 +124,14 @@ class Art(commands.Cog):
         em = discord.Embed(title="Style Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
         await ctx.respond(embed=em)
 
+    #show all style prompts
+    @commands.command(name="showstyleprompts",help = "Shows all style prompts")
+    async def ShowStylePrompts_command(self, ctx):
+        lines = open('databases/StylePrompt.txt').read().splitlines()
+        em = discord.Embed(title="Style Prompts", description=f"{lines}", color=0x20BEFF)
+        await ctx.send(embed=em)
+
+
 
 
 
