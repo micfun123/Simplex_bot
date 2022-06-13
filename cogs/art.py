@@ -131,9 +131,19 @@ class Art(commands.Cog):
         lines = open('databases/StylePrompt.txt').read().splitlines()
         for i in range(len(lines)):
             em.add_field(name=f"{i+1}", value=f"{lines[i]}")
-            
+
            
         await ctx.send(embed=em)
+
+    @commands.slash_command(name="showstyleprompts")
+    async def showstyleprompts_slash(self, ctx):
+        em = discord.Embed(title="Style Prompts", description=f"All current Styles DM tea for more to be added", color=0x20BEFF)
+        lines = open('databases/StylePrompt.txt').read().splitlines()
+        for i in range(len(lines)):
+            em.add_field(name=f"{i+1}", value=f"{lines[i]}")
+
+           
+        await ctx.respond(embed=em)
 
 
 
