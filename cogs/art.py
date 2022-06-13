@@ -127,8 +127,12 @@ class Art(commands.Cog):
     #show all style prompts
     @commands.command(name="showstyleprompts",help = "Shows all style prompts")
     async def ShowStylePrompts_command(self, ctx):
+        em = discord.Embed(title="Style Prompts", description=f"All current Styles DM tea for more to be added", color=0x20BEFF)
         lines = open('databases/StylePrompt.txt').read().splitlines()
-        em = discord.Embed(title="Style Prompts", description=f"{lines}", color=0x20BEFF)
+        for i in range(len(lines)):
+            em.add_field(name=f"{i+1}", value=f"{lines[i]}")
+            
+           
         await ctx.send(embed=em)
 
 
