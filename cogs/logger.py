@@ -65,6 +65,7 @@ class Moderationsettings(commands.Cog):
             color=discord.Color.red()
         )
         embed.add_field(name="Channel", value=message.channel)
+        embed.add_field(name="Time", value=message.delete_time)
         #try add media/ image
         try:
             embed.set_image(url=message.attachments[0].url)
@@ -156,7 +157,7 @@ class Moderationsettings(commands.Cog):
         em.add_field(name="After", value=after.content)
         em.add_field(name="Channel", value=after.channel)
         em.add_field(name="Link", value=f"https://discordapp.com/channels/{after.guild.id}/{after.channel.id}/{after.id}")
-        em.footer(text=f"Time (in UCT): {datetime.datetime.utcnow()}")
+        em.add_field(name="Time", value=after.created_at)
         
         
 
