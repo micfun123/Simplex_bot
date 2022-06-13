@@ -109,6 +109,21 @@ class Art(commands.Cog):
         em = discord.Embed(title="Art Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
         await ctx.respond(embed=em)
     
+    #style prompt command
+    @commands.command(name="styleprompt",help = "Prompts you a Style to draw")
+    async def StylePrompt_command(self, ctx):
+        lines = open('databases/StylePrompt.txt').read().splitlines()
+        myline =choice(lines)
+        em = discord.Embed(title="Style Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
+        await ctx.send(embed=em)
+
+    @discord.slash_command(name="styleprompt")
+    async def styleprompt_slash(self, ctx):
+        lines = open('databases/StylePrompt.txt').read().splitlines()
+        myline =choice(lines)
+        em = discord.Embed(title="Style Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
+        await ctx.respond(embed=em)
+
 
 
 
