@@ -65,7 +65,7 @@ class Moderationsettings(commands.Cog):
             color=discord.Color.red()
         )
         embed.add_field(name="Channel", value=message.channel)
-        embed.add_field(name="Time", value=message.delete_time)
+        embed.add_field(name="Time", value=message.created_at)
         #try add media/ image
         try:
             embed.set_image(url=message.attachments[0].url)
