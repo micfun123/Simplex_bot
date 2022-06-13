@@ -283,6 +283,27 @@ class utilities(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
+    #m to km
+    @commands.command(aliases=["mtokm"], help = "Convert m to km")
+    async def mtokm(self, ctx, *, m):
+        try:
+            km = int(m) / 1000
+            await ctx.send(f"{m} m is {km} km")
+        except:
+            await ctx.send("Invalid input")
+    
+    #km to m
+    @commands.command(aliases=["kmtom"], help = "Convert km to m")
+    async def kmtom(self, ctx, *, km):
+        try:
+            m = int(km) * 1000
+            await ctx.send(f"{km} km is {m} m")
+        except:
+            await ctx.send("Invalid input")
+
+
+
+
 
 
 
