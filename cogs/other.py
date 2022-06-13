@@ -284,7 +284,7 @@ class utilities(commands.Cog):
             await ctx.send("Invalid input")
 
     #m to km
-    @commands.command(aliases=["mtokm"], help = "Convert m to km")
+    @commands.command(help = "Convert m to km")
     async def mtokm(self, ctx, *, m):
         try:
             km = int(m) / 1000
@@ -293,7 +293,7 @@ class utilities(commands.Cog):
             await ctx.send("Invalid input")
     
     #km to m
-    @commands.command(aliases=["kmtom"], help = "Convert km to m")
+    @commands.command(help = "Convert km to m")
     async def kmtom(self, ctx, *, km):
         try:
             m = int(km) * 1000
