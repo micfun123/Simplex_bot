@@ -131,8 +131,79 @@ class lookup(commands.Cog):
         Embed.add_field(name="Link", value=url, inline=False)
         await ctx.send(embed=Embed)
         
+     #feet to cm
+    @commands.command(aliases=["ftocm"], help = "Convert feet to cm")
+    async def ftoc(self, ctx, *, feet):
+        try:
+            cm = int(feet) * 30.48
+            await ctx.send(f"{feet} feet is {cm} cm")
+        except:
+            await ctx.send("Invalid input")
 
-        
+    #cm to feet
+    @commands.command(name="ctof", aliases=["ctofm"], help = "Convert cm to feet")
+    async def ctof(self, ctx, *, cm):
+        try:
+            feet = int(cm) / 30.48
+            await ctx.send(f"{cm} cm is {feet} feet")
+        except:
+            await ctx.send("Invalid input")
+
+    #m to km
+    @commands.command(help = "Convert m to km")
+    async def mtokm(self, ctx, *, m):
+        try:
+            km = int(m) / 1000
+            await ctx.send(f"{m} m is {km} km")
+        except:
+            await ctx.send("Invalid input")
+    
+    #km to m
+    @commands.command(help = "Convert km to m")
+    async def kmtom(self, ctx, *, km):
+        try:
+            m = int(km) * 1000
+            await ctx.send(f"{km} km is {m} m")
+        except:
+            await ctx.send("Invalid input")
+
+    #f to m
+    @commands.command(help = "Convert f to m")
+    async def ftom(self, ctx, *, f):
+        try:
+            m = int(f) * 0.3048
+            await ctx.send(f"{f} f is {m} m")
+        except:
+            await ctx.send("Invalid input")
+
+    #m to f
+    @commands.command(help = "Convert m to f")
+    async def mtof(self, ctx, *, m):
+        try:
+            f = int(m) / 0.3048
+            await ctx.send(f"{m} m is {f} f")
+        except:
+            await ctx.send("Invalid input")
+
+    #in to cm
+    @commands.command(help = "Convert in to cm")
+    async def intocm(self, ctx, *, ins):
+        try:
+            cm = int(ins) * 2.54
+            await ctx.send(f"{ins} in is {cm} cm")
+        except:
+            await ctx.send("Invalid input")
+
+    #cm to in
+    @commands.command(help = "Convert cm to in")
+    async def cmtoin(self, ctx, *, cm):
+        try:
+            ins = int(cm) / 2.54
+            await ctx.send(f"{cm} cm is {ins} in")
+        except:
+            await ctx.send("Invalid input")
+
+
 
         
 
