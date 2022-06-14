@@ -301,6 +301,23 @@ class utilities(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
+    #f to m
+    @commands.command(help = "Convert f to m")
+    async def ftom(self, ctx, *, f):
+        try:
+            m = int(f) * 0.3048
+            await ctx.send(f"{f} f is {m} m")
+        except:
+            await ctx.send("Invalid input")
+
+    #m to f
+    @commands.command(help = "Convert m to f")
+    async def mtof(self, ctx, *, m):
+        try:
+            f = int(m) / 0.3048
+            await ctx.send(f"{m} m is {f} f")
+        except:
+            await ctx.send("Invalid input")
 
 
 
