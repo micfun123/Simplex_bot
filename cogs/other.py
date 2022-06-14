@@ -319,6 +319,26 @@ class utilities(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
+    #in to cm
+    @commands.command(help = "Convert in to cm")
+    async def intocm(self, ctx, *, ins):
+        try:
+            cm = int(ins) * 2.54
+            await ctx.send(f"{ins} in is {cm} cm")
+        except:
+            await ctx.send("Invalid input")
+
+    #cm to in
+    @commands.command(help = "Convert cm to in")
+    async def cmtoin(self, ctx, *, cm):
+        try:
+            ins = int(cm) / 2.54
+            await ctx.send(f"{cm} cm is {ins} in")
+        except:
+            await ctx.send("Invalid input")
+
+        
+
 
 
 
