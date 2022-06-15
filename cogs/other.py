@@ -265,7 +265,6 @@ class utilities(commands.Cog):
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
 
-   
         
 
 

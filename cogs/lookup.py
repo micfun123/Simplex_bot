@@ -132,8 +132,8 @@ class lookup(commands.Cog):
         await ctx.send(embed=Embed)
         
      #feet to cm
-    @commands.command(aliases=["ftocm"], help = "Convert feet to cm")
-    async def ftoc(self, ctx, *, feet):
+    @commands.command(help = "Convert feet to cm")
+    async def ftocm(self, ctx, *, feet):
         try:
             cm = int(feet) * 30.48
             await ctx.send(f"{feet} feet is {cm} cm")
@@ -141,8 +141,8 @@ class lookup(commands.Cog):
             await ctx.send("Invalid input")
 
     #cm to feet
-    @commands.command(name="ctof", aliases=["ctofm"], help = "Convert cm to feet")
-    async def ctof(self, ctx, *, cm):
+    @commands.command(help = "Convert cm to feet")
+    async def cmtof(self, ctx, *, cm):
         try:
             feet = int(cm) / 30.48
             await ctx.send(f"{cm} cm is {feet} feet")
@@ -200,6 +200,24 @@ class lookup(commands.Cog):
         try:
             ins = int(cm) / 2.54
             await ctx.send(f"{cm} cm is {ins} in")
+        except:
+            await ctx.send("Invalid input")
+    
+        #farenheit to celsius
+    @commands.command(help = "Convert farenheit to celsius")
+    async def ftoc(self, ctx, *, f):
+        try:
+            c = (int(f) - 32) * 5/9
+            await ctx.send(f"{f} farenheit is {c} celsius")
+        except:
+            await ctx.send("Invalid input")
+    
+    #celsius to farenheit
+    @commands.command(help = "Convert celsius to farenheit")
+    async def ctof(self, ctx, *, c):
+        try:
+            f = (int(c) * 9/5) + 32
+            await ctx.send(f"{c} celsius is {f} farenheit")
         except:
             await ctx.send("Invalid input")
 
