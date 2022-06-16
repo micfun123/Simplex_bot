@@ -13,6 +13,9 @@ import qrcode
 import io
 from PIL import Image
 from simpcalc import simpcalc
+import matplotlib.pyplot as plt
+from io import BytesIO
+
 calculator = simpcalc.Calculate()
 
 def get_lines():
@@ -263,6 +266,21 @@ class utilities(commands.Cog):
         calc = simpcalc.Calculate()
         ans = await calc.calculate(equation)
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
+
+    #LaTeX
+    @commands.command(name="latex", aliases=["tex"], help = "Generate LaTeX")
+    async def _latex_(self, ctx, *, equation):
+        await ctx.message.delete()
+        a = equation
+        ax=plt.subplot(111)
+        ax.text(0.5,0.5,r"$%s$" %(a),fontsize=30,color="green")
+        d = BytesIO()
+        d.seek(0)
+        plt.savefig(d, format='png')
+        d.seek(0)
+        #clear the plot
+        plt.clf()
+        await ctx.send(file=discord.File(d, 'latex.png'))
 
 
         
