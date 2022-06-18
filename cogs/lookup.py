@@ -223,10 +223,6 @@ class lookup(commands.Cog):
             await ctx.send("Invalid input")
 
 
-    
-
-        
-
     @commands.command(help = "Searches for images")
     async def image(self,ctx,search):
         token = os.getenv("serpapi")

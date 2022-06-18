@@ -10,6 +10,9 @@ from async_timeout import timeout
 from discord.ext import commands
 import datetime as dt
 import typing as t
+from gtts import gTTS
+from io import BytesIO
+import os
 
 LYRICS_URL = "https://some-random-api.ml/lyrics?title="
 
@@ -525,6 +528,17 @@ class Music(commands.Cog):
         
 
         await ctx.send(embed=em)
+
+
+    #tts in a vc
+    @commands.command(help="Turns your text to audio")
+    async def tts(sef,ctx,*,message):
+        tts = gTTS(message, lang='en')
+        tts.save("tts.mp3")
+        await ctx.send(file=discord.File("tts.mp3"))
+        os.remove("tts.mp3")
+
+
 
 
 def setup(bot):
