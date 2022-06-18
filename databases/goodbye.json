@@ -1,2 +1,728 @@
 [
+    {
+        "guild_id": 921437159272112188,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 386671155395952640,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 825664056126996521,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 957611027841843300,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 894657626485440524,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 908428900697272360,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 694994318468841542,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 856677753108693002,
+        "channel": null,
+        "text": "Welcome <@!750272735346688001>! Please read <#856677753285771309>",
+        "enabled": false
+    },
+    {
+        "guild_id": 534040131720708108,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 951221995666825236,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 894207563351064606,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 690004815220047902,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 915760402195959861,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 401041820458680340,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 913083052631130122,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 931163137384792127,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 448648100547133450,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 922889452286771210,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 192331153124884480,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 454604460182732800,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 920544374499201034,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 954240310702120980,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 959104657089781770,
+        "channel": 959104657534386197,
+        "text": "It was good to see you. Sorry you had to go",
+        "enabled": true
+    },
+    {
+        "guild_id": 695491531041406986,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 954892267582267432,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 810766520652660767,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 764870932761935923,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 739457521223204884,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 959120068409704458,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 905810111266701394,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 828704111896821770,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 894136531651022848,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 837442908704866366,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 805866948360798228,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 923004629602689084,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 947162799967182898,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 926390874265493514,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 941115065690628098,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 279952177953243136,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 653264223933169677,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 829073787176615968,
+        "channel": 829075336049721344,
+        "text": "Good bye. It was nice to cya you.",
+        "enabled": true
+    },
+    {
+        "guild_id": 947310333314334732,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 434161060207919104,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 893792955465355335,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 872571344246673428,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 934135436446691379,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 908963077125459989,
+        "channel": 935544118946430996,
+        "text": "Good bye. sorry you had to go",
+        "enabled": true
+    },
+    {
+        "guild_id": 789482271093817384,
+        "channel": 796396641539063838,
+        "text": "Its sad to see you",
+        "enabled": true
+    },
+    {
+        "guild_id": 919024483111690251,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 898557704858136617,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 955551044383940648,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 932214963957800990,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 853275185569071144,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 301396444412116992,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 587705351843872825,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 914901503737741342,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 961641235863441408,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 962750234356756592,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 649327176201666560,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 135449117475340288,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 654671180766117888,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 343873951463899136,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 903051884930166804,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 842350895449636925,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 590324833989034029,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 590324833989034029,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 590324833989034029,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 550439092392034305,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 969789742214418474,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 656003794651447317,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 969789742214418474,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 891211843815768064,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 936659584553205830,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 899204125848395828,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 188168817610850305,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 970871002429001758,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 968050675294543872,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 944410751702036481,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 951093514807164948,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 767446384499621918,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 961012544837935115,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 384542140836872208,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 292499297847607296,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 286560105082650624,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 956987811494514748,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 972968394926207118,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 788174096864247809,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 940195062934036481,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 933298861798223892,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 951221995666825236,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 416877088419872774,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 831266517353627669,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 976872037584891904,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 857282708518469682,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 895680076341968938,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 409014620729245706,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 529391589274157066,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 857282708518469682,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 977877838684389416,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 416065819181711360,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 799581681957732383,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 979602719411175486,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 849282387534676020,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 977877838684389416,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 944716837856378920,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 708347415249289349,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 963217667215466537,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 978721979492335627,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 822901423179432000,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 852074093968883732,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 965327240315412500,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 236631606289367040,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 744844350311104602,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 980007299135463484,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 756578886711771136,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 980565880272466041,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 985655459576959078,
+        "channel": 985655459576959081,
+        "text": "It's sad to see you go but it's probably for the best",
+        "enabled": true
+    },
+    {
+        "guild_id": 298272274664914958,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 825664056126996521,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 898435107193487381,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    },
+    {
+        "guild_id": 271740101132812309,
+        "channel": null,
+        "text": null,
+        "enabled": false
+    }
 ]

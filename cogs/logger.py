@@ -1,7 +1,7 @@
     
 from tools import mic, log
 import json
-from discord import Option
+from discord import Guild, Option
 import discord
 from discord.ext import commands
 import discord.ui 
@@ -35,19 +35,14 @@ class Moderationsettings(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def announcement(self, ctx, *, message):
-        data = await get_data_announcement()
-        for guild in data:
-            stuff = guild
-            y = stuff['channel']
-            log(y)
-            if y == None:
-                continue
-            channel = await self.client.fetch_channel(y)
-            log(channel)
+        #get all servers
+        for i in self.client.guilds:
             try:
-                await channel.send(message)
-            except Exception as e:
-                log(e)
+                #send server announcement
+                await i.system_channel.send(message)
+            except:
+                log(f"{i.name} has no system channel")
+
 
     @commands.Cog.listener()
     async def on_message_delete(self,message):
