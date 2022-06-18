@@ -39,15 +39,14 @@ class Moderationsettings(commands.Cog):
         for guild in data:
             stuff = guild
             y = stuff['channel']
-            log(y)
             if y == None:
                 continue
             channel = await self.client.fetch_channel(y)
-            log(channel)
             try:
                 await channel.send(message)
             except Exception as e:
-                log(e)
+                await ctx.send(f"{e}")
+                print("failed on channel: " + str(channel))
 
     @commands.Cog.listener()
     async def on_message_delete(self,message):
