@@ -230,14 +230,16 @@ class lookup(commands.Cog):
     @commands.command(help = "Searches for images")
     async def image(self,ctx,search):
         token = os.getenv("serpapi")
-
-        URL = f'https://serpapi.com/search.json?q={search}&tbm=isch&ijn=0&api_key={token}'
-        results = requests.get(URL).json()
-        em = discord.Embed(title=search,description="This is the image you searched for", color=0x00ff00)
-        url = results["images_results"][0]["original"]
-        print(url)
-        em.set_image(url=url)
-        await ctx.send(embed=em)
+        try:
+            URL = f'https://serpapi.com/search.json?q={search}&tbm=isch&ijn=0&api_key={token}'
+            results = requests.get(URL).json()
+            em = discord.Embed(title=search,description="This is the image you searched for", color=0x00ff00)
+            url = results["images_results"][0]["original"]
+            print(url)
+            em.set_image(url=url)
+            await ctx.send(embed=em)
+        except:
+            await ctx.send("The dev has ran out of credit. Please DM the bot to let him know.")
 
 
 
