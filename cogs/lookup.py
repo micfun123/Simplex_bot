@@ -5,7 +5,7 @@ from discord.ext import commands
 import json
 import os
 import discord
-import imp
+import random
 from tools import log
 import requests
 
@@ -234,7 +234,8 @@ class lookup(commands.Cog):
             URL = f'https://serpapi.com/search.json?q={search}&tbm=isch&ijn=0&api_key={token}'
             results = requests.get(URL).json()
             em = discord.Embed(title=search,description="This is the image you searched for", color=0x00ff00)
-            url = results["images_results"][0]["original"]
+            num = random.randint(0,10)
+            url = results["images_results"][num]["original"]
             print(url)
             em.set_image(url=url)
             await ctx.send(embed=em)
