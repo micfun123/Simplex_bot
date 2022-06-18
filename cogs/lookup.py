@@ -10,6 +10,7 @@ from tools import log
 import requests
 
 
+
 class lookup(commands.Cog):
     def __init__(self, client): 
         self.client = client 
@@ -220,6 +221,23 @@ class lookup(commands.Cog):
             await ctx.send(f"{c} celsius is {f} farenheit")
         except:
             await ctx.send("Invalid input")
+
+
+    
+
+        
+
+    @commands.command(help = "Searches for images")
+    async def image(self,ctx,search):
+        token = os.getenv("serpapi")
+
+        URL = f'https://serpapi.com/search.json?q={search}&tbm=isch&ijn=0&api_key={token}'
+        results = requests.get(URL).json()
+        em = discord.Embed(title=search,description="This is the image you searched for", color=0x00ff00)
+        url = results["images_results"][0]["original"]
+        print(url)
+        em.set_image(url=url)
+        await ctx.send(embed=em)
 
 
 
