@@ -214,6 +214,13 @@ class Leveling(commands.Cog):
             member = ctx.author
         await ctx.send(f"{member.mention}'s xp has been reset to 0.")
         await lvl.reset_member(member)
+
+    #give xp to a user
+    @commands.command(help="This command gives xp to a user.")
+    @commands.has_permissions(administrator=True)
+    async def givexp(self, ctx, member:discord.Member, xp:int):
+        await ctx.send(f"{member.mention} has received {xp} xp.")
+        await lvl.add_xp(member, xp)
         
     #reset all users on server
     @commands.command(aliases=['resetall'], help="This command resets all users xp to 0.")
@@ -231,7 +238,6 @@ class Leveling(commands.Cog):
             if level_toggle:
                 await lvl.award_xp(amount=15, message=message)
     
-
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
