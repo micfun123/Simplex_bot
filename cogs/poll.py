@@ -1,5 +1,8 @@
+from turtle import color
+import discord
 from discord.ext import commands
 import asyncio
+from discord import Embed
 
 def to_emoji(c):
     base = 0x1f1e6
@@ -44,9 +47,13 @@ class Polls(commands.Cog):
             await ctx.channel.delete_messages(messages)
         except:
             pass # oh well
-
+        
         answer = '\n'.join(f'{keycap}: {content}' for keycap, content in answers)
-        actual_poll = await ctx.send(f'{ctx.author} asks: {question}\n\n{answer}')
+        
+        em = discord.Embed(title=question, description=answer,color=0x20BEFF)
+        em.set_footer(text=f'Poll created by {ctx.author}')
+
+        actual_poll = await ctx.send(embed=em)
         for emoji, _ in answers:
             await actual_poll.add_reaction(emoji)
 
@@ -78,9 +85,11 @@ class Polls(commands.Cog):
             await ctx.message.delete()
         except:
             pass
+        
+        em = discord.Embed(title=question, description='\n'.join(f'{keycap}: {content}' for keycap, content in choices),color=0x20BEFF)
+        em.set_footer(text=f'Poll created by {ctx.author}')
 
-        body = "\n".join(f"{key}: {c}" for key, c in choices)
-        poll = await ctx.send(f'{ctx.author} asks: {question}\n\n{body}')
+        poll = await ctx.send(embed=em)
         for emoji, _ in choices:
             await poll.add_reaction(emoji)
 
