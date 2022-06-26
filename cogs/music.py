@@ -10,9 +10,6 @@ from async_timeout import timeout
 from discord.ext import commands
 import datetime as dt
 import typing as t
-from gtts import gTTS
-from io import BytesIO
-import os
 
 LYRICS_URL = "https://some-random-api.ml/lyrics?title="
 
@@ -380,12 +377,8 @@ class Music(commands.Cog):
     @commands.command(name='skip')
     async def _skip(self, ctx: commands.Context):
         """Vote to skip a song. The requester can automatically skip.
-        50% skip votes are needed for the song to be skipped.
+        3 skip votes are needed for the song to be skipped.
         """
-        #amount of people in vc
-        amount = len(ctx.voice_state.voice.channel.members)
-        #amount of votes needed to skip
-        votes = amount // 2
 
         if not ctx.voice_state.is_playing:
             return await ctx.send('Not playing any music right now...')
@@ -399,11 +392,11 @@ class Music(commands.Cog):
             ctx.voice_state.skip_votes.add(voter.id)
             total_votes = len(ctx.voice_state.skip_votes)
 
-            if total_votes >= votes:
+            if total_votes >= 3:
                 await ctx.message.add_reaction('⏭')
                 ctx.voice_state.skip()
             else:
-                await ctx.send('Skip vote added, currently at **{}/50%**'.format(total_votes))
+                await ctx.send('Skip vote added, currently at **{}/3**'.format(total_votes))
 
         else:
             await ctx.send('You have already voted to skip this song.')
@@ -528,17 +521,6 @@ class Music(commands.Cog):
         
 
         await ctx.send(embed=em)
-
-
-    #tts in a vc
-    @commands.command(help="Turns your text to audio")
-    async def tts(sef,ctx,*,message):
-        tts = gTTS(message, lang='en')
-        tts.save("tts.mp3")
-        await ctx.send(file=discord.File("tts.mp3"))
-        os.remove("tts.mp3")
-
-
 
 
 def setup(bot):
