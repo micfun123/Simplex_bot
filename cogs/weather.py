@@ -63,7 +63,7 @@ class Weather(commands.Cog):
             await ctx.send(embed=e)
         else:
             # showing the error message
-            await ctx.send("I've had a connection issue, Sir. Should be fixed momentarily")
+            await ctx.send("I've had a connection issue, sorry for the inconvenience, Should be fixed momentarily")
 
 
     @commands.slash_command(name = "weather", help = "Get the weather in your location")
@@ -107,7 +107,7 @@ class Weather(commands.Cog):
             await ctx.respond(embed=e)
         else:
             # showing the error message
-            await ctx.respond("I've had a connection issue, Sir. Should be fixed momentarily")
+            await ctx.respond("I've had a connection issue, sorry for the inconvenience, Should be fixed momentarily")
 
 def setup(client):
     client.add_cog(Weather(client))
