@@ -365,7 +365,7 @@ class Moderation(commands.Cog):
     #add role to all
     @commands.command(help = "Add a role to all members")
     @commands.has_guild_permissions(manage_roles=True)
-    async def giverollall(self, ctx, role: discord.Role):
+    async def giveroleall(self, ctx, role: discord.Role):
         """
         Adds a role to all members.
         """
