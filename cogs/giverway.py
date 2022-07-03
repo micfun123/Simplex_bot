@@ -20,7 +20,7 @@ class Giveaway(commands.Cog):
         msg = await ctx.send(embed=embed)
         await msg.add_reaction("🎉")
 
-        await asyncio.sleep(int(time))
+        await asyncio.sleep(int(60*time))
         feteched_message = await ctx.channel.fetch_message(msg.id)
         reactions = feteched_message.reactions
         for reaction in reactions:
