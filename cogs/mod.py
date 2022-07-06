@@ -434,14 +434,26 @@ class Moderation(commands.Cog):
         await ctx.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
         await ctx.message.delete()
         # rename the channel old name + archive
-        await ctx.channel.edit(name=f"{ctx.channel.name}-closed")
-        #dm members in channel
-        for user in ctx.channel.members:
-            try: 
-                await user.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
+        await ctx.channel.edit(name=f"{ctx.channel.name}-closed-Ticket")
+        #try remove all users in channel perms
+        for i in ctx.channel.members:
+            try:
+                await ctx.channel.set_permissions(i, send_messages=False)
+                await ctx.channel.set_permissions(i, read_messages=False)
             except:
-                print(f"Can't DM {user}")
-        await ctx.channel.delete()
+                print(f"Can't remove perms from {i}")
+        
+
+    #deleat all old ticket
+    @commands.command(help = "Delete all old tickets")
+    async def deletetickets(self, ctx):
+        """
+        Deletes all old tickets.
+        """
+        for channel in ctx.guild.text_channels:
+            if "-closed-Ticket" in channel.name:
+                await channel.delete()
+        await ctx.send(f"All old tickets have been deleted.")
         
     
         
