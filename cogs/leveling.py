@@ -199,7 +199,7 @@ class Leveling(commands.Cog):
         for i in data:
             em.add_field(name=f'{i.rank}: {i.name}', value=f'Level: {i.level}, Total XP: {i.total_xp}', inline=False)
             n += 1
-            if n == 50:
+            if n == 20:
                 await ctx.send(embed=em)
                 n = 0
                 return
