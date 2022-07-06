@@ -14,6 +14,7 @@ import io
 from PIL import Image
 from simpcalc import simpcalc
 import matplotlib.pyplot as plt
+import random
 from io import BytesIO
 
 calculator = simpcalc.Calculate()
@@ -282,8 +283,11 @@ class utilities(commands.Cog):
         plt.clf()
         await ctx.send(file=discord.File(d, 'latex.png'))
 
-
-        
+    #random num generator between two numbers
+    @commands.command(name="rand", aliases=["random"], help = "Generate a random number")
+    async def _rand_(self, ctx, start: int, end: int):
+        await ctx.message.delete()
+        await ctx.send(f"The random number is: {random.randint(start, end)}")
 
 
 
