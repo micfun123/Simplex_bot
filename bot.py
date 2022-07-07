@@ -39,7 +39,7 @@ client = commands.Bot(command_prefix= (get_prefix), intents=intents, presences =
 
 
 # Custom ending note
-menu = DefaultMenu(page_left="◀", page_right="▶", remove="❌", active_time=10)
+menu = DefaultMenu(page_left="◀", page_right="▶", remove="❌", active_time=30)
 
 # Custom ending note
 ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n "
