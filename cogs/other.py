@@ -289,6 +289,14 @@ class utilities(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f"The random number is: {random.randint(start, end)}")
 
+    #remind me
+    @commands.command(name="remind", aliases=["remindme"], help = "Remind me to do something")
+    async def _remind_(self, ctx, time: str, *, message):
+        await ctx.message.delete()
+        await ctx.send(f"Reminding you in {time} to {message}")
+        await asyncio.sleep(int(time)*60)
+        await ctx.send(f"Reminding you to {message}")
+
 
 
 
