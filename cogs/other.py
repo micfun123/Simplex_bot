@@ -62,6 +62,7 @@ class utilities(commands.Cog):
         bots = str(len([m for m in ctx.guild.members if m.bot]))
         peopleusers = str(len([m for m in ctx.guild.members if not m.bot]))
         emoji_amount = str(len(ctx.guild.emojis))
+        verificationlevel = str(ctx.guild.verification_level)
 
         embed = discord.Embed(
             title=name + " Server Information",
@@ -79,6 +80,7 @@ class utilities(commands.Cog):
         embed.add_field(name="Voice Channel Count", value=vcamounts, inline=True)
         embed.add_field(name="Role Count", value=roleamount, inline=True)
         embed.add_field(name="Emoji Count", value=emoji_amount, inline=True)
+        embed.add_field(name="Verification Level", value=verificationlevel, inline=True)
 
 
 
