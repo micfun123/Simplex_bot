@@ -295,7 +295,7 @@ class utilities(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f"Reminding you in {time} to {message}")
         await asyncio.sleep(int(time)*60)
-        await ctx.send(f"Reminding you to {message}")
+        await ctx.send(f"Reminding {ctx.message.author.mention} to {message}")
 
 
 
