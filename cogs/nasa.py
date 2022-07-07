@@ -7,7 +7,8 @@ from discord.commands import slash_command
 from dotenv import load_dotenv
 import os
 import json
-
+import time
+from geopy.geocoders import Nominatim
 
 load_dotenv()
 
@@ -54,6 +55,33 @@ class Nasa(commands.Cog):
         embed.add_field(name='Link to image of the day/video', value=data['url'], inline=False)
         embed.set_footer(text=f'{date}')
         await ctx.respond(embed=embed)
+
+    #where is ISS
+    @commands.command(name="iss", description="Where is ISS")
+    async def iss_(self, ctx):
+        """
+        Where is ISS
+        """
+        
+        url = 'https://api.wheretheiss.at/v1/satellites/25544'
+        response = requests.get(url)
+        data = response.json()
+        velocity = data['velocity']
+        latitude = data['latitude']
+        longitude = data['longitude']
+        altitude = data['altitude']
+        visibility = data['visibility']
+        
+        em = discord.Embed(title='Where is ISS', description='', color=0x00168B)
+        em.add_field(name='Latitude', value=latitude, inline=True)
+        em.add_field(name='Longitude', value=longitude, inline=True)
+        em.add_field(name='Altitude', value=f"{altitude}km", inline=True)
+        em.add_field(name='Velocity', value=f"{velocity}km/hr", inline=True)
+        em.add_field(name='Visibility', value=visibility, inline=True)
+        em.set_footer(text=f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
+        await ctx.send(embed=em)
+        
+   
         
         
 def setup(client):
