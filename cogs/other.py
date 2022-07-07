@@ -52,7 +52,6 @@ class utilities(commands.Cog):
     async def serverinfo(self,ctx):
         name = str(ctx.guild.name)
         description = str(ctx.guild.description)
-
         owner = str(ctx.guild.owner)
         id = str(ctx.guild.id)
         region = str(ctx.guild.region)
@@ -62,7 +61,7 @@ class utilities(commands.Cog):
         roleamount = str(len(ctx.guild.roles))
         bots = str(len([m for m in ctx.guild.members if m.bot]))
         peopleusers = str(len([m for m in ctx.guild.members if not m.bot]))
-
+        emoji_amount = str(len(ctx.guild.emojis))
 
         embed = discord.Embed(
             title=name + " Server Information",
@@ -79,6 +78,7 @@ class utilities(commands.Cog):
         embed.add_field(name="Channel Count", value=channelamount, inline=True)
         embed.add_field(name="Voice Channel Count", value=vcamounts, inline=True)
         embed.add_field(name="Role Count", value=roleamount, inline=True)
+        embed.add_field(name="Emoji Count", value=emoji_amount, inline=True)
 
 
 
