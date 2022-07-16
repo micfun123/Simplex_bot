@@ -299,8 +299,22 @@ class utilities(commands.Cog):
         await asyncio.sleep(int(time)*60)
         await ctx.send(f"Reminding {ctx.message.author.mention} to {message}")
 
-
-
+    #detect if user joins a vc
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        if before.channel is None and after.channel is not None:
+            if after.channel.name == "CUSTOM VC":
+                #make a vc
+                vc = await after.channel.clone()
+                vc.name = member.name
+                await vc.edit(name=member.name)
+                await member.move_to(vc)
+        #if user leaves a vc
+        if before.channel is not None and after.channel is None:
+            if before.channel.name == member.name:
+                await member.move_to(None)
+                await before.channel.delete()
+        
 
 
 
