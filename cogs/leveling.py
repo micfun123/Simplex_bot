@@ -221,6 +221,15 @@ class Leveling(commands.Cog):
     async def givexp(self, ctx, member:discord.Member, xp:int):
         await ctx.send(f"{member.mention} has received {xp} xp.")
         await lvl.add_xp(member, xp)
+
+    #give xp to all user
+    @commands.command(help="This command gives xp to all users.")
+    @commands.has_permissions(administrator=True)
+    async def givexpall(self, ctx, xp:int):
+        for i in ctx.guild.members:
+            await lvl.add_xp(i, xp)
+        await ctx.send(f"All users have received {xp} xp.")
+        
         
     #reset all users on server
     @commands.command(aliases=['resetall'], help="This command resets all users xp to 0.")
