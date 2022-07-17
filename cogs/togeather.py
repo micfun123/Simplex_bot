@@ -1,7 +1,10 @@
+from email.mime import application
+from optparse import Option
+from venv import create
 import discord
 from discord.ext import commands, tasks
 from discord_together import DiscordTogether
-
+from discord.commands import OptionChoice, ApplicationCommand
 
 
 import os
@@ -13,6 +16,7 @@ TOKENfrombot = os.getenv("DISCORD_TOKEN")
 class TogetherCog(commands.Cog):
     def __init__(self, client):
         self.client = client
+    
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -31,7 +35,8 @@ class TogetherCog(commands.Cog):
             await ctx.send(f"Click the blue link!\n{link}")
 
     @commands.slash_command(name="activity", description="Join a voice channel with another user to play a game")
-    async def activity__slash(self, ctx, *, activity):
+    async def activity__slash(self, ctx, *, activity: discord.Option(str, "Rock Paper or Scissors", required=True, choices=["youtube","poker","chess","letter-league","word-snack","sketch-heads","spellcast","awkword","checkers","blazing-8s","land-io","putt-party","bobble-league","ask-away"])):
+    
         # Here we consider that the user is already in a VC accessible to the bot.
         if ctx.author.voice is None:
             await ctx.respond("You are not in a voice channel")
