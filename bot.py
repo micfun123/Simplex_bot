@@ -212,7 +212,7 @@ async def on_message(message):
     if client.user.mentioned_in(message) and message.mention_everyone is False:
         if message.reference is None:
             prefix= get_prefix(client, message)
-            await message.channel.send(f"Hello {message.author.mention} I am Simplex Bot the worlds best discord bot. My prefix for this server is {prefix}. \n To see all of my commands type {prefix}help. If you need to speak to a dev feel free to DM me the bot")
+            await message.channel.send(f"Hello {message.author.mention} I am Simplex Bot the worlds best discord bot. My prefix for this server is {prefix} \n To see all of my commands type {prefix}help. If you need to speak to a dev feel free to DM me the bot")
 
     await client.process_commands(message) 
 
