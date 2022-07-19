@@ -1,5 +1,3 @@
-from multiprocessing import Manager
-import typing
 import discord
 from discord.ext import commands
 import json
@@ -8,7 +6,6 @@ from os import listdir
 from os.path import isfile, join
 import datetime
 import humanfriendly
-from sqlalchemy import false
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
