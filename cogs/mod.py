@@ -8,6 +8,7 @@ from os import listdir
 from os.path import isfile, join
 import datetime
 import humanfriendly
+from sqlalchemy import false
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -456,7 +457,12 @@ class Moderation(commands.Cog):
         await ctx.send(f"All old tickets have been deleted.")
         
     
-        
+    @commands.command(help="Prints all server roles and amount of members")
+    async def roles(self,ctx):
+        em = discord.Embed(title="The roles of the server",description="Shows you the amount of members in each role. ", color=0x00ff00)
+        for roles in ctx.guild.roles:
+            em.add_field(name=f"{roles.name} :",value=len(roles.members),inline=False)
+        await ctx.send(embed=em)
 
 
         
