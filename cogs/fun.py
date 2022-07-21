@@ -97,10 +97,10 @@ class Fun(commands.Cog):
         """Pay respect to something/someone by pressing the reaction."""
         try:
             message = await ctx.send(f'Press F to pay respect to `{object}`')
-            await message.add_reaction('<:key_f:945289545526677514>')
+            await message.add_reaction('<:f_key:999594098010882148>')
             while True:
                 def check(r, u):
-                    return str(r.emoji) == '<:key_f:945289545526677514>' and r.message == message and u.id != self.bot.user.id
+                    return str(r.emoji) == '<:f_key:999594098010882148>' and r.message == message and u.id != self.bot.user.id
                 reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=30.0)
                 if reaction:
                     await ctx.send(f'**{user.name}** has paid their respects.')
