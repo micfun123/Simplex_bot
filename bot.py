@@ -149,9 +149,7 @@ async def bond(ctx):
 async def easter_egg(ctx):
     await ctx.send("Did you think i would just give you the easter eggs. have fun finding them and good luck.")
     
-@client.command()
-async def invite(ctx):
-    await ctx.send("Invite the bot here https://discord.com/api/oauth2/authorize?client_id=902240397273743361&permissions=8&scope=bot")
+
 
 @client.command(hidden=True)
 async def echo(ctx, *, content:str):
@@ -215,6 +213,7 @@ async def on_message(message):
             await message.channel.send(f"Hello {message.author.mention} I am Simplex Bot the worlds best discord bot. My prefix for this server is {prefix} \n To see all of my commands type {prefix}help. If you need to speak to a dev feel free to DM me the bot")
 
     await client.process_commands(message) 
+
 
 
 
