@@ -109,5 +109,31 @@ class Weather(commands.Cog):
             # showing the error message
             await ctx.respond("I've had a connection issue, sorry for the inconvenience, Should be fixed momentarily")
 
+    @commands.command()
+    async def timein(self, ctx, continent, city):
+        url = f"https://timeapi.io/api/Time/current/zone?timeZone={continent}/{city}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            time = data['time']
+            date = data['date']
+            day = data['dayOfWeek']
+            await ctx.send(f"The time in {city} is {time} on {date} {day}")
+
+    @commands.slash_command()
+    async def time_day(self, ctx, continent, city):
+        url = f"https://timeapi.io/api/Time/current/zone?timeZone={continent}/{city}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            time = data['time']
+            date = data['date']
+            day = data['dayOfWeek']
+            await ctx.respond(f"The time in {city} is {time} on {date} {day}")
+
+        
+        
+
+
 def setup(client):
     client.add_cog(Weather(client))
