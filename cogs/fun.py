@@ -367,29 +367,34 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=["boredom"])
     async def bored(self,ctx):
-        BASE_URL = "https://www.boredapi.com/api/activity?"
-        response = requests.get(BASE_URL)
-        if response.status_code == 200:
-            data = response.json()
-            activity = data['activity']
-            accessibility = data['accessibility']
-            type = data['type']
-            participants = data['participants']
-            price = data['price']
-        
+        try:
+            BASE_URL = "http://www.boredapi.com/api/activity?"
+            response = requests.get(BASE_URL)
+            if response.status_code == 200:
+                data = response.json()
+                activity = data['activity']
+                accessibility = data['accessibility']
+                type = data['type']
+                participants = data['participants']
+                price = data['price']
+            
 
-            e = discord.Embed(
-                title=f"If your bored, you should try {activity}",
-                color=discord.Colour.blue() )
-            e.add_field(name="Accessibility", value=accessibility)
-            e.add_field(name="Type", value=type)
-            e.add_field(name="Participants", value=participants)
-            e.add_field(name="Price", value=price)
-            await ctx.send(embed=e)
-        
-        else:
-            # showing the error message
-            await ctx.send("I've had a connection issue Sir.")
+                e = discord.Embed(
+                    title=f"If your bored, you should try {activity}",
+                    color=discord.Colour.blue() )
+                e.add_field(name="Accessibility", value=accessibility)
+                e.add_field(name="Type", value=type)
+                e.add_field(name="Participants", value=participants)
+                e.add_field(name="Price", value=price)
+                await ctx.send(embed=e)
+            
+            else:
+                # showing the error message
+                await ctx.send("I've had a connection issue .")
+        except Exception as e:
+            await ctx.send(f"Error: {e}")
+            await ctx.send("I've had a connection issue .")
+
 
     @commands.group(pass_context=True, invoke_without_command=True)
     async def ascii(self, ctx, *, msg):
