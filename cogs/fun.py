@@ -123,11 +123,10 @@ class Fun(commands.Cog):
             await ctx.send('Timed out.')
 
     @commands.command(aliases=["jokes"], help = "It tells a joke")  #tells a joke
-    async def joke(ctx):
+    async def joke(self, ctx):
         async with aiohttp.ClientSession() as session:
             # This time we'll get the joke request as well!
-            request = await session.get('https://some-random-api.ml/joke')
-            jokejson = await request.json()
+            jokejson = requests.get("https://some-random-api.ml/joke").json()
 
 
         embed = discord.Embed(title="I know its funny", color=discord.Color.purple())
