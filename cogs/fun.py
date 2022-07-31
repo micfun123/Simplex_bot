@@ -345,8 +345,8 @@ class Fun(commands.Cog):
     @commands.slash_command(name="hack")
     async def hecker_slash(self, ctx, member: discord.Member):
         """Hack someone and get their details."""
-        used_words = ['Nerd','Sucker','Noob','Sup','Yo','Wassup','Nab','Nub','fool','stupid','b1tch','fvck','idiot']
-        mails = ['@gmail.com','@hotmail.com','@yahoo.com']
+        used_words = ['Nerd','Sucker','Noob','Sup','Yo','Wassup','Nab','Nub','fool','stupid','b1tch','fvck','idiot','Bruh','LAMO']
+        mails = ['@gmail.com','@hotmail.com','@yahoo.com','@outlook.com']
         await ctx.respond(f"Powering Up all systems....")
         await asyncio.sleep(1.55)
         hacking = await ctx.send(f"Hacking {member.name}....")
