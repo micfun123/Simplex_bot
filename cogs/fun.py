@@ -526,9 +526,14 @@ class Fun(commands.Cog):
         await ctx.respond(embed=embed)
 
 
-    @commands.command()
-    async def freestuff(self ,ctx):
+    @commands.command(name="freestuff", help="Shows free stuff")
+    async def freestuf_commands(self ,ctx):
         await ctx.send("Claim a Free gift", view=MyView())
+
+    @commands.slash_command(name="freestuff", description="Shows free stuff")
+    async def freestuff_slassh(self ,ctx):
+        await ctx.respond("Claim a Free gift", view=MyView())
+
 
     @commands.command(help="This will put a pixelate effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
     async def pixelatethis (self, ctx, urls):
