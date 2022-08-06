@@ -253,7 +253,7 @@ class Leveling(commands.Cog):
         await lvl.reset_member(member)
 
     @commands.command(help="Checks and recalculates the ranks from xp amounts")
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def recalculateranks(self, ctx, *, member:discord.Member=None):
         await ctx.send("Recalculating ranks...")
         LEVELS_AND_XP = {
@@ -272,13 +272,16 @@ class Leveling(commands.Cog):
             '93': 1542250,'94': 1590245,'95': 1639225,'96': 1689200,'97': 1740180,'98': 1792175,'99': 1845195,'100': 1899250
         }
         targetxp = await lvl.get_data_for(member)
-        xp = targetxp.total_xp
-        rank = 0
-        for i in LEVELS_AND_XP:
-            if xp >= LEVELS_AND_XP[i]:
-                rank = int(i)
-        await lvl.set_level(member, rank)
-        await ctx.send(f"{member.mention} has been set to rank {rank}.")        
+        temp = 0 
+        xpamount = targetxp.total_xp
+        print(xpamount)
+        for level, xp in LEVELS_AND_XP.items():
+            if(temp + xp >= xpamount):
+                await ctx.send(f"{member.mention} is level {level}")
+                break
+            temp += xp
+        await lvl.set_level(member, int(level))
+        
         
 
         
