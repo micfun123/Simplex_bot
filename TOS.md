@@ -12,7 +12,7 @@ Data is stored in a SQL and Json database. The database is secured to prevent ex
 
 ## User Rights
 
-At any time, you have the right to request to view the Data pertaining to your Discord account by making a ticked and speaking to the dev team. You have the right to request the removal of relevant Data. You may submit a request through the official discord server.
+At any time, you have the right to request to view the Data pertaining to your Discord account by making a ticket and speaking to the development team. You have the right to request the removal of relevant Data. You may submit a request through the official discord server. (You agree that this action can take up to 30 days to be completed.) 
 
 ## Underage Users
 
