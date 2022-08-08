@@ -56,6 +56,8 @@ async def counting(msg, guild, channel, m):
         if (data[f"{guild.id}"] + 1) == msg:
             data[f"{guild.id}"] += 1
             await m.add_reaction("✅")
+            if msg == 69:
+                channel.send("Nice")
         else:
             await m.add_reaction("❌")
             em = discord.Embed(title=f"{m.author.name}, You ruined it!", description=f"You were supposed to type `{(data[f'{guild.id}']+1)}`\nCount reset to zero")
