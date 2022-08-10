@@ -226,8 +226,8 @@ class filter(commands.Cog):
         os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
 
 
-    @commands.command(help="This will put a Wanted old effect over the profile", description="Image overlays for you discord profile pic")
-    async def wanted (self, ctx, member: discord.Member=None):
+    @commands.command(name="wanted",help="This will put a Wanted old effect over the profile", description="Image overlays for you discord profile pic")
+    async def wanted__ (self, ctx, member: discord.Member=None):
 
         if member is None:
             member = ctx.author
@@ -244,8 +244,8 @@ class filter(commands.Cog):
         await ctx.send(file=file)
         os.remove(f"./tempstorage/overlay{ctx.author.id}.png")
 
-    @commands.slash_command(help="This will put a Wanted old effect over the profile", description="Image overlays for you discord profile pic")
-    async def wanted (self, ctx, member: discord.Member=None):
+    @commands.slash_command(name="wanted",help="This will put a Wanted old effect over the profile", description="Image overlays for you discord profile pic")
+    async def wanted__slash (self, ctx, member: discord.Member=None):
 
         if member is None:
             member = ctx.author
