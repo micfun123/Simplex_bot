@@ -219,7 +219,7 @@ class Moderationsettings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_channel_delete(self,channel):
-        em = discord.Embed(color=discord.Color.blue(), 
+        em = discord.Embed(color=discord.Color.red(), 
             title="Channel deleted!", description=f"{channel.name} Has been deleated from the server", timestamp = datetime.datetime.utcnow())
         em.add_field(name="Channel:", value=channel.name)
         data = await get_data()
@@ -232,7 +232,7 @@ class Moderationsettings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_channel_create(self,channel):
-        em = discord.Embed(color=discord.Color.blue(),
+        em = discord.Embed(color=discord.Color.green(),
             title="Channel Created!", description=f"{channel.name} Has been created on the server", timestamp = datetime.datetime.utcnow())
         data = await get_data()
         for i in data:
