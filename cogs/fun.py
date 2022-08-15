@@ -117,7 +117,7 @@ class Fun(commands.Cog):
             while True:
                 def check(r, u):
                     return str(r.emoji) == '<:X_button:978154155044646952>' and r.message == message and u.id != self.bot.user.id
-                reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=30.0)
+                reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=60.0)
                 if reaction:
                     await ctx.send(f'**{user.name}** has doubts.')
         except asyncio.TimeoutError:
