@@ -181,7 +181,7 @@ class Fun(commands.Cog):
         await msg.add_reaction('👎')
 
     @commands.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
-    async def dog(self, ctx):
+    async def dog_command(self, ctx):
         async with aiohttp.ClientSession() as session:
             request = await session.get('https://some-random-api.ml/img/dog')
             dogjson = await request.json()
@@ -193,6 +193,20 @@ class Fun(commands.Cog):
         embed.set_image(url=dogjson['link'])
         embed.set_footer(text=factjson['fact'])
         await ctx.send(embed=embed)
+
+    @commands.slash_command(name="dog", help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
+    async def dog_slash(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/dog')
+            dogjson = await request.json()
+            # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/dog')
+            factjson = await request2.json()
+
+        embed = discord.Embed(title="Doggo!", color=discord.Color.purple())
+        embed.set_image(url=dogjson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.respond(embed=embed)
 
     @commands.command(help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
     async def cat(self, ctx):
