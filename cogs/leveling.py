@@ -9,7 +9,7 @@ import random
 LevelUPresponses = [f'Congrats {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} 😎',
                  f'Well done {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} have a 🥇',
                  f'{LevelUpAnnouncement.Member.mention} you are now level {LevelUpAnnouncement.LEVEL}! Keep going you are amazing!',
-                 f'You are {LevelUpAnnouncement.Member.mention} and now your at level {LevelUpAnnouncement.LEVEL}!',
+                 f"You are {LevelUpAnnouncement.Member.mention} and now you're at level {LevelUpAnnouncement.LEVEL}!",
                  f'Wow you are now level {LevelUpAnnouncement.LEVEL}! good job {LevelUpAnnouncement.Member.mention}'
                  ]
 
