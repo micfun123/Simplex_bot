@@ -95,6 +95,19 @@ class Counting(commands.Cog):
     def mic(ctx):
         return ctx.author.id == 481377376475938826
 
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def set_num(self,ctx,nums):
+        with open("./databases/counting.json") as f:
+            data = json.load(f)
+            nums = int(nums)
+        data[f"{ctx.guild.id}"] = nums
+        with open("./databases/counting.json", 'w') as f:
+                        json.dump(data, f, indent=4)
+        await ctx.send(f"Numb set to {nums}")
+
+
+
     # delete after usage 
     @commands.command()
     @commands.check(mic) # cmd can only be run by mic
