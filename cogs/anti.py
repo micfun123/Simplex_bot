@@ -80,7 +80,12 @@ class Protection(commands.Cog):
                 con.close()
             if timer - time.time() > 60:
                 timer = time.time()
-            
+            if datas[0][2] <= datas[0][3]:
+                await member.send(f"you cannot join {member.guild} at the current due to a suspected raid please try again in 5 minutes")
+                owner = member.guild.owner
+                await owner.send("There may be a raid curretly. the bot has temporarly stopped any one joining")
+                await member.kick(reason="IMAGINE RAIDING SKILL ISSUE")
+                
 
 
             
