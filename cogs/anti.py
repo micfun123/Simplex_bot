@@ -8,7 +8,7 @@ import discord.ui
 import calendar, datetime, time
 import sqlite3
 
-
+timer = time.time()
 class Protection(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -20,7 +20,7 @@ class Protection(commands.Cog):
     async def madetablerade(self,ctx):
         con = sqlite3.connect("databases/raids.db")
         cur = con.cursor()
-        cur.execute("CREATE TABLE raids(ServerID int, Servertoggle, raiders int)")
+        cur.execute("CREATE TABLE raids(ServerID int, Servertoggle, raiderneed int, currentrade int)")
         con.commit()
         con.close()
 
@@ -30,7 +30,7 @@ class Protection(commands.Cog):
         for i in self.client.guilds:
             con = sqlite3.connect("databases/raids.db")
             cur = con.cursor()
-            cur.execute("INSERT INTO raids(ServerID, Servertoggle, raiders) VALUES(?, ?,?)", (i.id, False, 20))
+            cur.execute("INSERT INTO raids(ServerID, Servertoggle, raiderneed, currentrade) VALUES(?, ?,?, ?)", (i.id, False, 20, 0))
             await ctx.send(f"{i} has been set")
             con.commit()
             con.close()
@@ -60,13 +60,30 @@ class Protection(commands.Cog):
 
         con = sqlite3.connect("databases/raids.db")
         cur = con.cursor()
-        cur.execute("INSERT INTO raids(ServerID, Servertoggle) VALUES(?, ?)", (guild.id, False))
+        cur.execute("INSERT INTO raids(ServerID, Servertoggle, raiderneed, currentrade) VALUES(?, ?,?, ?)", (guild.id, False, 20, 0))
         con.commit()
         con.close()
        
 
+    @commands.Cog.listener()
+    async def on_member_join(self,member):
+        guild = member.guild.id
+        con = sqlite3.connect("databases/raids.db")
+        cur = con.cursor()
+        datas = cur.execute("SELECT * FROM raids WHERE ServerID=?", (guild))
+        current = datas[0][3]
+        datas = cur.fetchall()
+        if datas[0][1] == True:
+            if timer - time.time() <= 60.0:
+                cur.execute("UPDATE raids SET currentrade = ? WHERE ServerID=?", (current + 1, member.guild.id,))
+                con.commit()
+                con.close()
+            if timer - time.time() > 60:
+                timer = time.time()
+            
 
 
+            
         
 
 
