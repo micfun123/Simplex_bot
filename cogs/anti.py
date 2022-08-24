@@ -3,7 +3,7 @@ from tools import mic, log
 import json
 from discord import Guild, Option
 import discord
-from discord.ext import commands
+from discord.ext import commands , tasks
 import discord.ui 
 import calendar, datetime, time
 import sqlite3
@@ -12,6 +12,7 @@ timer = time.time()
 class Protection(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.resetraders.start()
 
 
 
@@ -49,11 +50,21 @@ class Protection(commands.Cog):
             con.close()
             await ctx.send("Raid Protection has been turned off")
         if toggle == False:
-            cur.execute("UPDATE raids SET Servertoggle = ? WHERE ServerID=?", (False, ctx.guild.id,))
+            cur.execute("UPDATE raids SET Servertoggle = ? WHERE ServerID=?", (True, ctx.guild.id,))
             con.commit()
             con.close()
             await ctx.send("Raid Protection has been turrned on")
 
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def setraidnumb(self,ctx,raidnum):
+        con = sqlite3.connect("databases/raids.db")
+        cur = con.cursor()
+        cur.execute("UPDATE raids SET raiderneed = ? WHERE ServerID=?", (raidnum, ctx.guild.id,))
+        con.commit()
+        con.close()
+        await ctx.send(f"Numb has been changed to {raidnum}")
+        
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         
@@ -67,13 +78,14 @@ class Protection(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self,member):
+        global timer
         guild = member.guild.id
         con = sqlite3.connect("databases/raids.db")
         cur = con.cursor()
-        datas = cur.execute("SELECT * FROM raids WHERE ServerID=?", (guild))
-        current = datas[0][3]
+        datas = cur.execute("SELECT * FROM raids WHERE ServerID=?", (member.guild.id,))
         datas = cur.fetchall()
-        if datas[0][1] == True:
+        current = datas[0][3]
+        if datas[0][1] == 1:
             if timer - time.time() <= 60.0:
                 cur.execute("UPDATE raids SET currentrade = ? WHERE ServerID=?", (current + 1, member.guild.id,))
                 con.commit()
@@ -85,8 +97,15 @@ class Protection(commands.Cog):
                 owner = member.guild.owner
                 await owner.send("There may be a raid curretly. the bot has temporarly stopped any one joining")
                 await member.kick(reason="IMAGINE RAIDING SKILL ISSUE")
-                
 
+
+    @tasks.loop(minutes=5)
+    async def resetraders(self):
+        con = sqlite3.connect("databases/raids.db")
+        cur = con.cursor()
+        cur.execute("UPDATE raids SET currentrade = 0")
+        con.commit()
+        con.close()
 
             
         
