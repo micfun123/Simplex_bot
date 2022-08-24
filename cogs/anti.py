@@ -86,11 +86,11 @@ class Protection(commands.Cog):
         datas = cur.fetchall()
         current = datas[0][3]
         if datas[0][1] == 1:
-            if timer - time.time() <= 60.0:
+            if timer - time.time() <= 120.0:
                 cur.execute("UPDATE raids SET currentrade = ? WHERE ServerID=?", (current + 1, member.guild.id,))
                 con.commit()
                 con.close()
-            if timer - time.time() > 60:
+            if timer - time.time() > 120:
                 timer = time.time()
             if datas[0][2] <= datas[0][3]:
                 await member.send(f"you cannot join {member.guild} at the current due to a suspected raid please try again in 5 minutes")
