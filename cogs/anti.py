@@ -36,7 +36,7 @@ class Protection(commands.Cog):
             con.commit()
             con.close()
 
-    @commands.command()
+    @commands.command(help = " enable and disable raid protection")
     @commands.has_permissions(administrator=True)
     async def toggle_raid_protections(self,ctx):
         con = sqlite3.connect("databases/raids.db")
@@ -55,7 +55,7 @@ class Protection(commands.Cog):
             con.close()
             await ctx.send("Raid Protection has been turrned on")
 
-    @commands.command()
+    @commands.command(help = "The amount of users before raid protections starts")
     @commands.has_permissions(administrator=True)
     async def setraidnumb(self,ctx,raidnum):
         con = sqlite3.connect("databases/raids.db")
