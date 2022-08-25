@@ -180,7 +180,7 @@ class Fun(commands.Cog):
         await msg.add_reaction('👍')
         await msg.add_reaction('👎')
 
-    @commands.command(aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
+    @commands.command(name = "dog", aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
     async def dog_command(self, ctx):
         async with aiohttp.ClientSession() as session:
             request = await session.get('https://some-random-api.ml/img/dog')
