@@ -208,8 +208,8 @@ class Fun(commands.Cog):
         embed.set_footer(text=factjson['fact'])
         await ctx.respond(embed=embed)
 
-    @commands.command(help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
-    async def cat(self, ctx):
+    @commands.command(name = "cat", aliases=["pussy"], help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
+    async def cat__prefix(self, ctx):
         async with aiohttp.ClientSession() as session:
             request = await session.get('https://some-random-api.ml/img/cat')
             catjson = await request.json()
@@ -222,6 +222,19 @@ class Fun(commands.Cog):
         embed.set_footer(text=factjson['fact'])
         await ctx.send(embed=embed)
 
+    @commands.slash_command(name = "cat",help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
+    async def cat__slash(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/cat')
+            catjson = await request.json()
+        # This time we'll get the fact request as well!
+            request2 = await session.get('https://some-random-api.ml/facts/cat')
+            factjson = await request2.json()
+
+        embed = discord.Embed(title="Cat!", color=discord.Color.purple())
+        embed.set_image(url=catjson['link'])
+        embed.set_footer(text=factjson['fact'])
+        await ctx.respond(embed=embed)
 
     @commands.command(help = "It shows you a panda photo as well as a fact") #shows cat photo and fact
     async def panda(self, ctx):
