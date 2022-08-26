@@ -405,7 +405,7 @@ class Fun(commands.Cog):
         url = url.replace("https://", "")
         await ctx.send(f"https://image.thum.io/get/https://{url}")
 
-    @commands.slash_command(name = "screenshot")
+    @commands.slash_command(name = "screenshoter")
     async def screenshot____slash(self, ctx, *, url):
         """Takes a screenshot from a given URL."""
         url = url.replace("https://", "")
