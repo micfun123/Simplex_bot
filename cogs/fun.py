@@ -405,7 +405,7 @@ class Fun(commands.Cog):
         url = url.replace("https://", "")
         await ctx.send(f"https://image.thum.io/get/https://{url}")
 
-    @commands.command(name = "screenshot")
+    @commands.slash_command(name = "screenshot")
     async def screenshot____slash(self, ctx, *, url):
         """Takes a screenshot from a given URL."""
         url = url.replace("https://", "")
@@ -429,8 +429,8 @@ class Fun(commands.Cog):
             Embed = discord.Embed(title = "Errors", description = f"```{data['stderr']}```", color = discord.Color.red())
             await ctx.send(embed = Embed)
 
-    @commands.command(aliases=["boredom"])
-    async def bored(self,ctx):
+    @commands.command(aliases=["boredom"],name="bored")
+    async def bored__c(self,ctx):
         try:
             BASE_URL = "http://www.boredapi.com/api/activity?"
             response = requests.get(BASE_URL)
@@ -458,6 +458,36 @@ class Fun(commands.Cog):
         except Exception as e:
             await ctx.send(f"Error: {e}")
             await ctx.send("I've had a connection issue .")
+
+    @commands.slash_command(name="bored")
+    async def bored__slash(self,ctx):
+        try:
+            BASE_URL = "http://www.boredapi.com/api/activity?"
+            response = requests.get(BASE_URL)
+            if response.status_code == 200:
+                data = response.json()
+                activity = data['activity']
+                accessibility = data['accessibility']
+                type = data['type']
+                participants = data['participants']
+                price = data['price']
+            
+
+                e = discord.Embed(
+                    title=f"If your bored, you should try {activity}",
+                    color=discord.Colour.blue() )
+                e.add_field(name="Accessibility", value=accessibility)
+                e.add_field(name="Type", value=type)
+                e.add_field(name="Participants", value=participants)
+                e.add_field(name="Price", value=price)
+                await ctx.respond(embed=e)
+            
+            else:
+                # showing the error message
+                await ctx.respond("I've had a connection issue .")
+        except Exception as e:
+            await ctx.respond(f"Error: {e}")
+            await ctx.respond("I've had a connection issue .")
 
 
     @commands.group(pass_context=True, invoke_without_command=True)
