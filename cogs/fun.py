@@ -399,11 +399,17 @@ class Fun(commands.Cog):
         await hacking.edit(content=f"{ctx.author.mention} successfully hacked {member.mention}")
         await ctx.send("The ultimate, totally real hacking has been completed!")
 
-    @commands.command(aliases=["ss"])
-    async def screenshot(self, ctx, *, url):
+    @commands.command(aliases=["ss"], name = "screenshot")
+    async def screenshot__command(self, ctx, *, url):
         """Takes a screenshot from a given URL."""
         url = url.replace("https://", "")
         await ctx.send(f"https://image.thum.io/get/https://{url}")
+
+    @commands.command(name = "screenshot")
+    async def screenshot____slash(self, ctx, *, url):
+        """Takes a screenshot from a given URL."""
+        url = url.replace("https://", "")
+        await ctx.respond(f"https://image.thum.io/get/https://{url}")
 
     @commands.command(name = "runcode", usage = "runcode [language] [code]", description = "Runs code", help = "This command is used to run code. It supports many languages.")
     async def runcode_(self, ctx, lang:str, *, code):
