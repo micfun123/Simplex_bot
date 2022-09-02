@@ -31,11 +31,11 @@ from discord.ext import commands, tasks
 
 
 intents = discord.Intents.all()
-intents.presences = True
+intents.presences = False
 intents.members = True
 intents.guilds=True
 
-client = commands.Bot(command_prefix= (get_prefix), intents=intents, presences = True, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False),  help_command=PrettyHelp())
+client = commands.Bot(command_prefix= (get_prefix), intents=intents, members = True, guilds=True, case_insensitive=True, allowed_mentions = discord.AllowedMentions(everyone=False),  help_command=PrettyHelp())
 
 
 # Custom ending note
