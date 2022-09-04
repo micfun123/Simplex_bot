@@ -90,7 +90,7 @@ class utilities(commands.Cog):
         await ctx.send(embed=embed)
 
     
-    @commands.command(name = "serverinfo", description = "Shows the server info")
+    @commands.command(name = "server_info", description = "Shows the server info")
     async def serverinfo_slash(self,ctx):
         name = str(ctx.guild.name)
         description = str(ctx.guild.description)
