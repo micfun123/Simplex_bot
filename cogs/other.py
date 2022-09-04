@@ -1,6 +1,7 @@
 from datetime import timedelta 
 import datetime
 from lib2to3.pgen2.token import AWAIT
+from pydoc import describe
 from threading import activeCount
 import discord
 from discord.ext import commands
@@ -16,6 +17,8 @@ from simpcalc import simpcalc
 import matplotlib.pyplot as plt
 import random
 from io import BytesIO
+
+from bot import server
 
 calculator = simpcalc.Calculate()
 
@@ -48,8 +51,47 @@ class utilities(commands.Cog):
         await sid.send(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
         await ctx.send("Thank you for you suggestion!")
 
-    @commands.command()
-    async def serverinfo(self,ctx):
+    @commands.command(name = "serverinfo", help = "Shows the server info")
+    async def serverinfo_commands(self,ctx):
+        name = str(ctx.guild.name)
+        description = str(ctx.guild.description)
+        owner = str(ctx.guild.owner)
+        id = str(ctx.guild.id)
+        region = str(ctx.guild.region)
+        memberCount = str(ctx.guild.member_count)
+        channelamount = str(len(ctx.guild.channels))
+        vcamounts = str(len(ctx.guild.voice_channels))
+        roleamount = str(len(ctx.guild.roles))
+        bots = str(len([m for m in ctx.guild.members if m.bot]))
+        peopleusers = str(len([m for m in ctx.guild.members if not m.bot]))
+        emoji_amount = str(len(ctx.guild.emojis))
+        verificationlevel = str(ctx.guild.verification_level)
+
+        embed = discord.Embed(
+            title=name + " Server Information",
+            description=description,
+            color=discord.Color.blue()
+        )
+        embed.set_thumbnail(url=ctx.guild.icon.url)
+        embed.add_field(name="Owner", value=owner, inline=True)
+        embed.add_field(name="Server ID", value=id, inline=True)
+        embed.add_field(name="Created: ", value=f"<t:{int(time.mktime(ctx.guild.created_at.timetuple()))}>", inline=True)
+        embed.add_field(name="Member Count: ", value=memberCount, inline=True)
+        embed.add_field(name="Real Users:",value=peopleusers, inline=True)
+        embed.add_field(name="Bots", value=bots, inline=True)
+        embed.add_field(name="Channel Count", value=channelamount, inline=True)
+        embed.add_field(name="Voice Channel Count", value=vcamounts, inline=True)
+        embed.add_field(name="Role Count", value=roleamount, inline=True)
+        embed.add_field(name="Emoji Count", value=emoji_amount, inline=True)
+        embed.add_field(name="Verification Level", value=verificationlevel, inline=True)
+
+
+
+        await ctx.send(embed=embed)
+
+    
+    @commands.command(name = "serverinfo", description = "Shows the server info")
+    async def serverinfo_slash(self,ctx):
         name = str(ctx.guild.name)
         description = str(ctx.guild.description)
         owner = str(ctx.guild.owner)
