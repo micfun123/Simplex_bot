@@ -462,7 +462,13 @@ class Moderation(commands.Cog):
         await ctx.send(embed=em)
 
 
-        
+    @commands.command(help="Reset all user names nick names")
+    @commands.has_permissions(administrator=True)
+    async def nicknamereset(self,ctx):
+        await ctx.send("Nicknames reseting")
+        for i in ctx.guild.members:
+            await i.edit(nick=None)
+        await ctx.send("No more nick names. balence has been restored")    
     
 
 def setup(client):
