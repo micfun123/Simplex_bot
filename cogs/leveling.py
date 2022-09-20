@@ -132,7 +132,7 @@ class Leveling(commands.Cog):
         percentage = int(percentage[:-1])
 
         user_data = {  # Most likely coming from database or calculation
-        "name": f"{member.name}",  # The user's name
+        "name": f"{member.display_name}",  # The user's name
         "xp": arank,
         "level": data.level,
         "next_level_xp": brank,
