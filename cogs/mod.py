@@ -428,18 +428,21 @@ class Moderation(commands.Cog):
         """
         Closes a ticket.
         """
-        # Creates a message
-        await ctx.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
-        await ctx.message.delete()
-        # rename the channel old name + archive
-        await ctx.channel.edit(name=f"{ctx.channel.name}-closed-Ticket")
-        #try remove all users in channel perms
-        for i in ctx.channel.members:
-            try:
-                await ctx.channel.set_permissions(i, send_messages=False)
-                await ctx.channel.set_permissions(i, read_messages=False)
-            except:
-                print(f"Can't remove perms from {i}")
+        if ctx.channel.name.startswith("ticket-"):
+            # Creates a message
+            await ctx.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
+            await ctx.message.delete()
+            # rename the channel old name + archive
+            await ctx.channel.edit(name=f"{ctx.channel.name}-closed-Ticket")
+            #try remove all users in channel perms
+            for i in ctx.channel.members:
+                try:
+                    await ctx.channel.set_permissions(i, send_messages=False)
+                    await ctx.channel.set_permissions(i, read_messages=False)
+                except:
+                    print(f"Can't remove perms from {i}")
+        else:
+            await ctx.send("This channel is not a ticket!")
         
 
     #deleat all old ticket
