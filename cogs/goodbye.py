@@ -108,20 +108,24 @@ class GoodBye(commands.Cog):
         return await message.edit(view=view)
 
 
-    @commands.command()
-    async def set_all_bye(self, ctx):
-        data = await get_data()
-        for guild in self.client.guilds:
-            append_this = {
-                "guild_id": guild.id,
-                "channel": None,
-                "text": None,
-                "enabled": False
-            }
-            data.append(append_this)
-
-        await dump_data(data)
-        await ctx.send("Done")
+#    This command should not exist
+#    I'm just gonna comment it out, because it disables goodbye messages in all guilds.
+#    - EpicPix
+#   
+#   @commands.command()
+#   async def set_all_bye(self, ctx):
+#       data = await get_data()
+#       for guild in self.client.guilds:
+#           append_this = {
+#               "guild_id": guild.id,
+#               "channel": None,
+#               "text": None,
+#               "enabled": False
+#           }
+#           data.append(append_this)
+#   
+#       await dump_data(data)
+#       await ctx.send("Done")
 
 
     @commands.Cog.listener()
