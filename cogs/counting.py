@@ -147,6 +147,7 @@ class Counting(commands.Cog):
 
             
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def countingoff(self, ctx):
             with open("./databases/db.json") as f:
                 data = json.load(f)
