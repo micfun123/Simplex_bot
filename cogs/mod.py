@@ -447,6 +447,7 @@ class Moderation(commands.Cog):
 
     #deleat all old ticket
     @commands.command(help = "Delete all old tickets")
+    @commands.has_guild_permissions(Administrator=True)
     async def deletetickets(self, ctx):
         """
         Deletes all old tickets.
