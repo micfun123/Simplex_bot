@@ -71,6 +71,7 @@ class Moderationsettings(commands.Cog):
 
 
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def setLogChannel(self, ctx, channel: discord.TextChannel):
         data = await get_data()
         for i in data:
@@ -80,6 +81,7 @@ class Moderationsettings(commands.Cog):
         await ctx.send(f"Set log channel to {channel.mention}")
 
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def setAnnouncementChannel(self, ctx, channel: discord.TextChannel):
         data = await get_data_announcement()
         for i in data:
