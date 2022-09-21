@@ -28,7 +28,7 @@ class GoodbyeView(discord.ui.View):
         def check(m):
             return m.channel == self.ctx.channel and m.author == self.ctx.author
 
-        await interaction.response.send_message("Enter the welcome text:")
+        await interaction.response.send_message("Enter the exit text:")
         text = await self.client.wait_for("message", check=check)
         text = text.content
 
@@ -108,21 +108,21 @@ class GoodBye(commands.Cog):
         return await message.edit(view=view)
 
 
-    @commands.command()
-    async def set_all_bye(self, ctx):
-        data = await get_data()
-        for guild in self.client.guilds:
-            append_this = {
-                "guild_id": guild.id,
-                "channel": None,
-                "text": None,
-                "enabled": False
-            }
-            data.append(append_this)
-
-        await dump_data(data)
-        await ctx.send("Done")
-
+    #@commands.command()
+    #async def set_all_bye(self, ctx):
+    #    data = await get_data()
+    #    for guild in self.client.guilds:
+    #        append_this = {
+    #            "guild_id": guild.id,
+    #            "channel": None,
+    #            "text": None,
+    #            "enabled": False
+    #        }
+    #        data.append(append_this)
+#
+    #    await dump_data(data)
+    #    await ctx.send("Done")
+#
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
