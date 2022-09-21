@@ -47,7 +47,7 @@ class Fun(commands.Cog):
     async def coinflip(self, ctx):
         """ Coinflip! """
         coinsides = ["Heads", "Tails"]
-        await ctx.send(f"**{ctx.author.name}** flipped a coin and got **{random.choice(coinsides)}**!")
+        await ctx.respond(f"**{ctx.author.name}** flipped a coin and got **{random.choice(coinsides)}**!")
 
 
     @commands.command()
