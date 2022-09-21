@@ -15,6 +15,7 @@ class Polls(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
     async def poll(self, ctx, *, question):
         """Interactively creates a poll with the following question.
         To vote, use reactions!
