@@ -75,6 +75,16 @@ class BotMakerCommands(commands.Cog):
         await ctx.send(gitstuff.decode())
         log(gitstuff.decode())
 
+    @commands.command()
+    @commands.check(micsid)
+    async def dm_owners(self,ctx,*, msg):
+        for server in self.client.guilds:
+            tosend = server.owner
+            try:
+                await tosend.send(msg)
+            except:
+                await ctx.send(f"Counld not send to {server} ||  {server.owner.name}")
+
     @commands.command(hidden = True)
     @commands.is_owner()
     async def clearlog(self,ctx):
@@ -104,7 +114,7 @@ class BotMakerCommands(commands.Cog):
             title='Load', description=f'{extension} successfully loaded', color=0xff00c8)
         await ctx.send(embed=embed)
 
-    
+
 
 
     @commands.command()
