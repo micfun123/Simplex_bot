@@ -8,6 +8,7 @@ class Autorole(commands.Cog):
         self.client = client
 
     @commands.command(help="Sets the autorole for the server")
+    @commands.has_permissions(administrator=True)
     async def autorole(self, ctx, role:discord.Role):
         role_id = role.id
         guild_id = str(ctx.guild.id)
@@ -22,6 +23,7 @@ class Autorole(commands.Cog):
 
         await ctx.send(embed=discord.Embed(title=f"{role.mention} has been set as the autorole for this server"))
 
+    @commands.has_permissions(administrator=True)
     @commands.command()
     async def autorolereset(self, ctx):
         guild_id = str(ctx.guild.id)
