@@ -453,7 +453,7 @@ class Moderation(commands.Cog):
         Deletes all old tickets.
         """
         for channel in ctx.guild.text_channels:
-            if "-closed-Ticket" in channel.name:
+            if "-closed-ticket" in channel.name:
                 await channel.delete()
         await ctx.send(f"All old tickets have been deleted.")
         
