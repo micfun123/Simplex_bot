@@ -148,7 +148,9 @@ class utilities(commands.Cog):
         await channelbug.send(f"Bug report:\n{bug}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
         await ctx.send("Thank you for reporting this bug!")
 
+    # This command rate limits the bot, not sure if it should be used.
     @commands.command(aliases=["channel_stats", "channel_health", "channel_info", "channel_information"])
+    @commands.has_guild_permissions(manage_channels=True)
     async def channel_status(self, ctx, channel: discord.TextChannel = None):
         if not channel:
             channel = ctx.channel
