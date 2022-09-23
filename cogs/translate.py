@@ -76,13 +76,15 @@ class Translate(commands.Cog):
         for i in text:
             # if in english turn to galactic
             if i in galactic_lang:
-                out.append(galactic_lang[i])
+                for en, gl in galactic_lang.items():
+                    if i == en:
+                        text = text.replace(i, gl)
             #if galactic turn to english
             else:
                 for en, gl in galactic_lang.items():
                     if i == gl:
-                        out.append(en)
-        embed = discord.Embed(title=f'Galactic converter', description="".join(out), color=0x00ff00)
+                        text = text.replace(i, en)
+        embed = discord.Embed(title=f'Galactic converter', description=text, color=0x00ff00)
         await ctx.respond(embed=embed)
 
         
