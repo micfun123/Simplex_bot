@@ -1,3 +1,4 @@
+from email import message
 from unicodedata import name
 import discord
 from discord.commands.core import SlashCommand
@@ -64,14 +65,25 @@ class Translate(commands.Cog):
         embed = discord.Embed(title=f'Decimal', description=int(text), color=0x00ff00)
         await ctx.respond(embed=embed)
     
-    @discord.slash_command(name = "galactic_lang")
-    async def galactic_lang(self, ctx, *, text):
+    @discord.slash_command(name = "galactic_lang",description="Turns english to Galactic")
+    async def galactic_lang_to(self, ctx, *, text):
+        text=text.lower()
         galactic_lang = {"a":"ᔑ","b":"ʖ","c":"ᓵ","d":"↸","e":"ᒷ","f":"⎓","g":"⊣","h":"⍑","i":"╎","j":"⋮","k":"ꖌ","l":"ꖎ","m":"ᒲ","n":"リ","o":"𝙹","p":"!¡","q":"ᑑ","r":"∷","s":"ᓭ","t":"ℸ ̣","u":"⚍","v":"⍊","w":"∴","x":"̇/","y":"||","z":"⨅"," ":" "}
-        messageout = []
-        for i in text:
-            x = galactic_lang[i]
-            messageout.append(x)
-        await ctx.respond("".join(messageout))
+        for en, gl in galactic_lang.items():
+                text = text.replace(en, gl)
+            
+        embed = discord.Embed(title=f'Galactic Language', description=text, color=0x00ff00)
+        await ctx.respond(embed=embed)
+
+    @discord.slash_command(name = "galactic_lang_from", description="Convert Galactic Language to English")
+    async def galactic_lang_from(self, ctx, *, text):
+        text=text.lower()
+        galactic_lang = {"a":"ᔑ","b":"ʖ","c":"ᓵ","d":"↸","e":"ᒷ","f":"⎓","g":"⊣","h":"⍑","i":"╎","j":"⋮","k":"ꖌ","l":"ꖎ","m":"ᒲ","n":"リ","o":"𝙹","p":"!¡","q":"ᑑ","r":"∷","s":"ᓭ","t":"ℸ ̣","u":"⚍","v":"⍊","w":"∴","x":"̇/","y":"||","z":"⨅"," ":" "}
+        for en, gl in galactic_lang.items():
+                text = text.replace(gl, en)
+            
+        embed = discord.Embed(title=f'Galactic Language', description=text, color=0x00ff00)
+        await ctx.respond(embed=embed)
 
         
 def setup(client):
