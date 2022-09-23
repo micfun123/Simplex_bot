@@ -1,4 +1,5 @@
 from email import message
+from operator import contains
 from unicodedata import name
 import discord
 from discord.commands.core import SlashCommand
@@ -68,7 +69,7 @@ class Translate(commands.Cog):
     @discord.slash_command(name = "galactic_lang",description="Turns english to Galactic")
     async def galactic_lang_to(self, ctx, *, text):
         text=text.lower()
-        galactic_lang = {"a":"ᔑ","b":"ʖ","c":"ᓵ","d":"↸","e":"ᒷ","f":"⎓","g":"⊣","h":"⍑","i":"╎","j":"⋮","k":"ꖌ","l":"ꖎ","m":"ᒲ","n":"リ","o":"𝙹","p":"!¡","q":"ᑑ","r":"∷","s":"ᓭ","t":"ℸ ̣","u":"⚍","v":"⍊","w":"∴","x":"̇/","y":"||","z":"⨅"," ":" "}
+        galactic_lang = {"a":"ᔑ","b":"ʖ","c":"ᓵ","d":"↸","e":"ᒷ","f":"⎓","g":"⊣","h":"⍑","i":"╎","j":"⋮","k":"ꖌ","l":"ꖎ","m":"ᒲ","n":"リ","o":"𝙹","p":"!¡","q":"ᑑ","r":"∷","s":"ᓭ","t":"ℸ ̣","u":"⚍","v":"⍊","w":"∴","x":"̇/","y":"||","z":"⨅"," ":" ","ᔑ":"a","ʖ":"b","ᓵ":"c","↸":"d","ᒷ":"e","⎓":"f","⊣":"g","⍑":"h","╎":"i","⋮":"j","ꖌ":"k","ꖎ":"l","ᒲ":"m","リ":"n","𝙹":"o","!¡":"p","ᑑ":"q","∷":"r","ᓭ":"s","ℸ ̣":"t","⚍":"u","⍊":"v","∴":"w","̇/":"x","||":"y","⨅":"z"}
         for en, gl in galactic_lang.items():
                 text = text.replace(en, gl)
             
@@ -78,11 +79,18 @@ class Translate(commands.Cog):
     @discord.slash_command(name = "galactic_lang_from", description="Convert Galactic Language to English")
     async def galactic_lang_from(self, ctx, *, text):
         text=text.lower()
+        out = []
         galactic_lang = {"a":"ᔑ","b":"ʖ","c":"ᓵ","d":"↸","e":"ᒷ","f":"⎓","g":"⊣","h":"⍑","i":"╎","j":"⋮","k":"ꖌ","l":"ꖎ","m":"ᒲ","n":"リ","o":"𝙹","p":"!¡","q":"ᑑ","r":"∷","s":"ᓭ","t":"ℸ ̣","u":"⚍","v":"⍊","w":"∴","x":"̇/","y":"||","z":"⨅"," ":" "}
-        for en, gl in galactic_lang.items():
-                text = text.replace(gl, en)
-            
-        embed = discord.Embed(title=f'Galactic Language', description=text, color=0x00ff00)
+        for i in text:
+            # if in english turn to galactic
+            if i in galactic_lang:
+                out.append(galactic_lang[i])
+            #if galactic turn to english
+            else:
+                for en, gl in galactic_lang.items():
+                    if i == gl:
+                        out.append(en)
+        embed = discord.Embed(title=f'English', description="".join(out), color=0x00ff00)
         await ctx.respond(embed=embed)
 
         
