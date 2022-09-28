@@ -85,6 +85,16 @@ class BotMakerCommands(commands.Cog):
             except:
                 await ctx.send(f"Counld not send to {server} ||  {server.owner.name}")
 
+    @commands.command()
+    @commands.check(micsid)
+    async def ghoastping(self,ctx,*,member:discord.Member):
+        for i in ctx.guild.channels:
+            try:
+                x = await i.send(f"{member.mention}")
+                await x.delete()
+            except:
+                print(f"Can't send message in {i}")
+
     @commands.command(hidden = True)
     @commands.is_owner()
     async def clearlog(self,ctx):
