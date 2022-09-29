@@ -693,8 +693,26 @@ class Fun(commands.Cog):
             f = io.BytesIO(response.read())
             await ctx.respond(file=discord.File(f, "read.png"))
 
-
-    
+    @commands.command(hidden = True)
+    async def im_blue(self,ctx):
+        await ctx.send("""
+                        I'm blue
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                I'm blue
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di
+                Da ba dee da ba di""")
+                    
 
 def setup(bot):
     bot.add_cog(Fun(bot))
