@@ -328,6 +328,11 @@ class utilities(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f"The random number is: {random.randint(start, end)}")
 
+    @commands.slash_command(name="rand", description = "Generate a random number")
+    async def _rand_slash(self, ctx, start: int, end: int):
+        await ctx.respond(f"The random number is: {random.randint(start, end)}")
+
+
     #remind me
     @commands.command(name="remind", aliases=["remindme"], help = "Remind me to do something")
     async def _remind_(self, ctx, time: str, *, message):
