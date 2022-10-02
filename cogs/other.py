@@ -340,7 +340,7 @@ class utilities(commands.Cog):
     async def _remind__slash(self, ctx, time: str, *, message):
         await ctx.respond(f"Reminding you in {time} (mins) to {message}")
         await asyncio.sleep(int(time)*60)
-        await ctx.send(f"Reminding {ctx.message.author.mention} to {message}")
+        await ctx.send(f"Reminding {ctx.author.mention} to {message}")
 
 
     #detect if user joins a vc
