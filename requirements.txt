@@ -27,3 +27,5 @@ wikipedia
 rsa>=4.7 # not directly required, pinned by Snyk to avoid a vulnerability
 lyricsgenius
 matplotlib
+pillow>=9.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
+pyyaml>=5.4 # not directly required, pinned by Snyk to avoid a vulnerability
