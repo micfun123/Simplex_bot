@@ -1,3 +1,4 @@
+Cute simplex
 Biker gang
 Gamer
 Mythology
@@ -36,7 +37,6 @@ Cyborg
 Rick Astley
 Smug expression
 Dare devil
-Worship
 Deadly plants
 Melting
 Cake
@@ -62,6 +62,7 @@ Chef
 Doctor
 Hunter
 Pollution
+Thalassophobia
 Archer
 Parent and child
 Blacksmith
@@ -120,4 +121,4 @@ Frog in a Hat
 The moon is shining
 The sun is shining
 When Pigs Fly
-cute Simplex
+ninja
