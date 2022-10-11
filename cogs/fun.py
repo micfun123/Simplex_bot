@@ -633,7 +633,7 @@ class Fun(commands.Cog):
     async def if_they_could_read_(self, ctx, * , message):
             text = message.replace(" ", "%20")
             text = text.replace("’", "%E2%80%99")
-            URL = "https://michaelapi.herokuapp.com/Memes/if_the_could_read?text={}".format(text)
+            URL = "http://api.michaelparker.ml/Memes/if_the_could_read?text={}".format(text)
             req = urllib.request.Request(URL)
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
@@ -644,7 +644,7 @@ class Fun(commands.Cog):
     async def if_they_could_read__s(self, ctx, * , message):
             text = message.replace(" ", "%20")
             text = text.replace("’", "%E2%80%99")
-            URL = "https://michaelapi.herokuapp.com/Memes/if_the_could_read?text={}".format(text)
+            URL = "http://api.michaelparker.ml/Memes/if_the_could_read?text={}".format(text)
             req = urllib.request.Request(URL)
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
