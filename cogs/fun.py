@@ -631,10 +631,10 @@ class Fun(commands.Cog):
 
     @commands.command(name = "if_they_could_read") 
     async def if_they_could_read_(self, ctx, * , message):
+            hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
             text = message.replace(" ", "%20")
-            text = text.replace("’", "%E2%80%99")
             URL = "http://api.michaelparker.ml/Memes/if_the_could_read?text={}".format(text)
-            req = urllib.request.Request(URL)
+            req = urllib.request.Request(URL, headers=hdr)
             response = urllib.request.urlopen(req) 
             f = io.BytesIO(response.read())
             await ctx.send(file=discord.File(f, "read.png"))
