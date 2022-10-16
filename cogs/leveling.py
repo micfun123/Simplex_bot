@@ -141,7 +141,10 @@ class Leveling(commands.Cog):
         }
 
         background = Editor(Canvas((934, 282), "#23272a"))
-        profile_image = await load_image_async(str(member.avatar.url))
+        try:
+            profile_image = await load_image_async(str(member.avatar.url))
+        except:
+            profile_image = await load_image_async(str("https://cdn.discordapp.com/embed/avatars/0.png"))
         profile = Editor(profile_image).resize((150, 150)).circle_image()
 
 
