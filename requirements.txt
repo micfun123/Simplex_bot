@@ -30,3 +30,4 @@ matplotlib
 python-dotenv
 easy_pil
 discord_pretty_help
+pyfiglet
