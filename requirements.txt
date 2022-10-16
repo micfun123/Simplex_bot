@@ -1,4 +1,4 @@
-discordLevelingSystem
+aiosqlite
 easy-pil
 qrcode
 python-dotenv
@@ -27,3 +27,4 @@ wikipedia
 rsa>=4.7 # not directly required, pinned by Snyk to avoid a vulnerability
 lyricsgenius
 matplotlib
+
