@@ -28,3 +28,4 @@ rsa>=4.7 # not directly required, pinned by Snyk to avoid a vulnerability
 lyricsgenius
 matplotlib
 python-dotenv
+easy_pil
