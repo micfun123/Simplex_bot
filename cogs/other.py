@@ -142,7 +142,7 @@ class utilities(commands.Cog):
         try:
             embed.set_thumbnail(url=user.avatar.url)
         except:
-            pass
+            embed.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/0.png")
         await ctx.send(embed=embed)
 
     @commands.command(aliases=['Report'])
