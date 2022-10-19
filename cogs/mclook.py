@@ -44,6 +44,25 @@ class Minecraft(commands.Cog):
                 embed=discord.Embed(title=f"{server} is offline",color=0xFF0000)
                 await ctx.send(embed=embed)
 
+    @commands.slash_command(name="mcping", description= "Gets the status of a Minecraft server, Ping and player count")
+    async def mc_ping__slasj(self, ctx, server: str):
+        async with ctx.typing():
+            url = f"https://api.mcsrvstat.us/2/{server}"
+            response = requests.get(url)
+            resp = response.json()
+            try:
+                players = resp["players"]["online"]
+                MOTD = resp["motd"]["clean"][0]
+                online = resp["online"]
+                version = resp["version"]
+                embed=discord.Embed(title=f"{server} is online" , description=MOTD, colour=0x00FF00)
+                embed.add_field(name="Players Online: ", value=players, inline=True)
+                embed.add_field(name="Version: ", value=version, inline=True)
+                await ctx.respond(embed=embed)
+            except:
+                embed=discord.Embed(title=f"{server} is offline",color=0xFF0000)
+                await ctx.respond(embed=embed)
+
         
 
     @commands.command(name="mcskin", help="Gets a skin of a minecraft player")
