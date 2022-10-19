@@ -38,6 +38,11 @@ class Minecraft(commands.Cog):
                 online = resp["online"]
                 version = resp["version"]
                 embed=discord.Embed(title=f"{server} is online" , description=MOTD, colour=0x00FF00)
+                try:
+                    mods = resp["mods"]
+                    embed.add_field(name="Is modded: ", value= "True", inline=True)
+                except:
+                    embed.add_field(name="Is modded: ", value= "False", inline=True)
                 embed.add_field(name="Players Online: ", value=f"{players} / {playersmax}", inline=True)
                 embed.add_field(name="Version: ", value=version, inline=True)
                 await ctx.send(embed=embed)
