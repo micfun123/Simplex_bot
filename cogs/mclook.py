@@ -51,7 +51,7 @@ class Minecraft(commands.Cog):
                 await ctx.send(embed=embed)
 
     @commands.slash_command(name="mcping", description= "Gets the status of a Minecraft server, Ping and player count")
-    async def mc_ping__slasj(self, ctx, server: str):
+    async def mc_ping__slash(self, ctx, server: str):
             url = f"https://api.mcsrvstat.us/2/{server}"
             response = requests.get(url)
             resp = response.json()
