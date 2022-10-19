@@ -33,11 +33,12 @@ class Minecraft(commands.Cog):
             resp = response.json()
             try:
                 players = resp["players"]["online"]
+                playersmax = resp["players"]["max"]
                 MOTD = resp["motd"]["clean"][0]
                 online = resp["online"]
                 version = resp["version"]
                 embed=discord.Embed(title=f"{server} is online" , description=MOTD, colour=0x00FF00)
-                embed.add_field(name="Players Online: ", value=players, inline=True)
+                embed.add_field(name="Players Online: ", value=f"{players} / {playersmax}", inline=True)
                 embed.add_field(name="Version: ", value=version, inline=True)
                 await ctx.send(embed=embed)
             except:
@@ -52,11 +53,12 @@ class Minecraft(commands.Cog):
             resp = response.json()
             try:
                 players = resp["players"]["online"]
+                playersmax = resp["players"]["max"]
                 MOTD = resp["motd"]["clean"][0]
                 online = resp["online"]
                 version = resp["version"]
                 embed=discord.Embed(title=f"{server} is online" , description=MOTD, colour=0x00FF00)
-                embed.add_field(name="Players Online: ", value=players, inline=True)
+                embed.add_field(name="Players Online: ", value=f"{players} / {playersmax}", inline=True)
                 embed.add_field(name="Version: ", value=version, inline=True)
                 await ctx.respond(embed=embed)
             except:
