@@ -14,7 +14,7 @@ class Birthday(commands.Cog):
 
 
     
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def makeservertablebirthday(self,ctx):
         con = sqlite3.connect("databases/server_brithdays.db")
@@ -29,7 +29,7 @@ class Birthday(commands.Cog):
         con.close()
         await ctx.send("Done")
 
-    @commands.command()
+    @commands.command(hidden = True)
     @commands.is_owner()
     async def setallbithday(self,ctx):
         for i in self.client.guilds:
