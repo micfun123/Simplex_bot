@@ -1,5 +1,4 @@
     
-from tkinter import HIDDEN
 from tools import mic, log
 import json
 from discord import Guild, Option
