@@ -22,11 +22,11 @@ class Birthday(commands.Cog):
             return
         con = sqlite3.connect("databases/user_brithdays.db")
         cur = con.cursor()
-        cur.execute("SELECT * FROM birthdays WHERE user_id = ?", (user.id,))
+        cur.execute("SELECT * FROM birthday WHERE user_id = ?", (user.id,))
         if cur.fetchone() is not None:
             await ctx.send("User already exists.")
             return
-        cur.execute("INSERT INTO birthdays VALUES (?, ?, ?)", (user.id, day, month))
+        cur.execute("INSERT INTO birthday VALUES (?, ?, ?)", (user.id, day, month))
         con.commit()
         con.close()
     
