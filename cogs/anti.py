@@ -1,4 +1,5 @@
     
+from tkinter import HIDDEN
 from tools import mic, log
 import json
 from discord import Guild, Option
@@ -16,7 +17,7 @@ class Protection(commands.Cog):
 
 
 
-    @commands.command()
+    @commands.command(hidden = True)
     @commands.is_owner()
     async def madetablerade(self,ctx):
         con = sqlite3.connect("databases/raids.db")
@@ -25,7 +26,7 @@ class Protection(commands.Cog):
         con.commit()
         con.close()
 
-    @commands.command()
+    @commands.command(hidden = True)
     @commands.is_owner()
     async def setallraid(self,ctx):
         for i in self.client.guilds:
