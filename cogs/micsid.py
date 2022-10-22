@@ -78,12 +78,17 @@ class BotMakerCommands(commands.Cog):
     @commands.command()
     @commands.check(micsid)
     async def dm_owners(self,ctx,*, msg):
+        owners = []
         for server in self.client.guilds:
             tosend = server.owner
+            owners.append(tosend)
+        owners = list(set(owners))
+        for i in owners:
             try:
-                await tosend.send(msg)
+                await i.send(msg)
             except:
-                await ctx.send(f"Counld not send to {server} ||  {server.owner.name}")
+                await ctx.send(f"Counld not send to {i}")
+            
 
     @commands.command()
     @commands.check(micsid)
