@@ -1,4 +1,5 @@
 from discord.ext import commands, tasks
+import discord
 import asyncio
 import os
 import json
@@ -12,7 +13,19 @@ class Birthday(commands.Cog):
         self.client = client
         self.birthdaytimer.start()
 
-
+    @commands.command()
+    @commands.is_owner()
+    async def force_add_user(self, ctx, user: discord.Member, day: int, month: int):
+        """Adds a user to the birthday list."""
+        if day > 31 or day < 1 or month > 12 or month < 1:
+            await ctx.send("Invalid date.")
+            return
+        conn = sqlite3.connect('birthday.db')
+        c = conn.cursor()
+        c.execute("INSERT INTO birthdays VALUES (?, ?, ?)", (user.id, day, month))
+        conn.commit()
+        conn.close()
+        await ctx.send(f"Added {user.name} to the birthday list.")
     
     @commands.command(hidden=True)
     @commands.is_owner()
@@ -71,37 +84,43 @@ class Birthday(commands.Cog):
 
     @commands.slash_command(name="setbirthday", description="Set your birthday use day then month")
     async def setbirthday__slash(self, ctx, day: int, month: int):
-        con = sqlite3.connect("databases/user_brithdays.db")
-        cur = con.cursor()
-        data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
-        data = cur.fetchall()
-        if data == []:
-            cur.execute("INSERT INTO birthday(UsersID, birthday) VALUES(?, ?)", (ctx.author.id, f"{day}/{month}"))
-            con.commit()
-            con.close()
-            await ctx.send("Your birthday has been set")
+        if day > 31 or day < 1 or month > 12 or month < 1:
+            await ctx.respond("Invalid date.")
         else:
-            cur.execute("UPDATE birthday SET birthday = ? WHERE UsersID=?", (f"{day}/{month}", ctx.author.id,))
-            con.commit()
-            con.close()
-            await ctx.send("Your birthday has been updated")
-    
+            con = sqlite3.connect("databases/user_brithdays.db")
+            cur = con.cursor()
+            data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
+            data = cur.fetchall()
+            if data == []:
+                cur.execute("INSERT INTO birthday(UsersID, birthday) VALUES(?, ?)", (ctx.author.id, f"{day}/{month}"))
+                con.commit()
+                con.close()
+                await ctx.respond("Your birthday has been set")
+            else:
+                cur.execute("UPDATE birthday SET birthday = ? WHERE UsersID=?", (f"{day}/{month}", ctx.author.id,))
+                con.commit()
+                con.close()
+                await ctx.respond("Your birthday has been updated")
+        
     @commands.command(name="setbirthday", help = "Set your birthday use day then month")
     async def setbirthday_commands(self, ctx, day: int, month: int):
-        con = sqlite3.connect("databases/user_brithdays.db")
-        cur = con.cursor()
-        data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
-        data = cur.fetchall()
-        if data == []:
-            cur.execute("INSERT INTO birthday(UsersID, birthday) VALUES(?, ?)", (ctx.author.id, f"{day}/{month}"))
-            con.commit()
-            con.close()
-            await ctx.send("Your birthday has been set")
+        if day > 31 or day < 1 or month > 12 or month < 1:
+            await ctx.send("Invalid date.")
         else:
-            cur.execute("UPDATE birthday SET birthday = ? WHERE UsersID=?", (f"{day}/{month}", ctx.author.id,))
-            con.commit()
-            con.close()
-            await ctx.send("Your birthday has been updated")
+            con = sqlite3.connect("databases/user_brithdays.db")
+            cur = con.cursor()
+            data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
+            data = cur.fetchall()
+            if data == []:
+                cur.execute("INSERT INTO birthday(UsersID, birthday) VALUES(?, ?)", (ctx.author.id, f"{day}/{month}"))
+                con.commit()
+                con.close()
+                await ctx.send("Your birthday has been set")
+            else:
+                cur.execute("UPDATE birthday SET birthday = ? WHERE UsersID=?", (f"{day}/{month}", ctx.author.id,))
+                con.commit()
+                con.close()
+                await ctx.send("Your birthday has been updated")
 
     @commands.command(help = "Set the birthday channel")
     @commands.has_permissions(administrator=True)
