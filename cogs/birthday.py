@@ -13,7 +13,7 @@ class Birthday(commands.Cog):
         self.client = client
         self.birthdaytimer.start()
 
-    @commands.command()
+    @commands.command(hidden = True)
     @commands.is_owner()
     async def force_add_user(self, ctx, user: discord.Member, day: int, month: int):
         """Adds a user to the birthday list."""
