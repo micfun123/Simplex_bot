@@ -69,8 +69,8 @@ class Birthday(commands.Cog):
             con.close()
             await ctx.send("Birthday reminders has been turrned on")
 
-    @commands.slash_command(name="setbirthday", description="Set your birthday")
-    async def setbirthday(self, ctx, day: int, month: int):
+    @commands.slash_command(name="setbirthday", description="Set your birthday use day then month")
+    async def setbirthday__slash(self, ctx, day: int, month: int):
         con = sqlite3.connect("databases/user_brithdays.db")
         cur = con.cursor()
         data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
@@ -86,8 +86,8 @@ class Birthday(commands.Cog):
             con.close()
             await ctx.send("Your birthday has been updated")
     
-    @commands.command()
-    async def setbirthday(self, ctx, day: int, month: int):
+    @commands.command(name="setbirthday", help = "Set your birthday use day then month")
+    async def setbirthday_commands(self, ctx, day: int, month: int):
         con = sqlite3.connect("databases/user_brithdays.db")
         cur = con.cursor()
         data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
@@ -114,7 +114,7 @@ class Birthday(commands.Cog):
         await ctx.send(f"Birthday channel has been set to {channel}")
 
     #runs every 24 hours
-    @tasks.loop(time=time(18,20))
+    @tasks.loop(time=time(12,00))
     async def birthdaytimer(self):
         await self.client.wait_until_ready()
         for i in self.client.guilds:
