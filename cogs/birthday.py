@@ -20,12 +20,15 @@ class Birthday(commands.Cog):
         if day > 31 or day < 1 or month > 12 or month < 1:
             await ctx.send("Invalid date.")
             return
-        conn = sqlite3.connect('birthday.db')
-        c = conn.cursor()
-        c.execute("INSERT INTO birthdays VALUES (?, ?, ?)", (user.id, day, month))
-        conn.commit()
-        conn.close()
-        await ctx.send(f"Added {user.name} to the birthday list.")
+        con = sqlite3.connect("databases/user_brithdays.db")
+        cur = con.cursor()
+        cur.execute("SELECT * FROM birthdays WHERE user_id = ?", (user.id,))
+        if cur.fetchone() is not None:
+            await ctx.send("User already exists.")
+            return
+        cur.execute("INSERT INTO birthdays VALUES (?, ?, ?)", (user.id, day, month))
+        con.commit()
+        con.close()
     
     @commands.command(hidden=True)
     @commands.is_owner()
