@@ -32,3 +32,4 @@ easy_pil
 discord_pretty_help
 pyfiglet
 mcstatus
+discord-ext-ipc
