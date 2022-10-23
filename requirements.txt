@@ -32,3 +32,4 @@ easy_pil
 discord_pretty_help
 pyfiglet
 mcstatus
+pillow>=9.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
