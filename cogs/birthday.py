@@ -29,32 +29,33 @@ class Birthday(commands.Cog):
         cur.execute("INSERT INTO birthday VALUES (?, ?, ?)", (user.id, day, month))
         con.commit()
         con.close()
+        await ctx.send("Added user to birthday list.")
     
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def makeservertablebirthday(self,ctx):
-        con = sqlite3.connect("databases/server_brithdays.db")
-        cur = con.cursor()
-        cur.execute("CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int)")
-        con.commit()
-        con.close()
-        con = sqlite3.connect("databases/user_brithdays.db")
-        cur = con.cursor()
-        cur.execute("CREATE TABLE birthday(UsersID int, birthday)")
-        con.commit()
-        con.close()
-        await ctx.send("Done")
-
-    @commands.command(hidden = True)
-    @commands.is_owner()
-    async def setallbithday(self,ctx):
-        for i in self.client.guilds:
-            con = sqlite3.connect("databases/server_brithdays.db")
-            cur = con.cursor()
-            cur.execute("INSERT INTO server(ServerID, Servertoggle,birthdaychannel) VALUES(?, ?,?)", (i.id, False,None))
-            await ctx.send(f"{i} has been set")
-            con.commit()
-            con.close()
+    #@commands.command(hidden=True)
+    #@commands.is_owner()
+    #async def makeservertablebirthday(self,ctx):
+    #    con = sqlite3.connect("databases/server_brithdays.db")
+    #    cur = con.cursor()
+    #    cur.execute("CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int)")
+    #    con.commit()
+    #    con.close()
+    #    con = sqlite3.connect("databases/user_brithdays.db")
+    #    cur = con.cursor()
+    #    cur.execute("CREATE TABLE birthday(UsersID int, birthday)")
+    #    con.commit()
+    #    con.close()
+    #    await ctx.send("Done")
+#
+    #@commands.command(hidden = True)
+    #@commands.is_owner()
+    #async def setallbithday(self,ctx):
+    #    for i in self.client.guilds:
+    #        con = sqlite3.connect("databases/server_brithdays.db")
+    #        cur = con.cursor()
+    #        cur.execute("INSERT INTO server(ServerID, Servertoggle,birthdaychannel) VALUES(?, ?,?)", (i.id, False,None))
+    #        await ctx.send(f"{i} has been set")
+    #        con.commit()
+    #        con.close()
         
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
