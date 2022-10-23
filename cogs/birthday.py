@@ -85,6 +85,26 @@ class Birthday(commands.Cog):
             con.commit()
             con.close()
             await ctx.send("Birthday reminders has been turrned on")
+    
+    @commands.slash_command(name="toggle_birthday", description="enable and disable Birthday")
+    @commands.has_permissions(administrator=True)
+    async def _toggle_birthday(self,ctx):
+        con = sqlite3.connect("databases/server_brithdays.db")
+        cur = con.cursor()
+        datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (ctx.guild.id,))
+        datas = cur.fetchall()
+        toggle = datas[0][1]
+        if toggle == True:
+            cur.execute("UPDATE server SET Servertoggle = ? WHERE ServerID=?", (False, ctx.guild.id,))
+            con.commit()
+            con.close()
+            await ctx.respond("Birthday reminders has been turned off")
+        if toggle == False:
+            cur.execute("UPDATE server SET Servertoggle = ? WHERE ServerID=?", (True, ctx.guild.id,))
+            con.commit()
+            con.close()
+            await ctx.respond("Birthday reminders has been turrned on")
+
 
     @commands.slash_command(name="setbirthday", description="Set your birthday use day then month")
     async def setbirthday__slash(self, ctx, day: int, month: int):
@@ -137,7 +157,7 @@ class Birthday(commands.Cog):
         await ctx.send(f"Birthday channel has been set to {channel}")
 
     #runs every 24 hours
-    @tasks.loop(time=time(12,00))
+    @tasks.loop(time=time(7,00))
     async def birthdaytimer(self):
         await self.client.wait_until_ready()
         for i in self.client.guilds:
@@ -156,7 +176,8 @@ class Birthday(commands.Cog):
                 for i in data:
                     if i[1] == datetime.now().strftime("%d/%m"):
                         channel = self.client.get_channel(channel)
-                        await channel.send(f"<@{i[0]}> Happy Birthday")
+                        if i[0] in [i.id for i in self.client.get_guild(channel.guild.id).members]:
+                            await channel.send(f"<@{i[0]}> Happy Birthday")
                 con.close()
             else:
                 pass
