@@ -157,7 +157,7 @@ class Birthday(commands.Cog):
         await ctx.send(f"Birthday channel has been set to {channel}")
 
     #runs every 24 hours
-    @tasks.loop(time=time(7,12))
+    @tasks.loop(time=time(7,00))
     async def birthdaytimer(self):
         await self.client.wait_until_ready()
         for i in self.client.guilds:
