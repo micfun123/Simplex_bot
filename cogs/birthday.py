@@ -146,15 +146,26 @@ class Birthday(commands.Cog):
                 con.close()
                 await ctx.send("Your birthday has been updated")
 
-    @commands.command(help = "Set the birthday channel")
+    @commands.command(name="set_birthday_channel",help = "Set the birthday channel")
     @commands.has_permissions(administrator=True)
-    async def set_birthday_channel(self,ctx, channel: commands.TextChannelConverter):
+    async def set_birthday_channel_command(self,ctx, channel: commands.TextChannelConverter):
         con = sqlite3.connect("databases/server_brithdays.db")
         cur = con.cursor()
         cur.execute("UPDATE server SET birthdaychannel = ? WHERE ServerID=?", (channel.id, ctx.guild.id,))
         con.commit()
         con.close()
         await ctx.send(f"Birthday channel has been set to {channel}")
+
+    @commands.slash_command(name="set_birthday_channel",help = "Set the birthday channel")
+    @commands.has_permissions(administrator=True)
+    async def set_birthday_channel__slash(self,ctx, channel: commands.TextChannelConverter):
+        con = sqlite3.connect("databases/server_brithdays.db")
+        cur = con.cursor()
+        cur.execute("UPDATE server SET birthdaychannel = ? WHERE ServerID=?", (channel.id, ctx.guild.id,))
+        con.commit()
+        con.close()
+        await ctx.respond(f"Birthday channel has been set to {channel}")
+
 
     #runs every 24 hours
     @tasks.loop(time=time(7,00))
