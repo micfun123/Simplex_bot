@@ -188,7 +188,7 @@ class Birthday(commands.Cog):
                     if i[1] == datetime.now().strftime("%d/%m"):
                         channel = self.client.get_channel(channel)
                         if i[0] in [i.id for i in self.client.get_guild(channel.guild.id).members]:
-                            await channel.send(f"<@{i[0]}> Happy Birthday")
+                            await channel.send(f"Happy Birthday <@{i[0]}> !\n Hope you have a amazing day" )
                 con.close()
             else:
                 pass
