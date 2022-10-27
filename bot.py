@@ -217,7 +217,7 @@ async def on_message(message):
     #if "simplex" and "love" in message.clean_content.lower():
     #    await message.add_reaction("❤")
     #    await message.add_reaction("<:SimplexLove:1035258994115231856>")
-    await client.process_commands(message.content) 
+    await client.process_commands(message) 
 
 
 
