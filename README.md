@@ -28,7 +28,7 @@ Want to join the discord? [Link](https://discord.gg/d2gjWqFsTP)  List of suggest
 4. if its good i will merge it
 
 Please know I do not have much time so pull requests may take a week. If its important contact me using twitter i am [@michaelrbparker](https://twitter.com/michaelrbparker) or through the discord.
-Thank you for your time
+Thank you for your time.
 
 
 # Support 
