@@ -122,18 +122,18 @@ class Moderationsettings(commands.Cog):
     #    await ctx.send("Done")
 
 
-    @commands.command(hidden = True)
-    @commands.is_owner()
-    async def set_all_announcement(self, ctx):
-        await ctx.send("starting")
-        con = sqlite3.connect("databases/announcement.db")
-        cur = con.cursor()
-        cur.execute("CREATE TABLE server(ServerID int, channel int)")
-        for i in self.client.guilds:
-            cur.execute("INSERT INTO server(ServerID, channel) VALUES(?, ?)", (i.id, None))
-            await ctx.send(f"{i} has been set")
-            con.commit()
-        con.close()
+    #@commands.command(hidden = True)
+    #@commands.is_owner()
+    #async def set_all_announcement(self, ctx):
+    #    await ctx.send("starting")
+    #    con = sqlite3.connect("databases/announcement.db")
+    #    cur = con.cursor()
+    #    cur.execute("CREATE TABLE server(ServerID int, channel int)")
+    #    for i in self.client.guilds:
+    #        cur.execute("INSERT INTO server(ServerID, channel) VALUES(?, ?)", (i.id, None))
+    #        await ctx.send(f"{i} has been set")
+    #        con.commit()
+    #    con.close()
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
