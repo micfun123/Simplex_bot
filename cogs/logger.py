@@ -1,4 +1,5 @@
     
+from startrek import Channel
 from tools import mic, log
 import json
 from discord import Guild, Option
@@ -6,6 +7,7 @@ import discord
 from discord.ext import commands
 import discord.ui 
 import calendar, datetime, time
+import sqlite3
 
 
 async def get_data_announcement():
@@ -36,12 +38,20 @@ class Moderationsettings(commands.Cog):
     @commands.is_owner()
     async def announcement(self, ctx, *, message):
         #get all servers
+        con = sqlite3.connect("databases/announcement.db")
+        cur = con.cursor()
         for i in self.client.guilds:
+            data = cur.execute("SELECT * FROM server WHERE ServerID = ?", (i.id,)).fetchone()
             try:
-                #send server announcement
-                await i.system_channel.send(message)
+                channel = self.client.get_channel(data[1])
+                await channel.send(message)
             except:
-                log(f"{i.name} has no system channel")
+                try:
+                    system_channel = i.system_channel
+                    await system_channel.send(message)
+                except:
+                    await ctx.send(f"Could not send message to {i.name}")
+                    pass
 
 
     @commands.Cog.listener()
@@ -82,43 +92,49 @@ class Moderationsettings(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def setAnnouncementChannel(self, ctx, channel: discord.TextChannel):
-        data = await get_data_announcement()
-        for i in data:
-            if i['guild_id'] == ctx.guild.id:
-                i['channel'] = channel.id
-        await dump_data_announcement(data)
-        await ctx.send(f"Set bot announcment channel to {channel.mention}")
+    async def set_announcment_channel(self, ctx, channel: discord.TextChannel):
+        await ctx.send("This connecting")
+        con = sqlite3.connect("databases/announcement.db")
+        cur = con.cursor()
+        data = cur.execute("SELECT * FROM server WHERE ServerID=?", (ctx.guild.id,))
+        data = data.fetchall()
+        if data:
+            cur.execute("UPDATE server SET channel=? WHERE ServerID=?", (channel.id, ctx.guild.id))
+            con.commit()
+            await ctx.send(f"Set announcement channel to {channel.mention}")
+        else:
+            cur.execute("INSERT INTO server VALUES (?, ?)", (ctx.guild.id, channel.id))
+            con.commit()
+            await ctx.send(f"Set announcement channel to {channel.mention}")
 
-    @commands.command(hidden = True)
-    @commands.is_owner()
-    async def set_all_log(self, ctx):
-        data = await get_data()
-        for guild in self.client.guilds:
-            append_this = {
-                "guild_id": guild.id,
-                "channel": None,
-        
-            }
-            data.append(append_this)
+    #@commands.command(hidden = True)
+    #@commands.is_owner()
+    #async def set_all_log(self, ctx):
+    #    data = await get_data()
+    #    for guild in self.client.guilds:
+    #        append_this = {
+    #            "guild_id": guild.id,
+    #            "channel": None,
+    #    
+    #        }
+    #        data.append(append_this)
 
-        await dump_data(data)
-        await ctx.send("Done")
+    #    await dump_data(data)
+    #    await ctx.send("Done")
+
 
     @commands.command(hidden = True)
     @commands.is_owner()
     async def set_all_announcement(self, ctx):
-        data = await get_data_announcement()
-        for guild in self.client.guilds:
-            append_this = {
-                "guild_id": guild.id,
-                "channel": None,
-        
-            }
-            data.append(append_this)
-
-        await dump_data_announcement(data)
-        await ctx.send("Done")
+        await ctx.send("starting")
+        con = sqlite3.connect("databases/announcement.db")
+        cur = con.cursor()
+        cur.execute("CREATE TABLE server(ServerID int, channel int)")
+        for i in self.client.guilds:
+            cur.execute("INSERT INTO server(ServerID, channel) VALUES(?, ?)", (i.id, None))
+            await ctx.send(f"{i} has been set")
+            con.commit()
+        con.close()
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -132,16 +148,15 @@ class Moderationsettings(commands.Cog):
         data.append(append_this)
 
         await dump_data(data)
-        data = await get_data_announcement()
 
-        append_this = {
-            "guild_id": guild.id,
-            "channel": None,
-            
-        }
-        data.append(append_this)
+        con = sqlite3.connect("databases/announcement.db")
+        cur = con.cursor()
+        cur.execute("CREATE TABLE server(ServerID int, channel)")
+        cur.execute("INSERT INTO server(ServerID, channel) VALUES(?, ?)", (guild.id, None))
+        con.commit()
+        con.close()
+        
 
-        await dump_data_announcement(data)
        
 
     @commands.Cog.listener()
