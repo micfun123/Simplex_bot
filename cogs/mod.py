@@ -124,7 +124,7 @@ class Moderation(commands.Cog):
     async def embedmaker_command(self,ctx):
         await ctx.send("This commmand has moved to slash commands")
         
-    @commands.slash_command(name="embed", help="Creates an embed")
+    @commands.slash_command(name="embed", description="Creates an embed")
     @commands.has_permissions(manage_messages=True)
     async def embedmaker_slash(self,ctx: discord.ApplicationContext):
         modal = embed_makers(title="Embed Maker")
