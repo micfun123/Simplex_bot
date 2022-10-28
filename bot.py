@@ -214,9 +214,12 @@ async def on_message(message):
             if message.reference is None:
                 prefix= get_prefix(client, message)
                 await message.channel.send(f"Hello {message.author.mention} I am Simplex Bot the worlds best discord bot. My prefix for this server is {prefix} \n To see all of my commands type {prefix}help. If you need to speak to a dev feel free to DM me the bot")
-    #if "simplex" and "love" in message.clean_content.lower():
-    #    await message.add_reaction("❤")
-    #    await message.add_reaction("<:SimplexLove:1035258994115231856>")
+    if "simplex" and "love" in message.clean_content.lower():
+        await message.add_reaction("❤")
+        await message.add_reaction("<:SimplexLove:1035258994115231856>")
+    if "simplex hate" or "hate simplex" in message.clean_content.lower():
+        await message.add_reaction("💔")
+
     await client.process_commands(message) 
 
 
