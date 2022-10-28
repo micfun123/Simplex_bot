@@ -1,5 +1,4 @@
     
-from startrek import Channel
 from tools import mic, log
 import json
 from discord import Guild, Option
