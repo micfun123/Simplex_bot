@@ -28,6 +28,29 @@ for i in os.listdir("cogs/"):
     else:
         print(i[:-3])
 
+class embed_makers(discord.ui.Modal):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.add_item(discord.ui.InputText(label="Title", placeholder="Enter a title",required=True))
+        self.add_item(discord.ui.InputText(label="description", style=discord.InputTextStyle.long))
+        self.add_item(discord.ui.InputText(label="colour", placeholder="Enter a colour (in hex)",required=True))
+        self.add_item(discord.ui.InputText(label="footer", placeholder="Enter a footer (optional)",required=False))
+
+    async def callback(self, interaction: discord.Interaction):
+        embed = discord.Embed(title=self.children[0].value, description=self.children[1].value)
+        try:
+            embed.colour = int(self.children[2].value, 16)
+        except:
+            pass
+        try:
+            embed.set_footer(text=self.children[3].value)
+        except:
+            pass
+        await interaction.response.send_message(embeds=[embed])
+
+
+
 class Moderation(commands.Cog):
     def __init__(self, client): 
         self.client = client 
@@ -98,25 +121,14 @@ class Moderation(commands.Cog):
     #embed maker
     @commands.command(name="embed", help="Creates an embed")
     @commands.has_permissions(manage_messages=True)
-    async def embedmaker_command(self,ctx,titeltext,descriptiontext,colour):
-        embed = discord.Embed()
-        embed.title = titeltext
-        embed.description = descriptiontext
-        embed.color = int(colour, 16)
-
-        
-        await ctx.send(embed=embed)
+    async def embedmaker_command(self,ctx):
+        await ctx.send("This commmand has moved to slash commands")
         
     @commands.slash_command(name="embed", help="Creates an embed")
     @commands.has_permissions(manage_messages=True)
-    async def embedmaker_slash(self,ctx,titeltext,descriptiontext,colour):
-        embed = discord.Embed()
-        embed.title = titeltext
-        embed.description = descriptiontext
-        embed.color = int(colour, 16)
-
-        
-        await ctx.respond(embed=embed)
+    async def embedmaker_slash(self,ctx: discord.ApplicationContext):
+        modal = embed_makers(title="Embed Maker")
+        await ctx.send_modal(modal)
 
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
