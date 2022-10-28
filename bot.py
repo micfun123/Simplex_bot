@@ -217,8 +217,15 @@ async def on_message(message):
     if "simplex" and "love" in message.clean_content.lower():
         await message.add_reaction("❤")
         await message.add_reaction("<:SimplexLove:1035258994115231856>")
-    if "simplex hate" or "hate simplex" in message.clean_content.lower():
+
+    if "hate simplex" in message.clean_content.lower():
         await message.add_reaction("💔")
+
+    if "fuck simplex" in message.clean_content.lower():
+        await message.add_reaction("🖕")
+    
+    if "fuck you simplex" in message.clean_content.lower():
+        await message.add_reaction("🖕")
 
     await client.process_commands(message) 
 
