@@ -91,6 +91,77 @@ class Events(commands.Cog):
             )
             await ctx.send(embed=em)
 
+        elif isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(
+                title="Missing permissions",
+                description="I don't have permissions to use this commands",
+            )
+            await ctx.send(embed=em)
+
+        elif isinstance(error, commands.CommandNotFound):
+            em = discord.Embed(
+                title="Command not found",
+                description="This command doesn't exist",
+            )
+            await ctx.send(embed=em)
+
+    @commands.Cog.listener()
+    async def on_appliaction_command_error(self, ctx, error):
+        log(f"ERROR: {error}")
+        print(error)
+
+        if isinstance(error, commands.CommandOnCooldown):
+            async def better_time(cd: int):
+                time = f"{cd}s"
+                if cd > 60:
+                    minutes = cd - (cd % 60)
+                    seconds = cd - minutes
+                    minutes = int(minutes / 60)
+                    time = f"{minutes}min {seconds}s"
+                    if minutes > 60:
+                        hoursglad = minutes - (minutes % 60)
+                        hours = int(hoursglad / 60)
+                        minutes = minutes - (hours*60)
+                        time = f"{hours}h {minutes}min {seconds}s"
+                return time
+                
+            cd = round(error.retry_after)
+            if cd == 0:
+                cd = 1
+            retry_after = await better_time(cd)
+            em = discord.Embed(
+                title="Wow buddy, Slow it down\nThis command is on cooldown",
+                description=f"Try again in **{retry_after}**",
+            )
+            await ctx.send(embed=em)
+
+        elif isinstance(error, commands.MissingRequiredArgument):
+            em = discord.Embed(
+                title="Missing a requred value/arg",
+                description="You haven't passed in all value/arg",
+            )
+            await ctx.send(embed=em)
+
+        elif isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(
+                title="Missing permissions",
+                description="You don't have permissions to use this commands",
+            )
+            await ctx.send(embed=em)
+
+        elif isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(
+                title="Missing permissions",
+                description="I don't have permissions to use this commands",
+            )
+            await ctx.send(embed=em)
+
+        
+
+    
+
+        
+
 
 
 
