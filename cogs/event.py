@@ -98,12 +98,7 @@ class Events(commands.Cog):
             )
             await ctx.send(embed=em)
 
-        elif isinstance(error, commands.CommandNotFound):
-            em = discord.Embed(
-                title="Command not found",
-                description="This command doesn't exist",
-            )
-            await ctx.send(embed=em)
+       
 
     @commands.Cog.listener()
     async def on_appliaction_command_error(self, ctx, error):
