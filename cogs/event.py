@@ -23,7 +23,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         cha = self.client.get_channel(925787897527926805)
-        await cha.send(embed=discord.Embed(title="Join", description=f"Joined: {guild.name}\n Owner: {guild.owner}\n Members: {guild.member_count}\n ID: {guild.id}"))
+        await cha.send(embed=discord.Embed(title="Join", description=f"Joined: {guild.name}\n Owner: {guild.owner}\n Members: {guild.member_count}\n ID: {guild.id}",color=discord.Color.green()))
         await update_activity(self.client)
         embed = discord.Embed(color=discord.Color.blue())
         embed.set_author(name="Here's some stuff to get you started:")
@@ -44,7 +44,7 @@ class Events(commands.Cog):
     async def on_guild_remove(self,guild):
         await update_activity(self.client)
         cha = self.client.get_channel(925787897527926805)
-        await cha.send(embed=discord.Embed(title="Leave", description=f"Left: {guild.name}"))
+        await cha.send(embed=discord.Embed(title="Leave", description=f"Left: {guild.name}",color=discord.Color.red()))
 
     
     @commands.Cog.listener()
