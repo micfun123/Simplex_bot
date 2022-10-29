@@ -130,6 +130,8 @@ class utilities(commands.Cog):
     #gets user info of user on the discord
     @commands.command(aliases=["userinfo", "ui", "Whois"] ,help = "Finds info about users on the discord.")
     async def info(self,ctx, user: discord.Member):
+        if user == None:
+            user = ctx.author
         embed = discord.Embed(title=f"{user}'s info", description=f"Here's {user}'s info", color=0x00ff00)
         embed.add_field(name="Username:", value=user.name, inline=True)
         embed.add_field(name="ID:", value=user.id, inline=True)
