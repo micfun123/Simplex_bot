@@ -43,7 +43,7 @@ async def counting(msg, guild, channel, m):
                     data[f"{guild.id}"] = 0
                     i['lastcounter'] = None
                     await m.add_reaction("❌")
-                    em = discord.Embed(title=f"{m.author.name}, You ruined it!", description="Only one person at a time\nCount reset to zero")
+                    em = discord.Embed(title=f"{m.author.nick}, You ruined it!", description="Only one person at a time\nCount reset to zero")
                     with open("./databases/counting.json", 'w') as f:
                         json.dump(data, f, indent=4)
                     with open("./databases/db.json", 'w') as f:
@@ -62,7 +62,7 @@ async def counting(msg, guild, channel, m):
                 await channel.send("You have found the meaning of life.")
         else:
             await m.add_reaction("❌")
-            em = discord.Embed(title=f"{m.author.name}, You ruined it!", description=f"You were supposed to type `{(data[f'{guild.id}']+1)}`\nCount reset to zero")
+            em = discord.Embed(title=f"{m.author.nick}, You ruined it!", description=f"You were supposed to type `{(data[f'{guild.id}']+1)}`\nCount reset to zero")
             i['lastcounter'] = None
             data[f"{guild.id}"] = 0
             await channel.send(embed=em)
