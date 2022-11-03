@@ -40,7 +40,7 @@ def slap(imageUrl):
         frames.append(frame)
 
     d = BytesIO()
-    frames[0].save('new.gif', append_images=frames[1:], save_all=True)
+    frames[0].save(d,'new.gif', append_images=frames[1:], save_all=True)
     d.seek(0)
     return d
         
