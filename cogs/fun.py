@@ -20,29 +20,54 @@ import io
 import urllib
 from PIL import Image, ImageDraw, ImageFont , ImageEnhance , ImageSequence
 
-def slap(imageUrl):
+def slap(imageUrl,seconduser):
     hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
     req = urllib.request.Request(imageUrl, headers=hdr)
     response = urllib.request.urlopen(req) 
     f = io.BytesIO(response.read())
+    req = urllib.request.Request(seconduser, headers=hdr)
+    response = urllib.request.urlopen(req) 
+    d = io.BytesIO(response.read())
+    random_number = randrange(1, 2)
+    if random_number == 1:
+        im1 = Image.open("images/slap1.gif")
+        im2 = Image.open(f)
+        im2 = im2.resize((100, 100))
+        im2 = im2.convert("RGBA")
+        
     
-    im1 = Image.open("images/slap1.gif")
-    im2 = Image.open(f)
-    im2 = im2.resize((100, 100))
-    im2 = im2.convert("RGBA")
-    
-   
-    frames = []
-    for frame in ImageSequence.Iterator(im1):
-        frame = frame.copy()
-        frame = frame.convert("RGBA")
-        frame.paste(im2, (500, 90))
-        frames.append(frame)
+        frames = []
+        for frame in ImageSequence.Iterator(im1):
+            frame = frame.copy()
+            frame = frame.convert("RGBA")
+            frame.paste(im2, (500, 90))
+            frames.append(frame)
 
-    bytes_img = io.BytesIO()
-    frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
-    bytes_img.seek(0)
-    return bytes_img
+        bytes_img = io.BytesIO()
+        frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
+        bytes_img.seek(0)
+        return bytes_img
+    elif random_number == 2:
+        im1 = Image.open("app/images/slap-in-the-face-angry.gif")
+        im3 = Image.open(d)
+        im2 = Image.open(f)
+        im2 = im2.resize((100, 100))
+        im2 = im2.convert("RGBA")
+        im3 = im3.resize((100, 100))
+        im3 = im3.convert("RGBA")
+        
+    
+        frames = []
+        for frame in ImageSequence.Iterator(im1):
+            frame = frame.copy()
+            frame = frame.convert("RGBA")
+            frame.paste(im2, (50, 168))
+            frame.paste(im3, (220, 55))
+            frames.append(frame)
+        bytes_img = io.BytesIO()
+        frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
+        bytes_img.seek(0)
+        return bytes_img
 
         
 
@@ -743,7 +768,7 @@ class Fun(commands.Cog):
     @commands.command()
     async def slap(self,ctx, member : discord.Member):
         await ctx.send(f"{ctx.author.mention} slapped {member.mention}")
-        img = slap(member.avatar.url)
+        img = slap(member.avatar.url,ctx.author.avatar.url)
         await ctx.send(file=discord.File(img, "slap.gif"))
 
 def setup(bot):
