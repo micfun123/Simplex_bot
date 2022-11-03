@@ -743,7 +743,7 @@ class Fun(commands.Cog):
     @commands.command()
     async def slap(self,ctx, member : discord.Member):
         await ctx.send(f"{ctx.author.mention} slapped {member.mention}")
-        img = slap(member.avatar_url)
+        img = slap(member.avatar.url)
         await ctx.send(file=discord.File(img, "slap.gif"))
 
 def setup(bot):
