@@ -29,7 +29,7 @@ def slap(imageUrl,seconduser):
     response = urllib.request.urlopen(req) 
     d = io.BytesIO(response.read())
     random_number = random.randint(1, 2)
-
+    random_number = 2
     if random_number == 1:
         im1 = Image.open("images/slap1.gif")
         im2 = Image.open(f)
