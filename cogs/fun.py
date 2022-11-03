@@ -8,8 +8,8 @@ import numpy
 import aiohttp
 import asyncio
 import datetime
-from random import randrange
 import requests
+from random import randrange
 from pyfiglet import figlet_format, FontError, FontNotFound
 from tools import get, log
 from io import BytesIO
@@ -28,7 +28,8 @@ def slap(imageUrl,seconduser):
     req = urllib.request.Request(seconduser, headers=hdr)
     response = urllib.request.urlopen(req) 
     d = io.BytesIO(response.read())
-    random_number = randrange(1, 2)
+    random_number = random.randint(1, 2)
+
     if random_number == 1:
         im1 = Image.open("images/slap1.gif")
         im2 = Image.open(f)
