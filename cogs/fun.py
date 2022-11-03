@@ -38,6 +38,11 @@ def slap(imageUrl):
         frame = frame.convert("RGBA")
         frame.paste(im2, (500, 90))
         frames.append(frame)
+
+    d = BytesIO()
+    frames[0].save(d, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
+    d.seek(0)
+    return d
         
 
 class MyView(View):
