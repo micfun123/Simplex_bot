@@ -18,6 +18,27 @@ import os
 import aiofiles
 import io 
 import urllib
+from PIL import Image, ImageDraw, ImageFont , ImageEnhance , ImageSequence
+
+def slap(imageUrl):
+    hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+    req = urllib.request.Request(imageUrl, headers=hdr)
+    response = urllib.request.urlopen(req) 
+    f = io.BytesIO(response.read())
+    
+    im1 = Image.open("app/images/slap1.gif")
+    im2 = Image.open(f)
+    im2 = im2.resize((100, 100))
+    im2 = im2.convert("RGBA")
+    
+   
+    frames = []
+    for frame in ImageSequence.Iterator(im1):
+        frame = frame.copy()
+        frame = frame.convert("RGBA")
+        frame.paste(im2, (500, 90))
+        frames.append(frame)
+        
 
 class MyView(View):
     def __init__(self):
@@ -713,6 +734,10 @@ class Fun(commands.Cog):
                 Da ba dee da ba di
                 Da ba dee da ba di""")
                     
+    @commands.command()
+    async def slap(self,ctx, member : discord.Member):
+        await ctx.send(f"{ctx.author.mention} slapped {member.mention}")
+        await ctx.send(file=discord.File(slap(member.avatar.url)))
 
 def setup(bot):
     bot.add_cog(Fun(bot))
