@@ -28,7 +28,7 @@ def slap(imageUrl,seconduser):
     req = urllib.request.Request(seconduser, headers=hdr)
     response = urllib.request.urlopen(req) 
     d = io.BytesIO(response.read())
-    random_number = random.randint(1, 2)
+    random_number = random.randint(1, 3)
     if random_number == 1:
         im1 = Image.open("images/slap1.gif")
         im2 = Image.open(f)
@@ -69,6 +69,28 @@ def slap(imageUrl,seconduser):
         bytes_img.seek(0)
         return bytes_img
 
+    elif random_number == 3:
+        im1 = Image.open("images/slap.gif")
+        im3 = Image.open(d)
+        im2 = Image.open(f)
+        im2 = im2.resize((100, 100))
+        im2 = im2.convert("RGBA")
+        im3 = im3.resize((100, 100))
+        im3 = im3.convert("RGBA")
+        
+    
+        frames = []
+        for frame in ImageSequence.Iterator(im1):
+            frame = frame.copy()
+            frame = frame.convert("RGBA")
+            frame.paste(im2, (120, 45))
+            frame.paste(im3, (450, 55))
+            frames.append(frame)
+        bytes_img = io.BytesIO()
+        frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
+        bytes_img.seek(0)
+        return bytes_img
+        
         
 
 class MyView(View):
