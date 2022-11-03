@@ -26,7 +26,7 @@ def slap(imageUrl):
     response = urllib.request.urlopen(req) 
     f = io.BytesIO(response.read())
     
-    im1 = Image.open("app/images/slap1.gif")
+    im1 = Image.open("images/slap1.gif")
     im2 = Image.open(f)
     im2 = im2.resize((100, 100))
     im2 = im2.convert("RGBA")
