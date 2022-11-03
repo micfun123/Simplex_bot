@@ -49,7 +49,7 @@ def slap(imageUrl,seconduser):
         bytes_img.seek(0)
         return bytes_img
     elif random_number == 2:
-        im1 = Image.open("app/images/slap-in-the-face-angry.gif")
+        im1 = Image.open("images/slap-in-the-face-angry.gif")
         im3 = Image.open(d)
         im2 = Image.open(f)
         im2 = im2.resize((100, 100))
