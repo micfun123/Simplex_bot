@@ -43,7 +43,7 @@ def slap(imageUrl):
     frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
     bytes_img.seek(0)
     return bytes_img
-    
+
         
 
 class MyView(View):
@@ -743,7 +743,8 @@ class Fun(commands.Cog):
     @commands.command()
     async def slap(self,ctx, member : discord.Member):
         await ctx.send(f"{ctx.author.mention} slapped {member.mention}")
-        await ctx.send(file=discord.File(slap(member.avatar.url)))
-
+        img = slap(member.avatar_url)
+        await ctx.send(file=discord.File(img, "slap.png"))
+        
 def setup(bot):
     bot.add_cog(Fun(bot))
