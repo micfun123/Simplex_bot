@@ -39,10 +39,11 @@ def slap(imageUrl):
         frame.paste(im2, (500, 90))
         frames.append(frame)
 
-    d = BytesIO()
-    frames[0].save(d,'new.gif', append_images=frames[1:], save_all=True)
-    d.seek(0)
-    return d
+    bytes_img = io.BytesIO()
+    frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
+    bytes_img.seek(0)
+    return bytes_img
+    
         
 
 class MyView(View):
