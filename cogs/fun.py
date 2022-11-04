@@ -787,11 +787,17 @@ class Fun(commands.Cog):
                 Da ba dee da ba di
                 Da ba dee da ba di""")
                     
-    @commands.command()
-    async def slap(self,ctx, member : discord.Member):
+    @commands.command(name="slap")
+    async def slap__command(self,ctx, member : discord.Member):
         await ctx.send(f"{ctx.author.mention} slapped {member.mention}")
         img = slap(member.avatar.url,ctx.author.avatar.url)
         await ctx.send(file=discord.File(img, "slap.gif"))
+    
+    @commands.slash_command(name="slap")
+    async def slap__slash(self,ctx, member : discord.Member):
+        await ctx.respond(f"{ctx.author.mention} slapped {member.mention}")
+        img = slap(member.avatar.url,ctx.author.avatar.url)
+        await ctx.respond(file=discord.File(img, "slap.gif"))
 
 def setup(bot):
     bot.add_cog(Fun(bot))
