@@ -45,7 +45,7 @@ class QOTD(commands.Cog):
                 con.close()
                 await ctx.respond("QOTD channel updated!", ephemeral=True)
 
-    @tasks.loop(time=time(19,30))
+    @tasks.loop(time=time(00,00))
     async def qotd(self):
         con = sqlite3.connect('databases/qotd.db')
         cur = con.cursor()
