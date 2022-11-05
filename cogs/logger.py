@@ -36,6 +36,7 @@ class Moderationsettings(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def announcement_all(self, ctx, *, message):
+        sentto = 0
         #get all servers
         con = sqlite3.connect("databases/announcement.db")
         cur = con.cursor()
@@ -48,9 +49,10 @@ class Moderationsettings(commands.Cog):
                 try:
                     system_channel = i.system_channel
                     await system_channel.send(message)
+                    sentto += 1
                 except:
-                    await ctx.send(f"Could not send message to {i.name}")
                     pass
+        await ctx.send(f"Sent to {sentto} servers")
 
     @commands.command()
     @commands.is_owner()
