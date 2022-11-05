@@ -35,7 +35,7 @@ class Moderationsettings(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def announcement(self, ctx, *, message):
+    async def announcement_all(self, ctx, *, message):
         #get all servers
         con = sqlite3.connect("databases/announcement.db")
         cur = con.cursor()
@@ -52,6 +52,20 @@ class Moderationsettings(commands.Cog):
                     await ctx.send(f"Could not send message to {i.name}")
                     pass
 
+    @commands.command()
+    @commands.is_owner()
+    async def announcement(self, ctx, *, message):
+        #get all servers
+        con = sqlite3.connect("databases/announcement.db")
+        cur = con.cursor()
+        for i in self.client.guilds:
+            data = cur.execute("SELECT * FROM server WHERE ServerID = ?", (i.id,)).fetchone()
+            try:
+                channel = self.client.get_channel(data[1])
+                await channel.send(message)
+            except:
+                await ctx.send(f"Could not send message to {i.name}")
+                pass
 
     @commands.Cog.listener()
     async def on_message_delete(self,message):
