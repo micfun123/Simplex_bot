@@ -22,7 +22,7 @@ class QOTD(commands.Cog):
         cur.execute("CREATE table qotd (server_id int, channel_id int)")
         con.commit()
         con.close()
-        ctx.send("Table created")
+        await ctx.send("Table created")
         
 
 
