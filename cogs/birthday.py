@@ -104,6 +104,7 @@ class Birthday(commands.Cog):
             con.commit()
             con.close()
             await ctx.respond("Birthday reminders has been turrned on")
+        await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
 
     @commands.slash_command(name="setbirthday", description="Set your birthday use day then month")
@@ -125,6 +126,8 @@ class Birthday(commands.Cog):
                 con.commit()
                 con.close()
                 await ctx.respond("Your birthday has been updated")
+            await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
+
         
     @commands.command(name="setbirthday", help = "Set your birthday use day then month")
     async def setbirthday_commands(self, ctx, day: int, month: int):
