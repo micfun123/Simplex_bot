@@ -31,7 +31,8 @@ class Events(commands.Cog):
         embed.add_field(name="Disable Leveling", value="To disable leveling, use `.toggle_leveling`")
         embed.add_field(name="Set Welcome", value="You can use `.welcome` to set a welcome message and channel ")
         embed.add_field(name="Log messages", value="Use `.setLogChannel` to set a channel for logging removed,edited messages")
-        embed.add_field(name="Bot Announcements", value="Use `.setAnnouncementChannel [channel]` to set a channel for simplex announcements. Theses Announcments will include bug fixes and updates")
+        embed.add_field(name="Bot Announcements", value="Use `.set_announcment_channel [channel]` to set a channel for simplex announcements. Theses Announcments will include bug fixes and updates")
+        embed.add_field(name="Other bits", value="We also got a amazing collection of moderation commands, and a fun command , AutoBirthdays, question of the day, and more!")
         embed.add_field(name="Support", value="If you need support feel free to dm Me (the bot) and a human will reply to you ASAP or join the [Support Server](https://discord.gg/DCQWucrh2G) ")
         embed.set_footer( text=f"Thank You - Simplex is now on {len(self.client.guilds)} servers!")
         
