@@ -38,12 +38,13 @@ class QOTD(commands.Cog):
                 cur.execute("INSERT INTO qotd VALUES (?, ?)", (ctx.guild.id, channel.id))
                 con.commit()
                 con.close()
-                await ctx.respond("QOTD channel set!", ephemeral=True)
+                await ctx.respond("QOTD channel set!")
             else:
                 cur.execute("UPDATE qotd SET channel_id = ? WHERE server_id = ?", (channel.id, ctx.guild.id))
                 con.commit()
                 con.close()
-                await ctx.respond("QOTD channel updated!", ephemeral=True)
+                await ctx.respond("QOTD channel updated!")
+                await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
     @tasks.loop(time=time(00,00))
     async def qotd(self):
