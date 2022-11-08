@@ -14,7 +14,7 @@ def log(log):
         f.write(f"{timern} | {log}")
 
 async def update_activity(client):
-    await client.change_presence(activity=discord.Game(f"On {len(client.guilds)} / 500 servers! | {(len(client.guilds)/500)*100}% "))
+    await client.change_presence(activity=discord.Game(f"On {len(client.guilds)} / 250 servers! | {(len(client.guilds)/250)*100}% "))
     print("Updated presence")
 
 class Events(commands.Cog):
