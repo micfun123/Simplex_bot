@@ -93,6 +93,37 @@ def slap(imageUrl,seconduser):
         
         
 
+def stab(imageUrl,seconduser):
+    hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+    req = urllib.request.Request(imageUrl, headers=hdr)
+    response = urllib.request.urlopen(req) 
+    f = io.BytesIO(response.read())
+    req = urllib.request.Request(seconduser, headers=hdr)
+    response = urllib.request.urlopen(req) 
+    d = io.BytesIO(response.read())
+    im1 = Image.open("images/stab-fake.gif")
+    im2 = Image.open(f)
+    im2 = im2.resize((100, 100))
+    im2 = im2.convert("RGBA")
+    im3 = Image.open(d)
+    im3 = im3.resize((100, 100))
+    im3 = im3.convert("RGBA")
+
+        
+    
+    frames = []
+    for frame in ImageSequence.Iterator(im1):
+        frame = frame.copy()
+        frame = frame.convert("RGBA")
+        frame.paste(im2, (120, 45))
+        frame.paste(im3, (450, 55))
+        frames.append(frame)
+
+    bytes_img = io.BytesIO()
+    frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
+    bytes_img.seek(0)
+    return bytes_img
+
 class MyView(View):
     def __init__(self):
         super().__init__(timeout=500)
@@ -798,6 +829,12 @@ class Fun(commands.Cog):
         await ctx.respond(f"{ctx.author.mention} slapped {member.mention}")
         img = slap(member.avatar.url,ctx.author.avatar.url)
         await ctx.respond(file=discord.File(img, "slap.gif"))
+
+    @commands.command(name="kill")
+    async def kill__command(self,ctx, member : discord.Member):
+        await ctx.send(f"{ctx.author.mention} killed {member.mention}")
+        img = stab(member.avatar.url,ctx.author.avatar.url)
+        await ctx.send(file=discord.File(img, "kill.gif"))
 
 def setup(bot):
     bot.add_cog(Fun(bot))
