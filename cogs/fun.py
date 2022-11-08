@@ -116,7 +116,7 @@ def stab(imageUrl,seconduser):
         frame = frame.copy()
         frame = frame.convert("RGBA")
         frame.paste(im2, (120, 45))
-        frame.paste(im3, (220, 55))
+        frame.paste(im3, (250, 55))
         frames.append(frame)
 
     bytes_img = io.BytesIO()
