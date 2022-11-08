@@ -60,14 +60,16 @@ class Moderationsettings(commands.Cog):
         #get all servers
         con = sqlite3.connect("databases/announcement.db")
         cur = con.cursor()
+        total = 0
         for i in self.client.guilds:
             data = cur.execute("SELECT * FROM server WHERE ServerID = ?", (i.id,)).fetchone()
             try:
                 channel = self.client.get_channel(data[1])
                 await channel.send(message)
+                total += 1
             except:
-                await ctx.send(f"Could not send message to {i.name}")
                 pass
+        await ctx.send(f"Sent to {total} out of {self.client.guilds} servers")
 
     @commands.Cog.listener()
     async def on_message_delete(self,message):
