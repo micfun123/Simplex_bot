@@ -116,7 +116,7 @@ def stab(imageUrl,seconduser):
         frame = frame.copy()
         frame = frame.convert("RGBA")
         frame.paste(im2, (120, 45))
-        frame.paste(im3, (270, 40))
+        frame.paste(im3, (275, 40))
         frames.append(frame)
 
     bytes_img = io.BytesIO()
@@ -835,6 +835,12 @@ class Fun(commands.Cog):
         await ctx.send(f"{ctx.author.mention} killed {member.mention}")
         img = stab(member.avatar.url,ctx.author.avatar.url)
         await ctx.send(file=discord.File(img, "kill.gif"))
+
+    @commands.slash_command(name="kill")
+    async def kill__slash(self,ctx, member : discord.Member):
+        await ctx.respond(f"{ctx.author.mention} killed {member.mention}")
+        img = stab(member.avatar.url,ctx.author.avatar.url)
+        await ctx.respond(file=discord.File(img, "kill.gif"))
 
 def setup(bot):
     bot.add_cog(Fun(bot))
