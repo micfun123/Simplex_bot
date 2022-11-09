@@ -70,6 +70,17 @@ class TruthOrDare(commands.Cog):
             await ctx.respond("Truth or dare enabled!")
 
     @commands.command()
+    @commands.is_owner()
+    async def maketruthfile(self, ctx):
+        truthfile = open("databases/truth.txt", "w")
+        channel = self.client.get_channel(1031279120623083560)
+        messages = await channel.history(limit=1000).flatten()
+        for i in messages:
+            truthfile.write(i.content + "\n")
+        truthfile.close()
+        await ctx.send("Done")
+        
+
     
 
             
