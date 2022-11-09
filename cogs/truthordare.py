@@ -79,6 +79,14 @@ class TruthOrDare(commands.Cog):
             truthfile.write(i.content + "\n")
         truthfile.close()
         await ctx.send("Done")
+        #remove empty lines
+        with open("databases/truth.txt", "r") as f:
+            lines = f.readlines()
+        with open("databases/truth.txt", "w") as f:
+            for line in lines:
+                if line.strip("\n"):
+                    f.write(line)
+        await ctx.send("Done")
         
 
     
