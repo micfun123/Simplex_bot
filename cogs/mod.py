@@ -47,7 +47,7 @@ class embed_makers(discord.ui.Modal):
             embed.set_footer(text=self.children[3].value)
         except:
             pass
-        await interaction.response.send_message(embeds=[embed])
+        return embed
 
 
 
@@ -128,7 +128,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def embedmaker_slash(self,ctx: discord.ApplicationContext):
         modal = embed_makers(title="Embed Maker")
-        await ctx.send_modal(modal)
+        await ctx.send(embed=modal)
 
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
@@ -489,6 +489,11 @@ class Moderation(commands.Cog):
                 await ctx.send(f"cannot reset user {i}")
         await ctx.send("No more nick names. balence has been restored")    
     
+    @commands.command(help="UserID lookup")
+    async def userid(self,ctx,memberid:int):
+        member = ctx.guild.get_member(memberid)
+        await ctx.send(f"{member} has the id {memberid}")
+
 
 def setup(client):
     client.add_cog(Moderation(client))
