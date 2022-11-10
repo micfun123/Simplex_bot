@@ -47,7 +47,9 @@ class embed_makers(discord.ui.Modal):
             embed.set_footer(text=self.children[3].value)
         except:
             pass
-        await interaction.response.send_message(embeds=[embed])
+        #post the embed to the channel not reply
+        await interaction.response.send_message("embed sent", ephemeral=True)
+        await interaction.channel.send(embed=embed)
 
 
 
