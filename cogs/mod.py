@@ -47,7 +47,7 @@ class embed_makers(discord.ui.Modal):
             embed.set_footer(text=self.children[3].value)
         except:
             pass
-        return embed
+        await interaction.response.send_message(embeds=[embed])
 
 
 
@@ -128,7 +128,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def embedmaker_slash(self,ctx: discord.ApplicationContext):
         modal = embed_makers(title="Embed Maker")
-        await ctx.send(embed=modal)
+        await ctx.send_modal(modal)
 
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
