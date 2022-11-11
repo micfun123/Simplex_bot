@@ -4,6 +4,7 @@ from discord.ui import Button , View
 import sqlite3
 import random
 
+betaservers = [908963077125459989,401041820458680340]
 
 # Somewhere (in the check func)
 
@@ -71,7 +72,7 @@ class TruthOrDare(commands.Cog):
         else:
             pass
 
-    @commands.slash_command(name="toggle_truthordare", description="Toggle truth or dare",server_ids=[908963077125459989])
+    @commands.slash_command(name="toggle_truthordare", description="Toggle truth or dare",server_ids=betaservers)
     @commands.has_permissions(administrator=True)
     async def truthordare_toggle(self, ctx):
         con = sqlite3.connect('databases/truthordare.db')
@@ -139,7 +140,7 @@ class TruthOrDare(commands.Cog):
                     f.write(line)
         await ctx.send("Done")
 
-    @commands.slash_command(name="truth", description="Get a truth",server_ids=[908963077125459989])
+    @commands.slash_command(name="truth", description="Get a truth",server_ids=betaservers)
     async def truth(self, ctx):
         if enabled_check(ctx) == True:
             truthbutton = Button(label="Truth", style=discord.ButtonStyle.green, custom_id="truth")
@@ -172,7 +173,7 @@ class TruthOrDare(commands.Cog):
             await ctx.respond("Truth or dare is disabled on this server")
         
 
-    @commands.slash_command(name="dare", description="Get a dare",server_ids=[908963077125459989])
+    @commands.slash_command(name="dare", description="Get a dare",server_ids=betaservers)
     async def dare(self, ctx):
         if enabled_check(ctx) == True:
             truthbutton = Button(label="Truth", style=discord.ButtonStyle.green, custom_id="truth")
@@ -204,7 +205,7 @@ class TruthOrDare(commands.Cog):
         else:
             await ctx.respond("Truth or dare is disabled on this server")
 
-    @commands.slash_command(name="truthordare", description="Get a truth or a dare",server_ids=[908963077125459989],pass_context=True)
+    @commands.slash_command(name="truthordare", description="Get a truth or a dare",server_ids=betaservers,pass_context=True)
     async def truthordare(self, ctx):
         if enabled_check(ctx) == True:
             truthbutton = Button(label="Truth", style=discord.ButtonStyle.green, custom_id="truth")
