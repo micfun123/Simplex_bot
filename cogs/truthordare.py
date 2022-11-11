@@ -91,9 +91,11 @@ class TruthOrDare(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def maketruthfile(self, ctx):
+        #wipe file
+        open("databases/dare.txt", "w").close()
         truthfile = open("databases/truth.txt", "w")
         channel = self.client.get_channel(1031279120623083560)
-        messages = await channel.history(limit=1000).flatten()
+        messages = await channel.history(limit=100000).flatten()
         for i in messages:
             truthfile.write(i.content + "\n")
         truthfile.close()
@@ -111,9 +113,11 @@ class TruthOrDare(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def makedarefile(self, ctx):
+        #wipe file
+        open("databases/dare.txt", "w").close()
         darefile = open("databases/dare.txt", "w")
-        channel = self.client.get_channel(1031279120623083560)
-        messages = await channel.history(limit=1000).flatten()
+        channel = self.client.get_channel(1031279167360212993)
+        messages = await channel.history(limit=100000).flatten()
         for i in messages:
             darefile.write(i.content + "\n")
         darefile.close()
