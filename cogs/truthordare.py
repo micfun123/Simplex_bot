@@ -4,7 +4,7 @@ from discord.ui import Button , View
 import sqlite3
 import random
 
-betaservers = [908963077125459989,401041820458680340]
+betaservers = [908963077125459989,401041820458680340,985655459576959078]
 
 # Somewhere (in the check func)
 
