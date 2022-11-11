@@ -96,6 +96,7 @@ class TruthOrDare(commands.Cog):
             con.commit()
             con.close()
             await ctx.respond("Truth or dare enabled!")
+        await ctx.respond("Please feel free to vote for simplex and me. It would mean a lot to us and it helps load. https://top.gg/bot/902240397273743361", ephemeral=True)
 
     @commands.command()
     @commands.is_owner()
