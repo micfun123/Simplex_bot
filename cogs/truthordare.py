@@ -63,7 +63,7 @@ class TruthOrDare(commands.Cog):
         else:
             pass
 
-    @commands.slash_command(name="truthordare_toggle", description="Toggle truth or dare",server_ids=[908963077125459989])
+    @commands.slash_command(name="toggle_truthordare", description="Toggle truth or dare",server_ids=[908963077125459989])
     @commands.has_permissions(administrator=True)
     async def truthordare_toggle(self, ctx):
         con = sqlite3.connect('databases/truthordare.db')
