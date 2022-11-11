@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands 
+from discord.ui import Button , View
 import sqlite3
 import random
 
@@ -28,6 +29,13 @@ def get_dare():
             lines = f.readlines()
     embed = discord.Embed(title="Dare", description=random.choice(lines), color=0xFF0000)
     return embed
+
+def get_random_truthordare():
+    random_number = random.randint(1, 2)
+    if random_number == 1:
+        return get_truth()
+    else:
+        return get_dare()
 class TruthOrDare(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -134,7 +142,32 @@ class TruthOrDare(commands.Cog):
     @commands.slash_command(name="truth", description="Get a truth",server_ids=[908963077125459989])
     async def truth(self, ctx):
         if enabled_check(ctx) == True:
-            await ctx.respond(embed=get_truth())
+            truthbutton = Button(label="Truth", style=discord.ButtonStyle.green, custom_id="truth")
+            darebutton = Button(label="Dare", style=discord.ButtonStyle.red, custom_id="dare")
+            randombutton = Button(label="Random", style=discord.ButtonStyle.blurple, custom_id="random")
+            linktoserver = Button(label="Join our server", style=discord.ButtonStyle.link, url="https://discord.gg/w4ZbjyVQEr")
+
+            async def callback(interaction):
+                if interaction.data["custom_id"] == "truth":
+                    await interaction.response.send_message(embed=get_truth(), view=view)
+                elif interaction.data["custom_id"] == "dare":
+                    await interaction.response.send_message(embed=get_dare(), view=view)
+                elif interaction.data["custom_id"] == "random":
+                    await interaction.response.send_message(embed=get_random_truthordare(), view=view)
+                
+            truthbutton.callback = callback
+            darebutton.callback = callback
+            randombutton.callback = callback
+
+
+            view = View(timeout=300)
+            view.add_item(truthbutton)
+            view.add_item(darebutton)
+            view.add_item(randombutton)
+            if random.randint(0, 10) == 10:
+                view.add_item(linktoserver)
+
+            await ctx.respond(embed=get_truth(), view=view)
         else:
             await ctx.respond("Truth or dare is disabled on this server")
         
@@ -142,17 +175,66 @@ class TruthOrDare(commands.Cog):
     @commands.slash_command(name="dare", description="Get a dare",server_ids=[908963077125459989])
     async def dare(self, ctx):
         if enabled_check(ctx) == True:
-            await ctx.respond(embed=get_dare())
+            truthbutton = Button(label="Truth", style=discord.ButtonStyle.green, custom_id="truth")
+            darebutton = Button(label="Dare", style=discord.ButtonStyle.red, custom_id="dare")
+            randombutton = Button(label="Random", style=discord.ButtonStyle.blurple, custom_id="random")
+            linktoserver = Button(label="Join our server", style=discord.ButtonStyle.link, url="https://discord.gg/w4ZbjyVQEr")
+
+            async def callback(interaction):
+                if interaction.data["custom_id"] == "truth":
+                    await interaction.response.send_message(embed=get_truth(), view=view)
+                elif interaction.data["custom_id"] == "dare":
+                    await interaction.response.send_message(embed=get_dare(), view=view)
+                elif interaction.data["custom_id"] == "random":
+                    await interaction.response.send_message(embed=get_random_truthordare(), view=view)
+                
+            truthbutton.callback = callback
+            darebutton.callback = callback
+            randombutton.callback = callback
+
+
+            view = View(timeout=300)
+            view.add_item(truthbutton)
+            view.add_item(darebutton)
+            view.add_item(randombutton)
+            if random.randint(0, 10) == 10:
+                view.add_item(linktoserver)
+
+            await ctx.respond(embed=get_dare(), view=view)
         else:
             await ctx.respond("Truth or dare is disabled on this server")
 
     @commands.slash_command(name="truthordare", description="Get a truth or a dare",server_ids=[908963077125459989],pass_context=True)
     async def truthordare(self, ctx):
         if enabled_check(ctx) == True:
-            if random.randint(0, 1) == 0:
-                await ctx.respond(embed=get_truth())
-            else:
-                await ctx.respond(embed=get_dare())
+            truthbutton = Button(label="Truth", style=discord.ButtonStyle.green, custom_id="truth")
+            darebutton = Button(label="Dare", style=discord.ButtonStyle.red, custom_id="dare")
+            randombutton = Button(label="Random", style=discord.ButtonStyle.blurple, custom_id="random")
+            linktoserver = Button(label="Join our server", style=discord.ButtonStyle.link, url="https://discord.gg/w4ZbjyVQEr")
+
+            async def callback(interaction):
+                if interaction.data["custom_id"] == "truth":
+                    await interaction.response.send_message(embed=get_truth(), view=view)
+                elif interaction.data["custom_id"] == "dare":
+                    await interaction.response.send_message(embed=get_dare(), view=view)
+                elif interaction.data["custom_id"] == "random":
+                    await interaction.response.send_message(embed=get_random_truthordare(), view=view)
+                
+            truthbutton.callback = callback
+            darebutton.callback = callback
+            randombutton.callback = callback
+
+
+            view = View(timeout=300)
+            view.add_item(truthbutton)
+            view.add_item(darebutton)
+            view.add_item(randombutton)
+            if random.randint(0, 10) == 10:
+                view.add_item(linktoserver)
+
+            await ctx.respond(embed=get_random_truthordare(), view=view)
+            
+            
 
         else:
             await ctx.respond("Truth or dare is disabled on this server")
