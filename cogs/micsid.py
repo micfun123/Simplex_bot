@@ -75,7 +75,7 @@ class BotMakerCommands(commands.Cog):
         await ctx.send(gitstuff.decode())
         log(gitstuff.decode())
 
-    @commands.command()
+    @commands.command(help="Dms all server owners")
     @commands.check(micsid)
     async def dm_owners(self,ctx,*, msg):
         owners = []
