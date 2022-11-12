@@ -162,7 +162,7 @@ class TruthOrDare(commands.Cog):
             randombutton.callback = callback
 
 
-            view = View(timeout=300)
+            view = View()
             view.add_item(truthbutton)
             view.add_item(darebutton)
             view.add_item(randombutton)
@@ -195,7 +195,7 @@ class TruthOrDare(commands.Cog):
             randombutton.callback = callback
 
 
-            view = View(timeout=300)
+            view = View()
             view.add_item(truthbutton)
             view.add_item(darebutton)
             view.add_item(randombutton)
@@ -227,7 +227,7 @@ class TruthOrDare(commands.Cog):
             randombutton.callback = callback
 
 
-            view = View(timeout=300)
+            view = View()
             view.add_item(truthbutton)
             view.add_item(darebutton)
             view.add_item(randombutton)
