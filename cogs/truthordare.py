@@ -19,24 +19,26 @@ def enabled_check(ctx):
     else:
         return False
 
-def get_truth():
+def get_truth(ctx):
     with open("databases/truth.txt", "r") as f:
             lines = f.readlines()
     embed = discord.Embed(title="Truth", description=random.choice(lines), color=0x00ff00)
+    embed.set_footer(text=f"Requested by {ctx.author.name}")
     return embed
 
-def get_dare():
+def get_dare(ctx):
     with open("databases/dare.txt", "r") as f:
             lines = f.readlines()
     embed = discord.Embed(title="Dare", description=random.choice(lines), color=0xFF0000)
+    embed.set_footer(text=f"Requested by {ctx.author.name}")
     return embed
 
-def get_random_truthordare():
+def get_random_truthordare(ctx):
     random_number = random.randint(1, 2)
     if random_number == 1:
-        return get_truth()
+        return get_truth(ctx)
     else:
-        return get_dare()
+        return get_dare(ctx)
 class TruthOrDare(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -151,11 +153,11 @@ class TruthOrDare(commands.Cog):
 
             async def callback(interaction):
                 if interaction.data["custom_id"] == "truth":
-                    await interaction.response.send_message(embed=get_truth(), view=view)
+                    await interaction.response.send_message(embed=get_truth(ctx), view=view)
                 elif interaction.data["custom_id"] == "dare":
-                    await interaction.response.send_message(embed=get_dare(), view=view)
+                    await interaction.response.send_message(embed=get_dare(ctx), view=view)
                 elif interaction.data["custom_id"] == "random":
-                    await interaction.response.send_message(embed=get_random_truthordare(), view=view)
+                    await interaction.response.send_message(embed=get_random_truthordare(ctx), view=view)
                 
             truthbutton.callback = callback
             darebutton.callback = callback
@@ -169,7 +171,7 @@ class TruthOrDare(commands.Cog):
             if random.randint(0, 10) == 10:
                 view.add_item(linktoserver)
 
-            await ctx.respond(embed=get_truth(), view=view)
+            await ctx.respond(embed=get_truth(ctx), view=view)
         else:
             await ctx.respond("Truth or dare is disabled on this server")
         
@@ -184,11 +186,11 @@ class TruthOrDare(commands.Cog):
 
             async def callback(interaction):
                 if interaction.data["custom_id"] == "truth":
-                    await interaction.response.send_message(embed=get_truth(), view=view)
+                    await interaction.response.send_message(embed=get_truth(ctx), view=view)
                 elif interaction.data["custom_id"] == "dare":
-                    await interaction.response.send_message(embed=get_dare(), view=view)
+                    await interaction.response.send_message(embed=get_dare(ctx), view=view)
                 elif interaction.data["custom_id"] == "random":
-                    await interaction.response.send_message(embed=get_random_truthordare(), view=view)
+                    await interaction.response.send_message(embed=get_random_truthordare(ctx), view=view)
                 
             truthbutton.callback = callback
             darebutton.callback = callback
@@ -202,7 +204,7 @@ class TruthOrDare(commands.Cog):
             if random.randint(0, 10) == 10:
                 view.add_item(linktoserver)
 
-            await ctx.respond(embed=get_dare(), view=view)
+            await ctx.respond(embed=get_dare(ctx), view=view)
         else:
             await ctx.respond("Truth or dare is disabled on this server")
 
@@ -216,11 +218,11 @@ class TruthOrDare(commands.Cog):
 
             async def callback(interaction):
                 if interaction.data["custom_id"] == "truth":
-                    await interaction.response.send_message(embed=get_truth(), view=view)
+                    await interaction.response.send_message(embed=get_truth(ctx), view=view)
                 elif interaction.data["custom_id"] == "dare":
-                    await interaction.response.send_message(embed=get_dare(), view=view)
+                    await interaction.response.send_message(embed=get_dare(ctx), view=view)
                 elif interaction.data["custom_id"] == "random":
-                    await interaction.response.send_message(embed=get_random_truthordare(), view=view)
+                    await interaction.response.send_message(embed=get_random_truthordare(ctx), view=view)
                 
             truthbutton.callback = callback
             darebutton.callback = callback
@@ -234,7 +236,7 @@ class TruthOrDare(commands.Cog):
             if random.randint(0, 10) == 10:
                 view.add_item(linktoserver)
 
-            await ctx.respond(embed=get_random_truthordare(), view=view)
+            await ctx.respond(embed=get_random_truthordare(ctx), view=view)
             
             
 
