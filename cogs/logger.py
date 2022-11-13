@@ -71,6 +71,24 @@ class Moderationsettings(commands.Cog):
                 pass
         await ctx.send(f"Sent to {total} out of {self.client.guilds} servers")
 
+    @commands.command()
+    @commands.is_owner()
+    async def announcement_embed(self, ctx,titel, *,  message):
+        #get all servers
+        con = sqlite3.connect("databases/announcement.db")
+        cur = con.cursor()
+        total = 0
+        embed = discord.Embed(title=titel, description=message, color=0x00ff00)
+        for i in self.client.guilds:
+            data = cur.execute("SELECT * FROM server WHERE ServerID = ?", (i.id,)).fetchone()
+            try:
+                channel = self.client.get_channel(data[1])
+                await channel.send(embed=embed)
+                total += 1
+            except:
+                pass
+        await ctx.send(f"Sent to {total} out of {self.client.guilds} servers")    
+
     @commands.Cog.listener()
     async def on_message_delete(self,message):
         data = await get_data()
