@@ -1,6 +1,6 @@
 # The Everything Discord Bot
 
-
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/Michaelrbparker)
 ![](https://www.codefactor.io/repository/github/micfun123/simplex_bot)
 
 ![](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)

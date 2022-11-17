@@ -150,6 +150,7 @@ class TruthOrDare(commands.Cog):
             darebutton = Button(label="Dare", style=discord.ButtonStyle.red, custom_id="dare")
             randombutton = Button(label="Random", style=discord.ButtonStyle.blurple, custom_id="random")
             linktoserver = Button(label="Join our server", style=discord.ButtonStyle.link, url="https://discord.gg/w4ZbjyVQEr")
+            votebutton = Button(label="Vote for us", style=discord.ButtonStyle.link, url="https://top.gg/bot/902240397273743361")
 
             async def callback(interaction):
                 if interaction.data["custom_id"] == "truth":
@@ -168,8 +169,10 @@ class TruthOrDare(commands.Cog):
             view.add_item(truthbutton)
             view.add_item(darebutton)
             view.add_item(randombutton)
-            if random.randint(0, 10) == 10:
+            if random.randint(0, 15) == 10:
                 view.add_item(linktoserver)
+            if random.randint(0, 15) == 15:
+                view.add_item(votebutton)
 
             await ctx.respond(embed=get_truth(ctx), view=view)
         else:
@@ -183,6 +186,7 @@ class TruthOrDare(commands.Cog):
             darebutton = Button(label="Dare", style=discord.ButtonStyle.red, custom_id="dare")
             randombutton = Button(label="Random", style=discord.ButtonStyle.blurple, custom_id="random")
             linktoserver = Button(label="Join our server", style=discord.ButtonStyle.link, url="https://discord.gg/w4ZbjyVQEr")
+            votebutton = Button(label="Vote for us", style=discord.ButtonStyle.link, url="https://top.gg/bot/902240397273743361")
 
             async def callback(interaction):
                 if interaction.data["custom_id"] == "truth":
@@ -201,8 +205,10 @@ class TruthOrDare(commands.Cog):
             view.add_item(truthbutton)
             view.add_item(darebutton)
             view.add_item(randombutton)
-            if random.randint(0, 10) == 10:
+            if random.randint(0, 15) == 10:
                 view.add_item(linktoserver)
+            if random.randint(0, 15) == 15:
+                view.add_item(votebutton)
 
             await ctx.respond(embed=get_dare(ctx), view=view)
         else:
@@ -215,6 +221,7 @@ class TruthOrDare(commands.Cog):
             darebutton = Button(label="Dare", style=discord.ButtonStyle.red, custom_id="dare")
             randombutton = Button(label="Random", style=discord.ButtonStyle.blurple, custom_id="random")
             linktoserver = Button(label="Join our server", style=discord.ButtonStyle.link, url="https://discord.gg/w4ZbjyVQEr")
+            votebutton = Button(label="Vote for us", style=discord.ButtonStyle.link, url="https://top.gg/bot/902240397273743361")
 
             async def callback(interaction):
                 if interaction.data["custom_id"] == "truth":
@@ -233,8 +240,10 @@ class TruthOrDare(commands.Cog):
             view.add_item(truthbutton)
             view.add_item(darebutton)
             view.add_item(randombutton)
-            if random.randint(0, 10) == 10:
+            if random.randint(0, 15) == 10:
                 view.add_item(linktoserver)
+            if random.randint(0, 15) == 15:
+                view.add_item(votebutton)
 
             await ctx.respond(embed=get_random_truthordare(ctx), view=view)
             
