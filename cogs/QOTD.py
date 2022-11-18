@@ -14,15 +14,15 @@ class QOTD(commands.Cog):
         self.client = client
         self.qotd.start()
 
-    @commands.is_owner()
-    @commands.command()
-    async def make_file_table(self, ctx):
-        con = sqlite3.connect('databases/qotd.db')
-        cur = con.cursor()
-        cur.execute("CREATE table qotd (server_id int, channel_id int)")
-        con.commit()
-        con.close()
-        await ctx.send("Table created")
+    #@commands.is_owner()
+    #@commands.command()
+    #async def make_file_table(self, ctx):
+    #    con = sqlite3.connect('databases/qotd.db')
+    #    cur = con.cursor()
+    #    cur.execute("CREATE table qotd (server_id int, channel_id int)")
+    #    con.commit()
+    #    con.close()
+    #    await ctx.send("Table created")
         
 
 
