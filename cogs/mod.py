@@ -485,6 +485,7 @@ class Moderation(commands.Cog):
             cur.execute("DELETE FROM ticket_channel_id WHERE channel_id = ?", (ctx.channel.id,))
             con.commit()
             con.close()
+            await ctx.send("To remove all ticket channels please use .deletetickets ")
         else:
             await ctx.send("This channel is not a ticket!")
         
