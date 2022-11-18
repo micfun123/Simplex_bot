@@ -432,8 +432,8 @@ class Moderation(commands.Cog):
         await ctx.send(f"All roles have been removed from {member}.")
 
    #make ticket
-    @commands.command(help = "Make a ticket")
-    async def maketicket(self, ctx):
+    @commands.command(name = "maketicket",help = "Make a ticket")
+    async def maketicket__command(self, ctx):
         """
         Makes a ticket.
         """
@@ -452,6 +452,25 @@ class Moderation(commands.Cog):
         await ctx.send(f"{ctx.author.mention} Your ticket has been created. Please use the ticket channel to communicate with the staff team.")
         await ctx.message.delete()
         
+    @commands.slash_command(name = "maketicket",help = "Make a ticket")
+    async def maketicket__slash(self, ctx):
+        """
+        Makes a ticket.
+        """
+        channel = await ctx.guild.create_text_channel(name=f"ticket-{ctx.author.name}")
+        await channel.set_permissions(ctx.guild.default_role, send_messages=False)
+        await channel.set_permissions(ctx.guild.default_role, read_messages=False)
+        await channel.set_permissions(ctx.author, send_messages=True)
+        await channel.set_permissions(ctx.author, read_messages=True)
+        con = sqlite3.connect('databases/ticket_channel_id.db')
+        cur = con.cursor()
+        cur.execute("INSERT INTO ticket_channel_id VALUES (?, ?)", (ctx.author.id, channel.id))
+        con.commit()
+        con.close()
+        
+        await channel.send(f"{ctx.author.mention} You have been assigned a ticket. Please use the ticket channel to communicate with the staff team. When you or a staff member belives the ticket is solved please use .closeticket <reason> ")
+        await ctx.respond(f"{ctx.author.mention} Your ticket has been created. Please use the ticket channel to communicate with the staff team.")
+        await ctx.message.delete()
         
 
     #close ticket command
