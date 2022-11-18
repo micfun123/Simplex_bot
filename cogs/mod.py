@@ -6,6 +6,7 @@ from os import listdir
 from os.path import isfile, join
 import datetime
 import humanfriendly
+import sqlite3
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -56,6 +57,17 @@ class embed_makers(discord.ui.Modal):
 class Moderation(commands.Cog):
     def __init__(self, client): 
         self.client = client 
+
+    @commands.is_owner()
+    @commands.command()
+    async def make_file_table_ticketrs(self, ctx):
+        con = sqlite3.connect('databases/ticket_channel_id.db')
+        cur = con.cursor()
+        cur.execute("CREATE table ticket_channel_id (userid it, channel_id int)")
+        con.commit()
+        con.close()
+        await ctx.send("Table created")
+        
     
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -430,6 +442,12 @@ class Moderation(commands.Cog):
         await channel.set_permissions(ctx.guild.default_role, read_messages=False)
         await channel.set_permissions(ctx.author, send_messages=True)
         await channel.set_permissions(ctx.author, read_messages=True)
+        con = sqlite3.connect('databases/ticket_channel_id.db')
+        cur = con.cursor()
+        cur.execute("INSERT INTO ticket_channel_id VALUES (?, ?)", (ctx.author.id, channel.id))
+        con.commit()
+        con.close()
+        
         await channel.send(f"{ctx.author.mention} You have been assigned a ticket. Please use the ticket channel to communicate with the staff team. When you or a staff member belives the ticket is solved please use .closeticket <reason> ")
         await ctx.send(f"{ctx.author.mention} Your ticket has been created. Please use the ticket channel to communicate with the staff team.")
         await ctx.message.delete()
@@ -449,12 +467,24 @@ class Moderation(commands.Cog):
             # rename the channel old name + archive
             await ctx.channel.edit(name=f"{ctx.channel.name}-closed-Ticket")
             #try remove all users in channel perms
+            con = sqlite3.connect('databases/ticket_channel_id.db')
+            cur = con.cursor()
+            data = cur.execute("SELECT * FROM ticket_channel_id WHERE channel_id = ?", (ctx.channel.id,)).fetchall()
+            user = self.client.get_user(data[0][0])
+            await user.send(f"your ticket on {ctx.guild.name} has been closed for {reason}")
+            con.commit()
+            con.close()
             for i in ctx.channel.members:
                 try:
                     await ctx.channel.set_permissions(i, send_messages=False)
                     await ctx.channel.set_permissions(i, read_messages=False)
                 except:
                     print(f"Can't remove perms from {i}")
+            con = sqlite3.connect('databases/ticket_channel_id.db')
+            cur = con.cursor()
+            cur.execute("DELETE FROM ticket_channel_id WHERE channel_id = ?", (ctx.channel.id,))
+            con.commit()
+            con.close()
         else:
             await ctx.send("This channel is not a ticket!")
         
