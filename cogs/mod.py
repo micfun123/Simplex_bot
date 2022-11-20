@@ -90,6 +90,30 @@ class Moderation(commands.Cog):
         with open("react.json", "w") as f:
             json.dump(data, f, indent=4)
 
+    @commands.slash_command()
+    @commands.has_permissions(administrator=True)
+    async def reactrole(self, ctx, emoji, role: discord.Role, *, message):
+        embedVar = discord.Embed(description=message)
+        msg = await ctx.channel.send(embed=embedVar)
+        await msg.add_reaction(emoji)
+        with open("react.json") as json_file:
+            data = json.load(json_file)
+
+            new_react_role = {
+                "role_name": role.name,
+                "role_id": role.id,
+                "emoji": emoji,
+                "message_id": msg.id,
+            }
+
+            data.append(new_react_role)
+
+        with open("react.json", "w") as f:
+            json.dump(data, f, indent=4)
+        
+        await ctx.respond("Done",ephemeral=True)
+    
+
     @commands.has_permissions(kick_members=True)  #kicks a person
     @commands.command(help = "kicks a person from server")
     async def kick(self, ctx, user: discord.Member, *, reason="No reason provided"):
