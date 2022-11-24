@@ -196,6 +196,17 @@ class Birthday(commands.Cog):
             else:
                 pass
 
+    @commands.slash_command(name="findbirthday", description="Find a users birthday")
+    async def findbirthday__slash(self, ctx, user: commands.MemberConverter):
+        con = sqlite3.connect("databases/user_brithdays.db")
+        cur = con.cursor()
+        data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (user.id,))
+        data = cur.fetchall()
+        if data == []:
+            await ctx.respond(f"{user} has not set their birthday")
+        else:
+            await ctx.respond(f"{user} birthday is {data[0][1]}")
+        await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
 
 
