@@ -197,7 +197,7 @@ class Birthday(commands.Cog):
                 pass
 
     @commands.slash_command(name="findbirthday", description="Find a users birthday")
-    async def findbirthday__slash(self, ctx, user: commands.MemberConverter):
+    async def findbirthday__slash(self, ctx, user: discord.Member):
         con = sqlite3.connect("databases/user_brithdays.db")
         cur = con.cursor()
         data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (user.id,))
