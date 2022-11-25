@@ -213,7 +213,9 @@ class Counting(commands.Cog):
                 serverssent += 1
             except Exception as e:
                 print(e)
+                ctx.send(f"Error in {i}")
                 pass
+        await ctx.send(f"Sent to {serverssent} servers")
 
 def setup(client):
     client.add_cog(Counting(client))
