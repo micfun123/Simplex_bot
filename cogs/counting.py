@@ -209,7 +209,7 @@ class Counting(commands.Cog):
         for i in data.keys():
             try:
                 channel = await self.client.fetch_channel(int(i))
-                await channel.send(f"Couning has been rewriten to be more relable. Please use the new command to set the counting channel. `.setcountchannel <channel>`. This will set the channel to 0 to change the number use `.set_num <number>`. IF you find any bugs please dm the bot")
+                await channel.send(f"Couning has been rewriten to be more relable. Please use the new command to set the counting channel. `.setcountchannel <channel>`. This will set the channel to 0 to change the number use `.set_num <number>`. IF you find any bugs please dm the bot\n Now with a highscore marker")
                 serverssent += 1
             except Exception as e:
                 print(e)
