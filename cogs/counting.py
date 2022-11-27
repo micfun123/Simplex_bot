@@ -141,8 +141,8 @@ class Counting(commands.Cog):
     @commands.is_owner()
     async def add_column(self, ctx):
         async with aiosqlite.connect("./databases/counting.db") as db:
-            for i in self.client.guilds:
                 await db.execute("ALTER TABLE counting ADD COLUMN attemps INTEGER DEFAULT 0")
+        await ctx.send("Done")
 
     
     #@commands.is_owner()
