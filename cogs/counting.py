@@ -135,22 +135,27 @@ class Counting(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    
 
-    @commands.command()
-    @commands.is_owner()
-    async def add_column(self, ctx):
+    @commands.slash_command(name="counting_serverlb", description="Shows the server leaderboard for counting")
+    async def counting_serverlb(self, ctx):
         async with aiosqlite.connect("./databases/counting.db") as db:
-                await db.execute("ALTER TABLE counting ADD COLUMN attemps INTEGER DEFAULT 0")
-        await ctx.send("Done")
+            highestserver = await db.execute("SELECT highest, Guild_id FROM counting ORDER BY highest DESC LIMIT 10")
+            highestserver = await highestserver.fetchall()
+            em = discord.Embed(title="Counting Server Leaderboard", description="The top 10 servers for counting")
+            num = 1
+            for i in highestserver:
+                guild = self.client.get_guild(i[1])
+                em.add_field(name=f"{num}: {guild.name}", value=f"{i[0]}",inline=False)
+                num += 1
+            await ctx.respond(embed=em)
 
-    
+
     #@commands.is_owner()
     #@commands.command()
     #async def makedbtable(self, ctx):
     #    con = sqlite3.connect("./databases/counting.db")
     #    cur = con.cursor()
-    #    cur.execute("CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER)")
+    #    cur.execute("CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)")
     #    con.commit()
     #    for i in self.client.guilds:
     #        cur.execute("INSERT INTO counting VALUES (?, ?, ?, ?,?)", (i.id, None, 0, 0, None))
@@ -177,9 +182,9 @@ class Counting(commands.Cog):
             counting_channel = await db.execute("SELECT counting_channel FROM counting WHERE Guild_id = ?", (ctx.guild.id,))
             counting_channel = await counting_channel.fetchone()
             if counting_channel is None:
-                return await ctx.send("There is no counting channel set up")
+                return await ctx.respond("There is no counting channel set up. To set one up use `.setcountchannel`")
             if counting_channel[0] is None:
-                return await ctx.send("There is no counting channel set up")
+                return await ctx.respond("There is no counting channel set up. To set one up use `.setcountchannel`")
             else:
                 last_number = await db.execute("SELECT lastcounter FROM counting WHERE Guild_id = ?", (ctx.guild.id,))
                 last_number = await last_number.fetchone()
