@@ -7,6 +7,7 @@ from os.path import isfile, join
 import datetime
 import humanfriendly
 import sqlite3
+import re
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -175,7 +176,17 @@ class Moderation(commands.Cog):
         embeddm = discord.Embed(title=message)
         await member.send(embed=embeddm)
 
-
+    @commands.command()
+    @commands.has_permissions(manage_messages=True)
+    async def regex_clear(self, ctx,limit=100,*,regex):
+        await ctx.message.delete()
+        regex = re.compile(regex)
+        deleted = 0
+        async for message in ctx.channel.history(limit=limit):
+            if regex.search(message.content):
+                await message.delete()
+                deleted += 1
+        await ctx.send(f"Deleted {deleted} messages.")
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
