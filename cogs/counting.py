@@ -202,7 +202,7 @@ class Counting(commands.Cog):
                 await ctx.respond(embed=embed)
 
 
-    @commands.command()
+    @commands.is_owner()
     @commands.has_permissions(administrator=True)
     async def set_num(self,ctx,nums):
         con = sqlite3.connect("./databases/counting.db")
