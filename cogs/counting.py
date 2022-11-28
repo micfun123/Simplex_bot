@@ -197,11 +197,15 @@ class Counting(commands.Cog):
                 highest = await highest.fetchone()
                 attemps = await db.execute("SELECT attemps FROM counting WHERE Guild_id = ?", (ctx.guild.id,))
                 attemps = await attemps.fetchone()
+                place = await db.execute("SELECT highest, Guild_id FROM counting ORDER BY highest DESC")
+                place = await place.fetchall()
+                place = place.index((highest[0], ctx.guild.id))
                 embed = discord.Embed(title=f"Counting Stats for {ctx.guild.name}", description=f"Counting channel: <#{counting_channel[0]}>",color=discord.Color.green())
                 embed.add_field(name="Last number", value=last_number[0])
                 embed.add_field(name="Highest number", value=highest[0])
                 embed.add_field(name="Last user", value=f"<@{last_user[0]}>")
                 embed.add_field(name="Attemps", value=attemps[0])
+                embed.add_field(name="Place in server leaderboard", value=place+1)
                 await ctx.respond(embed=embed)
 
 
