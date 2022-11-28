@@ -73,6 +73,7 @@ async def counting(msg, guild, channel, m):
     #        con.commit()
     #        con.close()
     #        return await channel.send(embed=em)
+    
     async with aiosqlite.connect("./databases/counting.db") as db:
         counting_channel = await db.execute("SELECT counting_channel FROM counting WHERE Guild_id = ?", (guild.id,))
         counting_channel = await counting_channel.fetchone()
@@ -124,7 +125,6 @@ async def counting(msg, guild, channel, m):
                 em = discord.Embed(title=f"{m.author.display_name}, You ruined it!", description=f"Count reset to zero. you were supposed to count {last_number[0] + 1}")
                 await db.execute("UPDATE counting SET lastcounter = ? WHERE Guild_id = ?", (0, guild.id))
                 await db.execute("UPDATE counting SET last_user = ? WHERE Guild_id = ?", (None, guild.id))
-                await db.execute("UPDATE counting SET highest = ? WHERE Guild_id = ?", (0, guild.id))
                 await db.execute("UPDATE counting SET attemps = ? WHERE Guild_id = ?", (attemps+1, guild.id))
                 await db.commit()
                 return await channel.send(embed=em)
