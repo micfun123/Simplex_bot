@@ -13,6 +13,9 @@ calculator = simpcalc.Calculate()
 
 
 async def counting(msg, guild, channel, m):
+    if m.author.bot:
+        return
+    
     try:
       calc = simpcalc.Calculate()
       ans = await calc.calculate(msg)
