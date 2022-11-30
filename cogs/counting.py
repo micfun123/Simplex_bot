@@ -204,7 +204,7 @@ class Counting(commands.Cog):
                 embed.add_field(name="Last number", value=last_number[0])
                 embed.add_field(name="Highest number", value=highest[0])
                 embed.add_field(name="Last user", value=f"<@{last_user[0]}>")
-                embed.add_field(name="Attemps", value=attemps[0])
+                embed.add_field(name="Attempts", value=attemps[0])
                 embed.add_field(name="Place in server leaderboard", value=place+1)
                 await ctx.respond(embed=embed)
 
