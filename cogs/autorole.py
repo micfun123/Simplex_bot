@@ -90,9 +90,8 @@ class Autorole(commands.Cog):
             data = json.load(f)
         async with aiosqlite.connect("databases/autoroles.db") as db:
             for guild_id, roles in data.items():
-                for role_id in roles:
-                    await db.execute("INSERT INTO autoroles VALUES (?,?)", (guild_id, role_id))
-            await db.commit()
+                await db.execute("INSERT INTO autoroles VALUES (?,?)", (guild_id, roles))
+                await db.commit()
         await ctx.send("Done")
         
 
