@@ -75,7 +75,7 @@ class Autorole(commands.Cog):
     @commands.is_owner()
     @commands.command()
     async def json_to_sql(self, ctx):
-        with open("databases/autoroles.json", "r") as f:
+        with open("databases/autorole.json", "r") as f:
             data = json.load(f)
         async with aiosqlite.connect("databases/autoroles.db") as db:
             for guild_id, roles in data.items():
