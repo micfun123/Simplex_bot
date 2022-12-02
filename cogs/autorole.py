@@ -79,7 +79,7 @@ class Autorole(commands.Cog):
             cursor = await db.execute("SELECT role_id FROM autoroles WHERE guild_id = ?", (ctx.guild.id,))
             roles = await cursor.fetchall()
         if not roles:
-            return await ctx.send("No autoroles set")
+            return await ctx.respond("No autoroles set")
         role_names = [ctx.guild.get_role(role[0]).name for role in roles]
         await ctx.respond("Autoroles: " + ", ".join(role_names))
 
@@ -126,17 +126,17 @@ class Autorole(commands.Cog):
 #
     #    await ctx.send(embed=discord.Embed(title="Autorole reset"))
 
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            cursor = await db.execute("SELECT role_id FROM autoroles WHERE guild_id = ?", (member.guild.id,))
-            roles = await cursor.fetchall()
-        if roles is None:
-            return
-        else:
-            for role in roles:
-                await member.add_roles(member.guild.get_role(role[0]))
+    #@commands.Cog.listener()
+    #async def on_member_join(self, member):
+    #    
+    #    async with aiosqlite.connect("databases/autoroles.db") as db:
+    #        cursor = await db.execute("SELECT role_id FROM autoroles WHERE guild_id = ?", (member.guild.id,))
+    #        roles = await cursor.fetchall()
+    #    if roles is None:
+    #        return
+    #    else:
+    #        for role in roles:
+    #            await member.add_roles(member.guild.get_role(role[0]))
         
 
        
