@@ -8,13 +8,13 @@ class Autorole(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command()
-    @commands.is_owner()
-    async def make_tabe(self, ctx,):
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS autoroles (guild_id int, role_id int)")
-            await db.commit()
-            await ctx.send("Table created")
+    #@commands.command()
+    #@commands.is_owner()
+    #async def make_tabe(self, ctx,):
+    #    async with aiosqlite.connect("databases/autoroles.db") as db:
+    #        await db.execute("CREATE TABLE IF NOT EXISTS autoroles (guild_id int, role_id int)")
+    #        await db.commit()
+    #        await ctx.send("Table created")
 
 
     @commands.slash_command(name="add_autorole")
@@ -89,8 +89,8 @@ class Autorole(commands.Cog):
         with open("databases/autorole.json", "r") as f:
             data = json.load(f)
         async with aiosqlite.connect("databases/autoroles.db") as db:
-            for guild_id, roles in data.items():
-                await db.execute("INSERT INTO autoroles VALUES (?,?)", (guild_id, roles))
+            for i in data:
+                await db.execute("INSERT INTO autoroles VALUES (?,?)", (i, data[i]))
                 await db.commit()
         await ctx.send("Done")
         
