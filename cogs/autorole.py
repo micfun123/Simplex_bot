@@ -61,9 +61,9 @@ class Autorole(commands.Cog):
             await db.commit()
         await ctx.send(f"Removed {role.name} from autoroles")
 
-    @commands.command()
+    @commands.command(name="list_autoroles")
     @commands.has_permissions(administrator=True)
-    async def list_autoroles(self,ctx):
+    async def list_autoroles_commands(self,ctx):
         async with aiosqlite.connect("databases/autoroles.db") as db:
             cursor = await db.execute("SELECT role_id FROM autoroles WHERE guild_id = ?", (ctx.guild.id,))
             roles = await cursor.fetchall()
@@ -71,6 +71,17 @@ class Autorole(commands.Cog):
             return await ctx.send("No autoroles set")
         role_names = [ctx.guild.get_role(role[0]).name for role in roles]
         await ctx.send("Autoroles: " + ", ".join(role_names))
+
+    @commands.slash_command(name="list_autoroles")
+    @commands.has_permissions(administrator=True)
+    async def list_autoroles_slash(self,ctx):
+        async with aiosqlite.connect("databases/autoroles.db") as db:
+            cursor = await db.execute("SELECT role_id FROM autoroles WHERE guild_id = ?", (ctx.guild.id,))
+            roles = await cursor.fetchall()
+        if not roles:
+            return await ctx.send("No autoroles set")
+        role_names = [ctx.guild.get_role(role[0]).name for role in roles]
+        await ctx.respond("Autoroles: " + ", ".join(role_names))
 
     @commands.is_owner()
     @commands.command()
