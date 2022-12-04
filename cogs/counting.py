@@ -116,6 +116,8 @@ async def counting(msg, guild, channel, m):
                     else:
                         await m.add_reaction("✅")
                     await db.commit()
+                    if msg == 42:
+                        await channel.send("I see you found the awser to ultimate question of life, the universe, and everything")
                     if msg == 69:
                         await channel.send("nice")
                     if msg == 420:
