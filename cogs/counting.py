@@ -228,10 +228,18 @@ class Counting(commands.Cog):
     async def setcountchannel(self, ctx, channel:discord.TextChannel):
         con = sqlite3.connect("./databases/counting.db")
         cur = con.cursor()
-        cur.execute("UPDATE counting SET counting_channel = ? WHERE guild_id = ?", (channel.id, ctx.guild.id))
-        con.commit()
-        con.close()
-        await ctx.send(f"Counting channel set to {channel.mention}")
+        cur.execute("SELECT * FROM counting WHERE guild_id = ?", (ctx.guild.id,))
+        data = cur.fetchone()
+        if data is None:
+            cur.execute("INSERT INTO counting VALUES (?, ?, ?, ?, ?,?)", (ctx.guild.id, channel.id, 0, 0, None, 0))
+            con.commit()
+            con.close()
+            await ctx.send(f"Counting channel set to {channel.mention}")
+        else:
+            cur.execute("UPDATE counting SET counting_channel = ? WHERE guild_id = ?", (channel.id, ctx.guild.id))
+            con.commit()
+            con.close()
+            await ctx.send(f"Counting channel set to {channel.mention}")
             
     @commands.command()
     @commands.has_permissions(administrator=True)
