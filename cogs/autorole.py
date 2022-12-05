@@ -86,16 +86,16 @@ class Autorole(commands.Cog):
         role_names = [ctx.guild.get_role(role[0]).name for role in roles]
         await ctx.respond("Autoroles: " + ", ".join(role_names))
 
-    @commands.is_owner()
-    @commands.command()
-    async def json_to_sql(self, ctx):
-        with open("databases/autorole.json", "r") as f:
-            data = json.load(f)
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            for i in data:
-                await db.execute("INSERT INTO autoroles VALUES (?,?)", (i, data[i]))
-                await db.commit()
-        await ctx.send("Done")
+    #@commands.is_owner()
+    #@commands.command()
+    #async def json_to_sql(self, ctx):
+    #    with open("databases/autorole.json", "r") as f:
+    #        data = json.load(f)
+    #    async with aiosqlite.connect("databases/autoroles.db") as db:
+    #        for i in data:
+    #            await db.execute("INSERT INTO autoroles VALUES (?,?)", (i, data[i]))
+    #            await db.commit()
+    #    await ctx.send("Done")
         
 
     #@commands.command(help="Sets the autorole for the server")
