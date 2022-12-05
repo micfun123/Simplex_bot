@@ -428,6 +428,7 @@ class Moderation(commands.Cog):
         """
         Adds a role to all members.
         """
+        ctx.send(f"starting to give {role} to all")
         for member in ctx.guild.members:
             await member.add_roles(role)
         await ctx.send(f"{role} has been added to all members.")
