@@ -1,4 +1,3 @@
-from typing import Text
 import discord
 import random
 import aiohttp
