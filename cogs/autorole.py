@@ -25,10 +25,13 @@ class Autorole(commands.Cog):
             return await ctx.send("The role is above my highest role")
         roleid = role.id
         guildid = ctx.guild.id
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            await db.execute("INSERT INTO autoroles VALUES (?,?)", (guildid, roleid))
-            await db.commit()
-        await ctx.respond(f"Added {role} to autoroles")
+        try:
+            async with aiosqlite.connect("databases/autoroles.db") as db:
+                await db.execute("INSERT INTO autoroles VALUES (?,?)", (guildid, roleid))
+                await db.commit()
+            await ctx.respond(f"Added {role} to autoroles")
+        except:
+            ctx.respond("Failed for unknown reason")
 
     @commands.slash_command(name="remove_autorole")
     @commands.has_permissions(administrator=True)
