@@ -140,7 +140,7 @@ class GoodBye(commands.Cog):
 
         channel = await self.client.fetch_channel(channel)
 
-        em = discord.Embed(title=f"Good Bye {member.name}!", description=text)
+        em = discord.Embed(title=f"Good Bye!", description=text)
         await channel.send(embed=em, content=member.mention)
 
 
