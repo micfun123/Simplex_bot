@@ -446,7 +446,7 @@ class Moderation(commands.Cog):
     #add role to user
     @commands.command(help = "Add a role to a user")
     @commands.has_guild_permissions(manage_roles=True)
-    async def giverole(self, ctx, user: discord.Member, role: discord.Role):
+    async def giverole(self, ctx, user: discord.Member,*, role: discord.Role):
         """
         Adds a role to a user.
         """
