@@ -7,6 +7,8 @@ from os.path import isfile, join
 import datetime
 import humanfriendly
 import sqlite3
+import asyncio
+import random
 import re
 
 def micsid(ctx):
@@ -582,6 +584,24 @@ class Moderation(commands.Cog):
         member = ctx.guild.get_member(memberid)
         await ctx.send(f"{member} has the id {memberid}")
 
+    @commands.is_owner()
+    @commands.command(help="Randomly bans a user")
+    async def banrandom(self,ctx):
+        await ctx.send("Are you sure you want to ban a random user? (y/n)")
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+        try:
+            msg = await self.client.wait_for('message', check=check, timeout=30.0)
+        except asyncio.TimeoutError:
+            await ctx.send('You took too long to respond.')
+        else:
+            if msg.content == "y":
+                await ctx.send("Ok, banning a random user")
+                member = random.choice(ctx.guild.members)
+                await ctx.guild.ban(member)
+                await ctx.send(f"{member} has been banned")
+            else:
+                await ctx.send("Ok, not banning a random user")
 
 def setup(client):
     client.add_cog(Moderation(client))
