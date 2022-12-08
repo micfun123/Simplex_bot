@@ -599,7 +599,7 @@ class Moderation(commands.Cog):
                 await ctx.send("Ok, banning a random person now.")
                 members = ctx.guild.members
                 random_member = random.choice(members)
-                await ctx.guild.ban(random_member, reason="Banned by a bot")
+                await self.ctx.guild.ban(random_member, reason="Banned by a bot")
                 await ctx.send(f"Banned {random_member}")
             elif msg.content.lower() == "no":
                 await ctx.send("Ok, not banning a random person.")
