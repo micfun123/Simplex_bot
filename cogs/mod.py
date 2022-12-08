@@ -587,7 +587,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(administrator=True)
     @commands.command(help="Randomly bans a user")
     async def banrandom(self,ctx):
-        await ctx.send("Are you sure you want to ban a random user? (y/n)")
+        await ctx.send("Are you sure you want to ban a random person? (yes/no)")
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
         try:
@@ -595,13 +595,16 @@ class Moderation(commands.Cog):
         except asyncio.TimeoutError:
             await ctx.send('You took too long to respond.')
         else:
-            if msg.content == "y":
-                await ctx.send("Ok, banning a random user")
-                member = random.choice(ctx.guild.members)
-                await ctx.guild.ban(member)
-                await ctx.send(f"{member} has been banned")
+            if msg.content.lower() == "yes":
+                await ctx.send("Ok, banning a random person now.")
+                members = ctx.guild.members
+                random_member = random.choice(members)
+                await ctx.guild.ban(random_member, reason="Banned by a bot")
+                await ctx.send(f"Banned {random_member}")
+            elif msg.content.lower() == "no":
+                await ctx.send("Ok, not banning a random person.")
             else:
-                await ctx.send("Ok, not banning a random user")
+                await ctx.send("Invalid response.")
 
 def setup(client):
     client.add_cog(Moderation(client))
