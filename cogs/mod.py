@@ -584,7 +584,7 @@ class Moderation(commands.Cog):
         member = ctx.guild.get_member(memberid)
         await ctx.send(f"{member} has the id {memberid}")
 
-    @commands.is_owner()
+    @commands.has_permissions(administrator=True)
     @commands.command(help="Randomly bans a user")
     async def banrandom(self,ctx):
         await ctx.send("Are you sure you want to ban a random user? (y/n)")
