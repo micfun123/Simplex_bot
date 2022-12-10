@@ -74,6 +74,7 @@ class DMReply(commands.Cog):
                     pass
                 else:
                     await person.send(message.content)
+                    await message.react("✅")
 
                 if message.attachments is None:
                     return
@@ -85,8 +86,10 @@ class DMReply(commands.Cog):
                         em.timestamp = datetime.datetime.utcnow()
                         em.set_image(url=i.url)
                         await person.send(embed=em)
+                        await message.react("✅")
         except Exception as e:
             print(e)
+            await message.react("❌")
 
 def setup(client):
     client.add_cog(DMReply(client))
