@@ -419,7 +419,7 @@ class Fun(commands.Cog):
     
     
     @commands.command(aliases=['pie'])
-    async def catch(self,ctx):
+    async def catch_pie(self,ctx):
         """Catch the pie, by reacting. Dont't drop it!"""
         em = discord.Embed(color=discord.Color.orange())
         em.add_field(name='🥧  __Catch The Pie Game__  🥧', value='To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nHere we go in ?time...', inline=False)
@@ -443,6 +443,31 @@ class Fun(commands.Cog):
         em.add_field(name='🥧  __Catch The Pie Game__  🥧', value=f'To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nYou caught it in **{round(time_taken, 5)} seconds**', inline=False)
         await pie1.edit(embed=em)
 
+    @commands.slash_command(name="catch_pie", description="Catch the pie, by reacting. Dont't drop it!")
+    async def catch_the_pie(self,ctx):
+        """Catch the pie, by reacting. Dont't drop it!"""
+        await ctx.respond("getting pie...")
+        em = discord.Embed(color=discord.Color.orange())
+        em.add_field(name='🥧  __Catch The Pie Game__  🥧', value='To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nHere we go in ?time...', inline=False)
+        pie1 = await ctx.send(embed=em)
+
+
+        await asyncio.sleep(randrange(5))
+        await pie1.add_reaction('🥧')
+
+        def check(reaction, user):
+            self.reacted = reaction.emoji
+            return user == ctx.author and str(reaction.emoji)
+
+        before_wait = datetime.datetime.now()
+        reaction, user = await self.bot.wait_for('reaction_add', timeout=30.0, check=check)
+        after_wait = datetime.datetime.now()
+        time_delta = after_wait - before_wait
+        time_taken = time_delta.total_seconds()
+
+        em = discord.Embed(color=discord.Color.orange())
+        em.add_field(name='🥧  __Catch The Pie Game__  🥧', value=f'To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nYou caught it in **{round(time_taken, 5)} seconds**', inline=False)
+        await pie1.edit(embed=em)
 
     
     @commands.command(name='hack')
