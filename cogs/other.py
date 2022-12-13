@@ -383,7 +383,8 @@ class utilities(commands.Cog):
                     pass
                 else:
                     staff.append(user.mention)
-        await ctx.respond(f"Staff: {', '.join(staff)}")
+        embed = discord.Embed(title = "Staff:", description = f"{', '.join(staff)}", color = 0x8BE002)
+        await ctx.respond(embed = embed)
 
 
 def setup(bot):
