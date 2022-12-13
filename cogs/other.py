@@ -139,6 +139,12 @@ class utilities(commands.Cog):
         embed.add_field(name="Highest Role:", value=user.top_role, inline=True)
         embed.add_field(name="Joined Server:", value=user.joined_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
         embed.add_field(name="Created Account:", value=user.created_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
+        embed.add_field(name="Bot?", value=user.bot, inline=True)
+        embed.add_field(name="All Roles:", value=", ".join([role.mention for role in user.roles]), inline=True)
+        try:
+            embed.set_footer(text=f"Requested by {ctx.author.name}", icon_url=ctx.author.avatar.url)
+        except:
+            embed.set_footer(text=f"Requested by {ctx.author.name}", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
         try:
             embed.set_thumbnail(url=user.avatar.url)
         except:
