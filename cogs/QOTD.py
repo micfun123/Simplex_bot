@@ -27,24 +27,39 @@ class QOTD(commands.Cog):
 
 
 
-    @commands.slash_command(name="disable_qotd", description="Set the QOTD channel")
+    @commands.slash_command(name="setqotd", description="Set the QOTD channel")
     @commands.has_permissions(administrator=True)
-    async def disable_qotd(self, ctx):
+    async def setqotd(self, ctx, channel: discord.TextChannel):
             con = sqlite3.connect('databases/qotd.db')
             cur = con.cursor()
             data = cur.execute("SELECT * FROM qotd WHERE server_id = ?", (ctx.guild.id,))
             data = data.fetchall()
             if len(data) == 0:
-                await ctx.respond("QOTD all ready disabled on this server")
-            else:
-                cur.execute("DELETE FROM qotd WHERE server_id = ?", (ctx.guild.id,))
+                cur.execute("INSERT INTO qotd VALUES (?, ?)", (ctx.guild.id, channel.id))
                 con.commit()
                 con.close()
-                await ctx.respond("QOTD disabled on this server")
-            await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
+                await ctx.respond("QOTD channel set!")
+            else:
+                cur.execute("UPDATE qotd SET channel_id = ? WHERE server_id = ?", (channel.id, ctx.guild.id))
+                con.commit()
+                con.close()
+                await ctx.respond("QOTD channel updated!")
+                await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
-    @commands.slash_command(name="disable_qotd", description="Set the QOTD channel")
+
+    @commands.slash_command(name="disableqotd", description="Disable the QOTD channel")
     @commands.has_permissions(administrator=True)
+    async def disableqotd(self, ctx):
+        con = sqlite3.connect('databases/qotd.db')
+        cur = con.cursor()
+        if len(cur.execute("SELECT * FROM qotd WHERE server_id = ?", (ctx.guild.id,)).fetchall()) == 0:
+            await ctx.respond("QOTD is not enabled on this server!")
+        else:
+            cur.execute("DELETE FROM qotd WHERE server_id = ?", (ctx.guild.id,))
+            con.commit()
+            con.close()
+            await ctx.respond("QOTD disabled!")
+        await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
     @tasks.loop(time=time(00,00))
     async def qotd(self):
