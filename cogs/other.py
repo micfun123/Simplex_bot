@@ -374,7 +374,16 @@ class utilities(commands.Cog):
                 await member.move_to(None)
                 await before.channel.delete()
         
-
+    @commands.slash_command(describe = "shows staff list")
+    async def staff(self, ctx):
+        staff = []
+        for user in ctx.guild.members:
+            if user.guild_permissions.administrator:
+                if user.bot:
+                    pass
+                else:
+                    staff.append(user.mention)
+        await ctx.respond(f"Staff: {', '.join(staff)}")
 
 
 def setup(bot):
