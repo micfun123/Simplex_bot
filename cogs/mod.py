@@ -418,6 +418,7 @@ class Moderation(commands.Cog):
         """
         Removes a role from all members.
         """
+        ctx.send(f"starting to remove {role} to all")
         for member in ctx.guild.members:
             await member.remove_roles(role)
         await ctx.send(f"{role} has been removed from all members.")
@@ -432,7 +433,10 @@ class Moderation(commands.Cog):
         """
         ctx.send(f"starting to give {role} to all")
         for member in ctx.guild.members:
-            await member.add_roles(role)
+            try:
+                await member.add_roles(role)
+            except:
+                pass
         await ctx.send(f"{role} has been added to all members.")
 
     #remove role from user
