@@ -122,8 +122,6 @@ async def counting(msg, guild, channel, m):
                         await channel.send("nice")
                     if msg == 420:
                         await channel.send("nice")
-                    if msg == 42069:
-                        await channel.send("You have found the meaning of life.")
                     return
             else:
                 await m.add_reaction("❌")
