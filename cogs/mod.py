@@ -131,8 +131,12 @@ class Moderation(commands.Cog):
     @commands.has_permissions(kick_members=True)  #warn a user with Dms
     @commands.command(help = "Dms the User with a warning")
     async def warn(self, ctx, user: discord.User, *, message=None):
-        message = message or "This Message is a warning"
-        await discord.User.send(user, message + (f"** Warned by {ctx.message.author} From server {message.server.name}**"))
+        await ctx.message.delete()
+        if message == None:
+            await ctx.send("Please provide a message")
+        else:
+            await user.send(f"You have been warned in {ctx.guild.name} for {message}")
+            await ctx.send(f"Warned {user.mention} for {message}")
 
     @commands.command(name="removereactions",help="Clear reactions from a message in the current channel")
     @commands.has_permissions(manage_messages=True)
