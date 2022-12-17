@@ -13,7 +13,7 @@ class Polls(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(name='poll')
     @commands.guild_only()
     async def poll(self, ctx, *, question):
         """Interactively creates a poll with the following question.
@@ -61,9 +61,9 @@ class Polls(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             return await ctx.send('Missing the question.')
 
-    @commands.command()
+    @commands.command(name='quickpoll')
     @commands.guild_only()
-    async def quickpoll(self, ctx, *questions_and_choices: str):
+    async def quickpoll__command(self, ctx, *questions_and_choices: str):
         """Makes a poll quickly.
         The first argument is the question and the rest are the choices.
         """
@@ -91,6 +91,27 @@ class Polls(commands.Cog):
         poll = await ctx.send(embed=em)
         for emoji, _ in choices:
             await poll.add_reaction(emoji)
+
+    @commands.slash_command(name='quickpoll', description='Makes a poll quickly.')
+    async def quickpoll__slash(self, ctx, question: str, choise_1, choise_2, choise_3=None, choise_4=None, choise_5=None, choise_6=None, choise_7=None, choise_8=None, choise_9=None, choise_10=None, choise_11=None, choise_12=None, choise_13=None, choise_14=None, choise_15=None, choise_16=None, choise_17=None, choise_18=None, choise_19=None, choise_20=None):
+        """Makes a poll quickly.
+        The first argument is the question and the rest are the choices.
+        """
+
+        if len([choise_1, choise_2, choise_3, choise_4, choise_5, choise_6, choise_7, choise_8, choise_9, choise_10, choise_11, choise_12, choise_13, choise_14, choise_15, choise_16, choise_17, choise_18, choise_19, choise_20]) < 3:
+            return await ctx.send('Need at least 1 question with 2 choices.')
+        elif len([choise_1, choise_2, choise_3, choise_4, choise_5, choise_6, choise_7, choise_8, choise_9, choise_10, choise_11, choise_12, choise_13, choise_14, choise_15, choise_16, choise_17, choise_18, choise_19, choise_20]) > 21:
+            return await ctx.send('You can only have up to 20 choices.')
+
+        choses = [choise_1, choise_2, choise_3, choise_4, choise_5, choise_6, choise_7, choise_8, choise_9, choise_10, choise_11, choise_12, choise_13, choise_14, choise_15, choise_16, choise_17, choise_18, choise_19, choise_20]
+        choices = [(to_emoji(e), v) for e, v in enumerate(choses) if v is not None]
+        em = discord.Embed(title=question, description='\n'.join(f'{keycap}: {content}' for keycap, content in choices),color=0x20BEFF)
+        em.set_footer(text=f'Poll created by {ctx.author}')
+
+        poll = await ctx.send(embed=em)
+        for emoji, _ in choices:
+            await poll.add_reaction(emoji)
+        await ctx.respond("Poll Ceated!", ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Polls(bot))
