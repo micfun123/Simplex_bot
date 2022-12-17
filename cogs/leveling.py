@@ -6,6 +6,8 @@ from easy_pil import Editor, Canvas, Font, load_image_async, Text
 import os
 from tools import log, mic
 import random
+import aiosqlite
+
 LevelUPresponses = [f'Congrats {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} 😎',
                  f'Well done {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} have a 🥇',
                  f'{LevelUpAnnouncement.Member.mention} you are now level {LevelUpAnnouncement.LEVEL}! Keep going you are amazing!',
@@ -93,10 +95,66 @@ class Leveling(commands.Cog):
 
         return False
 
+    @commands.command()
+    @commands.is_owner()
+    async def make_xp_wipe_onleave_toggle(self, ctx):
+         async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS xp_wipe_onleave (guild_id TEXT, status int DEFAULT 0)")
+            await db.commit()
+            await ctx.send("Done")
+            for guild in self.client.guilds:
+                await db.execute("INSERT OR IGNORE INTO xp_wipe_onleave (guild_id) VALUES (?)", (str(guild.id),))
+                await ctx.send(f"Added {guild.name} to the database")
+            await db.commit()
+
+
+
+    @commands.command(name="xp_wipe_onleave_toggle", help="This command toggles the xp wipe on leave feature.")
+    @commands.has_permissions(administrator=True)
+    async def xp_wipe_onleave_toggle_command(self, ctx):
+        async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
+            await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(ctx.guild.id),))
+            status = await db.fetchone()
+            if status[0] == 0:
+                await db.execute("UPDATE xp_wipe_onleave SET status = 1 WHERE guild_id = ?", (str(ctx.guild.id),))
+                await db.commit()
+                await ctx.send("XP wipe on leave is now enabled.")
+            else:
+                await db.execute("UPDATE xp_wipe_onleave SET status = 0 WHERE guild_id = ?", (str(ctx.guild.id),))
+                await db.commit()
+                await ctx.send("XP wipe on leave is now disabled.")
+
+    @commands.slash_command(name="xp_wipe_onleave_toggle", description="This command toggles the xp wipe on leave feature.")
+    @commands.has_permissions(administrator=True)
+    async def xp_wipe_onleave_toggle_slash_command(self, ctx):
+        async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
+            await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(ctx.guild.id),))
+            status = await db.fetchone()
+            if status[0] == 0:
+                await db.execute("UPDATE xp_wipe_onleave SET status = 1 WHERE guild_id = ?", (str(ctx.guild.id),))
+                await db.commit()
+                await ctx.respond("XP wipe on leave is now enabled.")
+            else:
+                await db.execute("UPDATE xp_wipe_onleave SET status = 0 WHERE guild_id = ?", (str(ctx.guild.id),))
+                await db.commit()
+                await ctx.respond("XP wipe on leave is now disabled.")
+
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
+            await db.execute("INSERT OR IGNORE INTO xp_wipe_onleave (guild_id) VALUES (?)", (str(guild.id),))
+            await db.commit()
+
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        await lvl.reset_member(member)
+        async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
+            await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(member.guild.id),))
+            status = await db.fetchone()
+            if status[0] == 1:
+                await lvl.reset_member(member)
+            else:
+                pass
 
     @commands.command(aliases=['lvl'], help="This command shows your rank for the leveling system.", description="Shows your rank image")
     async def rank(self, ctx, member:discord.Member=None):
@@ -286,7 +344,6 @@ class Leveling(commands.Cog):
         await lvl.set_level(member, int(level))
         
         
-
         
 
 
