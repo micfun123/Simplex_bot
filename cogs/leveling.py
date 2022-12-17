@@ -113,31 +113,31 @@ class Leveling(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def xp_wipe_onleave_toggle_command(self, ctx):
         async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
-            await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(ctx.guild.id),))
-            status = await db.fetchone()
+            status = await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(ctx.guild.id),))
+            status = await status.fetchone()
             if status[0] == 0:
                 await db.execute("UPDATE xp_wipe_onleave SET status = 1 WHERE guild_id = ?", (str(ctx.guild.id),))
                 await db.commit()
-                await ctx.send("XP wipe on leave is now enabled.")
+                await ctx.send("XP wipe on leave is now disabled.")
             else:
                 await db.execute("UPDATE xp_wipe_onleave SET status = 0 WHERE guild_id = ?", (str(ctx.guild.id),))
                 await db.commit()
-                await ctx.send("XP wipe on leave is now disabled.")
+                await ctx.send("XP wipe on leave is now enabled.")
 
     @commands.slash_command(name="xp_wipe_onleave_toggle", description="This command toggles the xp wipe on leave feature.")
     @commands.has_permissions(administrator=True)
     async def xp_wipe_onleave_toggle_slash_command(self, ctx):
         async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
-            await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(ctx.guild.id),))
-            status = await db.fetchone()
+            status = await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(ctx.guild.id),))
+            status = await status.fetchone()
             if status[0] == 0:
                 await db.execute("UPDATE xp_wipe_onleave SET status = 1 WHERE guild_id = ?", (str(ctx.guild.id),))
                 await db.commit()
-                await ctx.respond("XP wipe on leave is now enabled.")
+                await ctx.respond("XP wipe on leave is now disabled.")
             else:
                 await db.execute("UPDATE xp_wipe_onleave SET status = 0 WHERE guild_id = ?", (str(ctx.guild.id),))
                 await db.commit()
-                await ctx.respond("XP wipe on leave is now disabled.")
+                await ctx.respond("XP wipe on leave is now enabled.")
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
