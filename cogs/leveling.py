@@ -151,7 +151,7 @@ class Leveling(commands.Cog):
         async with aiosqlite.connect("./databases/leveling_wipe_toggle.db") as db:
             await db.execute("SELECT status FROM xp_wipe_onleave WHERE guild_id = ?", (str(member.guild.id),))
             status = await db.fetchone()
-            if status[0] == 1:
+            if status[0] == 0:
                 await lvl.reset_member(member)
             else:
                 pass
