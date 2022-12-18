@@ -145,7 +145,9 @@ class GoodBye(commands.Cog):
         text = text.replace("{member.id}", str(member.id))
         text = text.replace("{member.guild.name}", member.guild.name)
         text = text.replace("{member.guild.member_count}", str(member.guild.member_count))
-        text = text.replace("{member.age}", str(member.created_at))
+        text = text.replace("{member.account_age}", str(member.created_at))
+        text = text.replace("{member.joined_at}", str(member.joined_at))
+        
 
 
         em = discord.Embed(title=f"Good Bye! {member.name}", description=text)
