@@ -92,7 +92,7 @@ class Polls(commands.Cog):
         for emoji, _ in choices:
             await poll.add_reaction(emoji)
 
-    @commands.slash_command(name='quickpoll', description='Makes a poll quickly.')
+    @commands.slash_command(name='poll', description='Makes a poll quickly.')
     async def quickpoll__slash(self, ctx, question: str, choice_1, choice_2, choice_3=None, choice_4=None, choice_5=None, choice_6=None, choice_7=None, choice_8=None, choice_9=None, choice_10=None, choice_11=None, choice_12=None, choice_13=None, choice_14=None, choice_15=None, choice_16=None, choice_17=None, choice_18=None, choice_19=None, choice_20=None):
         """Makes a poll quickly.
         The first argument is the question and the rest are the choices.
