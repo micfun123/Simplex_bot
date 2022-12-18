@@ -140,6 +140,13 @@ class Welcome(commands.Cog):
 
         channel = await self.client.fetch_channel(channel)
 
+        text = text.replace("{member.display_name}", member.display_name)
+        text = text.replace("{member.name}", member.name)
+        text = text.replace("{member.mention}", member.mention)
+        text = text.replace("{member.id}", str(member.id))
+        text = text.replace("{member.guild.name}", member.guild.name)
+        text = text.replace("{member.guild.member_count}", str(member.guild.member_count))
+        text = text.replace("{member.age}", str(member.created_at))
         em = discord.Embed(title=f"Welcome {member.name}!", description=text)
         await channel.send(embed=em, content=member.mention)
 
