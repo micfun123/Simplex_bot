@@ -81,7 +81,7 @@ class Nasa(commands.Cog):
         em.set_footer(text=f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
         await ctx.send(embed=em)
         
-    @commands.slash_command(name="APOD_LOOKUP", description="NASA Astronomy Picture of the Day Lookup")
+    @commands.slash_command(name="apod_lookup", description="NASA Astronomy Picture of the Day Lookup")
     async def apod_lookup(self, ctx, date: str):
         """
         NASA Astronomy Picture of the Day Lookup
