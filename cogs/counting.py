@@ -200,6 +200,7 @@ class Counting(commands.Cog):
         async with aiosqlite.connect("./databases/user_count_stats.db") as db:
             await db.execute("CREATE TABLE IF NOT EXISTS user_count_stats (user_id INTEGER,guild_id INTEGER, failed INTEGER DEFAULT 0, success INTEGER DEFAULT 0)")
             await db.commit()
+        await ctx.send("Done")
         
 
 
