@@ -81,6 +81,23 @@ class Nasa(commands.Cog):
         em.set_footer(text=f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
         await ctx.send(embed=em)
         
+    @commands.slash_command(name="APOD_LOOKUP", description="NASA Astronomy Picture of the Day Lookup")
+    async def apod_lookup(self, ctx, date: str):
+        """
+        NASA Astronomy Picture of the Day Lookup
+        """
+        
+        url = 'https://api.nasa.gov/planetary/apod?api_key={NASA}&thumbs=True&hd&date={date}'
+        response = requests.get(url.format(NASA=API_KEY, date=date))
+        data = response.json()
+        embed = discord.Embed(title=data['title'], description=data['explanation'], color=0x00168B)
+        if data["media_type"] == "image":
+            embed.set_image(url=data["hdurl"])
+        elif data["media_type"] == "video":
+                embed.set_image(url=data['thumbnail'])
+        embed.add_field(name='Link to image of the day/video', value=data['url'], inline=False)
+        embed.set_footer(text=f'{date}')
+        await ctx.respond(embed=embed)
    
         
         
