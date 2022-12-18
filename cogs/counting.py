@@ -194,13 +194,13 @@ class Counting(commands.Cog):
     #    con.close()
     #    await ctx.send("Done")
 
-    @commands.is_owner()
-    @commands.command(name="set_user_count_stats")
-    async def set_user_count_stats(self, ctx):
-        async with aiosqlite.connect("./databases/user_count_stats.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS user_count_stats (user_id INTEGER,guild_id INTEGER, failed INTEGER DEFAULT 0, success INTEGER DEFAULT 0)")
-            await db.commit()
-        await ctx.send("Done")
+    #@commands.is_owner()
+    #@commands.command(name="set_user_count_stats")
+    #async def set_user_count_stats(self, ctx):
+    #    async with aiosqlite.connect("./databases/user_count_stats.db") as db:
+    #        await db.execute("CREATE TABLE IF NOT EXISTS user_count_stats (user_id INTEGER,guild_id INTEGER, failed INTEGER DEFAULT 0, success INTEGER DEFAULT 0)")
+    #        await db.commit()
+    #    await ctx.send("Done")
         
 
 
@@ -298,6 +298,50 @@ class Counting(commands.Cog):
             cur.execute("INSERT INTO counting VALUES (?, ?, ?, ?)", (guild.id, None, None, 0))
             con.commit()
         con.close()
+
+    @commands.slash_command(name="user_counting_stats", description="Get the stats for the counting user")
+    async def user_counting_stats(self, ctx, user:discord.User=None):
+        if user is None:
+            user = ctx.author
+        
+        async with aiosqlite.connect("./databases/user_count_stats.db") as db_user:
+            person = await db_user.execute("SELECT * FROM user_count_stats WHERE user_id = ? AND guild_id = ?", (user.id, ctx.guild.id))
+            person = await person.fetchone()
+            if person is None:
+                await ctx.respond("User has not counted yet on this server")
+            
+            else:
+                username = await self.client.fetch_user(person[0])
+                guild = await self.client.fetch_guild(person[1])
+                username = username.name
+                guild = guild.name
+                embed = discord.Embed(title=f"Counting stats for {username} in {guild}", color=discord.Color.green())
+                faileds = person[2]
+                success = person[3]
+                embed.add_field(name="Servers Success", value=success)
+                embed.add_field(name="Servers Failed", value=faileds)
+                accuracy = success/(success+faileds)
+                embed.add_field(name="Accuracy", value=f"{accuracy*100}%")
+
+                await ctx.respond(embed=embed)
+            
+            #users total stats
+            data = await db_user.execute("SELECT * FROM user_count_stats WHERE user_id = ?", (user.id,))
+            data = await data.fetchall()
+            if data is None:
+                await ctx.respond("User has not counted yet")
+            else:
+                success = 0
+                failed = 0
+                for i in data:
+                    success += i[3]
+                    failed += i[2]
+                embed = discord.Embed(title=f"Counting stats for {username} across all servers", color=discord.Color.green())
+                embed.add_field(name="Servers Success", value=success)
+                embed.add_field(name="Servers Failed", value=failed)
+                accuracy = success/(success+failed)
+                embed.add_field(name="Accuracy", value=f"{accuracy*100}%")
+                await ctx.respond(embed=embed)
 
     #@commands.is_owner()
     #@commands.command()
