@@ -17,7 +17,7 @@ from simpcalc import simpcalc
 import matplotlib.pyplot as plt
 import random
 from io import BytesIO
-
+from base69 import encode_base69, decode_base69
 from bot import server
 
 calculator = simpcalc.Calculate()
@@ -386,6 +386,14 @@ class utilities(commands.Cog):
         embed = discord.Embed(title = "Staff:", description = f"{', '.join(staff)}", color = 0x8BE002)
         await ctx.respond(embed = embed)
 
+    @commands.slash_command(name="base69_encode", description = "Encode a int to base69")
+    async def _base69_encode_(self, ctx, *, int):
+        await ctx.respond(encode_base69(int))
+
+    @commands.slash_command(name="base69_decode", description = "Decode a base69 to int")
+    async def _base69_decode_(self, ctx, *, int):
+        await ctx.respond(decode_base69(int))
+        
 
 def setup(bot):
     bot.add_cog(utilities(bot))
