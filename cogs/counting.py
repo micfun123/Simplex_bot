@@ -321,9 +321,7 @@ class Counting(commands.Cog):
                 embed.add_field(name="Servers Success Counts", value=success)
                 embed.add_field(name="Servers Failed Counts", value=faileds)
                 accuracy = success/(success+faileds)
-                accuracy = accuracy*100
-                accuracy = round(accuracy, 2)
-                embed.add_field(name="Accuracy", value=f"{accuracy}%")
+                embed.add_field(name="Accuracy", value=f"{str(round(accuracy*100, 2))}%")
 
                 await ctx.respond(embed=embed)
             
