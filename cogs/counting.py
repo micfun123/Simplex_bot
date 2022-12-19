@@ -106,6 +106,18 @@ async def counting(msg, guild, channel, m):
                     await db.execute("UPDATE counting SET lastcounter = ? WHERE Guild_id = ?", (0, guild.id))
                     await db.execute("UPDATE counting SET last_user = ? WHERE Guild_id = ?", (None, guild.id))
                     await db.commit()
+                    async with aiosqlite.connect("./databases/user_count_stats.db") as db_user:
+                        failed = await db_user.execute("SELECT failed FROM user_count_stats WHERE user_id = ? AND guild_id = ?", (m.author.id, guild.id))
+                        failed = await failed.fetchone()
+                        if failed is None:
+                            await db_user.execute("INSERT INTO user_count_stats (user_id, guild_id, success, failed) VALUES (?, ?, ?, ?)", (m.author.id, guild.id, 0, 1))
+                            await db_user.commit()
+                        else:
+                            failed = failed[0]
+                            failed = int(failed)
+                            failed += 1
+                            await db_user.execute("UPDATE user_count_stats SET failed = ? WHERE user_id = ? AND guild_id = ?", (failed, m.author.id, guild.id))
+                            await db_user.commit()
                     return await channel.send(embed=em)
                 else:
                     await db.execute("UPDATE counting SET lastcounter = ? WHERE Guild_id = ?", (msg, guild.id))
