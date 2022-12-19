@@ -341,10 +341,8 @@ class Counting(commands.Cog):
                 embed = discord.Embed(title=f"Counting stats for {username} across all servers", color=discord.Color.green())
                 embed.add_field(name="Global Success Counts", value=success)
                 embed.add_field(name="Global Failed counts", value=failed)
-                accuracy = success/(success+faileds)
-                accuracy = accuracy*100
-                accuracy = round(accuracy, 2)
-                embed.add_field(name="Accuracy", value=f"{accuracy}%")
+                accuracy = success/(success+failed)
+                embed.add_field(name="Accuracy", value=f"{str(round(accuracy*100, 2))}%")
                 await ctx.respond(embed=embed)
 
     #@commands.is_owner()
