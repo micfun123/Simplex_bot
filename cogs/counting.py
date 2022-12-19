@@ -6,6 +6,7 @@ from simpcalc import simpcalc
 import asyncio
 import sqlite3
 import aiosqlite
+from base69 import decode_base69
 
 calculator = simpcalc.Calculate()
 
@@ -17,9 +18,11 @@ async def counting(msg, guild, channel, m):
         return
     
     try:
-      calc = simpcalc.Calculate()
-      ans = await calc.calculate(msg)
-      msg = int(ans)
+        if msg.startswith("69*|"):
+            msg = decode_base69(msg)
+        calc = simpcalc.Calculate()
+        ans = await calc.calculate(msg)
+        msg = int(ans)
     except:
         return    
     
