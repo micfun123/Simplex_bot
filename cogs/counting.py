@@ -19,11 +19,13 @@ async def counting(msg, guild, channel, m):
     
     try:
         if msg.startswith("69*|"):
+            #use base69
             msg = decode_base69(msg)
-            msg = int(msg)
-        calc = simpcalc.Calculate()
-        ans = await calc.calculate(msg)
-        msg = int(ans)
+        else:
+            #use simpcalc
+            calc = simpcalc.Calculate()
+            ans = await calc.calculate(msg)
+            msg = int(ans)
     except:
         return    
     
