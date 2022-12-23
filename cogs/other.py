@@ -394,6 +394,9 @@ class utilities(commands.Cog):
     async def _base69_decode_(self, ctx, *, int):
         await ctx.respond(decode_base69(int))
         
+    @commands.slash_command(name="Vote_Simplex", description = "Vote for Simplex")
+    async def _vote_simplex_(self, ctx):
+        await ctx.respond("https://top.gg/bot/902240397273743361")
 
 def setup(bot):
     bot.add_cog(utilities(bot))
