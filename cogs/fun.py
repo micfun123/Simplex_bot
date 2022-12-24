@@ -553,10 +553,10 @@ class Fun(commands.Cog):
         data = await get.post_get_json(url, data)
         print(data)
         if data['ran'] == True:
-            Embed = discord.Embed(title = "Code Output", description = f"```{data['output']}```", color = discord.Color.green())
+            Embed = discord.Embed(title = "Code Output", description = f"```\n{data['output']}```", color = discord.Color.green())
             await ctx.send(embed = Embed)
         if data['stderr'] != "":
-            Embed = discord.Embed(title = "Errors", description = f"```{data['stderr']}```", color = discord.Color.red())
+            Embed = discord.Embed(title = "Errors", description = f"```\n{data['stderr']}```", color = discord.Color.red())
             await ctx.send(embed = Embed)
 
     @commands.command(aliases=["boredom"],name="bored")
