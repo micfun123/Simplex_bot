@@ -138,6 +138,13 @@ class BotMakerCommands(commands.Cog):
         self.client.unload_extension(f"cogs.{extension}")
         await ctx.send(f"The module '{extension}' has been unloaded successfully!")
 
+    @commands.command()
+    @commands.is_owner()
+    async def change_status(self, ctx, *, status):
+        status = status.replace("[[servers]]", str(len(self.client.guilds)))
+        await self.client.change_presence(activity=discord.Game(name=status))
+        await ctx.send(f"Status changed to {status}")
+
 
 
 
