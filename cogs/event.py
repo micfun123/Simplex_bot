@@ -24,7 +24,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         cha = self.client.get_channel(925787897527926805)
-        await cha.send(embed=discord.Embed(title="Join", description=f"Joined: {guild.name}\n Owner: {guild.owner}\n Members: {guild.member_count}\n ID: {guild.id}",color=discord.Color.green()))
+        await cha.send(embed=discord.Embed(title="Join", description=f"Joined: {guild.name}\n Owner: {guild.owner}\n Members: {guild.member_count}\n Server ID: {guild.id}",color=discord.Color.green()))
         await update_activity(self.client)
         embed = discord.Embed(color=discord.Color.blue())
         embed.set_author(name="Here's some stuff to get you started:")
