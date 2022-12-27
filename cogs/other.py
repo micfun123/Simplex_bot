@@ -151,6 +151,31 @@ class utilities(commands.Cog):
             embed.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/0.png")
         await ctx.send(embed=embed)
 
+
+    @commands.slash_command(name = "userinfo", description = "Finds info about users on the discord.")
+    async def info_slash(self,ctx, user: discord.Member=None):
+        if user == None:
+            user = ctx.author
+        embed = discord.Embed(title=f"{user}'s info", description=f"Here's {user}'s info", color=0x00ff00)
+        embed.add_field(name="Username:", value=user.name, inline=True)
+        embed.add_field(name="ID:", value=user.id, inline=True)
+        embed.add_field(name="Status:", value=user.status, inline=True)
+        embed.add_field(name="Highest Role:", value=user.top_role, inline=True)
+        embed.add_field(name="Joined Server:", value=user.joined_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
+        embed.add_field(name="Created Account:", value=user.created_at.strftime("%a, %#d, %B, %Y, #I:%M %p UTC"), inline=True)
+        embed.add_field(name="Bot?", value=user.bot, inline=True)
+        embed.add_field(name="All Roles:", value=", ".join([role.mention for role in user.roles]), inline=True)
+        try:
+            embed.set_footer(text=f"Requested by {ctx.author.name}", icon_url=ctx.author.avatar.url)
+        except:
+            embed.set_footer(text=f"Requested by {ctx.author.name}", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
+        try:
+            embed.set_thumbnail(url=user.avatar.url)
+        except:
+            embed.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/0.png")
+        await ctx.respond(embed=embed)
+
+
     @commands.command(aliases=['Report'])
     async def bug(self, ctx, *, bug):
         channelbug = await self.client.fetch_channel(911996728167759902)
