@@ -8,6 +8,7 @@ from tools import log, mic
 import random
 import aiosqlite
 
+
 LevelUPresponses = [f'Congrats {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} 😎',
                  f'Well done {LevelUpAnnouncement.Member.mention}! You are now level {LevelUpAnnouncement.LEVEL} have a 🥇',
                  f'{LevelUpAnnouncement.Member.mention} you are now level {LevelUpAnnouncement.LEVEL}! Keep going you are amazing!',
@@ -300,14 +301,7 @@ class Leveling(commands.Cog):
         for member in ctx.guild.members:
             await lvl.reset_member(member)
         await ctx.send("All users xp has been reset to 0.")
-        
-
-    @commands.Cog.listener()
-    async def on_message(self, message):
-            level_toggle =  await level_on(message.guild.id)
-            if level_toggle:
-                await lvl.award_xp(amount=15, message=message)
-    
+           
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
@@ -344,8 +338,60 @@ class Leveling(commands.Cog):
         await lvl.set_level(member, int(level))
         
         
-        
+    @commands.is_owner()
+    @commands.command(help="make xp ignore a channel make table")
+    async def makeleveltable(self, ctx):
+        async with aiosqlite.connect("./databases/xp_ignore.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS xp_ignore (guild_id INTEGER, channel_id INTEGER)")
+            await db.commit()
+        await ctx.send("Table made")
 
+    @commands.has_permissions(administrator=True)
+    @commands.command(help="add a channel to the xp ignore list")
+    async def addxpignore(self, ctx, channel:discord.TextChannel):
+        async with aiosqlite.connect("./databases/xp_ignore.db") as db:
+            await db.execute("INSERT INTO xp_ignore VALUES (?, ?)", (ctx.guild.id, channel.id))
+            await db.commit()
+        await ctx.send(f"Added {channel.mention} to the xp ignore list.")
+
+    @commands.has_permissions(administrator=True)
+    @commands.command(help="remove a channel from the xp ignore list")
+    async def removexpignore(self, ctx, channel:discord.TextChannel):
+        async with aiosqlite.connect("./databases/xp_ignore.db") as db:
+            try: 
+                await db.execute("DELETE FROM xp_ignore WHERE channel_id = ?", (channel.id,))
+                await db.commit()
+                await ctx.send(f"Removed {channel.mention} from the xp ignore list.")
+            except:
+                await ctx.send("That channel is not in the xp ignore list.")
+
+    @commands.has_permissions(administrator=True)
+    @commands.command(help="list all channels in the xp ignore list")
+    async def listxpignore(self, ctx):
+        async with aiosqlite.connect("./databases/xp_ignore.db") as db:
+            data = await db.execute("SELECT * FROM xp_ignore WHERE guild_id = ?", (ctx.guild.id,))
+            data = await data.fetchall()
+            if data:
+                await ctx.send(f"List of channels in the xp ignore list: {', '.join([f'<#{channel[1]}>' for channel in data])}")
+            else:
+                await ctx.send("There are no channels in the xp ignore list.")
+            
+
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+            level_toggle =  await level_on(message.guild.id)
+            if level_toggle:
+                async with aiosqlite.connect("./databases/xp_ignore.db") as db:
+                    data = await db.execute("SELECT * FROM xp_ignore WHERE guild_id = ?", (message.guild.id,))
+                    data = await data.fetchall()
+                    if data:
+                        if message.channel.id in [channel[1] for channel in data]:
+                            return
+                        else:
+                            await lvl.award_xp(amount=15, message=message)
+            
+                
 
 def setup(client):
     client.add_cog(Leveling(client))
