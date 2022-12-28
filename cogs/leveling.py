@@ -390,6 +390,8 @@ class Leveling(commands.Cog):
                             return
                         else:
                             await lvl.award_xp(amount=15, message=message)
+                    else:
+                        await lvl.award_xp(amount=15, message=message)
             
                 
 
