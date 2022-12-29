@@ -82,20 +82,24 @@ class verificationview(discord.ui.View):
             return m.channel == self.ctx.channel and m.author == self.ctx.author
         role = await self.client.wait_for("message", check=check)
         role = role.content
-        role = self.ctx.guild.get_role(int(role[3:-1]))
-        async with aiosqlite.connect("databases/verification.db") as db:
-            data = await db.execute("SELECT * FROM verification WHERE ServerID = ?", (self.ctx.guild.id,))
-            data = await data.fetchall()
-            if data:
-                await db.execute("UPDATE verification SET verifyedRole = ? WHERE ServerID = ?", (role.id, self.ctx.guild.id))
-                await db.commit()
-                await db.close()
-                await interaction.followup.send(f"verification role is now {role.mention}")
-            else:
-                await db.execute("INSERT INTO verification VALUES(?, ?, ?, ?, ?)", (self.ctx.guild.id, 0, 0, 0, role.id))
-                await db.commit()
-                await db.close()
-                await interaction.followup.send(f"verification role is now {role.mention}")
+        #if role is above the bot
+        if self.ctx.guild.me.top_role.position < self.ctx.guild.get_role(int(role[3:-1])).position:
+            await interaction.followup.send("The role is above the bot")
+        else:
+            role = self.ctx.guild.get_role(int(role[3:-1]))
+            async with aiosqlite.connect("databases/verification.db") as db:
+                data = await db.execute("SELECT * FROM verification WHERE ServerID = ?", (self.ctx.guild.id,))
+                data = await data.fetchall()
+                if data:
+                    await db.execute("UPDATE verification SET verifyedRole = ? WHERE ServerID = ?", (role.id, self.ctx.guild.id))
+                    await db.commit()
+                    await db.close()
+                    await interaction.followup.send(f"verification role is now {role.mention}")
+                else:
+                    await db.execute("INSERT INTO verification VALUES(?, ?, ?, ?, ?)", (self.ctx.guild.id, 0, 0, 0, role.id))
+                    await db.commit()
+                    await db.close()
+                    await interaction.followup.send(f"verification role is now {role.mention}")
 
 
 
