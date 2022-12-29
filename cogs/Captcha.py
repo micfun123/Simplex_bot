@@ -142,13 +142,13 @@ class Captcha(commands.Cog):
             else:
                 return
     
-    @commands.command()
-    @commands.is_owner()
-    async def maketableverification(self, ctx):
-        async with aiosqlite.connect("databases/verification.db") as db:
-            await db.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
-            await db.commit()
-            await db.close()
+    #@commands.command()
+    #@commands.is_owner()
+    #async def maketableverification(self, ctx):
+    #    async with aiosqlite.connect("databases/verification.db") as db:
+    #        await db.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
+    #        await db.commit()
+    #        await db.close()
 
 
 def setup(client):
