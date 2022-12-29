@@ -10,6 +10,8 @@ from datetime import datetime,time
 url = "https://the-trivia-api.com/api/questions?categories=general_knowledge,food_and_drink&limit=1&difficulty=medium"
 
 class QOTD(commands.Cog):
+    ''' All the commands needed to set up question of the day
+    '''
     def __init__(self, client):
         self.client = client
         self.qotd.start()

@@ -40,6 +40,7 @@ def get_random_truthordare(interaction):
     else:
         return get_dare(interaction)
 class TruthOrDare(commands.Cog):
+    '''All the commands needed to set up truth or dare'''
     def __init__(self, client):
         self.client = client
 
