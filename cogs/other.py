@@ -64,7 +64,7 @@ class utilities(commands.Cog):
         bots = str(len([m for m in ctx.guild.members if m.bot]))
         peopleusers = str(len([m for m in ctx.guild.members if not m.bot]))
         emoji_amount = str(len(ctx.guild.emojis))
-        verificationlevel = str(ctx.guild.verification_level)
+        verificationlevel = str(ctx.guild.verification_level)     
 
         embed = discord.Embed(
             title=name + " Server Information",
@@ -83,13 +83,14 @@ class utilities(commands.Cog):
         embed.add_field(name="Role Count", value=roleamount, inline=True)
         embed.add_field(name="Emoji Count", value=emoji_amount, inline=True)
         embed.add_field(name="Verification Level", value=verificationlevel, inline=True)
+        embed.set_footer(text=f"Requested by {ctx.author.name}", icon_url=ctx.author.avatar.url)
 
 
 
         await ctx.send(embed=embed)
 
     
-    @commands.command(name = "server_info", description = "Shows the server info")
+    @commands.slash_command(name = "server_info", description = "Shows the server info")
     async def serverinfo_slash(self,ctx):
         name = str(ctx.guild.name)
         description = str(ctx.guild.description)
@@ -104,6 +105,7 @@ class utilities(commands.Cog):
         emoji_amount = str(len(ctx.guild.emojis))
         verificationlevel = str(ctx.guild.verification_level)
 
+
         embed = discord.Embed(
             title=name + " Server Information",
             description=description,
@@ -121,6 +123,7 @@ class utilities(commands.Cog):
         embed.add_field(name="Role Count", value=roleamount, inline=True)
         embed.add_field(name="Emoji Count", value=emoji_amount, inline=True)
         embed.add_field(name="Verification Level", value=verificationlevel, inline=True)
+        embed.set_footer(text=f"Requested by {ctx.author.name}", icon_url=ctx.author.avatar.url)
 
 
 
