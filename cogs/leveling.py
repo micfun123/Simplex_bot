@@ -338,13 +338,13 @@ class Leveling(commands.Cog):
         await lvl.set_level(member, int(level))
         
         
-    @commands.is_owner()
-    @commands.command(help="make xp ignore a channel make table")
-    async def makeleveltable(self, ctx):
-        async with aiosqlite.connect("./databases/xp_ignore.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS xp_ignore (guild_id INTEGER, channel_id INTEGER)")
-            await db.commit()
-        await ctx.send("Table made")
+    #@commands.is_owner()
+    #@commands.command(help="make xp ignore a channel make table")
+    #async def makeleveltable(self, ctx):
+    #    async with aiosqlite.connect("./databases/xp_ignore.db") as db:
+    #        await db.execute("CREATE TABLE IF NOT EXISTS xp_ignore (guild_id INTEGER, channel_id INTEGER)")
+    #        await db.commit()
+    #    await ctx.send("Table made")
 
     @commands.has_permissions(administrator=True)
     @commands.command(help="add a channel to the xp ignore list")
