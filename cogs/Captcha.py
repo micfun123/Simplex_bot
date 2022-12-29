@@ -114,6 +114,29 @@ class Captcha(commands.Cog):
             for i in view.children:
                 i.disabled = True
         return await message.edit(view=view)
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.bot:
+            return
+        async with aiosqlite.connect("databases/verification.db") as db:
+            data = await db.execute("SELECT * FROM verification WHERE ServerID = ?", (message.guild.id,))
+            data = await data.fetchall()
+            if data:
+                if data[0][1] == 1:
+                    if data[0][2] == message.channel.id:
+                        if data[0][3] == message.content:
+                            await message.author.add_roles(message.guild.get_role(data[0][4]))
+                            await message.delete()
+                            await message.channel.send(f"Welcome to {message.guild.name} {message.author.mention}")
+                        else:
+                            await message.delete()
+                            #dm user that he entered the wrong code
+                            await message.author.send("You entered the wrong verification code on {message.guild.name}")
+                else:
+                    return
+            else:
+                return
     
     @commands.command()
     @commands.is_owner()
