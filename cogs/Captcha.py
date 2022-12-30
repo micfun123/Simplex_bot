@@ -132,7 +132,7 @@ class Captcha(commands.Cog):
                         if data[0][3] == message.content:
                             await message.author.add_roles(message.guild.get_role(data[0][4]))
                             await message.delete()
-                            await message.channel.send(f"Welcome to {message.guild.name} {message.author.mention}")
+                            await message.author.send(f"Welcome to {message.guild.name} {message.author.mention}")
                         else:
                             await message.delete()
                             #dm user that he entered the wrong code
