@@ -174,6 +174,7 @@ class Moderation(commands.Cog):
     async def embedmaker_slash(self,ctx: discord.ApplicationContext):
         modal = embed_makers(title="Embed Maker")
         await ctx.send_modal(modal)
+        await ctx.respond("Done",ephemeral=True)
 
     @commands.command(aliases=['sendmsg'])
     @commands.check(micsid)
