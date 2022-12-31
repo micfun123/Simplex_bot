@@ -8,6 +8,23 @@ h1,
 h2 {
     text-align: center;
   }
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2em;
+}
+
+p {
+    font-size: 1.5em;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    text-align: center;
+    margin: 0.5em;
+    
+}
+
   
 .picker {
     margin: 2em;
@@ -55,11 +72,5 @@ h2 {
 .red-border {
     border: 4px solid rgb(255, 103, 90);
   }
-form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 2em;
-}
+
   

@@ -17,12 +17,41 @@
           <input type="submit" value="Change Prefix" />
         </form>
         <hr />
-        <h3>Toggle Leveling</h3>
-        <form action="/dashboard/{{guild_id}}/toggle_leveling" method="POST">
-          <input type="submit" value="Toggle Leveling" />
-        </form>
-        <hr />	
 
+
+
+        <h3>Set or change counting channel (To disable counting enter None)</h3>
+        <p style="text-align: center;">Counting is a simple game that can increase activity in a server. One user counts and another user says the next number however there are a few rules. <br>
+          A user cannot count twice in a row. <br>
+          If a user says a number that is not the next number in the counting sequence it resets the counting sequence. <br>
+          Numbers can be in other forms such as math equations, binary, bit shift, etc. <br>
+          Each user and server gets there own stats this will show accuracy, highest number, and build a leaderboard. <br>
+        </p>
+        <form action="/dashboard/{{guild_id}}/set_counting_channel" method="POST">
+          <input type="text" name="channel_id" placeholder="Channel ID" />
+          <input type="submit" value="Set Counting Channel" />
+        </form>
+        <hr />
+
+        <h3>Bot Announcement Channel. Current Channel: {{announment_channel}}</h3>
+        <p style="text-align: center;">This is the channel that the bot will send announcements to. <br>
+          This is useful for when the bot is down or when there is a new update. <br>
+          If you do not want to receive announcements enter None. <br>
+          By default it is set to none [there are rare exeptions were forced announcements are used] <br>
+        </p>
+        <form action="/dashboard/{{guild_id}}/set_announcement_channel" method="POST">
+          <input type="text" name="channel_id" placeholder="Channel ID" />
+          <input type="submit" value="Set Announcement Channel" />
+
+
+        <h3>Toggle Truth or dare</h3>
+        <p style="text-align: center;">Truth or dare is a simple game that can increase activity in a server. Once Truth or date is enabled a user can start a game with /TruthorDare .<br>
+          the bot will randomly select a truth or dare question and ask the user to answer or do the dare. <br>
+          There are three buttons from there on random, truth, and dare. <br> </p>
+        <form action="/dashboard/{{guild_id}}/toggle_truth_or_dare" method="POST">
+          <input type="submit" value="Toggle Truth or Dare" />
+        </form>
+        <hr />
     </div>
   </body>
 </html>
