@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simplex Bot</title>
+    <link rel="stylesheet" href="/static/index.css" />
+
+  </head>
+  <body>
+    <h1>Simplex Bot Dashboard!</h1>
+    <div class="picker">
+      <h3>Hello, {{name}}! Lets manage the {{servername}} server</h3>
+      <hr />
+      
+        <h3>Change Prefix. Your current prefix is {{prefix}}</h3>
+        <form action="/dashboard/{{guild_id}}/change_prefix" method="POST">
+          <input type="text" name="prefix" placeholder="New Prefix" />
+          <input type="submit" value="Change Prefix" />
+        </form>
+        <hr />
+        <h3>Toggle Leveling</h3>
+        <form action="/dashboard/{{guild_id}}/toggle_leveling" method="POST">
+          <input type="submit" value="Toggle Leveling" />
+        </form>
+        <hr />	
+
+    </div>
+  </body>
+</html>

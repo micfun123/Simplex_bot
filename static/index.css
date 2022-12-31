@@ -55,4 +55,11 @@ h2 {
 .red-border {
     border: 4px solid rgb(255, 103, 90);
   }
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2em;
+}
   
