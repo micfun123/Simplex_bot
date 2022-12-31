@@ -28,7 +28,7 @@ app.config["DISCORD_CLIENT_ID"] = os.getenv(
 app.config["DISCORD_CLIENT_SECRET"] = os.getenv(
     "client_secret"
 )  # Discord client secret.
-app.config["DISCORD_REDIRECT_URI"] = "http://134.209.20.240:5000/callback"
+app.config["DISCORD_REDIRECT_URI"] = "http://127.0.0.1:5000/callback"
 
 
 discord = DiscordOAuth2Session(app)
@@ -186,4 +186,4 @@ async def set_announcement_channel(guild_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, port=5000)
