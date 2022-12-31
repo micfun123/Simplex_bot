@@ -28,7 +28,7 @@ app.config["DISCORD_CLIENT_ID"] = os.getenv(
 app.config["DISCORD_CLIENT_SECRET"] = os.getenv(
     "client_secret"
 )  # Discord client secret.
-app.config["DISCORD_REDIRECT_URI"] = "http://127.0.0.1:5000/callback"
+app.config["DISCORD_REDIRECT_URI"] = "http://0.0.0.0:5000/callback"
 
 
 discord = DiscordOAuth2Session(app)
