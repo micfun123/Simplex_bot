@@ -136,7 +136,7 @@ class Captcha(commands.Cog):
                         else:
                             await message.delete()
                             #dm user that he entered the wrong code
-                            await message.author.send("You entered the wrong verification code on {message.guild.name}")
+                            await message.author.send(f"You entered the wrong verification code on {message.guild.name}")
                 else:
                     return
             else:
