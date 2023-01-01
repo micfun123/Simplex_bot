@@ -25,7 +25,9 @@ class DMReply(commands.Cog):
         if msg is None:
             pass
         else:
-            await person.send(msg)
+            x = await person.send(msg)
+            await x.add_reaction("📩")
+            
 
         if ctx.message.attachments is None:
             return
@@ -34,7 +36,10 @@ class DMReply(commands.Cog):
                 em = discord.Embed( color=ctx.author.color)
                 em.timestamp = datetime.datetime.utcnow()
                 em.set_image(url=i.url)
-                await person.send(embed=em)
+                x = await person.send(embed=em)
+                await x.add_reaction("📩")
+                
+
 
 
     @commands.Cog.listener()
