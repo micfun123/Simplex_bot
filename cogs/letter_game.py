@@ -322,6 +322,58 @@ class letter_game(commands.Cog):
                             "I do not have permission to remove users from the channel"
                         )
                     return
+            #if this word first letter is one bigger than first letter of last word
+            elif ord(message.content[0].lower()) == ord(lastword.content[-1]) + 1:
+                    await conn.execute(
+                        "insert into wordbank VALUES (?,?)",
+                        (message.guild.id, message.content.lower()),
+                    )
+                    await conn.commit()
+                    await conn.execute(
+                        "UPDATE letter_game_server SET word = ?, last_user_id = ? WHERE guild_id = ?",
+                        (message.content.lower(), message.author.id, message.guild.id),
+                    )
+                    await conn.commit()
+                    await message.add_reaction("✅")
+                    return
+            else:
+                await message.channel.send(
+                    "the next word must start {}".format(
+                        chr(ord(lastword.content[-1]) + 1)
+                    )
+                )
+                # remove user from channel
+                await conn.execute(
+                    "UPDATE letter_game_server SET total_failed_games = ? WHERE guild_id = ?",
+                    (totalfailedgames + 1, message.guild.id),
+                )
+                await conn.commit()
+                userdata = await conn.execute(
+                    "SELECT * FROM user_stats WHERE user_id = ?", (message.author.id,)
+                )
+                userdata = await userdata.fetchone()
+                if userdata is None:
+                    await conn.execute(
+                        "INSERT INTO user_stats VALUES (?,?,?,?,?)",
+                        (message.author.id, 0, 0, 0, 0),
+                    )
+                    await conn.commit()
+                await conn.execute(
+                    "UPDATE user_stats SET letter_game_failed = ? WHERE user_id = ?",
+                    (userdata[4] + 1, message.author.id),
+                )
+                await conn.commit()
+                try:
+                    await message.channel.set_permissions(
+                        message.author, send_messages=False
+                    )
+                except discord.Forbidden:
+                    await message.channel.send(
+                        "I do not have permission to remove users from the channel"
+                    )
+                return
+            
+                
 
 
 def setup(client):
