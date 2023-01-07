@@ -481,7 +481,7 @@ class Fun(commands.Cog):
             await db.commit()
             await db.close()
 
-    @commands.slash_command(name="PieLeaderboard", description="View the pie leaderboard")
+    @commands.slash_command(name="pieLeaderboard", description="View the pie leaderboard")
     async def pie_leaderboard(self,ctx):
         """View the pie leaderboard."""
         async with aiosqlite.connect("./databases/pie.db") as db:
