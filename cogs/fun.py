@@ -9,6 +9,7 @@ import aiohttp
 import asyncio
 import datetime
 import requests
+import aiosqlite
 from random import randrange
 from pyfiglet import figlet_format, FontError, FontNotFound
 from tools import get, log
@@ -442,6 +443,12 @@ class Fun(commands.Cog):
         em = discord.Embed(color=discord.Color.orange())
         em.add_field(name='🥧  __Catch The Pie Game__  🥧', value=f'To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nYou caught it in **{round(time_taken, 5)} seconds**', inline=False)
         await pie1.edit(embed=em)
+        async with aiosqlite.connect("./databases/pie.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS pie (user_id INTEGER, time_taken REAL)")
+            await db.execute("INSERT INTO pie (user_id, time_taken) VALUES (?, ?)", (ctx.author.id, time_taken))
+            await db.commit()
+            await db.close()
+
 
     @commands.slash_command(name="catch_pie", description="Catch the pie, by reacting. Dont't drop it!")
     async def catch_the_pie(self,ctx):
@@ -468,6 +475,26 @@ class Fun(commands.Cog):
         em = discord.Embed(color=discord.Color.orange())
         em.add_field(name='🥧  __Catch The Pie Game__  🥧', value=f'To catch the pie you must simply react with the emoji, when it appears. Click as fast as you can and see how fast you caught it... \n**Good Luck!** \n\nYou caught it in **{round(time_taken, 5)} seconds**', inline=False)
         await pie1.edit(embed=em)
+        async with aiosqlite.connect("./databases/pie.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS pie (user_id INTEGER, time_taken REAL)")
+            await db.execute("INSERT INTO pie (user_id, time_taken) VALUES (?, ?)", (ctx.author.id, time_taken))
+            await db.commit()
+            await db.close()
+
+    @commands.slash_command(name="PieLeaderboard", description="View the pie leaderboard")
+    async def pie_leaderboard(self,ctx):
+        """View the pie leaderboard."""
+        async with aiosqlite.connect("./databases/pie.db") as db:
+            cursor = await db.execute("SELECT user_id, time_taken FROM pie ORDER BY time_taken ASC LIMIT 10")
+            results = await cursor.fetchall()
+            await db.close()
+
+        em = discord.Embed(color=discord.Color.orange())
+        em.set_author(name='Pie Leaderboard', icon_url=self.bot.user.avatar_url)
+        for index, result in enumerate(results):
+            user = self.bot.get_user(result[0])
+            em.add_field(name=f'{index + 1}. {user}', value=f'**{round(result[1], 5)} seconds**', inline=False)
+        await ctx.send(embed=em)
 
     
     @commands.command(name='hack')
