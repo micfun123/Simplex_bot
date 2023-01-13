@@ -504,12 +504,8 @@ class Fun(commands.Cog):
     async def pie_leaderboard__command(self,ctx):
         """View the pie leaderboard."""
         async with aiosqlite.connect("./databases/pie.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS pie (user_id INTEGER, time_taken REAL)")
-            await db.commit()
-            await db.close()
-        async with aiosqlite.connect("./databases/pie.db") as db:
-            cursor = await db.execute("SELECT user_id, time_taken FROM pie ORDER BY time_taken ASC")
-            rows = await cursor.fetchall()
+            data = await db.execute("SELECT user_id, time_taken FROM pie ORDER BY time_taken ASC")
+            rows = await data.fetchall()
             await db.close()
         em = discord.Embed(color=discord.Color.orange())
         em.add_field(name='🥧  __Catch The Pie Leaderboard__  🥧', value='Here are the top 10 people who caught the pie the fastest...', inline=False)
@@ -518,6 +514,7 @@ class Fun(commands.Cog):
             em.add_field(name=f'{i+1}. {user}', value=f'**{round(row[1], 5)} seconds**', inline=False)
         await ctx.send(embed=em)
 
+        
 
     
     @commands.command(name='hack')
