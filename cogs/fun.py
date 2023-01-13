@@ -481,20 +481,43 @@ class Fun(commands.Cog):
             await db.commit()
             await db.close()
 
+
     @commands.slash_command(name="pieleaderboard", description="View the pie leaderboard")
     async def pie_leaderboard(self,ctx):
         """View the pie leaderboard."""
         async with aiosqlite.connect("./databases/pie.db") as db:
-            cursor = await db.execute("SELECT user_id, time_taken FROM pie ORDER BY time_taken ASC LIMIT 10")
-            results = await cursor.fetchall()
+            await db.execute("CREATE TABLE IF NOT EXISTS pie (user_id INTEGER, time_taken REAL)")
+            await db.commit()
             await db.close()
-
+        async with aiosqlite.connect("./databases/pie.db") as db:
+            cursor = await db.execute("SELECT user_id, time_taken FROM pie ORDER BY time_taken ASC")
+            rows = await cursor.fetchall()
+            await db.close()
         em = discord.Embed(color=discord.Color.orange())
-        em.set_author(name='Pie Leaderboard', icon_url=self.bot.user.avatar_url)
-        for index, result in enumerate(results):
-            user = self.bot.get_user(result[0])
-            em.add_field(name=f'{index + 1}. {user}', value=f'**{round(result[1], 5)} seconds**', inline=False)
+        em.add_field(name='🥧  __Catch The Pie Leaderboard__  🥧', value='Here are the top 10 people who caught the pie the fastest...', inline=False)
+        for i, row in enumerate(rows[:10]):
+            user = self.bot.get_user(row[0])
+            em.add_field(name=f'{i+1}. {user}', value=f'**{round(row[1], 5)} seconds**', inline=False)
         await ctx.send(embed=em)
+        
+    @commands.command(name='pielb')
+    async def pie_leaderboard__command(self,ctx):
+        """View the pie leaderboard."""
+        async with aiosqlite.connect("./databases/pie.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS pie (user_id INTEGER, time_taken REAL)")
+            await db.commit()
+            await db.close()
+        async with aiosqlite.connect("./databases/pie.db") as db:
+            cursor = await db.execute("SELECT user_id, time_taken FROM pie ORDER BY time_taken ASC")
+            rows = await cursor.fetchall()
+            await db.close()
+        em = discord.Embed(color=discord.Color.orange())
+        em.add_field(name='🥧  __Catch The Pie Leaderboard__  🥧', value='Here are the top 10 people who caught the pie the fastest...', inline=False)
+        for i, row in enumerate(rows[:10]):
+            user = self.bot.get_user(row[0])
+            em.add_field(name=f'{i+1}. {user}', value=f'**{round(row[1], 5)} seconds**', inline=False)
+        await ctx.send(embed=em)
+
 
     
     @commands.command(name='hack')
