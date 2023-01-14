@@ -92,6 +92,38 @@ def slap(imageUrl,seconduser):
         bytes_img.seek(0)
         return bytes_img
         
+def snuggle(imageUrl,seconduser):
+        hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
+        req = urllib.request.Request(imageUrl, headers=hdr)
+        response = urllib.request.urlopen(req) 
+        f = io.BytesIO(response.read())
+        req = urllib.request.Request(seconduser, headers=hdr)
+        response = urllib.request.urlopen(req) 
+        d = io.BytesIO(response.read())
+        random_number = random.randint(1, 1)
+        if random_number == 1:
+            im1 = Image.open("images/love-hug.gif")
+            im2 = Image.open(f)
+            im2 = im2.resize((65, 65))
+            im2 = im2.convert("RGBA")
+            im3 = Image.open(d)
+            im3 = im3.resize((65, 65))
+            im3 = im3.convert("RGBA")
+            
+        
+            frames = []
+            for frame in ImageSequence.Iterator(im1):
+                frame = frame.copy()
+                frame = frame.convert("RGBA")
+                frame.paste(im2, (40, 70))
+                frames.append(frame)
+                frame.paste(im3, (120, 20))
+                frames.append(frame)
+
+            bytes_img = io.BytesIO()
+            frames[0].save(bytes_img, format="GIF", save_all=True, append_images=frames[1:], loop=0, duration=100, disposal=2)
+            bytes_img.seek(0)
+            return bytes_img
         
 
 def stab(imageUrl,seconduser):
@@ -913,6 +945,18 @@ class Fun(commands.Cog):
         await ctx.respond(f"{ctx.author.mention} killed {member.mention}")
         img = stab(member.avatar.url,ctx.author.avatar.url)
         await ctx.respond(file=discord.File(img, "kill.gif"))
+
+    @commands.command(name="hug")
+    async def hug__command(self,ctx, member : discord.Member):
+        await ctx.send(f"{ctx.author.mention} gave {member.mention} a massive hug")
+        img = snuggle(member.avatar.url,ctx.author.avatar.url)
+        await ctx.send(file=discord.File(img, "hug.gif"))
+
+    @commands.command(name="hug")
+    async def hug__slash(self,ctx, member : discord.Member):
+        await ctx.respond(f"{ctx.author.mention} gave {member.mention} a massive hug")
+        img = snuggle(member.avatar.url,ctx.author.avatar.url)
+        await ctx.respond(file=discord.File(img, "hug.gif"))
 
 def setup(bot):
     bot.add_cog(Fun(bot))
