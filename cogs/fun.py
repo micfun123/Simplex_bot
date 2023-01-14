@@ -952,7 +952,7 @@ class Fun(commands.Cog):
         img = snuggle(member.avatar.url,ctx.author.avatar.url)
         await ctx.send(file=discord.File(img, "hug.gif"))
 
-    @commands.command(name="hug")
+    @commands.command(name="huggle")
     async def hug__slash(self,ctx, member : discord.Member):
         await ctx.respond(f"{ctx.author.mention} gave {member.mention} a massive hug")
         img = snuggle(member.avatar.url,ctx.author.avatar.url)
