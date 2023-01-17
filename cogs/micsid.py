@@ -129,9 +129,6 @@ class BotMakerCommands(commands.Cog):
             title='Load', description=f'{extension} successfully loaded', color=0xff00c8)
         await ctx.send(embed=embed)
 
-
-
-
     @commands.command()
     @commands.check(micsid)
     async def unload(self, ctx, extension):
@@ -144,6 +141,23 @@ class BotMakerCommands(commands.Cog):
         status = status.replace("[[servers]]", str(len(self.client.guilds)))
         await self.client.change_presence(activity=discord.Game(name=status))
         await ctx.send(f"Status changed to {status}")
+
+    @commands.command()
+    @commands.is_owner()
+    async def commandlookup(self, ctx, command):
+        #check if command exists
+        if self.client.get_command(command) == None:
+            await ctx.send("Command not found")
+            return
+        #find the cog 
+        for i in self.client.cogs:
+            if self.client.get_command(command) in self.client.get_cog(i).get_commands():
+                cog = i
+        await ctx.send(f"Cog: {cog}\nCommand: {command}")
+        
+
+
+
 
 
 
