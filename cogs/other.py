@@ -18,7 +18,8 @@ import matplotlib.pyplot as plt
 import random
 from io import BytesIO
 from base69 import encode_base69, decode_base69
-from bot import server
+import sympy
+
 
 calculator = simpcalc.Calculate()
 
@@ -348,18 +349,39 @@ class utilities(commands.Cog):
     #LaTeX
     @commands.command(name="latex", aliases=["tex"], help = "Generate LaTeX")
     async def _latex_(self, ctx, *, equation):
-        await ctx.message.delete()
-        a = equation
-        ax=plt.subplot(111)
-        ax.text(0.5,0.5,r"$%s$" %(a),fontsize=30,color="green")
-        d = BytesIO()
-        d.seek(0)
-        plt.savefig(d, format='png')
-        d.seek(0)
-        #clear the plot
-        plt.clf()
-        await ctx.send(file=discord.File(d, 'latex.png'))
+        x = await ctx.send("Generating LaTeX Image...")
+        try:
+            image = io.BytesIO()
+            sympy.preview(equation, output='png', euler=False)
+            plt.savefig(image, format='PNG')
+            image.seek(0)
+            await ctx.send(file=discord.File(fp=image, filename='latex.png'))
+            await x.delete()
+        except Exception as e:
+            await ctx.send("Something went wrong")
+            print(e)
 
+
+    @commands.slash_command(name="latex", description = "Generate LaTeX")
+    async def _latex_slash(self, ctx, *, equation):
+        if len(equation) > 1000:
+            await ctx.send("The equation is too long")
+            return
+        x = await ctx.send("Generating LaTeX Image...")
+        try:
+            Image = io.BytesIO()
+            sympy.preview(equation, output='png', euler=False)
+            plt.savefig(Image, format='PNG')
+            Image.seek(0)
+            await ctx.send(file=discord.File(fp=Image, filename='latex.png'))
+            await x.delete()
+        except Exception as e:
+            await ctx.send("Something went wrong: " + str(e))
+
+
+
+            
+        
     #random num generator between two numbers
     @commands.command(name="rand", aliases=["random"], help = "Generate a random number")
     async def _rand_(self, ctx, start: int, end: int):
