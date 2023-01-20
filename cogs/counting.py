@@ -201,7 +201,7 @@ class Counting(commands.Cog):
 
     #@commands.is_owner()
     #@commands.command()
-    #async def makedbtable(self, ctx):
+    #async def makedbtablecounter(self, ctx):
     #    con = sqlite3.connect("./databases/counting.db")
     #    cur = con.cursor()
     #    cur.execute("CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)")
@@ -211,7 +211,7 @@ class Counting(commands.Cog):
     #    con.commit()
     #    con.close()
     #    await ctx.send("Done")
-
+#
     #@commands.is_owner()
     #@commands.command(name="set_user_count_stats")
     #async def set_user_count_stats(self, ctx):
