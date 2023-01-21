@@ -572,8 +572,10 @@ class Moderation(commands.Cog):
     @commands.command(help="Prints all server roles and amount of members")
     async def roles(self,ctx):
         em = discord.Embed(title="The roles of the server",description="Shows you the amount of members in each role. ", color=0x00ff00)
-        for roles in ctx.guild.roles:
-            em.add_field(name=f"{roles.name} :",value=len(roles.members),inline=False)
+        roles = ctx.guild.roles
+        roles.reverse()
+        for role in roles:
+            em.add_field(name=role.name, value=len(role.members))
         await ctx.send(embed=em)
 
 
