@@ -580,17 +580,17 @@ class Moderation(commands.Cog):
         #if roles are to long split them into 2 embeds
         if len(roles) > 25:
             for i in roles[:25]:
-                em.add_field(name=i.name,value=len(i.members),inline=False)
+                em.add_field(name=i.name,value=len(i.members))
             await ctx.send(embed=em)
             em = discord.Embed(title="The roles of the server",description="Shows you the amount of members in each role. ", color=0x00ff00)
             for i in roles[25:]:
-                em.add_field(name=i.name,value=len(i.members),inline=False)
+                em.add_field(name=i.name,value=len(i.members),)
             await ctx.send(embed=em)
         else:
             for i in roles:
-                em.add_field(name=i.name,value=len(i.members),inline=False)
+                em.add_field(name=i.name,value=len(i.members))
             await ctx.send(embed=em)
-            
+
 
 
     @commands.command(help="Reset all user names nick names")
