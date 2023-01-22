@@ -10,6 +10,8 @@ import sqlite3
 import asyncio
 import random
 import re
+import io
+import chat_exporter
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -528,6 +530,21 @@ class Moderation(commands.Cog):
             Closes a ticket.
             """
             # Creates a message
+            transcript = await chat_exporter.export(
+                    ctx.channel,
+                    limit=1000,
+                    tz_info= str("UTC"),
+                    military_time=True,
+             )
+            if transcript is None:
+                    return
+            transcript_file = discord.File(
+                    io.BytesIO(transcript.encode()),
+                    filename=f"transcript-{ctx.channel.name}.html",
+                )
+                #send with out embed
+            await ctx.send(file=transcript_file, content="Here is the transcript")
+            
             await ctx.send(f"{ctx.author.mention} closed a ticket.\nReason: {reason}")
             await ctx.message.delete()
             # rename the channel old name + archive
@@ -538,6 +555,7 @@ class Moderation(commands.Cog):
             data = cur.execute("SELECT * FROM ticket_channel_id WHERE channel_id = ?", (ctx.channel.id,)).fetchall()
             user = self.client.get_user(data[0][0])
             await user.send(f"your ticket on {ctx.guild.name} has been closed for {reason}")
+            await user.send(file=transcript_file, content="Here is the transcript")
             con.commit()
             con.close()
             for i in ctx.channel.members:
