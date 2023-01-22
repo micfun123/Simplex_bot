@@ -655,7 +655,7 @@ class Moderation(commands.Cog):
         await ctx.send("This may take a while")
         transcript = await ctx.channel.history(
                     ctx.channel,
-                    limit=5000,
+                    limit=1000,
                     tz_info= str("UTC"),
                     military_time=True,
              )
