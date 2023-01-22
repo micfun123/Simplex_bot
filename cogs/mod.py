@@ -651,6 +651,8 @@ class Moderation(commands.Cog):
     @commands.command(help="Exports all messages in a channel to html")
     @commands.has_permissions(administrator=True)
     async def export(self,ctx):
+        await ctx.send("Exporting channel to html")
+        await ctx.send("This may take a while")
         transcript = await ctx.channel.history(
                     ctx.channel,
                     limit=5000,
