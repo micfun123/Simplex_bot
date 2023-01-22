@@ -656,7 +656,6 @@ class Moderation(commands.Cog):
         transcript = await ctx.channel.history(
                     ctx.channel,
                     limit=1000,
-                    tz_info= str("UTC"),
                     military_time=True,
              )
         if transcript is None:
