@@ -648,5 +648,23 @@ class Moderation(commands.Cog):
             else:
                 await ctx.send("Invalid response.")
 
+    @commands.command(help="Exports all messages in a channel to html")
+    @commands.has_permissions(administrator=True)
+    async def export(self,ctx):
+        transcript = await ctx.channel.history(
+                    ctx.channel,
+                    limit=5000,
+                    tz_info= str("UTC"),
+                    military_time=True,
+             )
+        if transcript is None:
+                    return
+        transcript_file = discord.File(
+                    io.BytesIO(transcript.encode()),
+                    filename=f"transcript-{ctx.channel.name}.html",
+                )
+                #send with out embed
+        await ctx.send(file=transcript_file, content="Here is the transcript")
+
 def setup(client):
     client.add_cog(Moderation(client))
