@@ -650,21 +650,25 @@ class Moderation(commands.Cog):
 
     @commands.command(help="Exports all messages in a channel to html")
     @commands.has_permissions(administrator=True)
-    async def export(self,ctx):
-        await ctx.send("Exporting channel to html")
-        await ctx.send("This may take a while")
-        transcript = await ctx.channel.history(
-                    ctx.channel,
-                    limit=1000,
-                    military_time=True,
-             )
+    async def export(self, ctx: commands.Context, limit = 2000, tz_info: str = "UTC", military_time: bool = True):
+        """Exports all messages in a channel to html"""
+        await ctx.send("All systems go")
+        await ctx.send("Exporting chat...")
+        transcript = await chat_exporter.export(
+            ctx.channel,
+            limit=limit,
+            tz_info=tz_info,
+            military_time=military_time
+        )
         if transcript is None:
-                    return
+            return
         transcript_file = discord.File(
-                    io.BytesIO(transcript.encode()),
-                    filename=f"transcript-{ctx.channel.name}.html",
-                )
-                #send with out embed
+            io.BytesIO(transcript.encode()),
+            filename=f"transcript-{ctx.channel.name}.html",
+        )
+        #send with out embed
+        #if file is too big, discord will not send it
+        
         await ctx.send(file=transcript_file, content="Here is the transcript")
 
 def setup(client):
