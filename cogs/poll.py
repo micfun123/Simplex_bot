@@ -111,7 +111,7 @@ class Polls(commands.Cog):
         poll = await ctx.send(embed=em)
         for emoji, _ in choices:
             await poll.add_reaction(emoji)
-        await ctx.respond("Poll Ceated!", ephemeral=True)
+        await ctx.respond("Poll created!", ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Polls(bot))
