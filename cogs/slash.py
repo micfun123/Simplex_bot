@@ -63,7 +63,10 @@ class Slash(commands.Cog):
             description=f"By: {ctx.author.name}\n\n{suggestion}",
             color=discord.Color.random()
         )
-        await sid.send(embed=em, content=ctx.author.id)
+        x = await sid.send(embed=em, content=ctx.author.id)
+        await x.add_reaction("✅")
+        await x.add_reaction("❌")
+        
         await ctx.respond("Thank you for you suggestion!")
 
     @commands.slash_command(name="ping", description="shows you the bots ping")

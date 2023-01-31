@@ -49,7 +49,12 @@ class utilities(commands.Cog):
     @commands.command(aliases=['sug', 'suggestion'])
     async def suggest(self, ctx, *, suggestion):
         sid = await self.client.fetch_channel(908969607266730005)
-        await sid.send(f"Suggestion:\n{suggestion}\n\nBy: {ctx.author.name}\nID: {ctx.author.id}")
+        em = discord.Embed(title="Suggestion", description=f"{suggestion}", color=discord.Color.blue())
+        em.set_author(name=f"{ctx.author.name}")
+        em.set_footer(text=f"ID: {ctx.author.id}")
+        x = await sid.send(embed=em)
+        await x.add_reaction("✅")
+        await x.add_reaction("❌")
         await ctx.send("Thank you for you suggestion!")
 
     @commands.command(name = "serverinfo", help = "Shows the server info")
