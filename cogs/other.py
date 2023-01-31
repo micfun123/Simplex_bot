@@ -49,9 +49,8 @@ class utilities(commands.Cog):
     @commands.command(aliases=['sug', 'suggestion'])
     async def suggest(self, ctx, *, suggestion):
         sid = await self.client.fetch_channel(908969607266730005)
-        em = discord.Embed(title="Suggestion", description=f"{suggestion}", color=discord.Color.blue())
-        em.set_author(name=f"{ctx.author.name}")
-        em.set_footer(text=f"ID: {ctx.author.id}")
+        em = discord.Embed(title="Suggestion:", description=f"{suggestion}", color=discord.Color.blue())
+        em.set_footer(text=f"ID: {ctx.author.id}, By: {ctx.author.name}")
         x = await sid.send(embed=em)
         await x.add_reaction("✅")
         await x.add_reaction("❌")
