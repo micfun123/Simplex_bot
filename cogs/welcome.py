@@ -152,6 +152,34 @@ class WelcomeView(discord.ui.View):
         em = discord.Embed(title="Welcome Card:", description=status)
         await interaction.followup.send(embed=em)
 
+    @discord.ui.button(label="Text_or_Embed", style=discord.ButtonStyle.green, custom_id="text_or_embed")
+    async def text_or_embed(self, button, interaction):
+        def check(m):
+            return m.channel == self.ctx.channel and m.author == self.ctx.author
+
+        await interaction.response.edit_message(view=self)
+        async with aiosqlite.connect("./databases/Welcome.db") as db:
+            async with db.execute("SELECT * FROM welcome WHERE guild_id = ?", (self.ctx.guild.id,)) as cursor:
+                data = await cursor.fetchall()
+                if data == []:
+                    await db.execute("INSERT INTO welcome VALUES (?,?,?,?,?,?)", (self.ctx.guild.id, None, None, 1, 0, 0))
+                    await db.commit()
+                    status = "Switched to Text instead of Embed"
+                else:
+                    if data[0][4] == None:
+                        await db.execute("UPDATE welcome SET textorembed = ? WHERE guild_id = ?", (1, self.ctx.guild.id))
+                        await db.commit()
+                        status = "Switched to Text instead of Embed"
+                    elif data[0][4] == 0:
+                        await db.execute("UPDATE welcome SET textorembed = ? WHERE guild_id = ?", (1, self.ctx.guild.id))
+                        await db.commit()
+                        status = "Switched to Text instead of Embed"
+                    else:
+                        await db.execute("UPDATE welcome SET textorembed = ? WHERE guild_id = ?", (0, self.ctx.guild.id))
+                        await db.commit()
+                        status = "Switched to Embed instead of Text"
+            await interaction.followup.send(embed=discord.Embed(title="Welcome Text or Embed:", description=status))
+
 
     @discord.ui.button(label="Reset", style=discord.ButtonStyle.red, custom_id="reset")
     async def reset(self, button, interaction):
@@ -280,8 +308,10 @@ class Welcome(commands.Cog):
         text = text.replace("{member.account_age}", str(member.created_at))
         text = text.replace("{member.joined_at}", str(member.joined_at))
         em = discord.Embed(title=f"Welcome {member.name}!", description=text)
-
-        await channel.send(embed=em, content=member.mention)
+        if textorembed == 1:
+            await channel.send(f"{member.mention} \n {text}")
+        else:
+            await channel.send(embed=em, content=member.mention)
 
 
     @commands.Cog.listener()
