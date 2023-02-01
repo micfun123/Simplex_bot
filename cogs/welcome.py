@@ -209,6 +209,7 @@ class Welcome(commands.Cog):
     #    await ctx.send("Done")
 
     @commands.command()
+    @commands.is_owner()
     async def welcome_database_make(self, ctx):
         async with aiosqlite.connect("./databases/Welcome.db") as db:
             await db.execute("CREATE TABLE IF NOT EXISTS welcome (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)")
