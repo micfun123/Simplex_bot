@@ -33,6 +33,7 @@ class Minecraft(commands.Cog):
             resp = response.json()
             try:
                 players = resp["players"]["online"]
+                playerlist = resp["players"]["list"]
                 playersmax = resp["players"]["max"]
                 MOTD = resp["motd"]["clean"][0]
                 online = resp["online"]
@@ -45,6 +46,13 @@ class Minecraft(commands.Cog):
                     embed.add_field(name="Is modded: ", value= "False", inline=True)
                 embed.add_field(name="Players Online: ", value=f"{players} / {playersmax}", inline=True)
                 embed.add_field(name="Version: ", value=version, inline=True)
+                if players > 20:
+                    embed.add_field(name="Player list: ", value="Too many players to display", inline=False)
+                elif players > 0:
+                    pass
+                else:
+                    for player in playerlist:
+                        embed.add_field(name="Player list: ", value=player, inline=False)
                 await ctx.send(embed=embed)
             except:
                 embed=discord.Embed(title=f"{server} is offline",color=0xFF0000)
@@ -57,6 +65,7 @@ class Minecraft(commands.Cog):
             resp = response.json()
             try:
                 players = resp["players"]["online"]
+                playerlist = resp["players"]["list"]
                 playersmax = resp["players"]["max"]
                 MOTD = resp["motd"]["clean"][0]
                 online = resp["online"]
@@ -69,6 +78,13 @@ class Minecraft(commands.Cog):
                     embed.add_field(name="Is modded: ", value= "False", inline=True)
                 embed.add_field(name="Players Online: ", value=f"{players} / {playersmax}", inline=True)
                 embed.add_field(name="Version: ", value=version, inline=True)
+                if players > 20:
+                    embed.add_field(name="Player list: ", value="Too many players to display", inline=False)
+                elif players > 0:
+                    pass
+                else:
+                    for player in playerlist:
+                        embed.add_field(name="Player list: ", value=player, inline=False)
                 await ctx.respond(embed=embed)
             except:
                 embed=discord.Embed(title=f"{server} is offline",color=0xFF0000)
