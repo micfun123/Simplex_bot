@@ -48,7 +48,7 @@ class Minecraft(commands.Cog):
                 embed.add_field(name="Version: ", value=version, inline=True)
                 if players > 20:
                     embed.add_field(name="Player list: ", value="Too many players to display", inline=False)
-                elif players > 0:
+                elif players = 0:
                     pass
                 else:
                     for player in playerlist:
@@ -80,7 +80,7 @@ class Minecraft(commands.Cog):
                 embed.add_field(name="Version: ", value=version, inline=True)
                 if players > 20:
                     embed.add_field(name="Player list: ", value="Too many players to display", inline=False)
-                elif players > 0:
+                elif players = 0:
                     pass
                 else:
                     for player in playerlist:
