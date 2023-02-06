@@ -6,6 +6,7 @@ import discord.ui
 import aiosqlite
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
+import textwrap
 import requests
 import textwrap
 
@@ -285,7 +286,9 @@ class Welcome(commands.Cog):
             background.paste(avatar, (1000, 200))
             draw = ImageDraw.Draw(background)
             font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
-            draw.text((400, 550), f"Welcome {member.name}!", (255, 255, 255), font=font)
+            textlocation = (975, 200)
+            textsize = draw.textsize(member.name, font=font)
+            draw.text((textlocation[0] - textsize[0] / 2, textlocation[1] - textsize[1] / 2), member.name, (255, 255, 255), font=font)
             font = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
             draw.text((800, 700), f"You are the {member.guild.member_count}th member!", (255, 255, 255), font=font)
             
