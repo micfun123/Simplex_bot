@@ -288,7 +288,7 @@ class Welcome(commands.Cog):
             font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
             textlocation = (975, 200)
             textsize = draw.textsize(member.name, font=font)
-            draw.text((textlocation[0] - textsize[0] / 2, textlocation[1] - textsize[1] / 2), member.name, (255, 255, 255), font=font)
+            draw.text((textlocation[0] - textsize[0] / 2, 550), member.name, (255, 255, 255), font=font)
             font = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
             draw.text((800, 700), f"You are the {member.guild.member_count}th member!", (255, 255, 255), font=font)
             
