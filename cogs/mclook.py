@@ -51,11 +51,9 @@ class Minecraft(commands.Cog):
                 elif players == 0:
                     pass
                 else:
-                    embed.add_field(name="Player list:", inline=False)
-                    num = 0
                     for player in playerlist:
-                        num += 1
-                        embed.add_field(name=f"Player {num}: ", value=player, inline=False)
+                        embed.add_field(name="Player list: ", value=player, inline=False)
+
                         
                 await ctx.send(embed=embed)
             except:
@@ -87,11 +85,10 @@ class Minecraft(commands.Cog):
                 elif players == 0:
                     pass
                 else:
-                    embed.add_field(name="Player list:", inline=False)
-                    num = 0
                     for player in playerlist:
-                        num += 1
-                        embed.add_field(name=f"Player {num}: ", value=player, inline=False)
+                        embed.add_field(name="Player list: ", value=player, inline=False)
+                        
+                    
                         
 
                 await ctx.respond(embed=embed)
