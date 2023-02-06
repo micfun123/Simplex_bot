@@ -51,8 +51,12 @@ class Minecraft(commands.Cog):
                 elif players == 0:
                     pass
                 else:
+                    embed.add_field(name="Player list:", inline=False)
+                    num = 0
                     for player in playerlist:
-                        embed.add_field(name="Player list: ", value=player, inline=False)
+                        num += 1
+                        embed.add_field(name=f"Player {num}: ", value=player, inline=False)
+                        
                 await ctx.send(embed=embed)
             except:
                 embed=discord.Embed(title=f"{server} is offline",color=0xFF0000)
@@ -83,8 +87,13 @@ class Minecraft(commands.Cog):
                 elif players == 0:
                     pass
                 else:
+                    embed.add_field(name="Player list:", inline=False)
+                    num = 0
                     for player in playerlist:
-                        embed.add_field(name="Player list: ", value=player, inline=False)
+                        num += 1
+                        embed.add_field(name=f"Player {num}: ", value=player, inline=False)
+                        
+
                 await ctx.respond(embed=embed)
             except:
                 embed=discord.Embed(title=f"{server} is offline",color=0xFF0000)
