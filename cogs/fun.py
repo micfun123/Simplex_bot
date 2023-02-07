@@ -560,7 +560,6 @@ class Fun(commands.Cog):
             #get the 10 fastest times
             data = await db.execute("SELECT user_id, time_taken FROM pie ORDER BY time_taken ASC")
             rows = await data.fetchall()
-            await db.close()
         em = discord.Embed(color=discord.Color.orange())
         for i in range(10):
             user = self.bot.get_user(rows[i][0])
