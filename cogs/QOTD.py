@@ -7,7 +7,7 @@ from datetime import datetime,time
 
 
 
-url = "https://the-trivia-api.com/api/questions?categories=general_knowledge,food_and_drink&limit=1&difficulty=medium"
+url = "https://the-trivia-api.com/api/questions?categories=society_and_culture,arts_and_literature,film_and_tv,food_and_drink,general_knowledge,geography,history,music,science&limit=1&difficulty=medium"
 
 class QOTD(commands.Cog):
     ''' All the commands needed to set up question of the day
