@@ -978,5 +978,20 @@ class Fun(commands.Cog):
         img = snuggle(member.avatar.url,ctx.author.avatar.url)
         await ctx.respond(file=discord.File(img, "hug.gif"))
 
+    @commands.slash_command(name="compatibility_check")
+    async def compatibility_check(self,ctx, member : discord.Member):
+        await ctx.respond(f"{ctx.author.mention} and {member.mention} are {random.randint(0,100)}% compatible :heart:")
+
+    @commands.command(name="Match_Maker")
+    async def Match_Maker(self,ctx):
+        member = random.choice(ctx.guild.members)
+        await ctx.respond(f"{ctx.author.mention} and {member.mention} are {random.randint(60,100)}% compatible :heart:")
+
+    @commands.command(name="match_maker_rigged")
+    async def Match_Maker_rigged(self,ctx, member : discord.Member):
+        await ctx.respond(f"{ctx.author.mention} and {member.mention} are {random.randint(75,100)}% compatible :heart:")
+
+        
+
 def setup(bot):
     bot.add_cog(Fun(bot))
