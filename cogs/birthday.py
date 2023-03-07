@@ -209,7 +209,30 @@ class Birthday(commands.Cog):
         await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
 
-
+    @commands.command(name="forceannouncmentsbirthdays")
+    @commands.is_owner()
+    async def forceannouncmentsbirthdays(self,ctx):
+        for i in self.client.guilds:
+                con = sqlite3.connect("databases/server_brithdays.db")
+                cur = con.cursor()
+                datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (i.id,))
+                datas = cur.fetchall()
+                toggle = datas[0][1]
+                channel = datas[0][2]
+                con.close()
+                if toggle == True:
+                    con = sqlite3.connect("databases/user_brithdays.db")
+                    cur = con.cursor()
+                    data = cur.execute("SELECT * FROM birthday")
+                    data = cur.fetchall()
+                    for i in data:
+                        if i[1] == datetime.now().strftime("%d/%m"):
+                            channel = self.client.get_channel(channel)
+                            if i[0] in [i.id for i in self.client.get_guild(channel.guild.id).members]:
+                                await channel.send(f"Happy Birthday <@{i[0]}> !\n Hope you have a amazing day" )
+                    con.close()
+                else:
+                    pass
             
 
         
