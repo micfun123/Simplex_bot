@@ -227,9 +227,12 @@ class Birthday(commands.Cog):
                     data = cur.fetchall()
                     for i in data:
                         if i[1] == datetime.now().strftime("%d/%m"):
-                            channel = await self.client.fetch_channel(channel)
-                            if i[0] in [i.id for i in self.client.get_guild(channel.guild.id).members]:
-                                await channel.send(f"Happy Birthday <@{i[0]}> !\n Hope you have a amazing day" )
+                            try:
+                                channel = await self.client.fetch_channel(channel)
+                                if i[0] in [i.id for i in self.client.get_guild(channel.guild.id).members]:
+                                    await channel.send(f"Happy Birthday <@{i[0]}> !\n Hope you have a amazing day" )
+                            except:
+                                pass
                     con.close()
                 else:
                     pass
