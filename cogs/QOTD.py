@@ -72,11 +72,14 @@ class QOTD(commands.Cog):
         question = data[0]["question"]
         answer = data[0]["correctAnswer"]
         for server in cur.execute("SELECT server_id, channel_id FROM qotd").fetchall():
-            channel = await self.client.fetch_channel(server[1])
-            embed = discord.Embed(title="QOTD", description=question, color=0x00ff00)
-            embed.add_field(name="Answers", value=f"||{answer}||", inline=False)
-            embed.set_footer(text=f"QOTD for {datetime.now().strftime('%d/%m/%Y')} \n If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D")
-            await channel.send(embed=embed)
+            try:
+                channel = await self.client.fetch_channel(server[1])
+                embed = discord.Embed(title="QOTD", description=question, color=0x00ff00)
+                embed.add_field(name="Answers", value=f"||{answer}||", inline=False)
+                embed.set_footer(text=f"QOTD for {datetime.now().strftime('%d/%m/%Y')} \n If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D")
+                await channel.send(embed=embed)
+            except:
+                pass
         con.close()
 
     @commands.command()
@@ -89,11 +92,14 @@ class QOTD(commands.Cog):
         question = data[0]["question"]
         answer = data[0]["correctAnswer"]
         for server in cur.execute("SELECT server_id, channel_id FROM qotd").fetchall():
-            channel = await self.client.fetch_channel(server[1])
-            embed = discord.Embed(title="QOTD", description=question, color=0x00ff00)
-            embed.add_field(name="Answers", value=f"||{answer}||", inline=False)
-            embed.set_footer(text=f"QOTD for {datetime.now().strftime('%d/%m/%Y')} \n If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D")
-            await channel.send(embed=embed)
+            try:
+                channel = await self.client.fetch_channel(server[1])
+                embed = discord.Embed(title="QOTD", description=question, color=0x00ff00)
+                embed.add_field(name="Answers", value=f"||{answer}||", inline=False)
+                embed.set_footer(text=f"QOTD for {datetime.now().strftime('%d/%m/%Y')} \n If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D")
+                await channel.send(embed=embed)
+            except:
+                pass
         con.close()
         await ctx.send("QOTD sent!")
 
