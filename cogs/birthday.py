@@ -237,6 +237,7 @@ class Birthday(commands.Cog):
                 data = cur.fetchall()
                 if data == []:
                     print("No birthday")
+                    #does not work below here
                 else:
                     for x in data:
                         print(x)
