@@ -113,6 +113,12 @@ class Birthday(commands.Cog):
         if day > 31 or day < 1 or month > 12 or month < 1:
             await ctx.respond("Invalid date.")
         else:
+            #force 2 digit date
+            if day < 10:
+                day = f"0{day}"
+            if month < 10:
+                month = f"0{month}"
+
             con = sqlite3.connect("databases/user_brithdays.db")
             cur = con.cursor()
             data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
@@ -135,6 +141,13 @@ class Birthday(commands.Cog):
         if day > 31 or day < 1 or month > 12 or month < 1:
             await ctx.send("Invalid date.")
         else:
+            #formate date 2 digit
+            if len(str(day)) == 1:
+                day = f"0{day}"
+            if len(str(month)) == 1:
+                month = f"0{month}"
+
+
             con = sqlite3.connect("databases/user_brithdays.db")
             cur = con.cursor()
             data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
@@ -187,7 +200,9 @@ class Birthday(commands.Cog):
     @commands.command(name="forceannouncmentsbirthdays")
     @commands.is_owner()
     async def forceannouncmentsbirthdays(self,ctx):
+        print("Birthday announcments")
         for i in self.client.guilds:
+                print(i)
                 con = sqlite3.connect("databases/server_brithdays.db")
                 cur = con.cursor()
                 datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (i.id,))
@@ -200,19 +215,28 @@ class Birthday(commands.Cog):
                     pass
                 con = sqlite3.connect("databases/user_brithdays.db")
                 cur = con.cursor()
-                data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
+                data = cur.execute("SELECT * FROM birthday")
                 data = cur.fetchall()
                 if data == []:
                     print("No birthday")
+                    #does not work below here
                 else:
-                    if datas[0][1] == True:
-                        if datas[0][2] == None:
-                            pass
+                    for x in data:
+                        print(x)
+                        if datas[0][1] == True:
+                            if datas[0][2] == None:
+                                pass
+                            else:
+                                channel = await self.client.fetch_channel(datas[0][2])
+                                print(channel)
+                                print(x[1])
+                                print(datetime.now().strftime("%d/%m"))
+                                if x[1] == datetime.now().strftime("%d/%m"):
+                                    print("Birthday")
+                                    print(x[0])
+                                    await channel.send(f"Happy birthday <@{x[0]}>! :tada:")
                         else:
-                            channel = self.client.get_channel(datas[0][2])
-                            await channel.send(f"Happy birthday {ctx.author.mention}! :tada:")
-                    else:
-                        pass
+                            pass
         await ctx.send("Done")
 
 
@@ -247,6 +271,8 @@ class Birthday(commands.Cog):
                             else:
                                 channel = await self.client.fetch_channel(datas[0][2])
                                 print(channel)
+                                print(x[1])
+                                print(datetime.now().strftime("%d/%m"))
                                 if x[1] == datetime.now().strftime("%d/%m"):
                                     print("Birthday")
                                     print(x[0])
