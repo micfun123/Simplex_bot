@@ -216,7 +216,7 @@ class Birthday(commands.Cog):
         await ctx.send("Done")
 
 
-    @tasks.loop(time=time(19,55))
+    @tasks.loop(time=time(7,00))
     async def birthday_announcments(self):
         print("Birthday announcments")
         for i in self.client.guilds:
