@@ -79,7 +79,7 @@ class QOTD(commands.Cog):
             try:
                 channel = await self.client.fetch_channel(server[1])
                 embed = discord.Embed(title="QOTD", description=question, color=0x00ff00)
-                embed.add_field(name="options", value=f"||{options[0]}|| \n ||{options[1]}|| \n ||{options[2]}|| \n ||{options[3]}||", inline=False)
+                embed.add_field(name="options", value=f"{options[0]} \n {options[1]} \n {options[2]} \n {options[3]}", inline=False)
                 embed.add_field(name="Answers", value=f"||{answer}||", inline=False)
                 embed.set_footer(text=f"QOTD for {datetime.now().strftime('%d/%m/%Y')} \n If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D")
                 await channel.send(embed=embed)
