@@ -11,7 +11,8 @@ class Birthday(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.birthdaytimer.start()
+        self.birthday_announcments.start()
+
 
     @commands.command(hidden = True)
     @commands.is_owner()
@@ -31,31 +32,31 @@ class Birthday(commands.Cog):
         con.close()
         await ctx.send("Added user to birthday list.")
     
-    #@commands.command(hidden=True)
-    #@commands.is_owner()
-    #async def makeservertablebirthday(self,ctx):
-    #    con = sqlite3.connect("databases/server_brithdays.db")
-    #    cur = con.cursor()
-    #    cur.execute("CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int)")
-    #    con.commit()
-    #    con.close()
-    #    con = sqlite3.connect("databases/user_brithdays.db")
-    #    cur = con.cursor()
-    #    cur.execute("CREATE TABLE birthday(UsersID int, birthday)")
-    #    con.commit()
-    #    con.close()
-    #    await ctx.send("Done")
+    @commands.command(hidden=True)
+    @commands.is_owner()
+    async def makeservertablebirthday(self,ctx):
+        con = sqlite3.connect("databases/server_brithdays.db")
+        cur = con.cursor()
+        cur.execute("CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int)")
+        con.commit()
+        con.close()
+        con = sqlite3.connect("databases/user_brithdays.db")
+        cur = con.cursor()
+        cur.execute("CREATE TABLE birthday(UsersID int, birthday)")
+        con.commit()
+        con.close()
+        await ctx.send("Done")
 #
-    #@commands.command(hidden = True)
-    #@commands.is_owner()
-    #async def setallbithday(self,ctx):
-    #    for i in self.client.guilds:
-    #        con = sqlite3.connect("databases/server_brithdays.db")
-    #        cur = con.cursor()
-    #        cur.execute("INSERT INTO server(ServerID, Servertoggle,birthdaychannel) VALUES(?, ?,?)", (i.id, False,None))
-    #        await ctx.send(f"{i} has been set")
-    #        con.commit()
-    #        con.close()
+    @commands.command(hidden = True)
+    @commands.is_owner()
+    async def setallbithday(self,ctx):
+        for i in self.client.guilds:
+            con = sqlite3.connect("databases/server_brithdays.db")
+            cur = con.cursor()
+            cur.execute("INSERT INTO server(ServerID, Servertoggle,birthdaychannel) VALUES(?, ?,?)", (i.id, False,None))
+            await ctx.send(f"{i} has been set")
+            con.commit()
+            con.close()
         
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -170,32 +171,6 @@ class Birthday(commands.Cog):
         await ctx.respond(f"Birthday channel has been set to {channel}")
 
 
-    #runs every 24 hours
-    @tasks.loop(time=time(7,00))
-    async def birthdaytimer(self):
-        await self.client.wait_until_ready()
-        for i in self.client.guilds:
-            con = sqlite3.connect("databases/server_brithdays.db")
-            cur = con.cursor()
-            datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (i.id,))
-            datas = cur.fetchall()
-            toggle = datas[0][1]
-            channel = datas[0][2]
-            con.close()
-            if toggle == True:
-                con = sqlite3.connect("databases/user_brithdays.db")
-                cur = con.cursor()
-                data = cur.execute("SELECT * FROM birthday")
-                data = cur.fetchall()
-                for i in data:
-                    if i[1] == datetime.now().strftime("%d/%m"):
-                        channel = self.client.get_channel(channel)
-                        if i[0] in [i.id for i in self.client.get_guild(channel.guild.id).members]:
-                            await channel.send(f"Happy Birthday <@{i[0]}> !\n Hope you have a amazing day" )
-                con.close()
-            else:
-                pass
-
     @commands.slash_command(name="findbirthday", description="Find a users birthday")
     async def findbirthday__slash(self, ctx, user: discord.Member):
         con = sqlite3.connect("databases/user_brithdays.db")
@@ -217,26 +192,66 @@ class Birthday(commands.Cog):
                 cur = con.cursor()
                 datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (i.id,))
                 datas = cur.fetchall()
-                toggle = datas[0][1]
-                channel = datas[0][2]
-                con.close()
-                if toggle == True:
-                    con = sqlite3.connect("databases/user_brithdays.db")
-                    cur = con.cursor()
-                    data = cur.execute("SELECT * FROM birthday")
-                    data = cur.fetchall()
-                    for i in data:
-                        if i[1] == datetime.now().strftime("%d/%m"):
-                            try:
-                                channel = await self.client.fetch_channel(channel)
-                                if i[0] in [i.id for i in self.client.get_guild(channel.guild.id).members]:
-                                    await channel.send(f"Happy Birthday <@{i[0]}> !\n Hope you have a amazing day" )
-                            except:
-                                pass
+                if datas == []:
+                    cur.execute("INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)", (i.id, False, None))
+                    con.commit()
                     con.close()
                 else:
                     pass
-            
+                con = sqlite3.connect("databases/user_brithdays.db")
+                cur = con.cursor()
+                data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
+                data = cur.fetchall()
+                if data == []:
+                    print("No birthday")
+                else:
+                    if datas[0][1] == True:
+                        if datas[0][2] == None:
+                            pass
+                        else:
+                            channel = self.client.get_channel(datas[0][2])
+                            await channel.send(f"Happy birthday {ctx.author.mention}! :tada:")
+                    else:
+                        pass
+        await ctx.send("Done")
+
+
+    @tasks.loop(time=time(19,55))
+    async def birthday_announcments(self):
+        print("Birthday announcments")
+        for i in self.client.guilds:
+                print(i)
+                con = sqlite3.connect("databases/server_brithdays.db")
+                cur = con.cursor()
+                datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (i.id,))
+                datas = cur.fetchall()
+                if datas == []:
+                    cur.execute("INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)", (i.id, False, None))
+                    con.commit()
+                    con.close()
+                else:
+                    pass
+                con = sqlite3.connect("databases/user_brithdays.db")
+                cur = con.cursor()
+                data = cur.execute("SELECT * FROM birthday")
+                data = cur.fetchall()
+                if data == []:
+                    print("No birthday")
+                else:
+                    for x in data:
+                        print(x)
+                        if datas[0][1] == True:
+                            if datas[0][2] == None:
+                                pass
+                            else:
+                                channel = await self.client.fetch_channel(datas[0][2])
+                                print(channel)
+                                if x[1] == datetime.now().strftime("%d/%m"):
+                                    print("Birthday")
+                                    print(x[0])
+                                    await channel.send(f"Happy birthday <@{x[0]}>! :tada:")
+                        else:
+                            pass
 
         
         
