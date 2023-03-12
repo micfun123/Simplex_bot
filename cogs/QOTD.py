@@ -63,7 +63,7 @@ class QOTD(commands.Cog):
             await ctx.respond("QOTD disabled!")
         await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
-    @tasks.loop(time=time(18,30))
+    @tasks.loop(time=time(00,00))
     async def qotd(self):
         con = sqlite3.connect('databases/qotd.db')
         cur = con.cursor()
