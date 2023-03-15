@@ -401,16 +401,11 @@ class utilities(commands.Cog):
     @commands.command(name="remind", aliases=["remindme"], help = "Remind me to do something")
     async def _remind_(self, ctx, time: str, *, message):
         await ctx.message.delete()
-        await ctx.send(f"Reminding you in {time} (mins) to {message}")
+        #dont allow any pings
+        message = message.replace("@", "")
+        await ctx.send(f"Reminding {ctx.message.author.mention} to {message} in {time} minutes")
         await asyncio.sleep(int(time)*60)
         await ctx.send(f"Reminding {ctx.message.author.mention} to {message}")
-
-    @commands.slash_command(name="remind", description = "Remind me to do something")
-    async def _remind__slash(self, ctx, time: str, *, message):
-        await ctx.respond(f"Reminding you in {time} (mins) to {message}")
-        await asyncio.sleep(int(time)*60)
-        await ctx.send(f"Reminding {ctx.author.mention} to {message}")
-
 
     #detect if user joins a vc
     @commands.Cog.listener()
