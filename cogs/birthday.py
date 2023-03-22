@@ -269,6 +269,9 @@ class Birthday(commands.Cog):
                             if datas[0][2] == None:
                                 pass
                             else:
+                                #if user is in server
+                                if i.get_member(x[0]) == None:
+                                    pass
                                 channel = await self.client.fetch_channel(datas[0][2])
                                 print(channel)
                                 print(x[1])
