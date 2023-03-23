@@ -291,6 +291,7 @@ class Birthday(commands.Cog):
             con.commit()
             con.close()
             await ctx.respond("Done")
+            await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
 
 def setup(bot):
