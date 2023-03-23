@@ -978,13 +978,13 @@ class Fun(commands.Cog):
         img = snuggle(member.avatar.url,ctx.author.avatar.url)
         await ctx.respond(file=discord.File(img, "hug.gif"))
 
-    @commands.slash_command(name="compatibility_check",description="Check how compatible you are with another user"	)
-    async def compatibility_check(self,ctx, member : discord.Member):
-        await ctx.respond(f"{ctx.author.mention} and {member.mention} are {random.randint(0,100)}% compatible :heart:")
+    #@commands.slash_command(name="compatibility_check",description="Check how compatible you are with another user"	)
+    #async def compatibility_check(self,ctx, member : discord.Member):
+    #    await ctx.respond(f"{ctx.author.mention} and {member.mention} are {random.randint(0,100)}% compatible :heart:")
 
-    @commands.command(name="match_making")
-    async def match_making(self,ctx):
-        await ctx.send(f"{ctx.author.mention} and {random.choice(ctx.guild.members)} are {random.randint(0,100)}% compatible :heart:")
+    #@commands.command(name="match_making")
+    #async def match_making(self,ctx):
+    #    await ctx.send(f"{ctx.author.mention} and {random.choice(ctx.guild.members)} are {random.randint(0,100)}% compatible :heart:")
 
     
 
