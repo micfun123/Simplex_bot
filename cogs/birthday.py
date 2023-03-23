@@ -37,7 +37,7 @@ class Birthday(commands.Cog):
     async def makeservertablebirthday(self,ctx):
         con = sqlite3.connect("databases/server_brithdays.db")
         cur = con.cursor()
-        cur.execute("CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int)")
+        cur.execute("CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int,birthdaymessage text)")
         con.commit()
         con.close()
         con = sqlite3.connect("databases/user_brithdays.db")
@@ -197,49 +197,6 @@ class Birthday(commands.Cog):
         await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
 
 
-    @commands.command(name="forceannouncmentsbirthdays")
-    @commands.is_owner()
-    async def forceannouncmentsbirthdays(self,ctx):
-        print("Birthday announcments")
-        for i in self.client.guilds:
-                print(i)
-                con = sqlite3.connect("databases/server_brithdays.db")
-                cur = con.cursor()
-                datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (i.id,))
-                datas = cur.fetchall()
-                if datas == []:
-                    cur.execute("INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)", (i.id, False, None))
-                    con.commit()
-                    con.close()
-                else:
-                    pass
-                con = sqlite3.connect("databases/user_brithdays.db")
-                cur = con.cursor()
-                data = cur.execute("SELECT * FROM birthday")
-                data = cur.fetchall()
-                if data == []:
-                    print("No birthday")
-                    #does not work below here
-                else:
-                    for x in data:
-                        print(x)
-                        if datas[0][1] == True:
-                            if datas[0][2] == None:
-                                pass
-                            else:
-                                channel = await self.client.fetch_channel(datas[0][2])
-                                print(channel)
-                                print(x[1])
-                                print(datetime.now().strftime("%d/%m"))
-                                if x[1] == datetime.now().strftime("%d/%m"):
-                                    print("Birthday")
-                                    print(x[0])
-                                    await channel.send(f"Happy birthday <@{x[0]}>! :tada:")
-                        else:
-                            pass
-        await ctx.send("Done")
-
-
     @tasks.loop(time=time(7,00))
     async def birthday_announcments(self):
         print("Birthday announcments")
@@ -273,13 +230,17 @@ class Birthday(commands.Cog):
                                 if i.get_member(x[0]) == None:
                                     pass
                                 channel = await self.client.fetch_channel(datas[0][2])
+                                message = datas[0][3]
+                                if message == None:
+                                    message = ":tada:"
+
                                 print(channel)
                                 print(x[1])
                                 print(datetime.now().strftime("%d/%m"))
                                 if x[1] == datetime.now().strftime("%d/%m"):
                                     print("Birthday")
                                     print(x[0])
-                                    await channel.send(f"Happy birthday <@{x[0]}>! :tada:")
+                                    await channel.send(f"Happy birthday <@{x[0]}>! \n {message}")
                         else:
                             pass
 
@@ -303,6 +264,33 @@ class Birthday(commands.Cog):
     #    con.close()
     #    
 
+    @commands.command()
+    @commands.is_owner()
+    async def add_message_to_birthday(self,ctx,*,message):
+        con = sqlite3.connect("databases/server_brithdays.db")
+        cur = con.cursor()
+        #creat a new column
+        cur.execute("ALTER TABLE server ADD COLUMN birthdaymessage TEXT")
+        #set the message
+        cur.execute("UPDATE server SET birthdaymessage = ?", (message,))
+        con.commit()
+        con.close()
+        await ctx.send("Done")
+
+    @commands.slash_command(name="birthday_message", description="Add a message to the birthday announcment")
+    @commands.has_permissions(administrator=True)
+    async def add_message_to_birthday__slash(self,ctx,*,message):
+        con = sqlite3.connect("databases/server_brithdays.db")
+        cur = con.cursor()
+        data = cur.execute("SELECT * FROM server WHERE ServerID=?", (ctx.guild.id,))
+        data = cur.fetchall()
+        if data == []:
+            await ctx.respond("You have not set a birthday channel")
+        else:
+            cur.execute("UPDATE server SET birthdaymessage = ? WHERE ServerID=?", (message, ctx.guild.id,))
+            con.commit()
+            con.close()
+            await ctx.respond("Done")
 
 
 def setup(bot):
