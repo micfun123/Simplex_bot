@@ -200,14 +200,14 @@ class Birthday(commands.Cog):
     @tasks.loop(time=time(7,00))
     async def birthday_announcments(self):
         print("Birthday announcments")
-        for i in self.client.guilds:
-                print(i)
+        for server in self.client.guilds:
+                print(server)
                 con = sqlite3.connect("databases/server_brithdays.db")
                 cur = con.cursor()
-                datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (i.id,))
+                datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (server.id,))
                 datas = cur.fetchall()
                 if datas == []:
-                    cur.execute("INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)", (i.id, False, None))
+                    cur.execute("INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)", (server.id, False, None))
                     con.commit()
                     con.close()
                 else:
@@ -221,26 +221,27 @@ class Birthday(commands.Cog):
                     #does not work below here
                 else:
                     for x in data:
-                        print(x)
                         if datas[0][1] == True:
                             if datas[0][2] == None:
                                 pass
                             else:
-                                #if user is in server
-                                if i.get_member(x[0]) == None:
-                                    pass
-                                channel = await self.client.fetch_channel(datas[0][2])
-                                message = datas[0][3]
-                                if message == None:
-                                    message = ":tada:"
+                                user = await self.client.fetch_user(x[0])
+                                if user in server.members:
+                                    channel = await self.client.fetch_channel(datas[0][2])
+                                    message = datas[0][3]
+                                    if message == None:
+                                        message = ":tada:"
 
-                                print(channel)
-                                print(x[1])
-                                print(datetime.now().strftime("%d/%m"))
-                                if x[1] == datetime.now().strftime("%d/%m"):
-                                    print("Birthday")
-                                    print(x[0])
-                                    await channel.send(f"Happy birthday <@{x[0]}>! \n {message}")
+                                    print(channel)
+                                    print(x[1])
+                                    print(datetime.now().strftime("%d/%m"))
+                                    if x[1] == datetime.now().strftime("%d/%m"):
+                                        print("Birthday")
+                                        print(x[0])
+                                        await channel.send(f"Happy birthday <@{x[0]}>! \n {message}")
+                                else:
+                                    username = await self.client.fetch_user(x[0])
+                                    print(f"User {username} not in server {x[0]} {server}")
                         else:
                             pass
 
