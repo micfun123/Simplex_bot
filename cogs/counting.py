@@ -190,12 +190,12 @@ class Counting(commands.Cog):
         async with aiosqlite.connect("./databases/counting.db") as db:
             highestserver = await db.execute("SELECT highest, Guild_id FROM counting ORDER BY highest DESC LIMIT 10")
             highestserver = await highestserver.fetchall()
-            em = discord.Embed(title="Counting Server Leaderboard", description="The top 10 servers for counting")
-            num = 1
+            if highestserver is None:
+                return await ctx.respond("No one has counted yet")
+            em = discord.Embed(title="Counting Leaderboard", description="Top 10 highest counts")
             for i in highestserver:
                 guild = self.client.get_guild(i[1])
-                em.add_field(name=f"{num}: {guild.name}", value=f"{i[0]}",inline=False)
-                num += 1
+                em.add_field(name=f"{guild.name}", value=f"{i[0]}", inline=False)
             await ctx.respond(embed=em)
 
 
