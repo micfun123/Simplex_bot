@@ -76,7 +76,10 @@ class utilities(commands.Cog):
             description=description,
             color=discord.Color.blue()
         )
-        embed.set_thumbnail(url=ctx.guild.icon.url)
+        try:
+            embed.set_thumbnail(url=ctx.guild.icon.url)
+        except:
+            pass
         embed.add_field(name="Owner", value=owner, inline=True)
         embed.add_field(name="Server ID", value=id, inline=True)
         embed.add_field(name="Created: ", value=f"<t:{int(time.mktime(ctx.guild.created_at.timetuple()))}>", inline=True)
