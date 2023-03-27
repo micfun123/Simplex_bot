@@ -70,6 +70,8 @@ class utilities(commands.Cog):
         peopleusers = str(len([m for m in ctx.guild.members if not m.bot]))
         emoji_amount = str(len(ctx.guild.emojis))
         verificationlevel = str(ctx.guild.verification_level)     
+        if description == "None":
+            description = "No Server description"
 
         embed = discord.Embed(
             title=name + " Server Information",
