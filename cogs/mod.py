@@ -425,7 +425,10 @@ class Moderation(commands.Cog):
         """
         Removes a role from all members.
         """
-        ctx.send(f"starting to remove {role} to all")
+        if role.position > ctx.guild.me.top_role.position:
+            await ctx.send("The role is higher than my highest role.")
+            return
+        await ctx.send(f"starting to remove {role} to all")
         for member in ctx.guild.members:
             await member.remove_roles(role)
         await ctx.send(f"{role} has been removed from all members.")
@@ -438,7 +441,10 @@ class Moderation(commands.Cog):
         """
         Adds a role to all members.
         """
-        ctx.send(f"starting to give {role} to all")
+        if role.position > ctx.guild.me.top_role.position:
+            await ctx.send("The role is higher than my highest role.")
+            return
+        await ctx.send(f"starting to give {role} to all")
         for member in ctx.guild.members:
             try:
                 await member.add_roles(role)
