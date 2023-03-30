@@ -239,8 +239,26 @@ class lookup(commands.Cog):
             await ctx.send("The dev has ran out of credit. Please DM the bot to let him know.")
 
 
-
+    @commands.slash_command(name="free_game", description="Get a free game")
+    async def free(self, ctx):
+        numnber = random.randint(0,100)
+        apiurl = "https://www.freetogame.com/api/games"
+        r = requests.get(apiurl)
+        json_data = r.json()
+        title = json_data[numnber]["title"]
+        url = json_data[numnber]["game_url"]
+        thumbnail = json_data[numnber]["thumbnail"]
+        short_description = json_data[numnber]["short_description"]
+        Embed = discord.Embed(title="Free Game", description=title, color=0x00ff00)
+        Embed.add_field(name="Link", value=url, inline=False)
+        Embed.add_field(name="Description", value=short_description, inline=False)
+        Embed.set_thumbnail(url=thumbnail)
         
+        await ctx.respond(embed=Embed)
+
+    
+    
+
 
 def setup(client):
     client.add_cog(lookup(client))

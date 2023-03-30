@@ -8,6 +8,8 @@ from os.path import isfile, join
 from datetime import datetime
 import subprocess
 from discordLevelingSystem import DiscordLevelingSystem
+import aiosqlite
+
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -157,6 +159,63 @@ class BotMakerCommands(commands.Cog):
         
 
 
+    #when a command is used, it will be logged
+    @commands.Cog.listener()
+    async def on_command(self, ctx):
+        #check if file exists
+        if os.path.isfile(f"databases/command_usage.db"):
+            async with aiosqlite.connect("databases/command_usage.db") as db:
+                #check if command is in database
+                async with db.execute("SELECT * FROM command_usage WHERE command = ?", (ctx.command.name,)) as cursor:
+                    data = await cursor.fetchall()
+                    #if command is not in database
+                    if len(data) == 0:
+                        await db.execute("INSERT INTO command_usage VALUES (?, ?, ?)", (ctx.command.name, 1, datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
+                        await db.commit()
+                    #if command is in database
+                    else:
+                        await db.execute("UPDATE command_usage SET times_used = ?, last_used = ? WHERE command = ?", (data[0][1] + 1, datetime.now().strftime("%d/%m/%Y %H:%M:%S"), ctx.command.name))
+                        await db.commit()
+
+        else:
+            async with aiosqlite.connect("databases/command_usage.db") as db:
+                await db.execute("CREATE TABLE command_usage (command TEXT, times_used INTEGER, last_used TEXT)")
+                await db.commit()
+
+    @commands.command()
+    @commands.check(micsid)
+    async def commandusage(self, ctx, command):
+        if os.path.isfile(f"databases/command_usage.db"):
+            async with aiosqlite.connect("databases/command_usage.db") as db:
+                async with db.execute("SELECT * FROM command_usage WHERE command = ?", (command,)) as cursor:
+                    data = await cursor.fetchall()
+                    if len(data) == 0:
+                        await ctx.send("Command not found")
+                    else:
+                        embed = discord.Embed(title = "Command Usage", description = f"Command: {data[0][0]}\nTimes used: {data[0][1]}\nLast used: {data[0][2]}", color = 0xff00c8)
+                        await ctx.send(embed = embed)
+        else:
+            await ctx.send("Command not found")
+
+    @commands.command()
+    @commands.check(micsid)
+    async def commandusagelist(self, ctx):
+        if os.path.isfile(f"databases/command_usage.db"):
+            async with aiosqlite.connect("databases/command_usage.db") as db:
+                async with db.execute("SELECT * FROM command_usage") as cursor:
+                    data = await cursor.fetchall()
+                    if len(data) == 0:
+                        await ctx.send("No commands found")
+                    else:
+                        embed = discord.Embed(title = "Command Usage", description = "Command: Times used: Last used:", color = 0xff00c8)
+                        for i in data:
+                            embed.description += f"\n{i[0]}: {i[1]}: {i[2]}"
+                        await ctx.send(embed = embed)
+        else:
+            await ctx.send("No commands found")
+                
+
+        
 
 
 
