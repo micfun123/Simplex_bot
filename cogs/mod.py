@@ -459,6 +459,9 @@ class Moderation(commands.Cog):
         """
         Removes a role from a user.
         """
+        if role.position > ctx.guild.me.top_role.position:
+            await ctx.send("The role is higher than my highest role.")
+            return
         await user.remove_roles(role)
         await ctx.send(f"{role} has been removed from {user}.")
 
@@ -469,6 +472,9 @@ class Moderation(commands.Cog):
         """
         Adds a role to a user.
         """
+        if role.position > ctx.guild.me.top_role.position:
+            await ctx.send("The role is higher than my highest role.")
+            return
         await user.add_roles(role)
         await ctx.send(f"{role} has been added to {user}.")
 
@@ -483,7 +489,7 @@ class Moderation(commands.Cog):
             try:
                 await member.remove_roles(i)
             except:
-                print(f"Can't remove the role {i}")
+                print(f"Can't remove the role {i} I do not have the perms")
         await ctx.send(f"All roles have been removed from {member}.")
 
    #make ticket
