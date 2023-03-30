@@ -147,6 +147,7 @@ class GoodBye(commands.Cog):
         text = text.replace("{member.guild.member_count}", str(member.guild.member_count))
         text = text.replace("{member.account_age}", str(member.created_at))
         text = text.replace("{member.joined_at}", str(member.joined_at))
+        text = text.replace("{member.time_in_guild}", str(member.joined_at - member.created_at))
         
 
 
