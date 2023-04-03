@@ -194,6 +194,8 @@ class Counting(commands.Cog):
                 return await ctx.respond("No one has counted yet")
             em = discord.Embed(title="Counting Leaderboard", description="Top 10 highest counts")
             for i in highestserver:
+                if i[0] is None:
+                    pass
                 guild = await self.client.fetch_guild(i[1])
                 em.add_field(name=f"{guild.name}", value=f"{i[0]}", inline=False)
             await ctx.respond(embed=em)
