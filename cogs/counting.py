@@ -194,10 +194,15 @@ class Counting(commands.Cog):
                 return await ctx.respond("No one has counted yet")
             em = discord.Embed(title="Counting Leaderboard", description="Top 10 highest counts")
             for i in highestserver:
-                guild = await self.client.fetch_guild(i[1])
-                if guild is None:
-                    continue
-                em.add_field(name=f"{guild.name}", value=f"{i[0]}", inline=False)
+                try:
+                    if i[0] is None:
+                        continue
+                    guild = await self.client.fetch_guild(i[1])
+                    if guild is None:
+                        continue
+                    em.add_field(name=f"{guild.name}", value=f"{i[0]}", inline=False)
+                except:
+                    pass
             await ctx.respond(embed=em)
             await ctx.followup.send("Thank you for using simplex. please consider voting or donating so I can stay running.", ephemeral=True)
 
