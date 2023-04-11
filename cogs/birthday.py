@@ -4,7 +4,11 @@ import asyncio
 import os
 import json
 import sqlite3
+from dotenv import load_dotenv
+import requests
 from datetime import datetime,time
+
+load_dotenv()
 
 class Birthday(commands.Cog):
     """Birthday commands."""
@@ -47,16 +51,16 @@ class Birthday(commands.Cog):
         con.close()
         await ctx.send("Done")
 #
-    @commands.command(hidden = True)
-    @commands.is_owner()
-    async def setallbithday(self,ctx):
-        for i in self.client.guilds:
-            con = sqlite3.connect("databases/server_brithdays.db")
-            cur = con.cursor()
-            cur.execute("INSERT INTO server(ServerID, Servertoggle,birthdaychannel) VALUES(?, ?,?)", (i.id, False,None))
-            await ctx.send(f"{i} has been set")
-            con.commit()
-            con.close()
+    #@commands.command(hidden = True)
+    #@commands.is_owner()
+    #async def setallbithday(self,ctx):
+    #    for i in self.client.guilds:
+    #        con = sqlite3.connect("databases/server_brithdays.db")
+    #        cur = con.cursor()
+    #        cur.execute("INSERT INTO server(ServerID, Servertoggle,birthdaychannel) VALUES(?, ?,?)", (i.id, False,None))
+    #        await ctx.send(f"{i} has been set")
+    #        con.commit()
+    #        con.close()
         
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -110,31 +114,43 @@ class Birthday(commands.Cog):
 
     @commands.slash_command(name="setbirthday", description="Set your birthday use day then month")
     async def setbirthday__slash(self, ctx, day: int, month: int):
-        if day > 31 or day < 1 or month > 12 or month < 1:
-            await ctx.respond("Invalid date.")
+        tocken = os.getenv("TOPGG_TOKEN")
+        api = requests.get(f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}", headers={"Authorization": tocken, "Content-Type": "application/json"})
+        data = api.json()
+        print(api)
+        print(data)
+        voted = data["voted"]
+        #if the api does not return a 200 status code
+        if api.status_code != 200:
+            voted = 1
+            print("api error")
+        if voted == 0:
+            await ctx.respond("You need to have voted for simplex in the last 24 hours to set your birthday. Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote")
+            return
         else:
-            #force 2 digit date
-            if day < 10:
-                day = f"0{day}"
-            if month < 10:
-                month = f"0{month}"
-
-            con = sqlite3.connect("databases/user_brithdays.db")
-            cur = con.cursor()
-            data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
-            data = cur.fetchall()
-            if data == []:
-                cur.execute("INSERT INTO birthday(UsersID, birthday) VALUES(?, ?)", (ctx.author.id, f"{day}/{month}"))
-                con.commit()
-                con.close()
-                await ctx.respond("Your birthday has been set")
+            if day > 31 or day < 1 or month > 12 or month < 1:
+                await ctx.respond("Invalid date.")
             else:
-                cur.execute("UPDATE birthday SET birthday = ? WHERE UsersID=?", (f"{day}/{month}", ctx.author.id,))
-                con.commit()
-                con.close()
-                await ctx.respond("Your birthday has been updated")
-            await ctx.followup.send("If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D", ephemeral=True)
+                #force 2 digit date
+                if day < 10:
+                    day = f"0{day}"
+                if month < 10:
+                    month = f"0{month}"
 
+                con = sqlite3.connect("databases/user_brithdays.db")
+                cur = con.cursor()
+                data = cur.execute("SELECT * FROM birthday WHERE UsersID=?", (ctx.author.id,))
+                data = cur.fetchall()
+                if data == []:
+                    cur.execute("INSERT INTO birthday(UsersID, birthday) VALUES(?, ?)", (ctx.author.id, f"{day}/{month}"))
+                    con.commit()
+                    con.close()
+                    await ctx.respond("Your birthday has been set")
+                else:
+                    cur.execute("UPDATE birthday SET birthday = ? WHERE UsersID=?", (f"{day}/{month}", ctx.author.id,))
+                    con.commit()
+                    con.close()
+                    await ctx.respond("Your birthday has been updated")
         
     @commands.command(name="setbirthday", help = "Set your birthday use day then month")
     async def setbirthday_commands(self, ctx, day: int, month: int):
