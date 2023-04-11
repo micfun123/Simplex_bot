@@ -125,7 +125,7 @@ class Birthday(commands.Cog):
             voted = 1
             print("api error")
         if voted == 0:
-            await ctx.respond("You need to have voted for simplex in the last 24 hours to set your birthday. Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote")
+            await ctx.respond("You need to have voted for simplex in the last 24 hours to set your birthday. Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote",ephemeral=True)
             return
         else:
             if day > 31 or day < 1 or month > 12 or month < 1:
