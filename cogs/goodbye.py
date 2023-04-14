@@ -313,7 +313,8 @@ class Goodbye(commands.Cog):
         text = text.replace("{member.guild.member_count}", str(member.guild.member_count))
         text = text.replace("{member.account_age}", str(member.created_at))
         text = text.replace("{member.joined_at}", str(member.joined_at))
-        text = text.replace("{member.time_in_guild}", str(member.joined_at - member.created_at))
+        timeinguilddays = str(member.joined_at - member.created_at).split(" ")[0]
+        text = text.replace("{member.time_in_guild_days}", timeinguilddays)
         text = text.replace("{member.top_role}", member.top_role.name)
         text = text.replace("{member.roles}", ", ".join([role.name for role in member.roles]))
         text = text.replace("{member.guild.owner}", member.guild.owner.name)
