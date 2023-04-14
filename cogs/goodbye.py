@@ -289,7 +289,7 @@ class Goodbye(commands.Cog):
                 textsize = draw.textsize(member.name, font=font)
                 draw.text((textlocation[0] - textsize[0] / 2, 550), f"Goodbye {member.name}!", (255, 255, 255), font=font)
                 font = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
-                draw.text((800, 700), f"You are the {member.guild.member_count}th member!", (255, 255, 255), font=font)
+                draw.text((800, 700), f"There are now {member.guild.member_count} members!", (255, 255, 255), font=font)
 
                 tosend = BytesIO()
                 background.save(tosend, format="PNG")
