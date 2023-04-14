@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 import requests
 import textwrap
+from tools import log
 
 
 
@@ -276,23 +277,28 @@ class Goodbye(commands.Cog):
             return
 
         if card_enabled == 1:
-            background = Image.open("./images/goodbye.png")
-            avatar = Image.open(requests.get(member.avatar.url, stream=True).raw)
-            
-            avatar = avatar.resize((300, 300))
-            background.paste(avatar, (1000, 200))
-            draw = ImageDraw.Draw(background)
-            font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
-            textlocation = (975, 200)
-            textsize = draw.textsize(member.name, font=font)
-            draw.text((textlocation[0] - textsize[0] / 2, 550), f"Goodbye {member.name}!", (255, 255, 255), font=font)
-            font = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
-            draw.text((800, 700), f"You are the {member.guild.member_count}th member!", (255, 255, 255), font=font)
-            
-            tosend = BytesIO()
-            background.save(tosend, format="PNG")
-            tosend.seek(0)
-            await member.guild.get_channel(channel).send(file=discord.File(tosend, "goodbye.png"))
+            try:
+                background = Image.open("./images/goodbye.png")
+                avatar = Image.open(requests.get(member.avatar.url, stream=True).raw)
+
+                avatar = avatar.resize((300, 300))
+                background.paste(avatar, (1000, 200))
+                draw = ImageDraw.Draw(background)
+                font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
+                textlocation = (975, 200)
+                textsize = draw.textsize(member.name, font=font)
+                draw.text((textlocation[0] - textsize[0] / 2, 550), f"Goodbye {member.name}!", (255, 255, 255), font=font)
+                font = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
+                draw.text((800, 700), f"You are the {member.guild.member_count}th member!", (255, 255, 255), font=font)
+
+                tosend = BytesIO()
+                background.save(tosend, format="PNG")
+                tosend.seek(0)
+                await member.guild.get_channel(channel).send(file=discord.File(tosend, "goodbye.png"))
+            except Exception as e:
+                log(e)
+                print(e)
+
             
 
 
@@ -308,11 +314,15 @@ class Goodbye(commands.Cog):
         text = text.replace("{member.account_age}", str(member.created_at))
         text = text.replace("{member.joined_at}", str(member.joined_at))
         text = text.replace("{member.time_in_guild}", str(member.joined_at - member.created_at))
+        text = text.replace("{member.top_role}", member.top_role.name)
+        text = text.replace("{member.roles}", ", ".join([role.name for role in member.roles]))
+        text = text.replace("{member.guild.owner}", member.guild.owner.name)
         em = discord.Embed(title=f"Goodbye {member.name}!", description=text)
         if textorembed == 1:
             await channel.send(f"{member.mention} \n {text}")
         else:
             await channel.send(embed=em, content=member.mention)
+
 
 
 
