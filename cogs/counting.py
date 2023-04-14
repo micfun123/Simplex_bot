@@ -29,59 +29,7 @@ async def counting(msg, guild, channel, m):
     except:
         return    
     
-    #con = sqlite3.connect("databases/counting.db")
-    #cur = con.cursor()
-    ###get counting channel
-    #countingchannel = cur.execute("SELECT counting_channel FROM counting WHERE Guild_id = ?", (guild.id,)).fetchone()[0]
-    #if countingchannel is None:
-    #    return
-    #if countingchannel != channel.id:
-    #    return
-    #else:
-    #    ##get last number
-    #    lastnumber = cur.execute("SELECT lastcounter FROM counting WHERE Guild_id = ?", (guild.id,)).fetchone()[0]
-    #    lastuser = cur.execute("SELECT last_user FROM counting WHERE Guild_id = ?", (guild.id,)).fetchone()[0]
-    #    highest = cur.execute("SELECT highest FROM counting WHERE Guild_id = ?", (guild.id,)).fetchone()[0]
-    #    if lastnumber is None:
-    #        cur.execute("UPDATE counting SET lastcounter = ? WHERE Guild_id = ?", (msg, guild.id))
-    #        con.commit()
-    #        con.close()
-    #        return
-    #    if msg == lastnumber + 1:
-    #        if lastuser == m.author.id:
-    #            await m.add_reaction("❌")
-    #            em = discord.Embed(title=f"{m.author.display_name}, You ruined it!", description="Take it in turns and stop being selfish\nCount reset to zero")
-    #            cur.execute("UPDATE counting SET lastcounter = ? WHERE Guild_id = ?", (0, guild.id))
-    #            cur.execute("UPDATE counting SET last_user = ? WHERE Guild_id = ?", (None, guild.id))
-    #            con.commit()
-    #            con.close()
-    #            return await channel.send(embed=em)
-    #        else:
-    #            
-    #            cur.execute("UPDATE counting SET lastcounter = ? WHERE Guild_id = ?", (msg, guild.id))
-    #            cur.execute("UPDATE counting SET last_user = ? WHERE Guild_id = ?", (m.author.id, guild.id))
-    #            if msg == highest+1:
-    #                cur.execute("UPDATE counting SET highest = ? WHERE Guild_id = ?", (msg, guild.id))
-    #                await m.add_reaction("☑")
-    #            else:
-    #                await m.add_reaction("✅")
-    #            con.commit()
-    #            con.close()
-    #            if msg == 69:
-    #                await channel.send("nice")
-    #            if msg == 420:
-    #                await channel.send("nice")
-    #            if msg == 42069:
-    #                await channel.send("You have found the meaning of life.")
-    #            return
-    #    else:
-    #        await m.add_reaction("❌")
-    #        em = discord.Embed(title=f"{m.author.display_name}, You ruined it!", description=f"Count reset to zero. you were supposed to count {lastnumber + 1}")
-    #        cur.execute("UPDATE counting SET lastcounter = ? WHERE Guild_id = ?", (0, guild.id))
-    #        cur.execute("UPDATE counting SET last_user = ? WHERE Guild_id = ?", (None, guild.id))
-    #        con.commit()
-    #        con.close()
-    #        return await channel.send(embed=em)
+    
     
     async with aiosqlite.connect("./databases/counting.db") as db:
         counting_channel = await db.execute("SELECT counting_channel FROM counting WHERE Guild_id = ?", (guild.id,))
