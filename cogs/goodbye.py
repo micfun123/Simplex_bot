@@ -235,28 +235,28 @@ class Goodbye(commands.Cog):
     #    await dump_data(data)
     #    await ctx.send("Done")
 
-    @commands.command()
-    @commands.is_owner()
-    async def goodbye_database_make(self, ctx):
-        async with aiosqlite.connect("./databases/Goodbye.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS goodbye (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)")
-            await db.commit()
-            await ctx.send("database made Now attempting to add all guilds to the database")
-            for guild in self.client.guilds:
-                try:
-                    await db.execute("INSERT INTO goodbye VALUES (?, ?, ?, ?, ?, ?)", (guild.id, None, None, None, None, 0))
-                    await db.commit()
-                except Exception as e:
-                    await ctx.send(f"Error: {e}")
-                    await ctx.send(f"Error adding {guild} to database")
-            await ctx.send("Done")
-            #convert the old database to the new one
-            data = await get_data()
-            for guild in self.client.guilds:
-                for i in data:
-                    if i["guild_id"] == guild.id:
-                        await db.execute("UPDATE goodbye SET channel = ?, text = ?, enabled = ? WHERE guild_id = ?", (i["channel"], i["text"], i["enabled"], guild.id))
-                        await db.commit()
+    #@commands.command()
+    #@commands.is_owner()
+    #async def goodbye_database_make(self, ctx):
+    #    async with aiosqlite.connect("./databases/Goodbye.db") as db:
+    #        await db.execute("CREATE TABLE IF NOT EXISTS goodbye (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)")
+    #        await db.commit()
+    #        await ctx.send("database made Now attempting to add all guilds to the database")
+    #        for guild in self.client.guilds:
+    #            try:
+    #                await db.execute("INSERT INTO goodbye VALUES (?, ?, ?, ?, ?, ?)", (guild.id, None, None, None, None, 0))
+    #                await db.commit()
+    #            except Exception as e:
+    #                await ctx.send(f"Error: {e}")
+    #                await ctx.send(f"Error adding {guild} to database")
+    #        await ctx.send("Done")
+    #        #convert the old database to the new one
+    #        data = await get_data()
+    #        for guild in self.client.guilds:
+    #            for i in data:
+    #                if i["guild_id"] == guild.id:
+    #                    await db.execute("UPDATE goodbye SET channel = ?, text = ?, enabled = ? WHERE guild_id = ?", (i["channel"], i["text"], i["enabled"], guild.id))
+    #                    await db.commit()
 
 
     @commands.Cog.listener()
