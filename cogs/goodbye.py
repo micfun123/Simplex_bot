@@ -2,10 +2,12 @@ import json
 from discord import Option
 import discord
 from discord.ext import commands
+import time
 import discord.ui
 import aiosqlite
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
+import datetime
 import textwrap
 import requests
 import textwrap
@@ -313,7 +315,10 @@ class Goodbye(commands.Cog):
         text = text.replace("{member.guild.member_count}", str(member.guild.member_count))
         text = text.replace("{member.account_age}", str(member.created_at))
         text = text.replace("{member.joined_at}", str(member.joined_at))
-        timeinguilddays = str(member.joined_at - member.created_at).split(" ")[0]
+        timeinguilddays = str(member.joined_at - datetime.datetime.now())
+        timeinguilddays = timeinguilddays.split(" ")
+        timeinguilddays = timeinguilddays[0]
+        timeinguilddays = timeinguilddays + " days"
         text = text.replace("{member.time_in_guild}", timeinguilddays)
         text = text.replace("{member.top_role}", member.top_role.name)
         text = text.replace("{member.roles}", ", ".join([role.name for role in member.roles]))
