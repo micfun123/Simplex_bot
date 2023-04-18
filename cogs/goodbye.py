@@ -10,7 +10,8 @@ import textwrap
 import requests
 import textwrap
 from tools import log
-import datetime
+from datetime import datetime , timedelta, timezone
+
 
 
 
@@ -314,11 +315,10 @@ class Goodbye(commands.Cog):
         text = text.replace("{member.guild.member_count}", str(member.guild.member_count))
         text = text.replace("{member.account_age}", str(member.created_at))
         text = text.replace("{member.joined_at}", str(member.joined_at))
-        timeinguilddays = str(member.joined_at - datetime.datetime.now(datetime.timezone.utc)).split(" ")[0]
-        timeinguilddays = timeinguilddays.replace("-", "")
-        timeinguilddays = timeinguilddays + " days"
-
-        text = text.replace("{member.time_in_guild}", timeinguilddays)
+        #timeleftat can't subtract offset-naive and offset-aware datetimes
+        timeinserver = datetime.now(tz=timezone.utc) - member.joined_at.replace(tzinfo=timezone.utc )
+        timeinserver = f"{timeinserver.days} days, {timeinserver.seconds // 3600} hours, {timeinserver.seconds // 60 % 60} minutes, {timeinserver.seconds % 60} seconds"
+        text = text.replace("{member.time_in_guild}", timeinserver)
         text = text.replace("{member.top_role}", member.top_role.name)
         text = text.replace("{member.roles}", ", ".join([role.name for role in member.roles]))
         text = text.replace("{member.guild.owner}", member.guild.owner.name)
