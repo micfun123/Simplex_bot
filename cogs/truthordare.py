@@ -29,7 +29,9 @@ def get_truth(interaction):
 def get_dare(interaction):
     with open("databases/dare.txt", "r") as f:
             lines = f.readlines()
-    embed = discord.Embed(title="Dare", description=random.choice(lines), color=0xFF0000)
+    text = random.choice(lines)
+    text = text.replace("{{randomly_selected_userer}}", f"{random.choice(interaction.guild.members).mention}")
+    embed = discord.Embed(title="Dare", description=text, color=0xFF0000)
     embed.set_footer(text=f"Requested by {interaction.user.name}")
     return embed
 
