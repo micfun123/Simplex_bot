@@ -3,10 +3,12 @@ from discord import Embed
 import wikipedia
 from discord.ext import commands
 import json
+import aiosqlite
 import os
 import discord
 import random
 from tools import log
+import asyncio
 import requests
 
 
@@ -256,7 +258,77 @@ class lookup(commands.Cog):
         
         await ctx.respond(embed=Embed)
 
-    
+    @commands.command()
+    async def makerss_file(self, ctx):
+        async with aiosqlite.connect("databases/rss.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+            await db.commit()
+        await ctx.send("Done")
+
+    @commands.slash_command(description="Allows you to manage your server RSS feeds")
+    async def rss(self, ctx, *, options:discord.Option(str, "Select option", required=True, choices=["add", "remove", "list", "update"])):
+        if options == "list":
+            #open the sql database
+            async with aiosqlite.connect("databases/rss.db") as db:
+                cursor = await db.execute("SELECT * FROM rss")
+                rows = await cursor.fetchall()
+                if len(rows) == 0:
+                    await ctx.respond("No feeds have been added yet")
+                else:
+                    Embed = discord.Embed(title="RSS Feeds", description="All the RSS feeds in the database", color=0x00ff00)
+                    for row in rows:
+                        Embed.add_field(name=row[0], value=row[1], inline=False)
+                    await ctx.respond(embed=Embed)
+        elif options == "add":
+            async with aiosqlite.connect("databases/rss.db") as db:
+                await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+                await db.commit()
+            await ctx.respond("What is the name of the feed?")
+            def check(m):
+                return m.author == ctx.author and m.channel == ctx.channel
+            try:
+                name = await self.client.wait_for("message", check=check, timeout=60)
+            except asyncio.TimeoutError:
+                await ctx.respond("You took too long to respond")
+            else:
+                await ctx.respond("What is the url of the feed?")
+                try:
+                    url = await self.client.wait_for("message", check=check, timeout=60)
+                except asyncio.TimeoutError:
+                    await ctx.respond("You took too long to respond")
+                else:
+                    await ctx.respond("What channel do you want to send the feed to?")
+                    try:
+                        channel = await self.client.wait_for("message", check=check, timeout=60)
+                    except asyncio.TimeoutError:
+                        await ctx.respond("You took too long to respond")
+                    else:
+                        async with aiosqlite.connect("databases/rss.db") as db:
+                            await db.execute("INSERT INTO rss VALUES (?,?,?,?)", (name.content, url.content, channel.content, ctx.guild.id))
+                            await db.commit()
+                        await ctx.respond("Done")
+
+        elif options == "remove":
+            async with aiosqlite.connect("databases/rss.db") as db:
+                await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+                await db.commit()
+            await ctx.respond("What is the name of the feed you want to remove?")
+            def check(m):
+                return m.author == ctx.author and m.channel == ctx.channel
+            try:
+                name = await self.client.wait_for("message", check=check, timeout=60)
+            except asyncio.TimeoutError:
+                await ctx.respond("You took too long to respond")
+            else:
+                async with aiosqlite.connect("databases/rss.db") as db:
+                    await db.execute("DELETE FROM rss WHERE name=? AND guild=?", (name.content, ctx.guild.id))
+                    await db.commit()
+                await ctx.respond("Done removing feed")
+                
+            
+
+
+
     
 
 
