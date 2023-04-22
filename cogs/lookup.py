@@ -1,7 +1,7 @@
 from pydoc import describe
 from discord import Embed
 import wikipedia
-from discord.ext import commands
+from discord.ext import commands, tasks
 import json
 import aiosqlite
 import os
@@ -9,6 +9,7 @@ import discord
 import random
 from tools import log
 import asyncio
+import feedparser
 import requests
 
 
@@ -16,6 +17,7 @@ import requests
 class lookup(commands.Cog):
     def __init__(self, client): 
         self.client = client 
+        self.rss_loop.start()
 
 
 
@@ -261,7 +263,7 @@ class lookup(commands.Cog):
     @commands.command()
     async def makerss_file(self, ctx):
         async with aiosqlite.connect("databases/rss.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+            await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)")
             await db.commit()
         await ctx.send("Done")
 
@@ -304,7 +306,7 @@ class lookup(commands.Cog):
                         await ctx.respond("You took too long to respond")
                     else:
                         async with aiosqlite.connect("databases/rss.db") as db:
-                            await db.execute("INSERT INTO rss VALUES (?,?,?,?)", (name.content, url.content, channel.content, ctx.guild.id))
+                            await db.execute("INSERT INTO rss VALUES (?,?,?,?,?)", (name.content, url.content, channel.content, ctx.guild.id,None))
                             await db.commit()
                         await ctx.respond("Done")
 
@@ -326,7 +328,27 @@ class lookup(commands.Cog):
                 await ctx.respond("Done removing feed")
                 
             
-
+    @tasks.loop(seconds=60)
+    async def rss_loop(self):
+        print("Running RSS Loop")
+        async with aiosqlite.connect("databases/rss.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text, lastpost text)")
+            await db.commit()
+            cursor = await db.execute("SELECT * FROM rss")
+            rows = await cursor.fetchall()
+            for row in rows:
+                feed = feedparser.parse(row[1])
+                if row[4] == None:
+                    await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
+                    await db.commit()
+                else:
+                    if feed.entries[0].link != row[4]:
+                        channel = await self.client.fetch_channel(row[2])
+                        Embed = discord.Embed(title=feed.entries[0].title, description=feed.entries[0].description, color=0x00ff00)
+                        Embed.add_field(name="Link", value=feed.entries[0].link, inline=False)
+                        await channel.send(embed=Embed)
+                        await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
+                        await db.commit()
 
 
     
