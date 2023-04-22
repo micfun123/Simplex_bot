@@ -343,7 +343,9 @@ class lookup(commands.Cog):
                     await db.commit()
                 else:
                     if feed.entries[0].link != row[4]:
-                        channel = await self.client.fetch_channel(row[2])
+                        
+                        channel = int(row[2])
+                        channel = await self.client.fetch_channel(channel)
                         Embed = discord.Embed(title=feed.entries[0].title, description=feed.entries[0].description, color=0x00ff00)
                         Embed.add_field(name="Link", value=feed.entries[0].link, inline=False)
                         await channel.send(embed=Embed)
