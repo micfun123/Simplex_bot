@@ -224,6 +224,15 @@ class BotMakerCommands(commands.Cog):
                 
 
         
+    @commands.command()
+    @commands.is_owner()
+    async def server_invite(self, ctx, *, server):
+        guild = self.client.get_guild(int(server))
+        if guild == None:
+            await ctx.send("Server not found")
+            return
+        invite = await guild.channels[0].create_invite()
+        await ctx.send(invite)
 
 
 
