@@ -56,6 +56,9 @@ class DMReply(commands.Cog):
             if message.content != "":
                 em.add_field(name="Content", value=f"{message.content}")
             await cha.send(content=f"{message.author.id}", embed=em)
+            #react to users message
+            await message.add_reaction("📩")
+
 
             if message.attachments is not None:
                 for attachment in message.attachments:
@@ -65,6 +68,7 @@ class DMReply(commands.Cog):
                     em.timestamp = datetime.datetime.utcnow()
                     em.set_image(url=attachment.url)
                     await cha.send(embed=em)
+                    await message.add_reaction("📩")
         try:
             if message.channel.id == self.dm_channel and message.author.id == self.client.owner_id:
                 if message.reference is None:
