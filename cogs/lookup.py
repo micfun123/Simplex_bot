@@ -349,23 +349,63 @@ class lookup(commands.Cog):
             cursor = await db.execute("SELECT * FROM rss")
             rows = await cursor.fetchall()
             for row in rows:
-                try:
-                    feed = feedparser.parse(row[1])
-                    if row[4] == None:
+                
+                feed = feedparser.parse(row[1])
+                if row[4] == None:
+                    await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
+                    await db.commit()
+                else:
+                    if feed.entries[0].link != row[4]:
+                        channel = await self.client.fetch_channel(row[2])
+                        print(channel)
+                        Embed = discord.Embed(title=feed.entries[0].title, color=0x00ff00)
+
+                        try:
+                            Embed.description = feed.channel["description"]
+                        except:
+                            pass
+
+
+                        try:
+                            Embed.set_thumbnail(url=feed.channel["image"]["href"])
+                        except:
+                            try:
+                                Embed.set_thumbnail(url=feed.entries[0].media_thumbnail[0]["url"])
+                            except:
+                                pass
+
+                        try:
+                            Embed.author(name=feed.channel["title"])
+                        except:
+                            pass
+
+                        try:
+                            Embed.set_footer(text=feed.entries[0].author)
+                        except:
+                            pass
+
+                    
+                        Embed.add_field(name="Link", value=feed.entries[0].link, inline=False)
+
+                        try:
+                            Embed.add_field(name="Summary", value=feed.entries[0].description, inline=False)
+                        except:
+                            try:
+                                Embed.add_field(name="Summary", value=feed.entries[0].summary, inline=False)
+                            except:
+                                pass
+                            
+
+
+
+
+                        await channel.send(embed=Embed)
                         await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
                         await db.commit()
-                    else:
-                        if feed.entries[0].link != row[4]:
-                            channel = await self.client.fetch_channel(row[2])
-                            print(channel)
-                            Embed = discord.Embed(title=feed.entries[0].title, description=feed.entries[0].description, color=0x00ff00)
-                            Embed.add_field(name="Link", value=feed.entries[0].link, inline=False)
-                            await channel.send(embed=Embed)
-                            await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
-                            await db.commit()
-                except Exception as e:
-                    print(e)
-                    pass
+
+
+             
+
     @rss_loop.before_loop
     async def before_rss_loop(self):
         await self.client.wait_until_ready()
