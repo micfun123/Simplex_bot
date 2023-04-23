@@ -302,11 +302,23 @@ class lookup(commands.Cog):
                     await ctx.respond("What channel do you want to send the feed to?")
                     try:
                         channel = await self.client.wait_for("message", check=check, timeout=60)
+                        #remove the # from the channel
+                        channelinfo = channel.content.replace("#", "")
+                        #remove the < and > from the channel
+                        channelinfo = channelinfo.replace("<", "")
+                        channelinfo = channelinfo.replace(">", "")
+
+                        #verify the channel exists
+                        channelcheck = self.client.get_channel(int(channelinfo))
+                        if channelcheck == None:
+                            await ctx.respond("That channel does not exist")
+                            return
+                        
                     except asyncio.TimeoutError:
                         await ctx.respond("You took too long to respond")
                     else:
                         async with aiosqlite.connect("databases/rss.db") as db:
-                            await db.execute("INSERT INTO rss VALUES (?,?,?,?,?)", (name.content, url.content, channel.content, ctx.guild.id,None))
+                            await db.execute("INSERT INTO rss VALUES (?,?,?,?,?)", (name.content, url.content, channelinfo, ctx.guild.id,None))
                             await db.commit()
                         await ctx.respond("Done")
 
@@ -337,18 +349,27 @@ class lookup(commands.Cog):
             cursor = await db.execute("SELECT * FROM rss")
             rows = await cursor.fetchall()
             for row in rows:
-                feed = feedparser.parse(row[1])
-                if row[4] == None:
-                    await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
-                    await db.commit()
-                else:
-                    if feed.entries[0].link != row[4]:
-                        channel = await self.client.fetch_channel(row[2])
-                        Embed = discord.Embed(title=feed.entries[0].title, description=feed.entries[0].description, color=0x00ff00)
-                        Embed.add_field(name="Link", value=feed.entries[0].link, inline=False)
-                        await channel.send(embed=Embed)
+                try:
+                    feed = feedparser.parse(row[1])
+                    if row[4] == None:
                         await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
                         await db.commit()
+                    else:
+                        if feed.entries[0].link != row[4]:
+                            channel = await self.client.fetch_channel(row[2])
+                            print(channel)
+                            Embed = discord.Embed(title=feed.entries[0].title, description=feed.entries[0].description, color=0x00ff00)
+                            Embed.add_field(name="Link", value=feed.entries[0].link, inline=False)
+                            await channel.send(embed=Embed)
+                            await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
+                            await db.commit()
+                except Exception as e:
+                    print(e)
+                    pass
+    @rss_loop.before_loop
+    async def before_rss_loop(self):
+        await self.client.wait_until_ready()
+        print("RSS Loop is ready")
 
 
     
