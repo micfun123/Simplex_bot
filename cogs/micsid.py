@@ -80,6 +80,13 @@ class BotMakerCommands(commands.Cog):
     @commands.command(help="Dms all server owners")
     @commands.check(micsid)
     async def dm_owners(self,ctx,*, msg):
+        await ctx.send("Sending...")
+        log(f"DMing all owners with {msg}")
+        mins = 0
+        #predicts how long it will take
+        mins = len(self.client.guilds) * 0.1
+        await ctx.send(f"Estimated time: {mins} minutes")
+
         owners = []
         for server in self.client.guilds:
             tosend = server.owner
@@ -90,6 +97,7 @@ class BotMakerCommands(commands.Cog):
                 await i.send(msg)
             except:
                 await ctx.send(f"Counld not send to {i}")
+        await ctx.send("Done")
             
 
     @commands.command()
