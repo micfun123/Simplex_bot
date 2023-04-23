@@ -74,7 +74,9 @@ class Moderationsettings(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def announcement_embed(self, ctx,titel, *,  message):
-        #get all servers
+        #estimate time to send to all servers
+        time_to_send = len(self.client.guilds) * 0.05
+
         con = sqlite3.connect("databases/announcement.db")
         cur = con.cursor()
         total = 0
