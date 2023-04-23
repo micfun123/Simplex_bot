@@ -9,3 +9,4 @@ databases\DiscordLevelingSystem.db
 log.txt
 welcome.json
 databases/*.*
+prefixes.json
