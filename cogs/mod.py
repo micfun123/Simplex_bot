@@ -406,6 +406,8 @@ class Moderation(commands.Cog):
     @commands.command(help = "Remove a role from all members")
     @commands.has_guild_permissions(manage_roles=True)
     async def removeroleall(self, ctx, role: discord.Role):
+        predicted_time = len(ctx.guild.members) * 1.5
+        await ctx.send(f"starting to remove {role} to all. This will take {predicted_time}")
         """
         Removes a role from all members.
         """
@@ -425,6 +427,9 @@ class Moderation(commands.Cog):
         """
         Adds a role to all members.
         """
+        #predicte how long it will take based on the amount of members and rate limit
+        predicted_time = len(ctx.guild.members) * 1.5
+        await ctx.send(f"starting to give {role} to all. This will take {predicted_time} seconds")
         if role.position > ctx.guild.me.top_role.position:
             await ctx.send("The role is higher than my highest role.")
             return
