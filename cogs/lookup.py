@@ -269,6 +269,7 @@ class lookup(commands.Cog):
     #    await ctx.send("Done")
 
     @commands.slash_command(description="Allows you to manage your server RSS feeds")
+    @commands.has_permissions(manage_guild=True)
     async def rss(self, ctx, *, options:discord.Option(str, "Select option", required=True, choices=["add", "remove", "list", "update"])):
         if options == "list":
             #open the sql database
