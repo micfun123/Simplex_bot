@@ -10,3 +10,4 @@ log.txt
 welcome.json
 databases/*.*
 prefixes.json
+*.json
