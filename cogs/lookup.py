@@ -366,6 +366,7 @@ class lookup(commands.Cog):
                 except Exception as e:
                     print(e)
                     pass
+                
     @rss_loop.before_loop
     async def before_rss_loop(self):
         await self.client.wait_until_ready()

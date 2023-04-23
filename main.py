@@ -29,6 +29,7 @@ app.config["DISCORD_CLIENT_SECRET"] = os.getenv(
     "client_secret"
 )  # Discord client secret.
 app.config["DISCORD_REDIRECT_URI"] = "http://127.0.0.1:5000/callback"
+app.config["Owner_ID"] = os.getenv("owner_id")
 
 
 discord = DiscordOAuth2Session(app)
@@ -183,6 +184,29 @@ async def set_announcement_channel(guild_id):
     channel_id = urllib.parse.unquote(channel_id)
     await set_announcement_channel_tool(guild_id, channel_id)
     return redirect(url_for("dashboard_server", guild_id=guild_id))
+
+@app.route("/xp_leaderboard/<int:guild_id>")
+async def xp_leaderboard(guild_id):
+    if not await discord.authorized:
+        return redirect(url_for("login"))
+
+    guild = await ipc_client.request("get_guild", guild_id=guild_id)
+    if guild is None:
+        return redirect(
+            f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}&scope=bot&permissions=8&guild_id={guild_id}&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}'
+        )
+    servername = guild["name"]
+    name = (await discord.fetch_user()).name
+    #ipc request get xp leaderboard from cog 
+    leaderboard = await ipc_client.request("get_xp_leaderboard", guild_id=guild_id)
+    return await render_template(
+        "xp_leaderboard.html",
+        guild_id=guild_id,
+        servername=servername,
+        leaderboard=leaderboard,
+        name=name,
+    )
+
 
 
 if __name__ == "__main__":
