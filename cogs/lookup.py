@@ -260,12 +260,13 @@ class lookup(commands.Cog):
         
         await ctx.respond(embed=Embed)
 
-    @commands.command()
-    async def makerss_file(self, ctx):
-        async with aiosqlite.connect("databases/rss.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)")
-            await db.commit()
-        await ctx.send("Done")
+    #@commands.command()
+    #@commands.is_owner()
+    #async def makerss_file(self, ctx):
+    #    async with aiosqlite.connect("databases/rss.db") as db:
+    #        await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)")
+    #        await db.commit()
+    #    await ctx.send("Done")
 
     @commands.slash_command(description="Allows you to manage your server RSS feeds")
     async def rss(self, ctx, *, options:discord.Option(str, "Select option", required=True, choices=["add", "remove", "list", "update"])):
