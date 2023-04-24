@@ -595,6 +595,11 @@ class Moderation(commands.Cog):
         for i in roles:
             if i.name == "@everyone":
                 roles.remove(i)
+            if i.is_bot_managed:
+                roles.remove(i)
+
+
+
         #if roles are to long split them into 2 embeds
         if len(roles) > 25:
             for i in roles[:25]:
