@@ -593,9 +593,7 @@ class Moderation(commands.Cog):
         roles = ctx.guild.roles
         roles.reverse()
         for i in roles:
-            if i.name == "@everyone":
-                roles.remove(i)
-            if i.is_bot_managed():
+            if i.name == "@everyone" or i.is_bot_managed() or i.is_integration():
                 roles.remove(i)
 
 
