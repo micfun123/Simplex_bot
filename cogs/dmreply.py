@@ -1,5 +1,6 @@
 import discord
 import datetime
+import aiosqlite
 from discord.ext import commands
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
@@ -8,6 +9,31 @@ class DMReply(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.dm_channel = 935891510367494154
+
+    @commands.is_owner()
+    @commands.command()
+    async def blacklist(self, ctx, id: int):
+        async with aiosqlite.connect("databases/blacklist.db") as conn:
+            await conn.execute("INSERT INTO blacklist VALUES(?)", (id,))
+            await conn.commit()
+        await ctx.send(f"Added {id} to blacklist")
+
+    @commands.is_owner()
+    @commands.command()
+    async def unblacklist(self, ctx, id: int):
+        async with aiosqlite.connect("databases/blacklist.db") as conn:
+            await conn.execute("DELETE FROM blacklist WHERE id=?", (id,))
+            await conn.commit()
+        await ctx.send(f"Removed {id} from blacklist")
+
+
+    @commands.is_owner()
+    @commands.command()
+    async def blacklistmake(self, ctx):
+        async with aiosqlite.connect("databases/blacklist.db") as conn:
+            await conn.execute("CREATE TABLE blacklist(id int)")
+            await conn.commit()
+        await ctx.send("Done")
 
     @commands.command(aliases=['dmr'])
     @commands.check(micsid)
@@ -55,6 +81,13 @@ class DMReply(commands.Cog):
 
             if message.content != "":
                 em.add_field(name="Content", value=f"{message.content}")
+            async with aiosqlite.connect("databases/blacklist.db") as conn:
+                async with conn.execute("SELECT * FROM blacklist") as cursor:
+                    async for row in cursor:
+                        if message.author.id == row[0]:
+                            await message.author.send("You are blacklisted from messaging the bot")
+                            return
+                        
             await cha.send(content=f"{message.author.id}", embed=em)
             #react to users message
             await message.add_reaction("📩")
@@ -67,6 +100,12 @@ class DMReply(commands.Cog):
                     em = discord.Embed(title="** **", color=discord.Color.blue())
                     em.timestamp = datetime.datetime.utcnow()
                     em.set_image(url=attachment.url)
+                    async with aiosqlite.connect("databases/blacklist.db") as conn:
+                        async with conn.execute("SELECT * FROM blacklist") as cursor:
+                            async for row in cursor:
+                                if message.author.id == row[0]:
+                                    await message.author.send("You are blacklisted from messaging the bot")
+                                    return
                     await cha.send(embed=em)
                     await message.add_reaction("📩")
         try:
