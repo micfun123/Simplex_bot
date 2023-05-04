@@ -1,8 +1,8 @@
 import random
 import asyncio
+import discord
 import aiosqlite
-from discord.ext import commands
-from pycord import Embed
+from discord.ext import commands 
 
 class Giveaway(commands.Cog):
     def __init__(self, client):
@@ -71,7 +71,7 @@ class Giveaway(commands.Cog):
                         winner_string = "The winners are:\n"
                         for winner in winners:
                             winner_string += "<@" + str(winner) + ">\n"
-                    embed = Embed(title=f"Giveaway Ended - {row[3]}", description=winner_string, color=0x00FF00)
+                    embed = discord.Embed(title=f"Giveaway Ended - {row[3]}", description=winner_string, color=0x00FF00)
                     await channel.send(embed=embed)
                     await self.db.execute("DELETE FROM giveaways WHERE id = ?", (row[0],))
                     await self.db.commit()
