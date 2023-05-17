@@ -35,6 +35,8 @@ class Events(commands.Cog):
         embed.add_field(name="Bot Announcements", value="Use `.set_announcment_channel [channel]` to set a channel for simplex announcements. Theses Announcments will include bug fixes and updates")
         embed.add_field(name="Support", value="If you need support feel free to dm Me (the bot) and a human will reply to you ASAP or join the [Support Server](https://discord.gg/DCQWucrh2G) ")
         embed.add_field(name="Sub_Reddit", value="If you want to support or to talk about the bot we also have a [Sub Reddit](https://www.reddit.com/r/SimplexBot/) ")
+        embed.add_field(name="Twitter", value="Maybe take a look at out twitter for events such as AMA and more! [Twitter](https://twitter.com/simplexbot) ")
+        embed.add_field(name="mastodon", value="We also have a mastodon account [Mastodon](https://mastodon.social/@simplex_bot) ")
         embed.set_footer( text=f"Thank You - Simplex is now on {len(self.client.guilds)} servers!")
         
 
