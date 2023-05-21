@@ -324,7 +324,7 @@ class Goodbye(commands.Cog):
         text = text.replace("{member.guild.owner}", member.guild.owner.name)
         em = discord.Embed(title=f"Goodbye {member.name}!", description=text)
         if textorembed == 1:
-            await channel.send(f"{member.mention} \n {text}")
+            await channel.send(f"{text}")
         else:
             await channel.send(embed=em, content=member.mention)
 
