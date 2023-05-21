@@ -326,7 +326,7 @@ class Goodbye(commands.Cog):
         if textorembed == 1:
             await channel.send(f"{text}")
         else:
-            await channel.send(embed=em, content=member.mention)
+            await channel.send(embed=em)
 
 
 
