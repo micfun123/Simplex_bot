@@ -383,9 +383,9 @@ class utilities(commands.Cog):
         ans = await calc.calculate(equation)
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
-    #LaTeX
-    @commands.command()
-    async def latex(ctx, *, expression):
+
+    @commands.slash_command(name="latex", description = "Convert latex to image")
+    async def _latex_slash(self, ctx, *, expression):
         # Convert the LaTeX expression to an image
         # Configure matplotlib to use the Agg backend
         plt.switch_backend("Agg")
@@ -406,8 +406,8 @@ class utilities(commands.Cog):
         # Close the figure
         plt.close(fig)
         #send the image
-        await ctx.send(file=discord.File(image_stream, "latex.png"))
-        
+        await ctx.respond(file=discord.File(image_stream, "latex.png"))
+
 
 
 
