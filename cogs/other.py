@@ -407,8 +407,32 @@ class utilities(commands.Cog):
         plt.close(fig)  
 
         # Send the image as a file
-        await ctx.send(file=discord.File(image_stream, "latex.png"))    
+        await ctx.send(file=discord.File(image_stream, "latex.png"))
 
+    @commands.command(name="latex", aliases=["tex"], help = "Convert LaTeX to image")
+    async def _latex_(self, ctx, *, expression: str):
+        # Convert the LaTeX expression to an image
+        # Configure matplotlib to use the Agg backend
+        plt.switch_backend("Agg")
+        plt.rcParams["text.usetex"] = True
+        plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"   
+
+        # Create a figure and plot the LaTeX expression
+        fig, ax = plt.subplots()
+        ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")  
+
+        # Set the size of the figure
+        fig.set_size_inches(3, 1)   
+
+        # Convert the figure to a PNG image in memory
+        image_stream = io.BytesIO()
+        FigureCanvas(fig).print_png(image_stream)   
+
+        # Close the figure
+        plt.close(fig)  
+
+        # Send the image as a file
+        await ctx.send(file=discord.File(image_stream, "latex.png"))
         
     #random num generator between two numbers
     @commands.command(name="rand", aliases=["random"], help = "Generate a random number")
