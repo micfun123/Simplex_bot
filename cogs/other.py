@@ -19,6 +19,33 @@ import random
 from io import BytesIO
 from base69 import encode_base69, decode_base69
 import sympy
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+def latex_to_image(latex_expression):
+    # Configure matplotlib to use the Agg backend
+    plt.switch_backend("Agg")
+    plt.rcParams["text.usetex"] = True
+    plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
+
+    # Create a figure and plot the LaTeX expression
+    fig, ax = plt.subplots()
+    ax.text(0.5, 0.5, f"${latex_expression}$", fontsize=16, ha="center")
+
+    # Set the size of the figure
+    fig.set_size_inches(3, 1)
+
+    # Convert the figure to a PNG image in memory
+    image_stream = io.BytesIO()
+    FigureCanvas(fig).print_png(image_stream)
+
+    # Close the figure
+    plt.close(fig)
+
+    # Return the image stream
+    image_stream.seek(0)
+    return image_stream
+
 
 
 calculator = simpcalc.Calculate()
@@ -357,30 +384,14 @@ class utilities(commands.Cog):
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
     #LaTeX
-    @commands.command(name="latex", aliases=["tex"], help = "Generate LaTeX")
-    async def _latex_(self, ctx, *, equation):
-        await ctx.message.delete()
-        #generate the latex image
-        plt.text(0.5, 0.5, f"${equation}$", fontsize=20)
-        plt.axis('off')
-        #send via bytesio
-        buf = BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
-        await ctx.send(file=discord.File(buf, 'latex.png'))
-    
-    @commands.slash_command(name="latex", description = "Generate LaTeX")
-    async def _latex_slash(self, ctx, *, equation):
-        await ctx.message.delete()
-        #generate the latex image
-        plt.text(0.5, 0.5, f"${equation}$", fontsize=20)
-        plt.axis('off')
-        #send via bytesio
-        buf = BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
-        await ctx.respond(file=discord.File(buf, 'latex.png'))
-        
+    @commands.command()
+    async def latex(ctx, *, expression):
+        # Convert the LaTeX expression to an image
+        image_stream = latex_to_image(expression)
+
+        # Send the image as a file to the user
+        file_data = discord.File(image_stream, filename="latex_image.png")
+        await ctx.send(file=file_data)
 
 
             
