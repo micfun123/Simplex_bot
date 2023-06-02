@@ -359,35 +359,28 @@ class utilities(commands.Cog):
     #LaTeX
     @commands.command(name="latex", aliases=["tex"], help = "Generate LaTeX")
     async def _latex_(self, ctx, *, equation):
-        x = await ctx.send("Generating LaTeX Image...")
-        try:
-            image = io.BytesIO()
-            sympy.preview(equation, output='png', euler=False)
-            plt.savefig(image, format='PNG')
-            image.seek(0)
-            await ctx.send(file=discord.File(fp=image, filename='latex.png'))
-            await x.delete()
-        except Exception as e:
-            await ctx.send("Something went wrong")
-            print(e)
-
-
+        await ctx.message.delete()
+        #generate the latex image
+        plt.text(0.5, 0.5, f"${equation}$", fontsize=20)
+        plt.axis('off')
+        #send via bytesio
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        await ctx.send(file=discord.File(buf, 'latex.png'))
+    
     @commands.slash_command(name="latex", description = "Generate LaTeX")
     async def _latex_slash(self, ctx, *, equation):
-        if len(equation) > 1000:
-            await ctx.send("The equation is too long")
-            return
-        x = await ctx.send("Generating LaTeX Image...")
-        try:
-            Image = io.BytesIO()
-            sympy.preview(equation, output='png', euler=False)
-            plt.savefig(Image, format='PNG')
-            Image.seek(0)
-            await ctx.send(file=discord.File(fp=Image, filename='latex.png'))
-            await x.delete()
-        except Exception as e:
-            await ctx.send("Something went wrong: " + str(e))
-
+        await ctx.message.delete()
+        #generate the latex image
+        plt.text(0.5, 0.5, f"${equation}$", fontsize=20)
+        plt.axis('off')
+        #send via bytesio
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        await ctx.respond(file=discord.File(buf, 'latex.png'))
+        
 
 
             
