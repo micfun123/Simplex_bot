@@ -426,14 +426,14 @@ class utilities(commands.Cog):
 
         # Convert the figure to a PNG image in memory
         image_stream = io.BytesIO()
-        FigureCanvas(fig).print_png(image_stream)   
-
-        # Close the figure
-        plt.close(fig)  
-
-        # Send the image as a file
+        FigureCanvas(fig).print_png(image_stream)
+        #send the image as a file
         await ctx.send(file=discord.File(image_stream, "latex.png"))
+        # Close the figure
+        plt.close(fig)
         
+
+
     #random num generator between two numbers
     @commands.command(name="rand", aliases=["random"], help = "Generate a random number")
     async def _rand_(self, ctx, start: int, end: int):
