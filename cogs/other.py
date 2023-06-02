@@ -388,11 +388,11 @@ class utilities(commands.Cog):
     async def latex(ctx, *, expression):
         # Convert the LaTeX expression to an image
         image_stream = latex_to_image(expression)
-
+    
         # Send the image as a file to the user
         file_data = discord.File(image_stream, filename="latex_image.png")
         await ctx.send(file=file_data)
-
+    
 
             
         
