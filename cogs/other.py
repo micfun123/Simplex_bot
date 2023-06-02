@@ -384,34 +384,31 @@ class utilities(commands.Cog):
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
 
-    @commands.slash_command(name="latex", description = "Convert latex to image")
-    async def _latex_slash(self, ctx, *, expression):
+    @commands.slash_command(name="latex", description="Convert LaTeX to image")
+    async def _latex_slash(self, ctx, expression: str):
         # Convert the LaTeX expression to an image
         # Configure matplotlib to use the Agg backend
         plt.switch_backend("Agg")
         plt.rcParams["text.usetex"] = True
-        plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
+        plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"   
 
         # Create a figure and plot the LaTeX expression
         fig, ax = plt.subplots()
-        ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
+        ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")  
 
         # Set the size of the figure
-        fig.set_size_inches(3, 1)
+        fig.set_size_inches(3, 1)   
 
         # Convert the figure to a PNG image in memory
         image_stream = io.BytesIO()
-        FigureCanvas(fig).print_png(image_stream)
+        FigureCanvas(fig).print_png(image_stream)   
 
         # Close the figure
-        plt.close(fig)
-        #send the image
-        await ctx.respond(file=discord.File(image_stream, "latex.png"))
+        plt.close(fig)  
 
+        # Send the image as a file
+        await ctx.send(file=discord.File(image_stream, "latex.png"))    
 
-
-
-            
         
     #random num generator between two numbers
     @commands.command(name="rand", aliases=["random"], help = "Generate a random number")
