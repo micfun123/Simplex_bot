@@ -402,6 +402,10 @@ class utilities(commands.Cog):
         ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
 
         # Set the size of the figure based on the calculated dimensions
+        if width < 3:
+            width = 3
+        if height < 1:
+            height = 1
         fig.set_size_inches(width, height)
 
         # Save the image to a file
@@ -434,6 +438,12 @@ class utilities(commands.Cog):
         ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
 
         # Set the size of the figure based on the calculated dimensions
+        if width < 3:
+            width = 3
+        if height < 1:
+            height = 1
+
+            
         fig.set_size_inches(width, height)
 
         # Save the image to a file
