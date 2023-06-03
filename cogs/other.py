@@ -387,76 +387,82 @@ class utilities(commands.Cog):
 
     @commands.slash_command(name="latex", description="Convert LaTeX to image")
     async def _latex_slash(self, ctx, expression: str):
-        # Configure matplotlib to use the Agg backend
-        plt.switch_backend("Agg")
-        plt.rcParams["text.usetex"] = True
-        plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
+        try:
+            # Configure matplotlib to use the Agg backend
+            plt.switch_backend("Agg")
+            plt.rcParams["text.usetex"] = True
+            plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
 
-        # Calculate the required canvas size based on the length of the expression
-        expression_length = len(expression)
-        width = math.ceil(math.sqrt(expression_length))  # Round up the square root
-        height = math.ceil(expression_length / width)
+            # Calculate the required canvas size based on the length of the expression
+            expression_length = len(expression)
+            width = math.ceil(math.sqrt(expression_length))  # Round up the square root
+            height = math.ceil(expression_length / width)
 
-        # Create a figure and plot the LaTeX expression
-        fig, ax = plt.subplots()
-        ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
+            # Create a figure and plot the LaTeX expression
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
 
-        # Set the size of the figure based on the calculated dimensions
-        if width < 3:
-            width = 3
-        if height < 1:
-            height = 1
-        fig.set_size_inches(width, height)
+            # Set the size of the figure based on the calculated dimensions
+            if width < 3:
+                width = 3
+            if height < 1:
+                height = 1
+            fig.set_size_inches(width, height)
 
-        # Save the image to a file
-        fig.savefig("latex.png")
+            # Save the image to a file
+            fig.savefig("latex.png")
 
-        # Send the image
-        await ctx.respond(file=discord.File("latex.png"))
+            # Send the image
+            await ctx.respond(file=discord.File("latex.png"))
 
-        # Close the figure
-        plt.close(fig)
+            # Close the figure
+            plt.close(fig)
 
-        # Delete the image
-        os.remove("latex.png")
+            # Delete the image
+            os.remove("latex.png")
+        except Exception as e:
+            await ctx.respond(f"Error: {e}")
 
 
     @commands.command(name="latex", aliases=["tex"], help="Convert LaTeX to image")
     async def _latex_(self, ctx, *, expression: str):
-        # Configure matplotlib to use the Agg backend
-        plt.switch_backend("Agg")
-        plt.rcParams["text.usetex"] = True
-        plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
+        try:
+            # Configure matplotlib to use the Agg backend
+            plt.switch_backend("Agg")
+            plt.rcParams["text.usetex"] = True
+            plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
 
-        # Calculate the required canvas size based on the length of the expression
-        expression_length = len(expression)
-        width = math.ceil(math.sqrt(expression_length))  # Round up the square root
-        height = math.ceil(expression_length / width)
+            # Calculate the required canvas size based on the length of the expression
+            expression_length = len(expression)
+            width = math.ceil(math.sqrt(expression_length))  # Round up the square root
+            height = math.ceil(expression_length / width)
 
-        # Create a figure and plot the LaTeX expression
-        fig, ax = plt.subplots()
-        ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
+            # Create a figure and plot the LaTeX expression
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
 
-        # Set the size of the figure based on the calculated dimensions
-        if width < 3:
-            width = 3
-        if height < 2:
-            height = 2
+            # Set the size of the figure based on the calculated dimensions
+            if width < 3:
+                width = 3
+            if height < 2:
+                height = 2
 
 
-        fig.set_size_inches(width, height)
+            fig.set_size_inches(width, height)
 
-        # Save the image to a file
-        fig.savefig("latex.png")
+            # Save the image to a file
+            fig.savefig("latex.png")
 
-        # Send the image
-        await ctx.send(file=discord.File("latex.png"))
+            # Send the image
+            await ctx.send(file=discord.File("latex.png"))
 
-        # Close the figure
-        plt.close(fig)
+            # Close the figure
+            plt.close(fig)
 
-        # Delete the image
-        os.remove("latex.png")
+            # Delete the image
+            os.remove("latex.png")
+        except Exception as e:
+            await ctx.send(f"Error: {e}")
 
 
     #random num generator between two numbers
