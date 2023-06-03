@@ -399,15 +399,14 @@ class utilities(commands.Cog):
         # Set the size of the figure
         fig.set_size_inches(3, 1)   
 
-        # Convert the figure to a PNG image in memory
-        image_stream = io.BytesIO()
-        FigureCanvas(fig).print_png(image_stream)   
-
-        # Close the figure
-        plt.close(fig)  
-
-        # Send the image as a file
-        await ctx.send(file=discord.File(image_stream, "latex.png"))
+        # save the image to a file
+        fig.savefig("latex.png")
+        #send the image
+        await ctx.send(file=discord.File("latex.png"))
+        #close the figure
+        plt.close(fig)
+        #delete the image
+        os.remove("latex.png")
 
     @commands.command(name="latex", aliases=["tex"], help = "Convert LaTeX to image")
     async def _latex_(self, ctx, *, expression: str):
