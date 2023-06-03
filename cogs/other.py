@@ -402,7 +402,7 @@ class utilities(commands.Cog):
         # save the image to a file
         fig.savefig("latex.png")
         #send the image
-        await ctx.send(file=discord.File("latex.png"))
+        await ctx.respond(file=discord.File("latex.png"))
         #close the figure
         plt.close(fig)
         #delete the image
@@ -426,7 +426,7 @@ class utilities(commands.Cog):
         # save the image to a file
         fig.savefig("latex.png")
         #send the image
-        await ctx.respond(file=discord.File("latex.png"))
+        await ctx.send(file=discord.File("latex.png"))
         #close the figure
         plt.close(fig)
         #delete the image
