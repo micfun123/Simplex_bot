@@ -440,10 +440,10 @@ class utilities(commands.Cog):
         # Set the size of the figure based on the calculated dimensions
         if width < 3:
             width = 3
-        if height < 1:
-            height = 1
+        if height < 2:
+            height = 2
 
-            
+
         fig.set_size_inches(width, height)
 
         # Save the image to a file
