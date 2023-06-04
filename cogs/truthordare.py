@@ -49,22 +49,22 @@ class TruthOrDare(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def maketable(self, ctx):
-        con = sqlite3.connect('databases/truthordare.db')
-        cur = con.cursor()
-        cur.execute("CREATE table truthordare (server_id int, toggel int)")
-        con.commit()
-        con.close()
-        await ctx.send("Table created")
-        for i in self.client.guilds:
-            con = sqlite3.connect('databases/truthordare.db')
-            cur = con.cursor()
-            cur.execute("INSERT INTO truthordare VALUES (?, ?)", (i.id, 0))
-            con.commit()
-            con.close()
-        await ctx.send("Table filled")
+    #@commands.command(hidden=True)
+    #@commands.is_owner()
+    #async def maketable(self, ctx):
+    #    con = sqlite3.connect('databases/truthordare.db')
+    #    cur = con.cursor()
+    #    cur.execute("CREATE table truthordare (server_id int, toggel int)")
+    #    con.commit()
+    #    con.close()
+    #    await ctx.send("Table created")
+    #    for i in self.client.guilds:
+    #        con = sqlite3.connect('databases/truthordare.db')
+    #        cur = con.cursor()
+    #        cur.execute("INSERT INTO truthordare VALUES (?, ?)", (i.id, 0))
+    #        con.commit()
+    #        con.close()
+    #    await ctx.send("Table filled")
     
     #onserverjoin
     @commands.Cog.listener()

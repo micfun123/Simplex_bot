@@ -98,3 +98,24 @@ con.close()
 print("rss.db created")
 
 
+con = sqlite3.connect("databases/ticket_channel_id.db")
+cur = con.cursor()
+cur.execute("CREATE table ticket_channel_id (userid it, channel_id int)")
+con.commit()
+con.close()
+print("ticket_channel_id.db created")
+
+
+con = sqlite3.connect("databases/qotd.db")
+cur = con.cursor()
+cur.execute("CREATE table qotd (server_id int, channel_id int)")
+con.commit()
+con.close()
+print("qotd.db created")
+
+con = sqlite3.connect('databases/truthordare.db')
+cur = con.cursor()
+cur.execute("CREATE table truthordare (server_id int, toggel int)")
+con.commit()
+con.close()
+print("truthordare.db created")
