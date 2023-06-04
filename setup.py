@@ -1,6 +1,8 @@
 #generate all the databases
 import sqlite3
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
+import json
+import os
 
 #rade stuff for the anti cog
 con = sqlite3.connect("databases/raids.db")
@@ -73,3 +75,26 @@ try:
     print("leveling.db created")
 except:
     print("leveling.db failed to create")
+
+con = sqlite3.connect("databases/announcement.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE server(ServerID int, channel int)")
+con.commit()
+con.close()
+print("announcement.db created")
+
+#make the log.json file
+if not os.path.exists("./databases/log.json"):
+    with open("./databases/log.json", "w") as f:
+        json.dump({}, f, indent=4)
+        print("log.json created")
+
+
+con = sqlite3.connect("databases/rss.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)")
+con.commit()
+con.close()
+print("rss.db created")
+
+
