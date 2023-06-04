@@ -30,13 +30,13 @@ class DMReply(commands.Cog):
         await ctx.send(f"Removed {id} from blacklist")
 
 
-    @commands.is_owner()
-    @commands.command()
-    async def blacklistmake(self, ctx):
-        async with aiosqlite.connect("databases/blacklist.db") as conn:
-            await conn.execute("CREATE TABLE blacklist(id int)")
-            await conn.commit()
-        await ctx.send("Done")
+    #@commands.is_owner()
+    #@commands.command()
+    #async def blacklistmake(self, ctx):
+    #    async with aiosqlite.connect("databases/blacklist.db") as conn:
+    #        await conn.execute("CREATE TABLE blacklist(id int)")
+    #        await conn.commit()
+    #    await ctx.send("Done")
 
     @commands.command(aliases=['dmr'])
     @commands.check(micsid)
