@@ -119,3 +119,12 @@ cur.execute("CREATE table truthordare (server_id int, toggel int)")
 con.commit()
 con.close()
 print("truthordare.db created")
+
+con = sqlite3.connect("databases/Welcome.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS welcome (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)")
+con.commit()
+con.close()
+print("Welcome.db created")
+
+print("all databases created")
