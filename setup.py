@@ -30,4 +30,17 @@ con.commit()
 con.close()
 print("user_brithdays.db created")
 
+#    async with aiosqlite.connect("databases/verification.db") as db:
+    #        await db.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
+    #        await db.commit()
+    #        await db.close()
+
+con = sqlite3.connect("databases/verification.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
+con.commit()
+con.close()
+print("verification.db created")
+
+
         
