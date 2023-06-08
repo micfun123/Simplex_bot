@@ -236,7 +236,7 @@ class BotMakerCommands(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def server_info(self, ctx, *, server):
+    async def server_loop_up(self, ctx, *, server):
         guild = self.client.get_guild(int(server))
         if guild == None:
             await ctx.send("Server not found")
@@ -250,7 +250,7 @@ class BotMakerCommands(commands.Cog):
         embed.add_field(name = "Created at", value = guild.created_at.strftime("%d/%m/%Y %H:%M:%S"))
         embed.set_thumbnail(url = guild.icon_url)
         await ctx.send(embed = embed)
-        
+
 
 
 def setup(client):
