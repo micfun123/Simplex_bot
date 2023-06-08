@@ -246,7 +246,6 @@ class BotMakerCommands(commands.Cog):
         embed.add_field(name = "Members", value = guild.member_count)
         embed.add_field(name = "Channels", value = len(guild.channels))
         embed.add_field(name = "Roles", value = len(guild.roles))
-        embed.add_field(name = "Region", value = guild.region)
         embed.add_field(name = "Created at", value = guild.created_at.strftime("%d/%m/%Y %H:%M:%S"))
         embed.set_thumbnail(url = guild.icon_url)
         await ctx.send(embed = embed)
