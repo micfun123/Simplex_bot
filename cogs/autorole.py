@@ -17,7 +17,7 @@ class Autorole(commands.Cog):
     #        await ctx.send("Table created")
 
 
-    @commands.slash_command(name="add_autorole")
+    @commands.slash_command(name="add_autorole", description="Adds a role to autoroles")
     @commands.has_permissions(administrator=True)
     async def add_autoroles__slashcommand(self,ctx, role : discord.Role):
         #if role is above the bot's highest role
@@ -33,7 +33,7 @@ class Autorole(commands.Cog):
         except:
             ctx.respond("Failed for unknown reason")
 
-    @commands.slash_command(name="remove_autorole")
+    @commands.slash_command(name="remove_autorole", description="Removes a role from autoroles")
     @commands.has_permissions(administrator=True)
     async def remove_autoroles__slashcommand(self,ctx, role: discord.Role):
         async with aiosqlite.connect("databases/autoroles.db") as db:
@@ -43,7 +43,7 @@ class Autorole(commands.Cog):
 
 
 
-    @commands.command(name="add_autorole")
+    @commands.command(name="add_autorole", description="Adds a role to autoroles")
     @commands.has_permissions(administrator=True)
     async def add_autoroles__command(self,ctx, role : discord.Role):
         #if role is above the bot's highest role
@@ -56,7 +56,7 @@ class Autorole(commands.Cog):
             await db.commit()
         await ctx.send(f"Added {role} to autoroles")
 
-    @commands.command(name="remove_autorole")
+    @commands.command(name="remove_autorole", description="Removes a role from autoroles")
     @commands.has_permissions(administrator=True)
     async def remove_autoroles__command(self,ctx, role: discord.Role):
         async with aiosqlite.connect("databases/autoroles.db") as db:
@@ -64,7 +64,7 @@ class Autorole(commands.Cog):
             await db.commit()
         await ctx.send(f"Removed {role.name} from autoroles")
 
-    @commands.command(name="list_autoroles")
+    @commands.command(name="list_autoroles",description="Lists the autoroles")
     @commands.has_permissions(administrator=True)
     async def list_autoroles_commands(self,ctx):
         async with aiosqlite.connect("databases/autoroles.db") as db:
@@ -75,7 +75,7 @@ class Autorole(commands.Cog):
         role_names = [ctx.guild.get_role(role[0]).name for role in roles]
         await ctx.send("Autoroles: " + ", ".join(role_names))
 
-    @commands.slash_command(name="list_autoroles")
+    @commands.slash_command(name="list_autoroles",description="Lists the autoroles")
     @commands.has_permissions(administrator=True)
     async def list_autoroles_slash(self,ctx):
         async with aiosqlite.connect("databases/autoroles.db") as db:

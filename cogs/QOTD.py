@@ -4,7 +4,10 @@ import random
 import requests
 import sqlite3
 from datetime import datetime,time
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 
 url = "https://the-trivia-api.com/api/questions?categories=society_and_culture,arts_and_literature,film_and_tv,food_and_drink,general_knowledge,geography,history,music,science&limit=1&difficulty=medium"
@@ -52,6 +55,19 @@ class QOTD(commands.Cog):
     @commands.slash_command(name="disableqotd", description="Disable the QOTD channel")
     @commands.has_permissions(administrator=True)
     async def disableqotd(self, ctx):
+        tocken = os.getenv("TOPGG_TOKEN")
+        api = requests.get(f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}", headers={"Authorization": tocken, "Content-Type": "application/json"})
+        data = api.json()
+        print(api)
+        print(data)
+        voted = data["voted"]
+        #if the api does not return a 200 status code
+        if api.status_code != 200:
+            voted = 1
+            print("api error")
+        if voted == 0:
+            await ctx.respond("You need to have voted for simplex in the last 24 hours to set your birthday. Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote",ephemeral=True)
+            return
         con = sqlite3.connect('databases/qotd.db')
         cur = con.cursor()
         if len(cur.execute("SELECT * FROM qotd WHERE server_id = ?", (ctx.guild.id,)).fetchall()) == 0:
@@ -93,7 +109,7 @@ class QOTD(commands.Cog):
                 embed = discord.Embed(title="QOTD", description=question, color=0x00ff00)
                 embed.add_field(name="options", value=f"{options[0]} \n {options[1]} \n {options[2]} \n {options[3]}", inline=False)
                 embed.add_field(name="Answer for yesterdays QOTD is", value=f"||{yesterday_answer}||", inline=False)
-                embed.set_footer(text=f"QOTD for {datetime.now().strftime('%d/%m/%Y')} \n If you like the bot, please consider voting for it at https://top.gg/bot/902240397273743361 \n It helps a lot! :D")
+                embed.set_footer(text=f"QOTD for {datetime.now().strftime('%d/%m/%Y')} \n If you like the bot, please consider voting its free or maybe even a donation \n It helps a lot! :D")
                 await channel.send(embed=embed)
             except:
                 pass

@@ -19,6 +19,34 @@ import random
 from io import BytesIO
 from base69 import encode_base69, decode_base69
 import sympy
+import matplotlib.pyplot as plt
+import math
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+def latex_to_image(latex_expression):
+    # Configure matplotlib to use the Agg backend
+    plt.switch_backend("Agg")
+    plt.rcParams["text.usetex"] = True
+    plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
+
+    # Create a figure and plot the LaTeX expression
+    fig, ax = plt.subplots()
+    ax.text(0.5, 0.5, f"${latex_expression}$", fontsize=16, ha="center")
+
+    # Set the size of the figure
+    fig.set_size_inches(3, 1)
+
+    # Convert the figure to a PNG image in memory
+    image_stream = io.BytesIO()
+    FigureCanvas(fig).print_png(image_stream)
+
+    # Close the figure
+    plt.close(fig)
+
+    # Return the image stream
+    image_stream.seek(0)
+    return image_stream
+
 
 
 calculator = simpcalc.Calculate()
@@ -356,42 +384,87 @@ class utilities(commands.Cog):
         ans = await calc.calculate(equation)
         await ctx.send(f"The equation is: {equation}\nThe answer is: {ans}")
 
-    #LaTeX
-    @commands.command(name="latex", aliases=["tex"], help = "Generate LaTeX")
-    async def _latex_(self, ctx, *, equation):
-        x = await ctx.send("Generating LaTeX Image...")
+
+    @commands.slash_command(name="latex", description="Convert LaTeX to image")
+    async def _latex_slash(self, ctx, expression: str):
         try:
-            image = io.BytesIO()
-            sympy.preview(equation, output='png', euler=False)
-            plt.savefig(image, format='PNG')
-            image.seek(0)
-            await ctx.send(file=discord.File(fp=image, filename='latex.png'))
-            await x.delete()
+            # Configure matplotlib to use the Agg backend
+            plt.switch_backend("Agg")
+            plt.rcParams["text.usetex"] = True
+            plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
+
+            # Calculate the required canvas size based on the length of the expression
+            expression_length = len(expression)
+            width = math.ceil(math.sqrt(expression_length))  # Round up the square root
+            height = math.ceil(expression_length / width)
+
+            # Create a figure and plot the LaTeX expression
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
+
+            # Set the size of the figure based on the calculated dimensions
+            if width < 3:
+                width = 3
+            if height < 1:
+                height = 1
+            fig.set_size_inches(width, height)
+
+            # Save the image to a file
+            fig.savefig("latex.png")
+
+            # Send the image
+            await ctx.respond(file=discord.File("latex.png"))
+
+            # Close the figure
+            plt.close(fig)
+
+            # Delete the image
+            os.remove("latex.png")
         except Exception as e:
-            await ctx.send("Something went wrong")
-            print(e)
+            await ctx.respond(f"Error: {e}")
 
 
-    @commands.slash_command(name="latex", description = "Generate LaTeX")
-    async def _latex_slash(self, ctx, *, equation):
-        if len(equation) > 1000:
-            await ctx.send("The equation is too long")
-            return
-        x = await ctx.send("Generating LaTeX Image...")
+    @commands.command(name="latex", aliases=["tex"], help="Convert LaTeX to image")
+    async def _latex_(self, ctx, *, expression: str):
         try:
-            Image = io.BytesIO()
-            sympy.preview(equation, output='png', euler=False)
-            plt.savefig(Image, format='PNG')
-            Image.seek(0)
-            await ctx.send(file=discord.File(fp=Image, filename='latex.png'))
-            await x.delete()
+            # Configure matplotlib to use the Agg backend
+            plt.switch_backend("Agg")
+            plt.rcParams["text.usetex"] = True
+            plt.rcParams["text.latex.preamble"] = r"\usepackage{amsmath}"
+
+            # Calculate the required canvas size based on the length of the expression
+            expression_length = len(expression)
+            width = math.ceil(math.sqrt(expression_length))  # Round up the square root
+            height = math.ceil(expression_length / width)
+
+            # Create a figure and plot the LaTeX expression
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, f"${expression}$", fontsize=16, ha="center")
+
+            # Set the size of the figure based on the calculated dimensions
+            if width < 3:
+                width = 3
+            if height < 2:
+                height = 2
+
+
+            fig.set_size_inches(width, height)
+
+            # Save the image to a file
+            fig.savefig("latex.png")
+
+            # Send the image
+            await ctx.send(file=discord.File("latex.png"))
+
+            # Close the figure
+            plt.close(fig)
+
+            # Delete the image
+            os.remove("latex.png")
         except Exception as e:
-            await ctx.send("Something went wrong: " + str(e))
+            await ctx.send(f"Error: {e}")
 
 
-
-            
-        
     #random num generator between two numbers
     @commands.command(name="rand", aliases=["random"], help = "Generate a random number")
     async def _rand_(self, ctx, start: int, end: int):

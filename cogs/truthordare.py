@@ -1,8 +1,9 @@
-import discord
-from discord.ext import commands 
-from discord.ui import Button , View
-import sqlite3
 import random
+import sqlite3
+
+import discord
+from discord.ext import commands
+from discord.ui import Button, View
 
 betaservers = [908963077125459989,401041820458680340,985655459576959078,1010679471109574667]
 
@@ -22,7 +23,9 @@ def enabled_check(ctx):
 def get_truth(interaction):
     with open("databases/truth.txt", "r") as f:
             lines = f.readlines()
-    embed = discord.Embed(title="Truth", description=random.choice(lines), color=0x00ff00)
+    text = random.choice(lines)
+    text = text.replace("{{randomly_selected_userer}}", f"{random.choice(interaction.guild.members).display_name}")
+    embed = discord.Embed(title="Truth", description=text, color=0x00FF00)
     embed.set_footer(text=f"Requested by {interaction.user.name}")
     return embed
 
@@ -30,7 +33,7 @@ def get_dare(interaction):
     with open("databases/dare.txt", "r") as f:
             lines = f.readlines()
     text = random.choice(lines)
-    text = text.replace("{{randomly_selected_userer}}", f"{random.choice(interaction.guild.members).mention}")
+    text = text.replace("{{randomly_selected_userer}}", f"{random.choice(interaction.guild.members).display_name}")
     embed = discord.Embed(title="Dare", description=text, color=0xFF0000)
     embed.set_footer(text=f"Requested by {interaction.user.name}")
     return embed
@@ -46,22 +49,22 @@ class TruthOrDare(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(hidden=True)
-    @commands.is_owner()
-    async def maketable(self, ctx):
-        con = sqlite3.connect('databases/truthordare.db')
-        cur = con.cursor()
-        cur.execute("CREATE table truthordare (server_id int, toggel int)")
-        con.commit()
-        con.close()
-        await ctx.send("Table created")
-        for i in self.client.guilds:
-            con = sqlite3.connect('databases/truthordare.db')
-            cur = con.cursor()
-            cur.execute("INSERT INTO truthordare VALUES (?, ?)", (i.id, 0))
-            con.commit()
-            con.close()
-        await ctx.send("Table filled")
+    #@commands.command(hidden=True)
+    #@commands.is_owner()
+    #async def maketable(self, ctx):
+    #    con = sqlite3.connect('databases/truthordare.db')
+    #    cur = con.cursor()
+    #    cur.execute("CREATE table truthordare (server_id int, toggel int)")
+    #    con.commit()
+    #    con.close()
+    #    await ctx.send("Table created")
+    #    for i in self.client.guilds:
+    #        con = sqlite3.connect('databases/truthordare.db')
+    #        cur = con.cursor()
+    #        cur.execute("INSERT INTO truthordare VALUES (?, ?)", (i.id, 0))
+    #        con.commit()
+    #        con.close()
+    #    await ctx.send("Table filled")
     
     #onserverjoin
     @commands.Cog.listener()

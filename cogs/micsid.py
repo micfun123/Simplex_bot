@@ -234,11 +234,25 @@ class BotMakerCommands(commands.Cog):
         invite = await guild.channels[0].create_invite()
         await ctx.send(invite)
 
-
-
-
-
-    
+    @commands.command()
+    @commands.is_owner()
+    async def server_loop_up(self, ctx, *, server):
+        guild = self.client.get_guild(int(server))
+        if guild == None:
+            await ctx.send("Server not found")
+            return
+        embed = discord.Embed(title = guild.name, description = f"ID: {guild.id}", color = 0xff00c8)
+        embed.add_field(name = "Owner", value = f"{guild.owner.name}#{guild.owner.discriminator}")
+        embed.add_field(name = "Members", value = guild.member_count)
+        embed.add_field(name = "Channels", value = len(guild.channels))
+        embed.add_field(name = "Roles", value = len(guild.roles))
+        embed.add_field(name = "Created at", value = guild.created_at.strftime("%d/%m/%Y %H:%M:%S"))
+        try:
+            embed.set_thumbnail(url = guild.icon.url)
+        except:
+            pass
+        
+        await ctx.send(embed = embed)
 
 
 

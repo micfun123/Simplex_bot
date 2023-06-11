@@ -1,9 +1,12 @@
-import discord
 import datetime
+
 import aiosqlite
+import discord
 from discord.ext import commands
+
+
 def micsid(ctx):
-    return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
+    return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363 or ctx.author.id == 644266328554995712
 
 class DMReply(commands.Cog):
     def __init__(self, client):
@@ -27,13 +30,13 @@ class DMReply(commands.Cog):
         await ctx.send(f"Removed {id} from blacklist")
 
 
-    @commands.is_owner()
-    @commands.command()
-    async def blacklistmake(self, ctx):
-        async with aiosqlite.connect("databases/blacklist.db") as conn:
-            await conn.execute("CREATE TABLE blacklist(id int)")
-            await conn.commit()
-        await ctx.send("Done")
+    #@commands.is_owner()
+    #@commands.command()
+    #async def blacklistmake(self, ctx):
+    #    async with aiosqlite.connect("databases/blacklist.db") as conn:
+    #        await conn.execute("CREATE TABLE blacklist(id int)")
+    #        await conn.commit()
+    #    await ctx.send("Done")
 
     @commands.command(aliases=['dmr'])
     @commands.check(micsid)

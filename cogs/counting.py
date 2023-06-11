@@ -317,23 +317,6 @@ class Counting(commands.Cog):
                 embed.add_field(name="Accuracy", value=f"{str(round(accuracy*100, 2))}%")
                 await ctx.respond(embed=embed)
 
-    #@commands.is_owner()
-    #@commands.command()
-    #async def countannounce(self, ctx):
-    #    with open("./databases/db.json", "rb") as f:
-    #        data = json.load(f)
-    #    serverssent = 0
-    #    #go throught list 
-    #    for i in data:
-    #        try:
-    #            channel = await self.client.fetch_channel(i["counting_channel"])
-    #            await channel.send(f"Couning has been rewriten to be more relable. Please use the new command to set the counting channel. `.setcountchannel <channel>`. This will set the channel to 0 to change the number use `.set_num <number>`. IF you find any bugs please dm the bot\n Now with a highscore marker")
-    #            serverssent += 1
-    #        except Exception as e:
-    #            print(e)
-    #            ctx.send(f"Error in {i}")
-    #            pass
-    #    await ctx.send(f"Sent to {serverssent} servers")
 
 def setup(client):
     client.add_cog(Counting(client))
