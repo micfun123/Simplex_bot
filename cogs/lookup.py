@@ -274,7 +274,7 @@ class lookup(commands.Cog):
         if options == "list":
             #open the sql database
             async with aiosqlite.connect("databases/rss.db") as db:
-                cursor = await db.execute("SELECT * FROM rss")
+                cursor = await db.execute("SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),))
                 rows = await cursor.fetchall()
                 if len(rows) == 0:
                     await ctx.respond("No feeds have been added yet")
