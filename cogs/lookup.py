@@ -373,6 +373,12 @@ class lookup(commands.Cog):
                             await ctx.respond("You took too long to respond")
                         else:
                             async with aiosqlite.connect("databases/rss.db") as db:
+                                # remove the # from the channel
+                                channelinfo = newchannel.content.replace("#", "")
+                                # remove the < and > from the channel
+                                channelinfo = channelinfo.replace("<", "")
+                                channelinfo = channelinfo.replace(">", "")
+                                
                                 await db.execute("UPDATE rss SET channel=? WHERE name=? AND guild=?", (newchannel.content, name.content, ctx.guild.id))
                                 await db.commit()
                             await ctx.respond("Done updating channel")
