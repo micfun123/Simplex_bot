@@ -258,7 +258,7 @@ class lookup(commands.Cog):
         if options == "list":
             #open the sql database
             async with aiosqlite.connect("databases/rss.db") as db:
-                cursor = await db.execute("SELECT * FROM rss")
+                cursor = await db.execute("SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),))
                 rows = await cursor.fetchall()
                 if len(rows) == 0:
                     await ctx.respond("No feeds have been added yet")
@@ -324,6 +324,66 @@ class lookup(commands.Cog):
                     await db.execute("DELETE FROM rss WHERE name=? AND guild=?", (name.content, ctx.guild.id))
                     await db.commit()
                 await ctx.respond("Done removing feed")
+
+        elif options == "update":
+            async with aiosqlite.connect("databases/rss.db") as db:
+                await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+                await db.commit()
+            await ctx.respond("What is the name of the feed you want to update?")
+            def check(m):
+                return m.author == ctx.author and m.channel == ctx.channel
+            try:
+                name = await self.client.wait_for("message", check=check, timeout=60)
+            except asyncio.TimeoutError:
+                await ctx.respond("You took too long to respond")
+            else:
+                await ctx.respond("What is the do you want to update the `name`, `url` or `channel`?")
+                try:
+                    update = await self.client.wait_for("message", check=check, timeout=60)
+                except asyncio.TimeoutError:
+                    await ctx.respond("You took too long to respond")
+                else:
+                    if update.content == "name":
+                        await ctx.respond("What do you want to update the name to?")
+                        try:
+                            newname = await self.client.wait_for("message", check=check, timeout=60)
+                        except asyncio.TimeoutError:
+                            await ctx.respond("You took too long to respond")
+                        else:
+                            async with aiosqlite.connect("databases/rss.db") as db:
+                                await db.execute("UPDATE rss SET name=? WHERE name=? AND guild=?", (newname.content, name.content, ctx.guild.id))
+                                await db.commit()
+                            await ctx.respond("Done updating name")
+                    elif update.content == "url":
+                        await ctx.respond("What do you want to update the url to?")
+                        try:
+                            newurl = await self.client.wait_for("message", check=check, timeout=60)
+                        except asyncio.TimeoutError:
+                            await ctx.respond("You took too long to respond")
+                        else:
+                            async with aiosqlite.connect("databases/rss.db") as db:
+                                await db.execute("UPDATE rss SET url=? WHERE name=? AND guild=?", (newurl.content, name.content, ctx.guild.id))
+                                await db.commit()
+                            await ctx.respond("Done updating url")
+                    elif update.content == "channel":
+                        await ctx.respond("What do you want to update the channel to?")
+                        try:
+                            newchannel = await self.client.wait_for("message", check=check, timeout=60)
+                        except asyncio.TimeoutError:
+                            await ctx.respond("You took too long to respond")
+                        else:
+                            async with aiosqlite.connect("databases/rss.db") as db:
+                                # remove the # from the channel
+                                channelinfo = newchannel.content.replace("#", "")
+                                # remove the < and > from the channel
+                                channelinfo = channelinfo.replace("<", "")
+                                channelinfo = channelinfo.replace(">", "")
+                                
+                                await db.execute("UPDATE rss SET channel=? WHERE name=? AND guild=?", (newchannel.content, name.content, ctx.guild.id))
+                                await db.commit()
+                            await ctx.respond("Done updating channel")
+                    else:
+                        await ctx.respond("That is not a valid option")
                 
             
     @tasks.loop(seconds=60)
