@@ -457,7 +457,7 @@ class music(commands.Cog):
         ctx.voice_state.loop = not ctx.voice_state.loop
         await ctx.message.add_reaction('✅')
 
-    @commands.command(name='play', aliases=['p'])
+    @commands.command(name='play', aliases=['pl'])
     async def _play(self, ctx: commands.Context, *, search: str):
         """Plays a song.
 
