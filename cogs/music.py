@@ -3,21 +3,14 @@ import functools
 import itertools
 import math
 import random
-import aiohttp
+
 import discord
 import youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
-import datetime as dt
-import typing as t
-
-LYRICS_URL = "https://some-random-api.ml/lyrics?title="
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
-
-class NoLyricsFound(commands.CommandError):
-    pass
 
 
 class VoiceError(Exception):
@@ -147,11 +140,11 @@ class Song:
     def create_embed(self):
         embed = (discord.Embed(title='Now playing',
                                description='```css\n{0.source.title}\n```'.format(self),
-                               color=discord.Color.blurple())
+                               color = 16202876)
                  .add_field(name='Duration', value=self.source.duration)
                  .add_field(name='Requested by', value=self.requester.mention)
                  .add_field(name='Uploader', value='[{0.source.uploader}]({0.source.uploader_url})'.format(self))
-                 .add_field(name='URL', value='[Click]({0.source.url})'.format(self))
+                 # .add_field(name='URL', value='[Click]({0.source.url})'.format(self))
                  .set_thumbnail(url=self.source.thumbnail))
 
         return embed
@@ -191,7 +184,7 @@ class VoiceState:
         self.songs = SongQueue()
 
         self._loop = False
-        self._volume = 0.5
+        self._volume = 1
         self.skip_votes = set()
 
         self.audio_player = bot.loop.create_task(self.audio_player_task())
@@ -229,7 +222,7 @@ class VoiceState:
                 # the player will disconnect due to performance
                 # reasons.
                 try:
-                    async with timeout(180):  # 3 minutes
+                    async with timeout(604800):  # 3 minutes
                         self.current = await self.songs.get()
                 except asyncio.TimeoutError:
                     self.bot.loop.create_task(self.stop())
@@ -261,7 +254,7 @@ class VoiceState:
             self.voice = None
 
 
-class Music(commands.Cog):
+class music(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.voice_states = {}
@@ -305,6 +298,7 @@ class Music(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def _summon(self, ctx: commands.Context, *, channel: discord.VoiceChannel = None):
         """Summons the bot to a voice channel.
+
         If no channel was specified, it joins your channel.
         """
 
@@ -318,7 +312,8 @@ class Music(commands.Cog):
 
         ctx.voice_state.voice = await destination.connect()
 
-    @commands.command(name='leave', aliases=['disconnect'])
+    @commands.command(name='leave', aliases=['disconnect', 'dc'])
+    # @commands.has_permissions(manage_guild=True)
     async def _leave(self, ctx: commands.Context):
         """Clears the queue and leaves the voice channel."""
 
@@ -327,6 +322,7 @@ class Music(commands.Cog):
 
         await ctx.voice_state.stop()
         del self.voice_states[ctx.guild.id]
+        await ctx.message.add_reaction('✅')
 
     @commands.command(name='volume')
     async def _volume(self, ctx: commands.Context, *, volume: int):
@@ -347,34 +343,36 @@ class Music(commands.Cog):
 
         await ctx.send(embed=ctx.voice_state.current.create_embed())
 
-    @commands.command(name='pause')
+    @commands.command(name='pause', aliases=['pa'])
+    # @commands.has_permissions(manage_guild=True)
     async def _pause(self, ctx: commands.Context):
         """Pauses the currently playing song."""
 
-        if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
+        if ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
-            await ctx.message.add_reaction('⏯')
+            await ctx.message.add_reaction('⏸️')
 
-    @commands.command(name='resume')
-    @commands.has_permissions(manage_guild=True)
+    @commands.command(name='resume', aliases=['re'])
+    # @commands.has_permissions(manage_guild=True)
     async def _resume(self, ctx: commands.Context):
         """Resumes a currently paused song."""
 
-        if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
+        if ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
-            await ctx.message.add_reaction('⏯')
+            await ctx.message.add_reaction('▶️')
 
-    @commands.command(name='stop')
+    @commands.command(name='stop', aliases=['close'])
+    # @commands.has_permissions(manage_guild=True)
     async def _stop(self, ctx: commands.Context):
         """Stops playing song and clears the queue."""
 
         ctx.voice_state.songs.clear()
 
-        if not ctx.voice_state.is_playing:
+        if ctx.voice_state.is_playing:
             ctx.voice_state.voice.stop()
             await ctx.message.add_reaction('⏹')
 
-    @commands.command(name='skip')
+    @commands.command(name='skip', aliases=['sk'])
     async def _skip(self, ctx: commands.Context):
         """Vote to skip a song. The requester can automatically skip.
         3 skip votes are needed for the song to be skipped.
@@ -401,9 +399,10 @@ class Music(commands.Cog):
         else:
             await ctx.send('You have already voted to skip this song.')
 
-    @commands.command(name='queue')
+    @commands.command(name='queue', aliases=['q'])
     async def _queue(self, ctx: commands.Context, *, page: int = 1):
         """Shows the player's queue.
+
         You can optionally specify the page to show. Each page contains 10 elements.
         """
 
@@ -447,6 +446,7 @@ class Music(commands.Cog):
     @commands.command(name='loop')
     async def _loop(self, ctx: commands.Context):
         """Loops the currently playing song.
+
         Invoke this command again to unloop the song.
         """
 
@@ -457,11 +457,13 @@ class Music(commands.Cog):
         ctx.voice_state.loop = not ctx.voice_state.loop
         await ctx.message.add_reaction('✅')
 
-    @commands.command(name='play')
+    @commands.command(name='play', aliases=['p'])
     async def _play(self, ctx: commands.Context, *, search: str):
         """Plays a song.
+
         If there are songs in the queue, this will be queued until the
         other songs finished playing.
+
         This command automatically searches from various sites if no URL is provided.
         A list of these sites can be found here: https://rg3.github.io/youtube-dl/supportedsites.html
         """
@@ -490,38 +492,5 @@ class Music(commands.Cog):
             if ctx.voice_client.channel != ctx.author.voice.channel:
                 raise commands.CommandError('Bot is already in a voice channel.')
 
-
-    @commands.command(help="This command shows lyrics for a song. You input the title and the bot tries to find the lyrics for that song", extras={"category":"Search"}, usage="lyrics [song name]", description="Song lyrics command")
-    async def lyrics(self, ctx, *, song = None):
-        if song is None:
-            try:
-                song = ctx.voice_state.current.source.title
-            except:
-                return await ctx.send("No song was provided")
-        
-        url = "https://some-random-api.ml/lyrics"
-        song = song.replace(" ", "+")
-        data = {
-            "title" : song
-        }
-
-        async with aiohttp.ClientSession() as session:
-                async with session.get(url, data=data) as resp:
-                    r = await resp.json()
-        if 'error' in r:
-            return await ctx.send(r['error'])
-        
-        em = discord.Embed(
-            title=r['title'],
-            description=f"{r['lyrics']}\n\n[Link on genius]({r['links']['genius']})", color=ctx.author.color
-        )
-        em.set_author(name=r['author'])
-        em.set_thumbnail(url=r['thumbnail']['genius'])
-        em.color = ctx.author.color
-        
-
-        await ctx.send(embed=em)
-
-
 def setup(bot):
-    bot.add_cog(Music(bot))
+  bot.add_cog(music(bot))
