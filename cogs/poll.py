@@ -102,16 +102,29 @@ class Polls(commands.Cog):
             return await ctx.send('Need at least 1 question with 2 choices.')
         elif len([choice_1, choice_2, choice_3, choice_4, choice_5, choice_6, choice_7, choice_8, choice_9, choice_10, choice_11, choice_12, choice_13, choice_14, choice_15, choice_16, choice_17, choice_18, choice_19, choice_20]) > 21:
             return await ctx.send('You can only have up to 20 choices.')
+        try:
+            choses = [choice_1, choice_2, choice_3, choice_4, choice_5, choice_6, choice_7, choice_8, choice_9, choice_10, choice_11, choice_12, choice_13, choice_14, choice_15, choice_16, choice_17, choice_18, choice_19, choice_20]
+            choices = [(to_emoji(e), v) for e, v in enumerate(choses) if v is not None]
+            em = discord.Embed(title=question, description='\n'.join(f'{keycap}: {content}' for keycap, content in choices),color=0x20BEFF)
+            em.set_footer(text=f'Poll created by {ctx.author}')
 
-        choses = [choice_1, choice_2, choice_3, choice_4, choice_5, choice_6, choice_7, choice_8, choice_9, choice_10, choice_11, choice_12, choice_13, choice_14, choice_15, choice_16, choice_17, choice_18, choice_19, choice_20]
-        choices = [(to_emoji(e), v) for e, v in enumerate(choses) if v is not None]
-        em = discord.Embed(title=question, description='\n'.join(f'{keycap}: {content}' for keycap, content in choices),color=0x20BEFF)
-        em.set_footer(text=f'Poll created by {ctx.author}')
+            poll = await ctx.send(embed=em)
+            for emoji, _ in choices:
+                await poll.add_reaction(emoji)
+            await ctx.respond("Poll created!\n If you like this bot a vote would be appreciate https://top.gg/bot/902240397273743361", ephemeral=True)
+        except Exception as e:
+            pass
 
-        poll = await ctx.send(embed=em)
-        for emoji, _ in choices:
-            await poll.add_reaction(emoji)
-        await ctx.respond("Poll created!\n If you like this bot a vote would be appreciate https://top.gg/bot/902240397273743361", ephemeral=True)
+    #if a bot does not have permissions to add reactions
+    @quickpoll__slash.error
+    async def quickpoll__slash_error(self, ctx, error):
+        if isinstance(error, commands.BotMissingPermissions):
+            return await ctx.respond("I don't have permissions to add reactions", ephemeral=True)
+        if isinstance(error, commands.MissingPermissions):
+            return await ctx.respond("You don't have permissions to add reactions", ephemeral=True)
+        if isinstance(error, discord.errors.Forbidden):
+            return await ctx.respond("I don't have permissions to post in that channel", ephemeral=True)
+        
 
 def setup(bot):
     bot.add_cog(Polls(bot))
