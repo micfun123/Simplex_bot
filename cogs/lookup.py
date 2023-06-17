@@ -460,7 +460,7 @@ class lookup(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def ForceRSS(self, ctx):
+    async def forcerss(self, ctx):
         await self.rss_loop()
         await ctx.respond("Done")
 
