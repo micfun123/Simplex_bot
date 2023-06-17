@@ -462,6 +462,7 @@ class lookup(commands.Cog):
     @commands.is_owner()
     async def forcerss(self, ctx):
         print("Running RSS Loop")
+        await ctx.respond("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text, lastpost text)")
             await db.commit()
