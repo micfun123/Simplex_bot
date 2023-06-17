@@ -445,17 +445,26 @@ class lookup(commands.Cog):
                                     pass
                                 
 
+                            try:
 
-
-
-                            await channel.send(embed=Embed)
-                            await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
-                            await db.commit()
+                                await channel.send(embed=Embed)
+                                await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
+                                await db.commit()
+                                log(f"Sent new post for {row[0]} this is server {row[3]} and the last post is {feed.entries[0].link}")
+                            except Exception as e:
+                                print(e)
+                                log(e)
                 except Exception as e:
                     print(e)
                     log(e)
 
-             
+    @commands.command()
+    @commands.is_owner()
+    async def ForceRSS(self, ctx):
+        await self.rss_loop()
+        await ctx.respond("Done")
+
+
 
     @rss_loop.before_loop
     async def before_rss_loop(self):
