@@ -401,6 +401,8 @@ class lookup(commands.Cog):
                     if row[4] == None:
                         await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
                         await db.commit()
+                        print("Updated last post")
+                        log(f"Updated last post for {row[0]} this is server {row[3]} and the last post is {feed.entries[0].link}")
                     else:
                         if feed.entries[0].link != row[4]:
                             channel = await self.client.fetch_channel(row[2])
