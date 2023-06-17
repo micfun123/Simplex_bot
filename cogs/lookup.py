@@ -461,8 +461,76 @@ class lookup(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def forcerss(self, ctx):
-        await self.rss_loop()
-        await ctx.respond("Done")
+        print("Running RSS Loop")
+        async with aiosqlite.connect("databases/rss.db") as db:
+            await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text, lastpost text)")
+            await db.commit()
+            cursor = await db.execute("SELECT * FROM rss")
+            rows = await cursor.fetchall()
+            for row in rows:
+                try:
+                    feed = feedparser.parse(row[1])
+                    if row[4] == None:
+                        await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
+                        await db.commit()
+                        print("Updated last post")
+                        log(f"Updated last post for {row[0]} this is server {row[3]} and the last post is {feed.entries[0].link}")
+                    else:
+                        if feed.entries[0].link != row[4]:
+                            channel = await self.client.fetch_channel(row[2])
+                            print(channel)
+                            Embed = discord.Embed(title=feed.entries[0].title, color=0x00ff00)
+
+                            try:
+                                Embed.description = feed.channel["description"]
+                            except:
+                                pass
+
+
+                            try:
+                                Embed.set_thumbnail(url=feed.channel["image"]["href"])
+                            except:
+                                try:
+                                    Embed.set_thumbnail(url=feed.entries[0].media_thumbnail[0]["url"])
+                                except:
+                                    pass
+
+                            try:
+                                Embed.author(name=feed.channel["title"])
+                            except:
+                                pass
+
+                            try:
+                                Embed.set_footer(text=feed.entries[0].author)
+                            except:
+                                pass
+
+                            
+                            Embed.add_field(name="Link", value=feed.entries[0].link, inline=False)
+
+                            try:
+                                Embed.add_field(name="Summary", value=feed.entries[0].description, inline=False)
+                            except:
+                                try:
+                                    Embed.add_field(name="Summary", value=feed.entries[0].summary, inline=False)
+                                except:
+                                    pass
+                                
+
+                            try:
+
+                                await channel.send(embed=Embed)
+                                await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
+                                await db.commit()
+                                log(f"Sent new post for {row[0]} this is server {row[3]} and the last post is {feed.entries[0].link}")
+                            except Exception as e:
+                                print(e)
+                                log(e)
+                                await ctx.respond(e)
+                except Exception as e:
+                    print(e)
+                    log(e)
+                    await ctx.respond(e)
 
 
 
