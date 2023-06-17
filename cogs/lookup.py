@@ -462,7 +462,7 @@ class lookup(commands.Cog):
     @commands.is_owner()
     async def forcerss(self, ctx):
         print("Running RSS Loop")
-        await ctx.respond("Running RSS Loop")
+        await ctx.send("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text, lastpost text)")
             await db.commit()
@@ -524,14 +524,15 @@ class lookup(commands.Cog):
                                 await db.execute("UPDATE rss SET lastpost=? WHERE name=? AND guild=?", (feed.entries[0].link, row[0], row[3]))
                                 await db.commit()
                                 log(f"Sent new post for {row[0]} this is server {row[3]} and the last post is {feed.entries[0].link}")
+                                await ctx.send(f"Sent new post for {row[0]} this is server {row[3]} and the last post is {feed.entries[0].link}")
                             except Exception as e:
                                 print(e)
                                 log(e)
-                                await ctx.respond(e)
+                                await ctx.send(e)
                 except Exception as e:
                     print(e)
                     log(e)
-                    await ctx.respond(e)
+                    await ctx.send(e)
 
 
 
