@@ -17,7 +17,9 @@ from tools import log
 class lookup(commands.Cog):
     def __init__(self, client): 
         self.client = client
+        #start the rss looper task
         self.rsslooper.start()
+
 
 
 
@@ -463,10 +465,11 @@ class lookup(commands.Cog):
         print("Done running RSS Loop")
 
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=1)
     async def rsslooper(self):
-        log("Running RSS Loop")
         print("Running RSS Loop")
+        rss = await self.client.fetch_channel(1121544547068035193)
+        await rss.send("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
@@ -534,6 +537,7 @@ class lookup(commands.Cog):
 
     @rsslooper.before_loop
     async def before_rsslooper(self):
+        print('waiting to run RSS Loop...')
         await self.client.wait_until_ready()
 
 
