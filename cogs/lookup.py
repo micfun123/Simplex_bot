@@ -9,7 +9,6 @@ import random
 import asyncio
 import feedparser
 import requests
-from tools import log
 
 
 
