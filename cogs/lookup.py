@@ -9,6 +9,7 @@ import random
 import asyncio
 import feedparser
 import requests
+from tools import log
 
 
 
@@ -17,6 +18,8 @@ class lookup(commands.Cog):
     def __init__(self, client): 
         self.client = client
         self.rsslooper.start()
+
+
 
 
     @commands.command()
@@ -462,6 +465,7 @@ class lookup(commands.Cog):
 
     @tasks.loop(minutes=5)
     async def rsslooper(self):
+        log("Running RSS Loop")
         print("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
