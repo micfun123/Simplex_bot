@@ -476,11 +476,13 @@ class lookup(commands.Cog):
             for row in rows:
                 try:
                     print("Checking " + row[0])
+                    await rss.send("Checking " + row[0])
                     name = row[0]
                     url = row[1]
                     channel = row[2]
                     guild = row[3]
                     lastpost = row[4]
+
 
                     # Check if the last post is None
                     if lastpost is None:
