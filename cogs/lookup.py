@@ -399,7 +399,6 @@ class lookup(commands.Cog):
             rows = await con.fetchall()
             for row in rows:
                 try:
-                    print("Checking " + row[0])
                     name = row[0]
                     url = row[1]
                     channel = row[2]
@@ -533,6 +532,7 @@ class lookup(commands.Cog):
                 except Exception as e:
                     #if the exeption is missing access to the channel then dm the owner
                     print(f"Error processing RSS feed '{name}': {str(e)}")
+                    await rss.send(f"Error processing RSS feed '{name}': {str(e)}")
 
         print("Done running RSS Loop")
 
