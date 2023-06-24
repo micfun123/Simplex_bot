@@ -127,4 +127,12 @@ con.commit()
 con.close()
 print("Welcome.db created")
 
+
+con = sqlite3.connect("databases/log.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS log (GuildID INTEGER, ChannelID INTEGER)")
+con.commit()
+con.close()
+print("log.db created")
+
 print("all databases created")
