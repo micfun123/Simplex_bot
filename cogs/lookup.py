@@ -473,8 +473,6 @@ class lookup(commands.Cog):
             rows = await con.fetchall()
             for row in rows:
                 try:
-                    print("Checking " + row[0])
-                    await rss.send("Checking " + row[0])
                     name = row[0]
                     url = row[1]
                     channel = row[2]
