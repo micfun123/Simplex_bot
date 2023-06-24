@@ -38,26 +38,6 @@ class Moderationsettings(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def set_all_log(self, ctx):
-        #make sql file for logging
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS log (GuildID INTEGER, ChannelID INTEGER)")
-        con.commit()
-        con.close()
-        #convert json to sql
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        data = await get_data()
-        for i in data:
-            cur.execute("INSERT INTO log VALUES (?, ?)", (i['guild_id'], i['channel']))
-        con.commit()
-        con.close()
-        await ctx.send("Done")
-
-
-    @commands.command()
-    @commands.is_owner()
     async def announcement_all(self, ctx, *, message):
         sentto = 0
         #get all servers
