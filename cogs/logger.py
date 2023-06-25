@@ -7,6 +7,7 @@ from discord.ext import commands
 import discord.ui 
 import calendar, datetime, time
 import sqlite3
+import aiosqlite
 
 
 async def get_data_announcement():
@@ -128,55 +129,6 @@ class Moderationsettings(commands.Cog):
             con.commit()
             await ctx.send(f"Set announcement channel to {channel.mention}")
 
-    #@commands.command(hidden = True)
-    #@commands.is_owner()
-    #async def set_all_log(self, ctx):
-    #    data = await get_data()
-    #    for guild in self.client.guilds:
-    #        append_this = {
-    #            "guild_id": guild.id,
-    #            "channel": None,
-    #    
-    #        }
-    #        data.append(append_this)
-
-    #    await dump_data(data)
-    #    await ctx.send("Done")
-
-
-    #@commands.command(hidden = True)
-    #@commands.is_owner()
-    #async def set_all_announcement(self, ctx):
-    #    await ctx.send("starting")
-    #    con = sqlite3.connect("databases/announcement.db")
-    #    cur = con.cursor()
-    #    cur.execute("CREATE TABLE server(ServerID int, channel int)")
-    #    for i in self.client.guilds:
-    #        cur.execute("INSERT INTO server(ServerID, channel) VALUES(?, ?)", (i.id, None))
-    #        await ctx.send(f"{i} has been set")
-    #        con.commit()
-    #    con.close()
-
-    #@commands.Cog.listener()
-    #async def on_guild_join(self, guild):
-    #    data = await get_data()
-    #    append_this = {
-    #        "guild_id": guild.id,
-    #        "channel": None,
-    #        
-    #    }
-    #    data.append(append_this)
-
-    #    await dump_data(data)
-    #    con = sqlite3.connect("databases/announcement.db")
-    #    cur = con.cursor()
-    #    cur.execute("CREATE TABLE server(ServerID int, channel)")
-    #    cur.execute("INSERT INTO server(ServerID, channel) VALUES(?, ?)", (guild.id, None))
-    #    con.commit()
-    #    con.close()
-        
-
-       
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
@@ -194,13 +146,16 @@ class Moderationsettings(commands.Cog):
 
         con = sqlite3.connect("databases/log.db")
         cur = con.cursor()
-        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (after.guild.id,)).fetchone()
+        async with aiosqlite.connect("databases/log.db") as con:
+            cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (after.guild.id,))
+            data = await cur.fetchone()
         if data:
             channel = self.client.get_channel(data[1])
             await channel.send(embed=em)
         else:
             return
         
+
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.nick is not None and after.nick is None:
@@ -223,20 +178,23 @@ class Moderationsettings(commands.Cog):
 
         con = sqlite3.connect("databases/log.db")
         cur = con.cursor()
-        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (after.guild.id,)).fetchone()
+        async with aiosqlite.connect("databases/log.db") as con:
+            cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (after.guild.id,))
+            data = await cur.fetchone()
         if data:
             channel = self.client.get_channel(data[1])
             await channel.send(embed=em)
         else:
             return
         
+        
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
         em = discord.Embed(color=discord.Color.blue(), 
             title="Member Banned!", description=f"{user.name} Has been banned from the server", timestamp = datetime.datetime.utcnow())
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (guild.id,)).fetchone()
+        async with aiosqlite.connect("databases/log.db") as con:
+            cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (guild.id,))
+            data = await cur.fetchone()
         if data:
             channel = self.client.get_channel(data[1])
             await channel.send(embed=em)
@@ -248,28 +206,30 @@ class Moderationsettings(commands.Cog):
     async def on_member_unban(self, guild, user):
         em = discord.Embed(color=discord.Color.blue(), 
             title="Member Unbanned!", description=f"{user.name} Has been unbanned from the server", timestamp = datetime.datetime.utcnow())
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (guild.id,)).fetchone()
+        async with aiosqlite.connect("databases/log.db") as con:
+            cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (guild.id,))
+            data = await cur.fetchone()
         if data:
             channel = self.client.get_channel(data[1])
             await channel.send(embed=em)
         else:
             return
         
+        
     @commands.Cog.listener()
     async def on_guild_channel_delete(self,channel):
         em = discord.Embed(color=discord.Color.red(), 
             title="Channel deleted!", description=f"{channel.name} Has been deleated from the server", timestamp = datetime.datetime.utcnow())
         em.add_field(name="Channel:", value=channel.name, inline=False)
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (channel.guild.id,)).fetchone()
+        async with aiosqlite.connect("databases/log.db") as con:
+            cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (channel.guild.id,))
+            data = await cur.fetchone()
         if data:
             channel = self.client.get_channel(data[1])
             await channel.send(embed=em)
         else:
             return
+        
         
     @commands.Cog.listener()
     async def on_guild_channel_create(self,channel):
@@ -278,12 +238,15 @@ class Moderationsettings(commands.Cog):
         em.add_field(name="Channel:", value=channel.name)
         con = sqlite3.connect("databases/log.db")
         cur = con.cursor()
-        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (channel.guild.id,)).fetchone()
+        async with aiosqlite.connect("databases/log.db") as con:
+            cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (channel.guild.id,))
+            data = await cur.fetchone()
         if data:
             channel = self.client.get_channel(data[1])
             await channel.send(embed=em)
         else:
             return
+        
         
     #on message delete
     @commands.Cog.listener()
@@ -302,15 +265,14 @@ class Moderationsettings(commands.Cog):
         if message.attachments:
             em.add_field(name="Attachment", value=message.attachments[0].url)
                
-
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (message.guild.id,)).fetchone()
-        if data:
-            channel = self.client.get_channel(data[1])
-            await channel.send(embed=em)
-        else:
-            return
+        async with aiosqlite.connect("databases/log.db") as con:
+           async with con.execute("SELECT * FROM log WHERE GuildID=?", (message.guild.id,)) as cur:
+               data = await cur.fetchone()
+               if data:
+                   channel = self.client.get_channel(data[1])
+                   await channel.send(embed=em)
+               else:
+                   return
 
 
 
