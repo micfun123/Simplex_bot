@@ -134,6 +134,9 @@ class Moderationsettings(commands.Cog):
     async def on_message_edit(self, before, after):
         if after.author.id == self.client.user.id:
             return
+        if before.content == after.content:
+            return
+        
         em = discord.Embed(color=discord.Color.blue(), 
             title="Message Edit", description=f"{before.author} edited their message",)
         em.add_field(name="Before", value=before.content)
