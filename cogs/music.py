@@ -97,7 +97,7 @@ class Music(commands.Cog):
             await ctx.send("Skipped to the next song.")
 
     @commands.command()
-    async def clear(self, ctx):
+    async def clear_queue(self, ctx):
         self.queue.clear()
         await ctx.send("Queue cleared.")
 
