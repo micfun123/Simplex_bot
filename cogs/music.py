@@ -81,7 +81,7 @@ class Music(commands.Cog):
             await self.play_next(ctx)
 
     @commands.command()
-    async def clear(self, ctx):
+    async def clear_queue(self, ctx):
         self.queue.clear()
 
 def setup(bot):
