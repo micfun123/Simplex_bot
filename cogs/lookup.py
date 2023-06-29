@@ -404,11 +404,12 @@ class lookup(commands.Cog):
                     channel = row[2]
                     guild = row[3]
                     lastpost = row[4]
+                    await ctx.send(f"Checking server {guild} for feed {name} with url {url} and the last post was {lastpost}")
 
                     # Check if the last post is None
                     if lastpost is None:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (url, name))
+                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (lastpost, name))
                         await db.commit()
 
                         # Send the message of the last post to the specified channel
@@ -430,7 +431,7 @@ class lookup(commands.Cog):
 
                     else:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (url, name))
+                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (lastpost, name))
                         await db.commit()
 
                         # Send the message of the last post if it's new
