@@ -402,7 +402,7 @@ class lookup(commands.Cog):
                     name = row[0]
                     url = row[1]
                     channel = row[2]
-                    guild = row[3]
+                    guild_id = row[3]
                     lastpost = row[4]
                     feed = feedparser.parse(url)
 
@@ -411,25 +411,20 @@ class lookup(commands.Cog):
                     # Get the title and link of the latest entry
                     entry_title = latest_entry.title
                     entry_link = latest_entry.link
-                    
 
                     # Check if the last post is None
                     if lastpost is None:
                         # Update the last post with the URL
-                        
+                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
+                        await db.commit()
 
                         # Send the message of the last post to the specified channel
-                        target_channel = await self.client.fetch_channel(channel)
+                        target_channel = self.client.get_channel(channel)
                         if target_channel:
-                            # Read the RSS feed
-                            
-
                             # Send the message with the title and link
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
-                            await ctx.send(f"Checking server {guild} for feed {name} with url {url} and the last post was {lastpost}")
-                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
-                            await db.commit()
+                            await ctx.send(f"Checking server {guild_id} for feed {name} with URL {url} and the last post was {lastpost}")
 
                     else:
                         # Update the last post with the URL
@@ -438,18 +433,8 @@ class lookup(commands.Cog):
 
                         # Send the message of the last post if it's new
                         if lastpost != entry_link:
-                            target_channel = await self.client.fetch_channel(channel)
+                            target_channel = self.client.get_channel(channel)
                             if target_channel:
-                                # Read the RSS feed
-                                feed = feedparser.parse(url)
-
-                                # Get the latest entry from the feed
-                                latest_entry = feed.entries[0]
-
-                                # Get the title and link of the latest entry
-                                entry_title = latest_entry.title
-                                entry_link = latest_entry.link
-
                                 # Send the message with the title and link
                                 message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                                 await target_channel.send(message)
@@ -457,9 +442,9 @@ class lookup(commands.Cog):
                 except Exception as e:
                     print(f"Error processing RSS feed '{name}': {str(e)}")
                     await ctx.send(f"Error processing RSS feed '{name}': {str(e)}")
-                    #if the exeption is missing access to the channel then dm the owner
+                    # If the exception is missing access to the channel, then DM the owner
                     if "Missing Access" in str(e):
-                        guild = await self.client.fetch_guild(guild)
+                        guild = self.client.get_guild(guild_id)
                         owner = guild.owner
                         await owner.send(f"Error processing RSS feed '{name}': {str(e)}")
                         await owner.send("Please make sure I have access to the channel")
