@@ -466,11 +466,10 @@ class lookup(commands.Cog):
         print("Done running RSS Loop")
 
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=60)
     async def rsslooper(self):
         print("Running RSS Loop")
         rss = await self.client.fetch_channel(1121544547068035193)
-        await rss.send("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
@@ -540,12 +539,10 @@ class lookup(commands.Cog):
                                     message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                                     await target_channel.send(message)
                             except Exception as e:
-                                await rss.send(f"Error processing RSS feed '{name}': {str(e)} channel: {channel} not found")
+                                pass
 
                 except Exception as e:
-                    #if the exeption is missing access to the channel then dm the owner
-                    print(f"Error processing RSS feed '{name}': {str(e)}")
-                    await rss.send(f"Error processing RSS feed '{name}': {str(e)}")
+                    pass
 
         print("Done running RSS Loop")
 
