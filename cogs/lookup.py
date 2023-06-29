@@ -428,16 +428,16 @@ class lookup(commands.Cog):
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
                             await ctx.send(f"Checking server {guild} for feed {name} with url {url} and the last post was {lastpost}")
-                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
+                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
                             await db.commit()
 
                     else:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
+                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
                         await db.commit()
 
                         # Send the message of the last post if it's new
-                        if lastpost != latest_entry.link:
+                        if lastpost != entry_link:
                             target_channel = await self.client.fetch_channel(channel)
                             if target_channel:
                                 # Read the RSS feed
@@ -505,17 +505,17 @@ class lookup(commands.Cog):
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
                             # Update the last post with the URL
-                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
+                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
                             await db.commit()
 
 
                     else:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
+                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
                         await db.commit()
 
                         # Send the message of the last post if it's new
-                        if lastpost != latest_entry.link:
+                        if lastpost != entry_link:
                             try:
                                 target_channel = await self.client.fetch_channel(channel)
                                 if target_channel:
