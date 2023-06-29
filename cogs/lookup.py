@@ -464,7 +464,7 @@ class lookup(commands.Cog):
         print("Done running RSS Loop")
 
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=5)
     async def rsslooper(self):
         print("Running RSS Loop")
         rss = await self.client.fetch_channel(1121544547068035193)
