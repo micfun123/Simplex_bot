@@ -471,7 +471,12 @@ class lookup(commands.Cog):
                     # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
-                    entry_title = latest_entry.title
+                    if latest_entry.title is None:
+                        entry_title = "No title"
+                    else:
+                        entry_title = latest_entry.title
+                        
+                    
                     entry_link = latest_entry.link
 
 
