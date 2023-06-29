@@ -481,6 +481,13 @@ class lookup(commands.Cog):
                     channel = row[2]
                     guild = row[3]
                     lastpost = row[4]
+                    # Read the RSS feed
+                    feed = feedparser.parse(url)
+                    # Get the latest entry from the feed
+                    latest_entry = feed.entries[0]
+                    # Get the title and link of the latest entry
+                    entry_title = latest_entry.title
+                    entry_link = latest_entry.link
 
 
                     # Check if the last post is None
