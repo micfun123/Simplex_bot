@@ -409,7 +409,7 @@ class lookup(commands.Cog):
                     # Check if the last post is None
                     if lastpost is None:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (lastpost, name))
+                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
                         await db.commit()
 
                         # Send the message of the last post to the specified channel
@@ -431,11 +431,11 @@ class lookup(commands.Cog):
 
                     else:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (lastpost, name))
+                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
                         await db.commit()
 
                         # Send the message of the last post if it's new
-                        if lastpost != url:
+                        if lastpost != latest_entry.link:
                             target_channel = await self.client.fetch_channel(channel)
                             if target_channel:
                                 # Read the RSS feed
