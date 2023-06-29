@@ -404,6 +404,13 @@ class lookup(commands.Cog):
                     channel = row[2]
                     guild = row[3]
                     lastpost = row[4]
+                    feed = feedparser.parse(url)
+
+                    # Get the latest entry from the feed
+                    latest_entry = feed.entries[0]
+                    # Get the title and link of the latest entry
+                    entry_title = latest_entry.title
+                    entry_link = latest_entry.link
                     
 
                     # Check if the last post is None
@@ -415,14 +422,7 @@ class lookup(commands.Cog):
                         target_channel = await self.client.fetch_channel(channel)
                         if target_channel:
                             # Read the RSS feed
-                            feed = feedparser.parse(url)
-
-                            # Get the latest entry from the feed
-                            latest_entry = feed.entries[0]
-
-                            # Get the title and link of the latest entry
-                            entry_title = latest_entry.title
-                            entry_link = latest_entry.link
+                            
 
                             # Send the message with the title and link
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
