@@ -548,11 +548,6 @@ class lookup(commands.Cog):
 
         print("Done running RSS Loop")
 
-    @rsslooper.before_loop
-    async def before_rsslooper(self):
-        print('waiting to run RSS Loop...')
-        await self.client.wait_until_ready()
-
 
 def setup(client):
     client.add_cog(lookup(client))
