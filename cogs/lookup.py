@@ -404,17 +404,17 @@ class lookup(commands.Cog):
                     channel = row[2]
                     guild = row[3]
                     lastpost = row[4]
-                    await ctx.send(f"Checking server {guild} for feed {name} with url {url} and the last post was {lastpost}")
+                    
 
                     # Check if the last post is None
                     if lastpost is None:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
-                        await db.commit()
+                        
 
                         # Send the message of the last post to the specified channel
                         target_channel = await self.client.fetch_channel(channel)
                         if target_channel:
+                            await ctx.send(f"Checking server {guild} for feed {name} with url {url} and the last post was {lastpost}")
                             # Read the RSS feed
                             feed = feedparser.parse(url)
 
@@ -428,6 +428,8 @@ class lookup(commands.Cog):
                             # Send the message with the title and link
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
+                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
+                            await db.commit()
 
                     else:
                         # Update the last post with the URL
@@ -483,9 +485,7 @@ class lookup(commands.Cog):
 
                     # Check if the last post is None
                     if lastpost is None:
-                        # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
-                        await db.commit()
+                        
 
                         # Send the message of the last post to the specified channel
                         target_channel = await self.client.fetch_channel(channel)
@@ -499,10 +499,14 @@ class lookup(commands.Cog):
                             # Get the title and link of the latest entry
                             entry_title = latest_entry.title
                             entry_link = latest_entry.link
+                            
 
                             # Send the message with the title and link
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
+                            # Update the last post with the URL
+                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (latest_entry.link, name))
+                            await db.commit()
 
 
                     else:
