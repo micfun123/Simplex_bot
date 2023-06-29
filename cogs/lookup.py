@@ -16,7 +16,11 @@ import requests
 class lookup(commands.Cog):
     def __init__(self, client): 
         self.client = client
+        #start the rss looper task
         self.rsslooper.start()
+
+
+
 
 
     @commands.command()
@@ -395,7 +399,6 @@ class lookup(commands.Cog):
             rows = await con.fetchall()
             for row in rows:
                 try:
-                    print("Checking " + row[0])
                     name = row[0]
                     url = row[1]
                     channel = row[2]
@@ -460,20 +463,22 @@ class lookup(commands.Cog):
         print("Done running RSS Loop")
 
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=1)
     async def rsslooper(self):
         print("Running RSS Loop")
+        rss = await self.client.fetch_channel(1121544547068035193)
+        await rss.send("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
             for row in rows:
                 try:
-                    print("Checking " + row[0])
                     name = row[0]
                     url = row[1]
                     channel = row[2]
                     guild = row[3]
                     lastpost = row[4]
+
 
                     # Check if the last post is None
                     if lastpost is None:
@@ -506,30 +511,35 @@ class lookup(commands.Cog):
 
                         # Send the message of the last post if it's new
                         if lastpost != url:
-                            target_channel = await self.client.fetch_channel(channel)
-                            if target_channel:
-                                # Read the RSS feed
-                                feed = feedparser.parse(url)
+                            try:
+                                target_channel = await self.client.fetch_channel(channel)
+                                if target_channel:
+                                    # Read the RSS feed
+                                    feed = feedparser.parse(url)
 
-                                # Get the latest entry from the feed
-                                latest_entry = feed.entries[0]
+                                    # Get the latest entry from the feed
+                                    latest_entry = feed.entries[0]
 
-                                # Get the title and link of the latest entry
-                                entry_title = latest_entry.title
-                                entry_link = latest_entry.link
+                                    # Get the title and link of the latest entry
+                                    entry_title = latest_entry.title
+                                    entry_link = latest_entry.link
 
-                                # Send the message with the title and link
-                                message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
-                                await target_channel.send(message)
+                                    # Send the message with the title and link
+                                    message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
+                                    await target_channel.send(message)
+                            except Exception as e:
+                                await rss.send(f"Error processing RSS feed '{name}': {str(e)} channel: {channel} not found")
 
                 except Exception as e:
                     #if the exeption is missing access to the channel then dm the owner
                     print(f"Error processing RSS feed '{name}': {str(e)}")
+                    await rss.send(f"Error processing RSS feed '{name}': {str(e)}")
 
         print("Done running RSS Loop")
 
     @rsslooper.before_loop
     async def before_rsslooper(self):
+        print('waiting to run RSS Loop...')
         await self.client.wait_until_ready()
 
 
