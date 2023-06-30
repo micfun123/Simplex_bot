@@ -398,7 +398,12 @@ class lookup(commands.Cog):
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
+            totalfeeds = len(rows)
+            await ctx.send(f"Found {totalfeeds} feeds")
+            donefeeds = 0
             for row in rows:
+                donefeeds += 1
+                await ctx.send(f"Checking feed {donefeeds}/{totalfeeds}")
                 try:
                     name = row[0]
                     url = row[1]
