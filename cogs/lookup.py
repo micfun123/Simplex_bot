@@ -420,8 +420,14 @@ class lookup(commands.Cog):
                     else:
                         entry_title = latest_entry.title
                     
-                    entry_link = latest_entry.link
-                    
+                    if latest_entry.link is None:
+                        try:
+                            entry_link = latest_entry.description
+                        except:
+                            pass
+                    else:
+                        entry_link = latest_entry.link
+                                        
 
                     # Check if the last post is None
                     if lastpost is None:
