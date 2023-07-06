@@ -311,7 +311,9 @@ class lookup(commands.Cog):
                         async with aiosqlite.connect("databases/rss.db") as db:
                             await db.execute("INSERT INTO rss VALUES (?,?,?,?,?)", (name.content, url.content, channelinfo, ctx.guild.id,None))
                             await db.commit()
-                        await ctx.respond("Done")
+                        await ctx.respond("Done adding feed. We will now send a test message to the channel")
+                        await channelcheck.send("This is a test message to make sure the feed works. We will check your rss feed every few hours to see if there is a new post. If there is a new post we will send it here.")
+                        await ctx.respond("Done sending test message if you did not recieve a message please check the channel you selected and make sure the bot has permissions to send messages in that channel")
 
         elif options == "remove":
             async with aiosqlite.connect("databases/rss.db") as db:
