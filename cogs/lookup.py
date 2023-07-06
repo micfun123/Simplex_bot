@@ -456,20 +456,25 @@ class lookup(commands.Cog):
                         if lastpost != entry_link:
                             target_channel = await self.client.fetch_channel(channel)
                             if target_channel:
-                                
                                 # Send the message with the title and link
                                 message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                                 await target_channel.send(message)
+                                
 
                 except Exception as e:
                     print(f"Error processing RSS feed '{name}': {str(e)}")
                     await ctx.send(f"Error processing RSS feed '{name}': {str(e)}")
-                    #if the exeption is missing access to the channel then dm the owner
-                    if "Missing Access" in str(e):
-                        guild = await self.client.fetch_guild(guild)
-                        owner = guild.owner
-                        await owner.send(f"Error processing RSS feed '{name}': {str(e)}")
-                        await owner.send("Please make sure I have access to the channel")
+                    try:
+                        #am i on the server
+                        await ctx.send("Checking if I am still on the server")
+                        await self.client.fetch_guild(guild)
+                    except:
+                        await ctx.send("I am not on the server anymore, removing feed")
+                        await db.execute("DELETE FROM rss WHERE name = ?", (name,))
+                        await db.commit()
+                        await ctx.send("Done removing feed")
+
+
         print("Done running RSS Loop")
 
 
