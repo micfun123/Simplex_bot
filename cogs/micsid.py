@@ -236,7 +236,7 @@ class BotMakerCommands(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def server_loop_up(self, ctx, *, server):
+    async def server_look_up(self, ctx, *, server):
         guild = self.client.get_guild(int(server))
         if guild == None:
             await ctx.send("Server not found")

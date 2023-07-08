@@ -311,7 +311,9 @@ class lookup(commands.Cog):
                         async with aiosqlite.connect("databases/rss.db") as db:
                             await db.execute("INSERT INTO rss VALUES (?,?,?,?,?)", (name.content, url.content, channelinfo, ctx.guild.id,None))
                             await db.commit()
-                        await ctx.respond("Done")
+                        await ctx.respond("Done adding feed. We will now send a test message to the channel")
+                        await channelcheck.send("This is a test message to make sure the feed works. We will check your rss feed every few hours to see if there is a new post. If there is a new post we will send it here.")
+                        await ctx.respond("Done sending test message if you did not recieve a message please check the channel you selected and make sure the bot has permissions to send messages in that channel")
 
         elif options == "remove":
             async with aiosqlite.connect("databases/rss.db") as db:
@@ -398,7 +400,12 @@ class lookup(commands.Cog):
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
+            totalfeeds = len(rows)
+            await ctx.send(f"Found {totalfeeds} feeds")
+            donefeeds = 0
             for row in rows:
+                donefeeds += 1
+                await ctx.send(f"Checking feed {donefeeds}/{totalfeeds}")
                 try:
                     name = row[0]
                     url = row[1]
@@ -410,9 +417,19 @@ class lookup(commands.Cog):
                     # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
-                    entry_title = latest_entry.title
-                    entry_link = latest_entry.link
+                    if latest_entry.title is None:
+                        entry_title = str(name)
+                    else:
+                        entry_title = latest_entry.title
                     
+                    if latest_entry.link is None:
+                        try:
+                            entry_link = latest_entry.description
+                        except:
+                            pass
+                    else:
+                        entry_link = latest_entry.link
+
 
                     # Check if the last post is None
                     if lastpost is None:
@@ -441,29 +458,25 @@ class lookup(commands.Cog):
                         if lastpost != entry_link:
                             target_channel = await self.client.fetch_channel(channel)
                             if target_channel:
-                                # Read the RSS feed
-                                feed = feedparser.parse(url)
-
-                                # Get the latest entry from the feed
-                                latest_entry = feed.entries[0]
-
-                                # Get the title and link of the latest entry
-                                entry_title = latest_entry.title
-                                entry_link = latest_entry.link
-
                                 # Send the message with the title and link
                                 message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                                 await target_channel.send(message)
+                                
 
                 except Exception as e:
                     print(f"Error processing RSS feed '{name}': {str(e)}")
                     await ctx.send(f"Error processing RSS feed '{name}': {str(e)}")
-                    #if the exeption is missing access to the channel then dm the owner
-                    if "Missing Access" in str(e):
-                        guild = await self.client.fetch_guild(guild)
-                        owner = guild.owner
-                        await owner.send(f"Error processing RSS feed '{name}': {str(e)}")
-                        await owner.send("Please make sure I have access to the channel")
+                    try:
+                        #am i on the server
+                        await ctx.send("Checking if I am still on the server")
+                        await self.client.fetch_guild(guild)
+                    except:
+                        await ctx.send("I am not on the server anymore, removing feed")
+                        await db.execute("DELETE FROM rss WHERE name = ?", (name,))
+                        await db.commit()
+                        await ctx.send("Done removing feed")
+
+
         print("Done running RSS Loop")
 
 
@@ -487,8 +500,18 @@ class lookup(commands.Cog):
                     # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
-                    entry_title = latest_entry.title
-                    entry_link = latest_entry.link
+                    if latest_entry.title is None:
+                        entry_title = str(name)
+                    else:
+                        entry_title = latest_entry.title
+                    
+                    if latest_entry.link is None:
+                        try:
+                            entry_link = latest_entry.description
+                        except:
+                            pass
+                    else:
+                        entry_link = latest_entry.link
 
 
                     # Check if the last post is None
@@ -498,15 +521,6 @@ class lookup(commands.Cog):
                         # Send the message of the last post to the specified channel
                         target_channel = await self.client.fetch_channel(channel)
                         if target_channel:
-                            # Read the RSS feed
-                            feed = feedparser.parse(url)
-
-                            # Get the latest entry from the feed
-                            latest_entry = feed.entries[0]
-
-                            # Get the title and link of the latest entry
-                            entry_title = latest_entry.title
-                            entry_link = latest_entry.link
                             
 
                             # Send the message with the title and link
@@ -527,15 +541,6 @@ class lookup(commands.Cog):
                             try:
                                 target_channel = await self.client.fetch_channel(channel)
                                 if target_channel:
-                                    # Read the RSS feed
-                                    feed = feedparser.parse(url)
-
-                                    # Get the latest entry from the feed
-                                    latest_entry = feed.entries[0]
-
-                                    # Get the title and link of the latest entry
-                                    entry_title = latest_entry.title
-                                    entry_link = latest_entry.link
 
                                     # Send the message with the title and link
                                     message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
