@@ -42,6 +42,7 @@ intents = discord.Intents.all()
 intents.presences = False
 intents.members = True
 intents.guilds = True
+intents.voice_states = True
 
 
 class MyBot(commands.Bot):
@@ -71,6 +72,7 @@ client = MyBot(
     intents=intents,
     members=True,
     guilds=True,
+    voice_states = True,
     case_insensitive=True,
     allowed_mentions=discord.AllowedMentions(everyone=False),
     help_command=PrettyHelp(),
