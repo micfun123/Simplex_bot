@@ -53,9 +53,7 @@ class Events(commands.Cog):
     
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        log(f"ERROR: {error}")
-        print(error)
-
+        
         if isinstance(error, commands.CommandOnCooldown):
             async def better_time(cd: int):
                 time = f"{cd}s"
