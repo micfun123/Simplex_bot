@@ -46,7 +46,6 @@ class mastodon(commands.Cog):
             cursor = await db.execute("SELECT * FROM mastodon")
             data = await cursor.fetchall()
             for row in data:
-                channeltosend = row[0]
                 guild = self.client.get_guild(row[1])
                 username = row[2]
                 last_posted = row[3]
@@ -61,12 +60,12 @@ class mastodon(commands.Cog):
                 #check if the last post is the same as the last posted
                 if last_post != last_posted:
                     #send the post
-                    tosend = await self.client.fetch_channel(channeltosend)
+                    tosend = await self.client.fetch_channel(row[0])
                     content = users_posts[0]["content"]
                     embed = discord.Embed(title=f"New post from {username}", description=content, color=discord.Color.random())
                     embed.set_footer(text="Powered by Mastodon")
                     await tosend.send(embed=embed)
-                    await db.execute("UPDATE mastodon SET last_posted = ? WHERE channel_id = ?", (last_post, channeltosend))
+                    await db.execute("UPDATE mastodon SET last_posted = ? WHERE channel_id = ?", (last_post, row[0]))
                     await db.commit()
                 else:
                     pass
