@@ -417,10 +417,11 @@ class lookup(commands.Cog):
                     # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
-                    if latest_entry.title is None:
-                        entry_title = str(name)
-                    else:
+                    #no attribute 'title'
+                    try:
                         entry_title = latest_entry.title
+                    except:
+                        entry_title = "No title"
                     
                     if latest_entry.link is None:
                         try:
@@ -500,10 +501,11 @@ class lookup(commands.Cog):
                     # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
-                    if latest_entry.title is None:
-                        entry_title = str(name)
-                    else:
+                    try:
                         entry_title = latest_entry.title
+                    except:
+                        entry_title = "No title"
+                    
                     
                     if latest_entry.link is None:
                         try:
