@@ -47,6 +47,7 @@ class mastodon(commands.Cog):
             await ctx.respond("Done")
         else:
             await ctx.respond("That is not a valid action, valid actions are: add, remove")
+        await ctx.respond("Thank you for using simplex voting and donating helps keep this bot free.", ephemeral=True)
 
 
 
