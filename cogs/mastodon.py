@@ -33,11 +33,20 @@ class mastodon(commands.Cog):
 
     @commands.slash_command(name="mastodon_manage", description="Manage the mastodon feeds")
     @commands.has_permissions(manage_channels=True)
-    async def mastodon_manage(self, ctx, channel:discord.TextChannel, username:str):
-        async with aiosqlite.connect("databases/mastodon.db") as db:
-            await db.execute("INSERT INTO mastodon (channel_id, guild_id, username, last_posted) VALUES (?, ?, ?, ?)", (channel.id, channel.guild.id, username, "0"))
-            await db.commit()
-        await ctx.respond("Done")
+    async def mastodon_manage(self, ctx, channel:discord.TextChannel, username:str,action:str):
+        action = action.lower()
+        if action == "add":
+            async with aiosqlite.connect("databases/mastodon.db") as db:
+                await db.execute("INSERT INTO mastodon (channel_id, guild_id, username, last_posted) VALUES (?, ?, ?, ?)", (channel.id, channel.guild.id, username, "0"))
+                await db.commit()
+            await ctx.respond("Done")
+        elif action == "remove":
+            async with aiosqlite.connect("databases/mastodon.db") as db:
+                await db.execute("DELETE FROM mastodon WHERE channel_id = ? AND guild_id = ? AND username = ?", (channel.id, channel.guild.id, username))
+                await db.commit()
+            await ctx.respond("Done")
+        else:
+            await ctx.respond("That is not a valid action, valid actions are: add, remove")
 
 
 
