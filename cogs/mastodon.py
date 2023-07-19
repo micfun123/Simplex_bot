@@ -4,6 +4,7 @@ import discord
 from mastodon import Mastodon
 import asyncio
 from datetime import datetime,time
+import requests
 import os
 from dotenv import load_dotenv
 
@@ -35,12 +36,12 @@ class mastodon(commands.Cog):
         async with aiosqlite.connect("databases/mastodon.db") as db:
             await db.execute("INSERT INTO mastodon (channel_id, guild_id, username, last_posted) VALUES (?, ?, ?, ?)", (channel.id, channel.guild.id, username, "0"))
             await db.commit()
-        await ctx.send("Done")
+        await ctx.respond("Done")
 
 
 
     #mastodon loop
-    @tasks.loop(seconds=120)
+    @tasks.loop(seconds=20)
     async def mastodon_looper(self):
         async with aiosqlite.connect("databases/mastodon.db") as db:
             cursor = await db.execute("SELECT * FROM mastodon")
@@ -58,10 +59,15 @@ class mastodon(commands.Cog):
                 users_posts = mastodon_client.account_statuses(userid)
                 last_post = users_posts[0]["id"]
                 #check if the last post is the same as the last posted
-                if last_post != last_posted:
+                if int(last_post) != int(last_posted):
+                    print(last_post)
                     #send the post
-                    tosend = await self.client.fetch_channel(row[0])
+                    tosend = await self.client.fetch_channel(int(row[0]))
                     content = users_posts[0]["content"]
+                    #just get the raw text remove the html
+                    content = content.replace("<p>", "")
+                    content = content.replace("</p>", "")
+                    content = content.replace("<br />", "\n")
                     embed = discord.Embed(title=f"New post from {username}", description=content, color=discord.Color.random())
                     embed.set_footer(text="Powered by Mastodon")
                     await tosend.send(embed=embed)
@@ -69,9 +75,17 @@ class mastodon(commands.Cog):
                     await db.commit()
                 else:
                     pass
+                await asyncio.sleep(5)
+            await db.commit()
 
 
+    #wait intill the loop is ready
+    @mastodon_looper.before_loop
+    async def before_mastodon_looper(self):
+        await self.client.wait_until_ready()
+        print("Mastodon loop is ready")
 
+        
 
 
 
