@@ -79,7 +79,7 @@ class mastodon(commands.Cog):
                     clean_content = clean_content.replace("<span class=\"p-locality\">", "")
                     clean_content = clean_content.replace("<span class=\"p-region\">", "")
                     
-                    embed = discord.Embed(title=f"New post from {username}", description=content, color=discord.Color.random())
+                    embed = discord.Embed(title=f"New post from {username}", description=clean_content, color=discord.Color.random())
                     embed.add_field(name="Link", value=f"https://mastodon.social/web/statuses/{last_post}")
                     embed.set_footer(text="Powered by Mastodon")
                     await tosend.send(embed=embed)
