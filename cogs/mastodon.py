@@ -81,6 +81,8 @@ class mastodon(commands.Cog):
                     clean_content = clean_content.replace('<span class="h-card" translate="no">', "")
                     clean_content = clean_content.replace('<span>', "")
                     clean_content = clean_content.replace('</a>', "")
+                    clean_content = clean_content.replace('<a href="', "")
+                    clean_content = clean_content.replace('</span>', "")
                     
                     embed = discord.Embed(title=f"New post from {username}", description=clean_content, color=discord.Color.random())
                     embed.add_field(name="Link", value=f"https://mastodon.social/web/statuses/{last_post}")
