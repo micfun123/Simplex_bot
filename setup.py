@@ -135,4 +135,11 @@ con.commit()
 con.close()
 print("log.db created")
 
+con = sqlite3.connect("databases/mastodon.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS mastodon (channel_id int, guild_id int, username text,last_posted text)")
+con.commit()
+con.close()
+print("mastodon.db created")
+
 print("all databases created")

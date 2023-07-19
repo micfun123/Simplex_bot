@@ -20,17 +20,6 @@ class mastodon(commands.Cog):
         #start the rss looper task
         self.mastodon_looper.start()
 
-
-
-    @commands.command()
-    @commands.is_owner()
-    async def make_mastodon_file(self, ctx):
-        async with aiosqlite.connect("databases/mastodon.db") as db:
-            await db.execute("CREATE TABLE IF NOT EXISTS mastodon (channel_id int, guild_id int, username text,last_posted text)")
-            await db.commit()
-        await ctx.respond("Done")
-
-
     @commands.slash_command(name="mastodon_manage", description="Manage the mastodon feeds")
     @commands.has_permissions(manage_channels=True)
     async def mastodon_manage(self, ctx, channel:discord.TextChannel, username:str,action:str):
