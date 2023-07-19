@@ -7,6 +7,7 @@ from datetime import datetime,time
 import requests
 import os
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
@@ -64,19 +65,16 @@ class mastodon(commands.Cog):
                     #send the post
                     tosend = await self.client.fetch_channel(int(row[0]))
                     content = users_posts[0]["content"]
-                    #just get the raw text remove the html
-                    content = content.replace("<p>", "")
-                    content = content.replace("</p>", "")
-                    content = content.replace("<br />", "\n")
+                    clean_content = content
                     embed = discord.Embed(title=f"New post from {username}", description=content, color=discord.Color.random())
+                    embed.add_field(name="Link", value=f"https://mastodon.social/web/statuses/{last_post}")
                     embed.set_footer(text="Powered by Mastodon")
                     await tosend.send(embed=embed)
-                    await db.execute("UPDATE mastodon SET last_posted = ? WHERE channel_id = ?", (last_post, row[0]))
+                    await db.execute("UPDATE mastodon SET last_posted = ? WHERE username = ?", (last_post, username))
                     await db.commit()
                 else:
                     pass
-                await asyncio.sleep(5)
-            await db.commit()
+            
 
 
     #wait intill the loop is ready
