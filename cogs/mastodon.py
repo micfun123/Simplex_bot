@@ -75,6 +75,20 @@ class mastodon(commands.Cog):
                     tosend = await self.client.fetch_channel(int(row[0]))
                     content = users_posts[0]["content"]
                     clean_content = content
+                    clean_content = clean_content.replace("<p>", "")
+                    clean_content = clean_content.replace("</p>", "")
+                    clean_content = clean_content.replace("<br />", "\n")
+                    clean_content = clean_content.replace("<span class=\"invisible\">", "")
+                    clean_content = clean_content.replace("</span>", "")
+                    clean_content = clean_content.replace("<span class=\"h-card\">", "")
+                    clean_content = clean_content.replace("<span class=\"p-name\">", "")
+                    clean_content = clean_content.replace("<span class=\"p-nickname\">", "")
+                    clean_content = clean_content.replace("<span class=\"p-note\">", "")
+                    clean_content = clean_content.replace("<span class=\"p-org\">", "")
+                    clean_content = clean_content.replace("<span class=\"p-category\">", "")
+                    clean_content = clean_content.replace("<span class=\"p-locality\">", "")
+                    clean_content = clean_content.replace("<span class=\"p-region\">", "")
+                    
                     embed = discord.Embed(title=f"New post from {username}", description=content, color=discord.Color.random())
                     embed.add_field(name="Link", value=f"https://mastodon.social/web/statuses/{last_post}")
                     embed.set_footer(text="Powered by Mastodon")
