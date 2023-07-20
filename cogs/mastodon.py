@@ -34,8 +34,17 @@ class mastodon(commands.Cog):
                 await db.execute("DELETE FROM mastodon WHERE channel_id = ? AND guild_id = ? AND username = ?", (channel.id, channel.guild.id, username))
                 await db.commit()
             await ctx.respond("Done")
+        elif action == "list":
+            async with aiosqlite.connect("databases/mastodon.db") as db:
+                cursor = await db.execute("SELECT * FROM mastodon WHERE guild_id = ?", (channel.guild.id,))
+                data = await cursor.fetchall()
+                embed = discord.Embed(title="Mastodon feeds", description="Here are all the mastodon feeds for this server", color=0x00ff00)
+                for row in data:
+                    embed.add_field(name=f"{row[2]}", value=f"Channel: <#{row[0]}>\nUsername: {row[2]}\nLast posted: {row[3]}", inline=False)
+                await ctx.respond(embed=embed)
+
         else:
-            await ctx.respond("That is not a valid action, valid actions are: add, remove")
+            await ctx.respond("That is not a valid action, valid actions are: add, remove,list")
         await ctx.respond("Thank you for using simplex voting and donating helps keep this bot free.", ephemeral=True)
 
 
