@@ -76,8 +76,9 @@ class mastodon(commands.Cog):
                         content = users_posts[0]["content"]
                         link = users_posts[0]["url"]
                         time = users_posts[0]["created_at"]
-                        message = f"**{username}** just posted on mastodon\n{link} \n {time}"
-                        await tosend.send(message)
+                        if link == None:
+                            message = f"**{username}** just posted on mastodon\n{link} \n {time}"
+                            await tosend.send(message)
                         await db.execute("UPDATE mastodon SET last_posted = ? WHERE username = ?", (last_post, username))
                         await db.commit()
                     else:
