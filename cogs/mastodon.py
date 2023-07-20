@@ -47,50 +47,33 @@ class mastodon(commands.Cog):
             cursor = await db.execute("SELECT * FROM mastodon")
             data = await cursor.fetchall()
             for row in data:
-                guild = self.client.get_guild(row[1])
-                username = row[2]
-                last_posted = row[3]
-                #get the last post
-                client_id_temp = os.getenv("MASTODON_CLIENT_ID")
-                client_secret_temp = os.getenv("MASTODON_CLIENT_SECRET")
-                access_token_temp = os.getenv("MASTODON_ACCESS_TOKEN")
-                mastodon_client = Mastodon(client_id=client_id_temp, client_secret=client_secret_temp, access_token=access_token_temp,api_base_url="https://mastodon.social")
-                userid = mastodon_client.account_search(username)[0]["id"]
-                users_posts = mastodon_client.account_statuses(userid)
-                last_post = users_posts[0]["id"]
-                #check if the last post is the same as the last posted
-                if int(last_post) != int(last_posted):
-                    print(last_post)
-                    #send the post
-                    tosend = await self.client.fetch_channel(int(row[0]))
-                    content = users_posts[0]["content"]
-                    clean_content = content
-                    clean_content = clean_content.replace("<p>", "")
-                    clean_content = clean_content.replace("</p>", "")
-                    clean_content = clean_content.replace("<br />", "\n")
-                    clean_content = clean_content.replace("<span class=\"invisible\">", "")
-                    clean_content = clean_content.replace("</span>", "")
-                    clean_content = clean_content.replace("<span class=\"h-card\">", "")
-                    clean_content = clean_content.replace("<span class=\"p-name\">", "")
-                    clean_content = clean_content.replace("<span class=\"p-nickname\">", "")
-                    clean_content = clean_content.replace("<span class=\"p-note\">", "")
-                    clean_content = clean_content.replace("<span class=\"p-org\">", "")
-                    clean_content = clean_content.replace("<span class=\"p-category\">", "")
-                    clean_content = clean_content.replace("<span class=\"p-locality\">", "")
-                    clean_content = clean_content.replace("<span class=\"p-region\">", "")
-                    clean_content = clean_content.replace('<span class="h-card" translate="no">', "")
-                    clean_content = clean_content.replace('<span>', "")
-                    clean_content = clean_content.replace('</a>', "")
-                    clean_content = clean_content.replace('<a href="', "")
-                    clean_content = clean_content.replace('</span>', "")
-                    
-                    embed = discord.Embed(title=f"New post from {username}", description=clean_content, color=discord.Color.random())
-                    embed.add_field(name="Link", value=f"https://mastodon.social/web/statuses/{last_post}")
-                    embed.set_footer(text="Powered by Mastodon")
-                    await tosend.send(embed=embed)
-                    await db.execute("UPDATE mastodon SET last_posted = ? WHERE username = ?", (last_post, username))
-                    await db.commit()
-                else:
+                try:
+                    guild = self.client.get_guild(row[1])
+                    username = row[2]
+                    last_posted = row[3]
+                    #get the last post
+                    client_id_temp = os.getenv("MASTODON_CLIENT_ID")
+                    client_secret_temp = os.getenv("MASTODON_CLIENT_SECRET")
+                    access_token_temp = os.getenv("MASTODON_ACCESS_TOKEN")
+                    mastodon_client = Mastodon(client_id=client_id_temp, client_secret=client_secret_temp, access_token=access_token_temp,api_base_url="https://mastodon.social")
+                    userid = mastodon_client.account_search(username)[0]["id"]
+                    users_posts = mastodon_client.account_statuses(userid)
+                    last_post = users_posts[0]["id"]
+                    #check if the last post is the same as the last posted
+                    if int(last_post) != int(last_posted):
+                        print(last_post)
+                        #send the post
+                        tosend = await self.client.fetch_channel(int(row[0]))
+                        content = users_posts[0]["content"]
+                        link = users_posts[0]["url"]
+                        time = users_posts[0]["created_at"]
+                        message = f"**{username}** just posted on mastodon\n{link} \n {time}"
+                        await tosend.send(message)
+                        await db.execute("UPDATE mastodon SET last_posted = ? WHERE username = ?", (last_post, username))
+                        await db.commit()
+                    else:
+                        pass
+                except:
                     pass
             
 
