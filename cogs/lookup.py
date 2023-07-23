@@ -481,8 +481,8 @@ class lookup(commands.Cog):
         print("Done running RSS Loop")
 
 
-    #run at time 00:00
-    @tasks.loop(time=time(00,00))
+    #run at time 00:00 and 12:00
+    @tasks.loop(hours=12)
     async def rsslooper(self):
         print("Running RSS Loop")
         rss = await self.client.fetch_channel(1121544547068035193)
@@ -554,6 +554,11 @@ class lookup(commands.Cog):
                     pass
 
         print("Done running RSS Loop")
+
+    @rsslooper.before_loop
+    async def before_rsslooper(self):
+        await self.client.wait_until_ready()
+        
 
 
 def setup(client):
