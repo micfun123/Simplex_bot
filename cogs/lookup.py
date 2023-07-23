@@ -405,7 +405,6 @@ class lookup(commands.Cog):
             donefeeds = 0
             for row in rows:
                 donefeeds += 1
-                await ctx.send(f"Checking feed {donefeeds}/{totalfeeds}")
                 try:
                     name = row[0]
                     url = row[1]
@@ -467,6 +466,7 @@ class lookup(commands.Cog):
                 except Exception as e:
                     print(f"Error processing RSS feed '{name}': {str(e)}")
                     await ctx.send(f"Error processing RSS feed '{name}': {str(e)}")
+                    await ctx.send(f"This is feed {donefeeds} out of {totalfeeds}")
                     try:
                         #am i on the server
                         await ctx.send("Checking if I am still on the server")
@@ -477,8 +477,7 @@ class lookup(commands.Cog):
                         await db.commit()
                         await ctx.send("Done removing feed")
 
-
-        print("Done running RSS Loop")
+        await ctx.send("Done running RSS Loop")
 
 
     #run at time 00:00 and 12:00
@@ -558,7 +557,7 @@ class lookup(commands.Cog):
     @rsslooper.before_loop
     async def before_rsslooper(self):
         await self.client.wait_until_ready()
-        
+
 
 
 def setup(client):
