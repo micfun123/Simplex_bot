@@ -50,7 +50,7 @@ class mastodon(commands.Cog):
 
 
     #mastodon loop
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=5)
     async def mastodon_looper(self):
         async with aiosqlite.connect("databases/mastodon.db") as db:
             cursor = await db.execute("SELECT * FROM mastodon")
