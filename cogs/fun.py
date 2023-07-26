@@ -547,7 +547,7 @@ class Fun(commands.Cog):
         em = discord.Embed(color=discord.Color.orange())
         em.add_field(name='🥧  __Catch The Pie Leaderboard__  🥧', value='Here are the top 10 people who caught the pie the fastest...', inline=False)
         for i, row in enumerate(rows[:10]):
-            user = self.bot.get_user(row[0])
+            user = await self.bot.fetch_user(row[0])
             em.add_field(name=f'{i+1}. {user}', value=f'**{round(row[1], 5)} seconds**', inline=False)
         await ctx.send(embed=em)
 
@@ -561,7 +561,7 @@ class Fun(commands.Cog):
             rows = await data.fetchall()
         em = discord.Embed(color=discord.Color.orange())
         for i in range(10):
-            user = self.bot.get_user(rows[i][0])
+            user = await self.bot.fetch_user(rows[i][0])
             em.add_field(name=f'{i+1}. {user}', value=f'**{round(rows[i][1], 5)} seconds**', inline=False)
         await ctx.send(embed=em)
         
