@@ -11,9 +11,6 @@ from datetime import datetime,time
 import feedparser
 import requests
 
-
-
-
 class lookup(commands.Cog):
     def __init__(self, client): 
         self.client = client
@@ -248,14 +245,6 @@ class lookup(commands.Cog):
         Embed.set_thumbnail(url=thumbnail)
         
         await ctx.respond(embed=Embed)
-
-    #@commands.command()
-    #@commands.is_owner()
-    #async def makerss_file(self, ctx):
-    #    async with aiosqlite.connect("databases/rss.db") as db:
-    #        await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)")
-    #        await db.commit()
-    #    await ctx.send("Done")
 
     @commands.slash_command(description="Allows you to manage your server RSS feeds")
     @commands.has_permissions(manage_guild=True)

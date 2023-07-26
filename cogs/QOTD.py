@@ -19,19 +19,6 @@ class QOTD(commands.Cog):
         self.client = client
         self.qotd.start()
 
-    #@commands.is_owner()
-    #@commands.command()
-    #async def make_file_table(self, ctx):
-    #    con = sqlite3.connect('databases/qotd.db')
-    #    cur = con.cursor()
-    #    cur.execute("CREATE table qotd (server_id int, channel_id int)")
-    #    con.commit()
-    #    con.close()
-    #    await ctx.send("Table created")
-        
-
-
-
     @commands.slash_command(name="setqotd", description="Set the QOTD channel")
     @commands.has_permissions(administrator=True)
     async def setqotd(self, ctx, channel: discord.TextChannel):
