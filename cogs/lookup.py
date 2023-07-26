@@ -551,6 +551,7 @@ class lookup(commands.Cog):
 
                 except Exception as e:
                     pass
+                await asyncio.sleep(5)
 
         print("Done running RSS Loop")
 
