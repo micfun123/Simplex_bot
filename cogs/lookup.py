@@ -476,6 +476,7 @@ class lookup(commands.Cog):
                         await db.execute("DELETE FROM rss WHERE name = ?", (name,))
                         await db.commit()
                         await ctx.send("Done removing feed")
+                await asyncio.sleep(2)
 
         await ctx.send("Done running RSS Loop")
 
