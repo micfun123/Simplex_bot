@@ -106,48 +106,28 @@ class TruthOrDare(commands.Cog):
             await ctx.respond("Truth or dare enabled!")
         await ctx.respond("Please feel free to vote for simplex and me. It would mean a lot to us and it helps load. https://top.gg/bot/902240397273743361", ephemeral=True)
 
-    @commands.command()
-    @commands.is_owner()
-    async def maketruthfile(self, ctx):
-        #wipe file
-        open("databases/dare.txt", "w").close()
-        truthfile = open("databases/truth.txt", "w")
-        channel = self.client.get_channel(1031279120623083560)
-        messages = await channel.history(limit=100000).flatten()
-        for i in messages:
-            truthfile.write(i.content + "\n")
-        truthfile.close()
-        await ctx.send("Done")
-        #remove empty lines
-        with open("databases/truth.txt", "r") as f:
-            lines = f.readlines()
-        with open("databases/truth.txt", "w") as f:
-            for line in lines:
-                if line.strip("\n"):
-                    f.write(line)
-        await ctx.send("Done")
-        
 
     @commands.command()
     @commands.is_owner()
-    async def makedarefile(self, ctx):
-        #wipe file
+    async def maketruthordarefile(self, ctx):
         open("databases/dare.txt", "w").close()
+        open("databases/truth.txt", "w").close()
+        truthfile = open("databases/truth.txt", "w")
         darefile = open("databases/dare.txt", "w")
+        channel = self.client.get_channel(1031279120623083560)
+        messages = await channel.history(limit=None).flatten()
+        for i in messages:
+            truthfile.write(i.content + "\n")
+        truthfile.close()
         channel = self.client.get_channel(1031279167360212993)
-        messages = await channel.history(limit=100000).flatten()
+        messages = await channel.history(limit=None).flatten()
         for i in messages:
             darefile.write(i.content + "\n")
         darefile.close()
         await ctx.send("Done")
-        #remove empty lines
-        with open("databases/dare.txt", "r") as f:
-            lines = f.readlines()
-        with open("databases/dare.txt", "w") as f:
-            for line in lines:
-                if line.strip("\n"):
-                    f.write(line)
-        await ctx.send("Done")
+
+
+
 
     @commands.slash_command(name="truth", description="Get a truth")
     async def truth(self, ctx):
