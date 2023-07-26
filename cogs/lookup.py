@@ -465,14 +465,9 @@ class lookup(commands.Cog):
 
                 except Exception as e:
                     print(f"Error processing RSS feed '{name}': {str(e)}")
-                    await ctx.send(f"Error processing RSS feed '{name}': {str(e)}")
-                    await ctx.send(f"This is feed {donefeeds} out of {totalfeeds}")
                     try:
-                        #am i on the server
-                        await ctx.send("Checking if I am still on the server")
                         await self.client.fetch_guild(guild)
                     except:
-                        await ctx.send("I am not on the server anymore, removing feed")
                         await db.execute("DELETE FROM rss WHERE name = ?", (name,))
                         await db.commit()
                         await ctx.send("Done removing feed")
