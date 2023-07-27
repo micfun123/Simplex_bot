@@ -399,9 +399,7 @@ class lookup(commands.Cog):
             rows = await con.fetchall()
             totalfeeds = len(rows)
             await ctx.send(f"Found {totalfeeds} feeds")
-            donefeeds = 0
             for row in rows:
-                donefeeds += 1
                 try:
                     name = row[0]
                     url = row[1]
@@ -430,19 +428,12 @@ class lookup(commands.Cog):
 
                     # Check if the last post is None
                     if lastpost is None:
-                        # Update the last post with the URL
-                        
-
                         # Send the message of the last post to the specified channel
                         target_channel = await self.client.fetch_channel(channel)
                         if target_channel:
-                            # Read the RSS feed
-                            
-
                             # Send the message with the title and link
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
-                            await ctx.send(f"Checking server {guild} for feed {name} with url {url} and the last post was {lastpost}")
                             await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
                             await db.commit()
 
@@ -467,8 +458,8 @@ class lookup(commands.Cog):
                     except:
                         await db.execute("DELETE FROM rss WHERE name = ?", (name,))
                         await db.commit()
-                        await ctx.send("Done removing feed")
                 await asyncio.sleep(5)
+
 
         await ctx.send("Done running RSS Loop")
 
@@ -477,7 +468,6 @@ class lookup(commands.Cog):
     @tasks.loop(hours=12)
     async def rsslooper(self):
         print("Running RSS Loop")
-        rss = await self.client.fetch_channel(1121544547068035193)
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
