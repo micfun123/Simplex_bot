@@ -9,6 +9,7 @@ import random
 import asyncio
 from datetime import datetime,time
 import feedparser
+import aiohttp
 import requests
 
 class lookup(commands.Cog):
@@ -388,7 +389,14 @@ class lookup(commands.Cog):
                     guild = row[3]
                     lastpost = row[4]
                     # Read the RSS feed
-                    feed = feedparser.parse(url)
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(url) as response:
+                            # Get the XML text from the response
+                            xml_text = await response.text()
+                    # Parse the XML text
+                    feed = feedparser.parse(xml_text)
+                    
+
                     # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
