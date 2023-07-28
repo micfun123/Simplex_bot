@@ -212,23 +212,6 @@ class lookup(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
-
-    @commands.command(help = "Searches for images")
-    async def image(self,ctx,search):
-        token = os.getenv("serpapi")
-        try:
-            URL = f'https://serpapi.com/search.json?q={search}&tbm=isch&ijn=0&api_key={token}'
-            results = requests.get(URL).json()
-            em = discord.Embed(title=search,description="This is the image you searched for", color=0x00ff00)
-            num = random.randint(0,10)
-            url = results["images_results"][num]["original"]
-            print(url)
-            em.set_image(url=url)
-            await ctx.send(embed=em)
-        except:
-            await ctx.send("The dev has ran out of credit. Please DM the bot to let him know.")
-
-
     @commands.slash_command(name="free_game", description="Get a free game")
     async def free(self, ctx):
         numnber = random.randint(0,100)
@@ -400,16 +383,16 @@ class lookup(commands.Cog):
             rows = await con.fetchall()
             totalfeeds = len(rows)
             await ctx.send(f"Found {totalfeeds} feeds")
-    
+
             async def process_rss_feed(row):
                 try:
                     name, url, channel, guild, lastpost = row
                     feed = feedparser.parse(url)
                     latest_entry = feed.entries[0]
-    
+
                     entry_title = latest_entry.title or "No title"
                     entry_link = latest_entry.link or latest_entry.description or "No link"
-    
+
                     # Check if the last post is None or different from the latest entry
                     if lastpost is None or lastpost != entry_link:
                         target_channel = await self.client.fetch_channel(channel)
@@ -417,11 +400,11 @@ class lookup(commands.Cog):
                             # Send the message with the title and link
                             message = f"{'Latest' if lastpost is None else 'New'} post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
-    
+
                         # Update the last post with the URL
                         await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
                         await db.commit()
-    
+
                 except Exception as e:
                     print(f"Error processing RSS feed '{name}': {str(e)}")
                     try:
@@ -429,10 +412,10 @@ class lookup(commands.Cog):
                     except:
                         await db.execute("DELETE FROM rss WHERE name = ?", (name,))
                         await db.commit()
-    
+
             # Use asyncio.gather to process multiple RSS feeds concurrently
             await asyncio.gather(*[process_rss_feed(row) for row in rows])
-    
+
         await ctx.send("Done running RSS Loop")
 
 
