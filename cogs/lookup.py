@@ -389,6 +389,7 @@ class lookup(commands.Cog):
                     else:
                         await ctx.respond("That is not a valid option")
 
+
     @commands.command()
     @commands.is_owner()
     async def forcerss(self, ctx):
@@ -399,58 +400,28 @@ class lookup(commands.Cog):
             rows = await con.fetchall()
             totalfeeds = len(rows)
             await ctx.send(f"Found {totalfeeds} feeds")
-            for row in rows:
+    
+            async def process_rss_feed(row):
                 try:
-                    name = row[0]
-                    url = row[1]
-                    channel = row[2]
-                    guild = row[3]
-                    lastpost = row[4]
+                    name, url, channel, guild, lastpost = row
                     feed = feedparser.parse(url)
-
-                    # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
-                    # Get the title and link of the latest entry
-                    #no attribute 'title'
-                    try:
-                        entry_title = latest_entry.title
-                    except:
-                        entry_title = "No title"
-                    
-                    if latest_entry.link is None:
-                        try:
-                            entry_link = latest_entry.description
-                        except:
-                            pass
-                    else:
-                        entry_link = latest_entry.link
-
-
-                    # Check if the last post is None
-                    if lastpost is None:
-                        # Send the message of the last post to the specified channel
+    
+                    entry_title = latest_entry.title or "No title"
+                    entry_link = latest_entry.link or latest_entry.description or "No link"
+    
+                    # Check if the last post is None or different from the latest entry
+                    if lastpost is None or lastpost != entry_link:
                         target_channel = await self.client.fetch_channel(channel)
                         if target_channel:
                             # Send the message with the title and link
-                            message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
+                            message = f"{'Latest' if lastpost is None else 'New'} post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
-                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
-                            await db.commit()
-
-                    else:
+    
                         # Update the last post with the URL
                         await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
                         await db.commit()
-
-                        # Send the message of the last post if it's new
-                        if lastpost != entry_link:
-                            target_channel = await self.client.fetch_channel(channel)
-                            if target_channel:
-                                # Send the message with the title and link
-                                message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
-                                await target_channel.send(message)
-                                
-
+    
                 except Exception as e:
                     print(f"Error processing RSS feed '{name}': {str(e)}")
                     try:
@@ -458,7 +429,10 @@ class lookup(commands.Cog):
                     except:
                         await db.execute("DELETE FROM rss WHERE name = ?", (name,))
                         await db.commit()
-                        
+    
+            # Use asyncio.gather to process multiple RSS feeds concurrently
+            await asyncio.gather(*[process_rss_feed(row) for row in rows])
+    
         await ctx.send("Done running RSS Loop")
 
 
