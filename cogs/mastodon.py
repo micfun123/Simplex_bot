@@ -45,12 +45,12 @@ class mastodon(commands.Cog):
 
         else:
             await ctx.respond("That is not a valid action, valid actions are: add, remove,list")
-        await ctx.respond("Thank you for using simplex voting and donating helps keep this bot free.", ephemeral=True)
+        await ctx.respond("Thank you for using simplex voting and donating helps keep this bot free.\n We do a check once every 10 minutes.", ephemeral=True)
 
 
 
     #mastodon loop
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=10)
     async def mastodon_looper(self):
         async with aiosqlite.connect("databases/mastodon.db") as db:
             cursor = await db.execute("SELECT * FROM mastodon")
