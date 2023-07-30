@@ -455,6 +455,16 @@ class Fun(commands.Cog):
         embed.set_footer(text=factjson['fact'])
         await ctx.send(embed=embed)
 
+    @commands.command(help = "It shows you a Red Panda photo ") #shows cat photo and fact
+    async def red_panda(self, ctx):
+        async with aiohttp.ClientSession() as session:
+            request = await session.get('https://some-random-api.ml/img/red_panda')
+            PANDAs = await request.json()
+        
+        embed = discord.Embed(title="RED PANDA!", color=discord.Color.purple())
+        embed.set_image(url=PANDAs['link'])
+        await ctx.send(embed=embed)
+
 
     @commands.command(aliases=["8ball", "eightball", "eight_ball"], help = "8ball proves a answer") #8ball game
     async def _8ball(self, ctx, *, question):
