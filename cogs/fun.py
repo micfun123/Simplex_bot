@@ -443,26 +443,40 @@ class Fun(commands.Cog):
 
     @commands.command(help = "It shows you a bird photo as well as a fact") #shows cat photo and fact
     async def bird(self, ctx):
+        urlimg = "https://some-random-api.ml/img/birb"
+        urlfact = "https://some-random-api.ml/facts/bird"
         async with aiohttp.ClientSession() as session:
-            request = await session.get('https://some-random-api.ml/img/birb')
-            birdjson = await request.json()
-        # This time we'll get the fact request as well!
-            request2 = await session.get('https://some-random-api.ml/facts/bird')
-            factjson = await request2.json()
+            async with session.get(urlimg) as request:
+                if request.status == 200:
+                    data = await request.json()
+                    async with session.get(urlfact) as request:
+                        if request.status == 200:
+                            fact = await request.json()
+                            embed = discord.Embed(title="Bird!", color=discord.Color.purple())
+                            embed.set_image(url=data['link'])
+                            embed.set_footer(text=fact['fact'])
+                            await ctx.send(embed=embed)
+                        else:
+                            await ctx.send(f"API returned a {request.status} status.")
+                else:
+                    await ctx.send(f"API returned a {request.status} status.")
 
-        embed = discord.Embed(title="bird!", color=discord.Color.purple())
-        embed.set_image(url=birdjson['link'])
-        embed.set_footer(text=factjson['fact'])
-        await ctx.send(embed=embed)
 
     @commands.command(help = "It shows you a Red Panda photo ") #shows cat photo and fact
     async def red_panda(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/red_panda')
-        red_pandajson = request.json()
-        embed = discord.Embed(title="Red Panda!", color=discord.Color.purple())
-        embed.set_image(url=red_pandajson['link'])
-        await ctx.send(embed=embed)
-        
+        url = "https://some-random-api.ml/img/red_panda"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as request:
+                if request.status == 200:
+                    data = await request.json()
+                    embed = discord.Embed(title="Red Panda!", color=discord.Color.purple())
+                    embed.set_image(url=data['link'])
+                    await ctx.send(embed=embed)
+                else:
+                    await ctx.send(f"API returned a {request.status} status.")
+
+
+
 
 
     @commands.command(aliases=["8ball", "eightball", "eight_ball"], help = "8ball proves a answer") #8ball game
