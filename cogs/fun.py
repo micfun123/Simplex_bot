@@ -288,7 +288,7 @@ class Fun(commands.Cog):
     async def joke(self, ctx):
         async with aiohttp.ClientSession() as session:
             # This time we'll get the joke request as well!
-            jokejson = requests.get("https://some-random-api.ml/joke").json()
+            jokejson = requests.get("https://some-random-api.com/joke").json()
 
 
         embed = discord.Embed(title="I know its funny", color=discord.Color.purple())
@@ -343,10 +343,10 @@ class Fun(commands.Cog):
 
     @commands.command(name = "dog", aliases=["doggo"], help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
     async def dog_command(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/dog')
+        request = requests.get('https://some-random-api.com/img/dog')
         dogimg = request.json()
         # This time we'll get the fact request as well!
-        request2 = requests.get('https://some-random-api.ml/facts/dog')
+        request2 = requests.get('https://some-random-api.com/facts/dog')
         factjson = request2.json()
 
         embed = discord.Embed(title="Doggo!", color=discord.Color.purple())
@@ -357,10 +357,10 @@ class Fun(commands.Cog):
 
     @commands.slash_command(name="dog", help = "It shows you a Dog photo as well as a fact") #shows a dog photo and a fact
     async def dog_command(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/dog')
+        request = requests.get('https://some-random-api.com/img/dog')
         dogimg = request.json()
         # This time we'll get the fact request as well!
-        request2 = requests.get('https://some-random-api.ml/facts/dog')
+        request2 = requests.get('https://some-random-api.com/facts/dog')
         factjson = request2.json()
 
         embed = discord.Embed(title="Doggo!", color=discord.Color.purple())
@@ -370,10 +370,10 @@ class Fun(commands.Cog):
 
     @commands.command(name = "cat", aliases=["pussy"], help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
     async def cat__prefix(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/cat')
+        request = requests.get('https://some-random-api.com/img/cat')
         catjson = request.json()
         # This time we'll get the fact request as well!
-        request2 = requests.get('https://some-random-api.ml/facts/cat')
+        request2 = requests.get('https://some-random-api.com/facts/cat')
         factjson = request2.json()
 
         embed = discord.Embed(title="Cat!", color=discord.Color.purple())
@@ -383,10 +383,10 @@ class Fun(commands.Cog):
 
     @commands.slash_command(name="cat", help = "It shows you a cat photo as well as a fact") #shows cat photo and fact
     async def cat__slash(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/cat')
+        request = requests.get('https://some-random-api.com/img/cat')
         catjson = request.json()
         # This time we'll get the fact request as well!
-        request2 = requests.get('https://some-random-api.ml/facts/cat')
+        request2 = requests.get('https://some-random-api.com/facts/cat')
         factjson = request2.json()
 
         embed = discord.Embed(title="Cat!", color=discord.Color.purple())
@@ -397,10 +397,10 @@ class Fun(commands.Cog):
 
     @commands.command(help = "It shows you a panda photo as well as a fact") #shows cat photo and fact
     async def panda(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/panda')
+        request = requests.get('https://some-random-api.com/img/panda')
         pandajson = request.json()
         # This time we'll get the fact request as well!
-        request2 = requests.get('https://some-random-api.ml/facts/panda')
+        request2 = requests.get('https://some-random-api.com/facts/panda')
         factjson = request2.json()
         embed = discord.Embed(title="Panda!", color=discord.Color.purple())
         embed.set_image(url=pandajson['link'])
@@ -411,10 +411,10 @@ class Fun(commands.Cog):
 
     @commands.command(help = "It shows you a koala photo as well as a fact") #shows cat photo and fact
     async def koala(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/koala')
+        request = requests.get('https://some-random-api.com/img/koala')
         koalajson = request.json()
         # This time we'll get the fact request as well!
-        request2 = requests.get('https://some-random-api.ml/facts/koala')
+        request2 = requests.get('https://some-random-api.com/facts/koala')
         factjson = request2.json()
         
         embed = discord.Embed(title="koala!", color=discord.Color.purple())
@@ -425,10 +425,10 @@ class Fun(commands.Cog):
 
     @commands.command(help = "It shows you a fox photo as well as a fact") #shows cat photo and fact
     async def fox(self, ctx):
-        request = requests.get('https://some-random-api.ml/img/fox')
+        request = requests.get('https://some-random-api.com/img/fox')
         foxjson = request.json()
         # This time we'll get the fact request as well!
-        request2 = requests.get('https://some-random-api.ml/facts/fox')
+        request2 = requests.get('https://some-random-api.com/facts/fox')
         factjson = request2.json()
         
         embed = discord.Embed(title="fox!", color=discord.Color.purple())
@@ -438,8 +438,8 @@ class Fun(commands.Cog):
 
     @commands.command(help = "It shows you a bird photo as well as a fact") #shows cat photo and fact
     async def bird(self, ctx):
-        urlimg = "https://some-random-api.ml/img/birb"
-        urlfact = "https://some-random-api.ml/facts/bird"
+        urlimg = "https://some-random-api.com/img/birb"
+        urlfact = "https://some-random-api.com/facts/bird"
         request = requests.get(urlimg)
         birdjson = request.json()
         # This time we'll get the fact request as well!
@@ -453,7 +453,7 @@ class Fun(commands.Cog):
 
     @commands.command(help = "It shows you a Red Panda photo ") #shows cat photo and fact
     async def red_panda(self, ctx):
-        url = "https://some-random-api.ml/img/red_panda"
+        url = "https://some-random-api.com/img/red_panda"
         request = requests.get(url)
         redpandajson = request.json()
         embed = discord.Embed(title="Red Panda!", color=discord.Color.purple())
@@ -838,7 +838,7 @@ class Fun(commands.Cog):
     @commands.command(help="This will put a pixelate effect over the profile", extras={"category":"Search"}, usage="[@member]", description="Image overlays for you discord profile pic")
     async def pixelatethis (self, ctx, urls):
         hdr = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
-        URL = "https://some-random-api.ml/canvas/pixelate?avatar={}".format(urls)
+        URL = "https://some-random-api.com/canvas/pixelate?avatar={}".format(urls)
         req = urllib.request.Request(URL, headers=hdr)
         response = urllib.request.urlopen(req) 
         f = io.BytesIO(response.read())
