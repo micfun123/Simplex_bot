@@ -377,7 +377,7 @@ class lookup(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def forcerss(self, ctx):
-        print("Running RSS Loop")
+        await ctx.send("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
@@ -396,8 +396,6 @@ class lookup(commands.Cog):
                     # Parse the XML text
                     feed = feedparser.parse(xml_text)
                     
-
-                    # Get the latest entry from the feed
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
                     try:
@@ -458,7 +456,6 @@ class lookup(commands.Cog):
     #run at time 00:00 and 12:00
     @tasks.loop(hours=12)
     async def rsslooper(self):
-        print("Running RSS Loop")
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
@@ -470,8 +467,13 @@ class lookup(commands.Cog):
                     guild = row[3]
                     lastpost = row[4]
                     # Read the RSS feed
-                    feed = feedparser.parse(url)
-                    # Get the latest entry from the feed
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(url) as response:
+                            # Get the XML text from the response
+                            xml_text = await response.text()
+                    # Parse the XML text
+                    feed = feedparser.parse(xml_text)
+                    
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
                     try:
@@ -526,8 +528,6 @@ class lookup(commands.Cog):
                 except Exception as e:
                     pass
                 await asyncio.sleep(5)
-
-        print("Done running RSS Loop")
 
     @rsslooper.before_loop
     async def before_rsslooper(self):
