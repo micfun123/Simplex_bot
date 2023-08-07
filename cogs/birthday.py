@@ -187,7 +187,7 @@ class Birthday(commands.Cog):
         cur.execute("UPDATE server SET birthdaychannel = ? WHERE ServerID=?", (channel.id, ctx.guild.id,))
         con.commit()
         con.close()
-        await ctx.send(f"Birthday channel has been set to {channel}")
+        await ctx.send(f"Birthday channel has been set to {channel} \n To enable birthday reminders use the command `/toggle_birthday` \n To set a custom message use the command `/birthday_message`")
 
     @commands.slash_command(name="set_birthday_channel",help = "Set the birthday channel")
     @commands.has_permissions(administrator=True)
