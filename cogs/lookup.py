@@ -7,23 +7,20 @@ import os
 import discord
 import random
 import asyncio
-from datetime import datetime,time
+from datetime import datetime, time
 import feedparser
 import aiohttp
 import requests
 
+
 class lookup(commands.Cog):
-    def __init__(self, client): 
+    def __init__(self, client):
         self.client = client
-        #start the rss looper task
+        # start the rss looper task
         self.rsslooper.start()
 
-
-
-
-
     @commands.command()
-    async def covid(self, ctx,*, country):
+    async def covid(self, ctx, *, country):
         x = country.replace(" ", "%20")
         """
         Get Covid-19 stats from a country or the world.
@@ -48,7 +45,7 @@ class lookup(commands.Cog):
             e = discord.Embed(
                 title=f"Covid-19 stats of {country}",
                 description="This is not live info. Therefore it might not be as accurate, but is approximate info.",
-                color=discord.Colour.red()
+                color=discord.Colour.red(),
             )
             e.add_field(name="Total Cases", value=totalCases, inline=True)
             e.add_field(name="Today's Cases", value=todayCases, inline=True)
@@ -58,10 +55,14 @@ class lookup(commands.Cog):
             e.add_field(name="Active", value=active, inline=True)
             e.add_field(name="Critical", value=critical, inline=True)
             e.add_field(name="Cases per one million", value=casesPerOneMil, inline=True)
-            e.add_field(name="Deaths per one million", value=deathsPerOneMil, inline=True)
+            e.add_field(
+                name="Deaths per one million", value=deathsPerOneMil, inline=True
+            )
             e.add_field(name="Tests per one million", value=testsPerOneMil, inline=True)
             e.add_field(name="Total tests", value=totalTests, inline=True)
-            e.set_thumbnail(url="https://www.osce.org/files/imagecache/10_large_gallery/f/images/hires/8/a/448717.jpg")
+            e.set_thumbnail(
+                url="https://www.osce.org/files/imagecache/10_large_gallery/f/images/hires/8/a/448717.jpg"
+            )
 
             await ctx.send(embed=e)
         except:
@@ -74,21 +75,31 @@ class lookup(commands.Cog):
         """
         url = "https://source.unsplash.com/random"
         r = requests.get(url)
-        Embed = discord.Embed(title="Random Image", description="Random Image from unsplash.com", color=0x00ff00)
+        Embed = discord.Embed(
+            title="Random Image",
+            description="Random Image from unsplash.com",
+            color=0x00FF00,
+        )
         Embed.set_image(url=r.url)
         await ctx.send(embed=Embed)
-        
+
     @commands.command()
     async def nyt_top(self, ctx):
         """
         Get a most populare articale from the New York Times
         """
-        url = "https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key={}".format(os.environ.get("NYT_API_KEY"))
+        url = "https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key={}".format(
+            os.environ.get("NYT_API_KEY")
+        )
         r = requests.get(url)
         json_data = r.json()
         title = json_data["results"][0]["title"]
         url = json_data["results"][0]["url"]
-        Embed = discord.Embed(title="Most Popular Article", description="Most Popular Article from the New York Times", color=0x00ff00)
+        Embed = discord.Embed(
+            title="Most Popular Article",
+            description="Most Popular Article from the New York Times",
+            color=0x00FF00,
+        )
         Embed.add_field(name="Title", value=title, inline=False)
         Embed.add_field(name="Link", value=url, inline=False)
         await ctx.send(embed=Embed)
@@ -98,12 +109,18 @@ class lookup(commands.Cog):
         """
         Search for an article from the New York Times
         """
-        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q={}&api-key={}".format(query, os.environ.get("NYT_API_KEY"))
+        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q={}&api-key={}".format(
+            query, os.environ.get("NYT_API_KEY")
+        )
         r = requests.get(url)
         json_data = r.json()
         title = json_data["response"]["docs"][0]["headline"]["main"]
         url = json_data["response"]["docs"][0]["web_url"]
-        Embed = discord.Embed(title="Search Result", description="Search Result from the New York Times", color=0x00ff00)
+        Embed = discord.Embed(
+            title="Search Result",
+            description="Search Result from the New York Times",
+            color=0x00FF00,
+        )
         Embed.add_field(name="Title", value=title, inline=False)
         Embed.add_field(name="Link", value=url, inline=False)
         await ctx.send(embed=Embed)
@@ -113,18 +130,24 @@ class lookup(commands.Cog):
         """
         Get a random article from the New York Times
         """
-        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key={}".format(os.environ.get("NYT_API_KEY"))
+        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key={}".format(
+            os.environ.get("NYT_API_KEY")
+        )
         r = requests.get(url)
         json_data = r.json()
         title = json_data["response"]["docs"][0]["headline"]["main"]
         url = json_data["response"]["docs"][0]["web_url"]
-        Embed = discord.Embed(title="Random Article", description="Random Article from the New York Times", color=0x00ff00)
+        Embed = discord.Embed(
+            title="Random Article",
+            description="Random Article from the New York Times",
+            color=0x00FF00,
+        )
         Embed.add_field(name="Title", value=title, inline=False)
         Embed.add_field(name="Link", value=url, inline=False)
         await ctx.send(embed=Embed)
-        
-     #feet to cm
-    @commands.command(help = "Convert feet to cm")
+
+    # feet to cm
+    @commands.command(help="Convert feet to cm")
     async def ftocm(self, ctx, *, feet):
         try:
             cm = int(feet) * 30.48
@@ -132,8 +155,8 @@ class lookup(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
-    #cm to feet
-    @commands.command(help = "Convert cm to feet")
+    # cm to feet
+    @commands.command(help="Convert cm to feet")
     async def cmtof(self, ctx, *, cm):
         try:
             feet = int(cm) / 30.48
@@ -141,17 +164,17 @@ class lookup(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
-    #m to km
-    @commands.command(help = "Convert m to km")
+    # m to km
+    @commands.command(help="Convert m to km")
     async def mtokm(self, ctx, *, m):
         try:
             km = int(m) / 1000
             await ctx.send(f"{m} m is {km} km")
         except:
             await ctx.send("Invalid input")
-    
-    #km to m
-    @commands.command(help = "Convert km to m")
+
+    # km to m
+    @commands.command(help="Convert km to m")
     async def kmtom(self, ctx, *, km):
         try:
             m = int(km) * 1000
@@ -159,8 +182,8 @@ class lookup(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
-    #f to m
-    @commands.command(help = "Convert f to m")
+    # f to m
+    @commands.command(help="Convert f to m")
     async def ftom(self, ctx, *, f):
         try:
             m = int(f) * 0.3048
@@ -168,8 +191,8 @@ class lookup(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
-    #m to f
-    @commands.command(help = "Convert m to f")
+    # m to f
+    @commands.command(help="Convert m to f")
     async def mtof(self, ctx, *, m):
         try:
             f = int(m) / 0.3048
@@ -177,8 +200,8 @@ class lookup(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
-    #in to cm
-    @commands.command(help = "Convert in to cm")
+    # in to cm
+    @commands.command(help="Convert in to cm")
     async def intocm(self, ctx, *, ins):
         try:
             cm = int(ins) * 2.54
@@ -186,36 +209,37 @@ class lookup(commands.Cog):
         except:
             await ctx.send("Invalid input")
 
-    #cm to in
-    @commands.command(help = "Convert cm to in")
+    # cm to in
+    @commands.command(help="Convert cm to in")
     async def cmtoin(self, ctx, *, cm):
         try:
             ins = int(cm) / 2.54
             await ctx.send(f"{cm} cm is {ins} in")
         except:
             await ctx.send("Invalid input")
-    
-        #farenheit to celsius
-    @commands.command(help = "Convert farenheit to celsius")
+
+        # farenheit to celsius
+
+    @commands.command(help="Convert farenheit to celsius")
     async def ftoc(self, ctx, *, f):
         try:
-            c = (int(f) - 32) * 5/9
+            c = (int(f) - 32) * 5 / 9
             await ctx.send(f"{f} farenheit is {c} celsius")
         except:
             await ctx.send("Invalid input")
-    
-    #celsius to farenheit
-    @commands.command(help = "Convert celsius to farenheit")
+
+    # celsius to farenheit
+    @commands.command(help="Convert celsius to farenheit")
     async def ctof(self, ctx, *, c):
         try:
-            f = (int(c) * 9/5) + 32
+            f = (int(c) * 9 / 5) + 32
             await ctx.send(f"{c} celsius is {f} farenheit")
         except:
             await ctx.send("Invalid input")
 
     @commands.slash_command(name="free_game", description="Get a free game")
     async def free(self, ctx):
-        numnber = random.randint(0,100)
+        numnber = random.randint(0, 100)
         apiurl = "https://www.freetogame.com/api/games"
         r = requests.get(apiurl)
         json_data = r.json()
@@ -223,35 +247,55 @@ class lookup(commands.Cog):
         url = json_data[numnber]["game_url"]
         thumbnail = json_data[numnber]["thumbnail"]
         short_description = json_data[numnber]["short_description"]
-        Embed = discord.Embed(title="Free Game", description=title, color=0x00ff00)
+        Embed = discord.Embed(title="Free Game", description=title, color=0x00FF00)
         Embed.add_field(name="Link", value=url, inline=False)
         Embed.add_field(name="Description", value=short_description, inline=False)
         Embed.set_thumbnail(url=thumbnail)
-        
+
         await ctx.respond(embed=Embed)
 
     @commands.slash_command(description="Allows you to manage your server RSS feeds")
     @commands.has_permissions(manage_guild=True)
-    async def rss(self, ctx, *, options:discord.Option(str, "Select option", required=True, choices=["add", "remove", "list", "update"])):
+    async def rss(
+        self,
+        ctx,
+        *,
+        options: discord.Option(
+            str,
+            "Select option",
+            required=True,
+            choices=["add", "remove", "list", "update"],
+        ),
+    ):
         if options == "list":
-            #open the sql database
+            # open the sql database
             async with aiosqlite.connect("databases/rss.db") as db:
-                cursor = await db.execute("SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),))
+                cursor = await db.execute(
+                    "SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),)
+                )
                 rows = await cursor.fetchall()
                 if len(rows) == 0:
                     await ctx.respond("No feeds have been added yet")
                 else:
-                    Embed = discord.Embed(title="RSS Feeds", description="All the RSS feeds in the database", color=0x00ff00)
+                    Embed = discord.Embed(
+                        title="RSS Feeds",
+                        description="All the RSS feeds in the database",
+                        color=0x00FF00,
+                    )
                     for row in rows:
                         Embed.add_field(name=row[0], value=row[1], inline=False)
                     await ctx.respond(embed=Embed)
         elif options == "add":
             async with aiosqlite.connect("databases/rss.db") as db:
-                await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+                await db.execute(
+                    "CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)"
+                )
                 await db.commit()
             await ctx.respond("What is the name of the feed?")
+
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
+
             try:
                 name = await self.client.wait_for("message", check=check, timeout=60)
             except asyncio.TimeoutError:
@@ -265,23 +309,25 @@ class lookup(commands.Cog):
                 else:
                     await ctx.respond("What channel do you want to send the feed to?")
                     try:
-                        channel = await self.client.wait_for("message", check=check, timeout=60)
-                        #remove the # from the channel
+                        channel = await self.client.wait_for(
+                            "message", check=check, timeout=60
+                        )
+                        # remove the # from the channel
                         channelinfo = channel.content.replace("#", "")
-                        #remove the < and > from the channel
+                        # remove the < and > from the channel
                         channelinfo = channelinfo.replace("<", "")
                         channelinfo = channelinfo.replace(">", "")
 
-                        #verify the channel exists
+                        # verify the channel exists
                         channelcheck = self.client.get_channel(int(channelinfo))
                         if channelcheck == None:
                             await ctx.respond("That channel does not exist")
                             return
-                        
+
                     except asyncio.TimeoutError:
                         await ctx.respond("You took too long to respond")
                     else:
-                        #verify the rss feed is valid
+                        # verify the rss feed is valid
                         try:
                             feed = feedparser.parse(url.content)
                         except:
@@ -289,74 +335,115 @@ class lookup(commands.Cog):
                             return
                         else:
                             async with aiosqlite.connect("databases/rss.db") as db:
-                                await db.execute("INSERT INTO rss VALUES (?,?,?,?,?)", (name.content, url.content, channelinfo, ctx.guild.id,None))
+                                await db.execute(
+                                    "INSERT INTO rss VALUES (?,?,?,?,?)",
+                                    (
+                                        name.content,
+                                        url.content,
+                                        channelinfo,
+                                        ctx.guild.id,
+                                        None,
+                                    ),
+                                )
                                 await db.commit()
-                            await ctx.respond("Done adding feed. We will now send a test message to the channel")
-                            await channelcheck.send("This is a test message to make sure the feed works. We will check your rss feed every few hours (we check once every 12 hours) to see if there is a new post. If there is a new post we will send it here.")
-                            await ctx.respond("Done sending test message if you did not recieve a message please check the channel you selected and make sure the bot has permissions to send messages in that channel")
-
+                            await ctx.respond(
+                                "Done adding feed. We will now send a test message to the channel"
+                            )
+                            await channelcheck.send(
+                                "This is a test message to make sure the feed works. We will check your rss feed every few hours (we check once every 12 hours) to see if there is a new post. If there is a new post we will send it here."
+                            )
+                            await ctx.respond(
+                                "Done sending test message if you did not recieve a message please check the channel you selected and make sure the bot has permissions to send messages in that channel"
+                            )
 
         elif options == "remove":
             async with aiosqlite.connect("databases/rss.db") as db:
-                await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+                await db.execute(
+                    "CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)"
+                )
                 await db.commit()
             await ctx.respond("What is the name of the feed you want to remove?")
+
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
+
             try:
                 name = await self.client.wait_for("message", check=check, timeout=60)
             except asyncio.TimeoutError:
                 await ctx.respond("You took too long to respond")
             else:
                 async with aiosqlite.connect("databases/rss.db") as db:
-                    await db.execute("DELETE FROM rss WHERE name=? AND guild=?", (name.content, ctx.guild.id))
+                    await db.execute(
+                        "DELETE FROM rss WHERE name=? AND guild=?",
+                        (name.content, ctx.guild.id),
+                    )
                     await db.commit()
                 await ctx.respond("Done removing feed")
 
         elif options == "update":
             async with aiosqlite.connect("databases/rss.db") as db:
-                await db.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)")
+                await db.execute(
+                    "CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)"
+                )
                 await db.commit()
             await ctx.respond("What is the name of the feed you want to update?")
+
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
+
             try:
                 name = await self.client.wait_for("message", check=check, timeout=60)
             except asyncio.TimeoutError:
                 await ctx.respond("You took too long to respond")
             else:
-                await ctx.respond("What is the do you want to update the `name`, `url` or `channel`?")
+                await ctx.respond(
+                    "What is the do you want to update the `name`, `url` or `channel`?"
+                )
                 try:
-                    update = await self.client.wait_for("message", check=check, timeout=60)
+                    update = await self.client.wait_for(
+                        "message", check=check, timeout=60
+                    )
                 except asyncio.TimeoutError:
                     await ctx.respond("You took too long to respond")
                 else:
                     if update.content == "name":
                         await ctx.respond("What do you want to update the name to?")
                         try:
-                            newname = await self.client.wait_for("message", check=check, timeout=60)
+                            newname = await self.client.wait_for(
+                                "message", check=check, timeout=60
+                            )
                         except asyncio.TimeoutError:
                             await ctx.respond("You took too long to respond")
                         else:
                             async with aiosqlite.connect("databases/rss.db") as db:
-                                await db.execute("UPDATE rss SET name=? WHERE name=? AND guild=?", (newname.content, name.content, ctx.guild.id))
+                                await db.execute(
+                                    "UPDATE rss SET name=? WHERE name=? AND guild=?",
+                                    (newname.content, name.content, ctx.guild.id),
+                                )
                                 await db.commit()
                             await ctx.respond("Done updating name")
                     elif update.content == "url":
                         await ctx.respond("What do you want to update the url to?")
                         try:
-                            newurl = await self.client.wait_for("message", check=check, timeout=60)
+                            newurl = await self.client.wait_for(
+                                "message", check=check, timeout=60
+                            )
                         except asyncio.TimeoutError:
                             await ctx.respond("You took too long to respond")
                         else:
                             async with aiosqlite.connect("databases/rss.db") as db:
-                                await db.execute("UPDATE rss SET url=? WHERE name=? AND guild=?", (newurl.content, name.content, ctx.guild.id))
+                                await db.execute(
+                                    "UPDATE rss SET url=? WHERE name=? AND guild=?",
+                                    (newurl.content, name.content, ctx.guild.id),
+                                )
                                 await db.commit()
                             await ctx.respond("Done updating url")
                     elif update.content == "channel":
                         await ctx.respond("What do you want to update the channel to?")
                         try:
-                            newchannel = await self.client.wait_for("message", check=check, timeout=60)
+                            newchannel = await self.client.wait_for(
+                                "message", check=check, timeout=60
+                            )
                         except asyncio.TimeoutError:
                             await ctx.respond("You took too long to respond")
                         else:
@@ -366,13 +453,15 @@ class lookup(commands.Cog):
                                 # remove the < and > from the channel
                                 channelinfo = channelinfo.replace("<", "")
                                 channelinfo = channelinfo.replace(">", "")
-                                
-                                await db.execute("UPDATE rss SET channel=? WHERE name=? AND guild=?", (newchannel.content, name.content, ctx.guild.id))
+
+                                await db.execute(
+                                    "UPDATE rss SET channel=? WHERE name=? AND guild=?",
+                                    (newchannel.content, name.content, ctx.guild.id),
+                                )
                                 await db.commit()
                             await ctx.respond("Done updating channel")
                     else:
                         await ctx.respond("That is not a valid option")
-
 
     @commands.command()
     @commands.is_owner()
@@ -395,15 +484,14 @@ class lookup(commands.Cog):
                             xml_text = await response.text()
                     # Parse the XML text
                     feed = feedparser.parse(xml_text)
-                    
+
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
                     try:
                         entry_title = latest_entry.title
                     except:
                         entry_title = "No title"
-                    
-                    
+
                     if latest_entry.link is None:
                         try:
                             entry_link = latest_entry.description
@@ -412,35 +500,36 @@ class lookup(commands.Cog):
                     else:
                         entry_link = latest_entry.link
 
-
                     # Check if the last post is None
                     if lastpost is None:
-                        
-
                         # Send the message of the last post to the specified channel
                         target_channel = await self.client.fetch_channel(channel)
                         if target_channel:
-                            
-
                             # Send the message with the title and link
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
                             # Update the last post with the URL
-                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
+                            await db.execute(
+                                "UPDATE rss SET lastpost = ? WHERE name = ?",
+                                (entry_link, name),
+                            )
                             await db.commit()
-
 
                     else:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
+                        await db.execute(
+                            "UPDATE rss SET lastpost = ? WHERE name = ?",
+                            (entry_link, name),
+                        )
                         await db.commit()
 
                         # Send the message of the last post if it's new
                         if lastpost != entry_link:
                             try:
-                                target_channel = await self.client.fetch_channel(channel)
+                                target_channel = await self.client.fetch_channel(
+                                    channel
+                                )
                                 if target_channel:
-
                                     # Send the message with the title and link
                                     message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                                     await target_channel.send(message)
@@ -452,8 +541,7 @@ class lookup(commands.Cog):
                 await asyncio.sleep(5)
         await ctx.send("Done running RSS Loop")
 
-
-    #run at time 00:00 and 12:00
+    # run at time 00:00 and 12:00
     @tasks.loop(hours=12)
     async def rsslooper(self):
         async with aiosqlite.connect("databases/rss.db") as db:
@@ -473,15 +561,14 @@ class lookup(commands.Cog):
                             xml_text = await response.text()
                     # Parse the XML text
                     feed = feedparser.parse(xml_text)
-                    
+
                     latest_entry = feed.entries[0]
                     # Get the title and link of the latest entry
                     try:
                         entry_title = latest_entry.title
                     except:
                         entry_title = "No title"
-                    
-                    
+
                     if latest_entry.link is None:
                         try:
                             entry_link = latest_entry.description
@@ -490,35 +577,36 @@ class lookup(commands.Cog):
                     else:
                         entry_link = latest_entry.link
 
-
                     # Check if the last post is None
                     if lastpost is None:
-                        
-
                         # Send the message of the last post to the specified channel
                         target_channel = await self.client.fetch_channel(channel)
                         if target_channel:
-                            
-
                             # Send the message with the title and link
                             message = f"Latest post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                             await target_channel.send(message)
                             # Update the last post with the URL
-                            await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
+                            await db.execute(
+                                "UPDATE rss SET lastpost = ? WHERE name = ?",
+                                (entry_link, name),
+                            )
                             await db.commit()
-
 
                     else:
                         # Update the last post with the URL
-                        await db.execute("UPDATE rss SET lastpost = ? WHERE name = ?", (entry_link, name))
+                        await db.execute(
+                            "UPDATE rss SET lastpost = ? WHERE name = ?",
+                            (entry_link, name),
+                        )
                         await db.commit()
 
                         # Send the message of the last post if it's new
                         if lastpost != entry_link:
                             try:
-                                target_channel = await self.client.fetch_channel(channel)
+                                target_channel = await self.client.fetch_channel(
+                                    channel
+                                )
                                 if target_channel:
-
                                     # Send the message with the title and link
                                     message = f"New post in '{name}':\nTitle: {entry_title}\nLink: {entry_link}"
                                     await target_channel.send(message)
@@ -534,7 +622,5 @@ class lookup(commands.Cog):
         await self.client.wait_until_ready()
 
 
-
 def setup(client):
     client.add_cog(lookup(client))
-    

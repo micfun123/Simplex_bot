@@ -656,7 +656,7 @@ class Moderation(commands.Cog):
     async def export(self, ctx: commands.Context, limit = 2000, tz_info: str = "UTC", military_time: bool = True):
         """Exports all messages in a channel to html"""
         await ctx.send("All systems go")
-        await ctx.send("Exporting chat...")
+        await ctx.send("Exporting chat... (This is limited to 2000 messages)")
         transcript = await chat_exporter.export(
             ctx.channel,
             limit=limit,
