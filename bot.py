@@ -230,10 +230,7 @@ async def ping(ctx):
 
 @client.command(help="Provides the voting link for the bot. This helps the bot")
 async def vote(ctx):
-    await ctx.send("Like the bot vote here <https://top.gg/bot/902240397273743361>")
-    await ctx.send(
-        "Like the bot vote here <https://discordbotlist.com/bots/simplex-bot>"
-    )
+    await ctx.send("Like the bot vote here https://top.gg/bot/902240397273743361")
 
 
 @client.command(aliases=["source"], help="Gives you the source code of the bot")
