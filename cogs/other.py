@@ -482,9 +482,13 @@ class utilities(commands.Cog):
         await ctx.message.delete()
         #dont allow any pings
         message = message.replace("@", "")
-        await ctx.send(f"Reminding {ctx.message.author.mention} to {message} in {time} minutes")
+        embed = discord.Embed(title="Reminder", description=f"Reminder set for {time} from now", color=0x8BE002)
+        await ctx.send(embed=embed)
         await asyncio.sleep(int(time)*60)
-        await ctx.send(f"Reminding {ctx.message.author.mention} to {message}")
+        embed = discord.Embed(title="Reminder", description=f"{message}", color=0x8BE002)
+        await ctx.send(embed=embed)
+        await ctx.send(f"{ctx.author.mention}")
+        
 
     #detect if user joins a vc
     @commands.Cog.listener()
