@@ -519,8 +519,8 @@ class utilities(commands.Cog):
         await ctx.respond(embed = embed)
 
     @commands.slash_command(name="base69_encode", description = "Encode a int to base69")
-    async def _base69_encode_(self, ctx, *, int):
-        await ctx.respond(encode_base69(int))
+    async def _base69_encode_(self, ctx, *, num):
+        await ctx.respond(encode_base69(int(num)))
 
     @commands.slash_command(name="base69_decode", description = "Decode a base69 to int")
     async def _base69_decode_(self, ctx, *, int):
