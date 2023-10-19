@@ -548,6 +548,7 @@ class lookup(commands.Cog):
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
             for row in rows:
+                await asyncio.sleep(5)
                 try:
                     name = row[0]
                     url = row[1]
