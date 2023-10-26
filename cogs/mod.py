@@ -644,12 +644,12 @@ class Moderation(commands.Cog):
                 await ctx.send("Ok, banning a random person now.")
                 members = ctx.guild.members
                 random_member = random.choice(members)
-                await self.ctx.guild.ban(random_member, reason="Banned by a bot")
                 await ctx.send(f"Banned {random_member}")
+                await random_member.ban()
             elif msg.content.lower() == "no":
                 await ctx.send("Ok, not banning a random person.")
             else:
-                await ctx.send("Invalid response.")
+                await ctx.send("That is not a valid answer. Please use yes or no")
 
     @commands.command(help="Exports all messages in a channel to html")
     @commands.has_permissions(administrator=True)
