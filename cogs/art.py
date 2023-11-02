@@ -1,11 +1,9 @@
-
 from random import random, choice
 import discord
 from discord.ext import commands
 from PIL import Image
 import sys
 from io import BytesIO
-
 
 
 from numpy import size
@@ -21,10 +19,10 @@ from colorthief import ColorThief
 
 
 class Art(commands.Cog):
-    def __init__(self, client): 
-        self.client = client 
+    def __init__(self, client):
+        self.client = client
 
-    #colour converter
+    # colour converter
     @commands.command()
     async def hextorgb(self, ctx, *, color: str):
         """Converts a hex color to RGB"""
@@ -33,12 +31,14 @@ class Art(commands.Cog):
             red = color >> 16
             green = (color >> 8) & 255
             blue = color & 255
-            embed = discord.Embed(title="RGB", description=f"{red}, {green}, {blue}", color=color)
+            embed = discord.Embed(
+                title="RGB", description=f"{red}, {green}, {blue}", color=color
+            )
             await ctx.send(embed=embed)
         except:
             await ctx.send("Invalid color")
 
-    #hex converter
+    # hex converter
     @commands.command()
     async def RGBtoHex(self, ctx, *, color: str):
         """Converts RGB to Hex"""
@@ -47,22 +47,30 @@ class Art(commands.Cog):
             red = int(color[0])
             green = int(color[1])
             blue = int(color[2])
-            embed = discord.Embed(title="Hex", description=f"#{red:02x}{green:02x}{blue:02x}", color=0x00ff00)
+            embed = discord.Embed(
+                title="Hex",
+                description=f"#{red:02x}{green:02x}{blue:02x}",
+                color=0x00FF00,
+            )
             await ctx.send(embed=embed)
         except:
             await ctx.send("Invalid color")
-        
-    @commands.command(help = "Shows a colour from image")
+
+    @commands.command(help="Shows a colour from image")
     async def DominantColour(self, ctx, *, URL: str):
-        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+        user_agent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
         url = URL
-        headers={'User-Agent':user_agent,} 
-        request=urllib.request.Request(url,None,headers)
+        headers = {
+            "User-Agent": user_agent,
+        }
+        request = urllib.request.Request(url, None, headers)
         fd = urllib.request.urlopen(request)
         f = io.BytesIO(fd.read())
         color_thief = ColorThief(f)
         em = discord.Embed(title="Dominant colour", color=0x20BEFF)
-        em.add_field(name="RGB of dominant colour", value=f"{color_thief.get_color(quality=1)}")
+        em.add_field(
+            name="RGB of dominant colour", value=f"{color_thief.get_color(quality=1)}"
+        )
         size = (100, 100)
         colour_code = color_thief.get_color(quality=1)
         image = Image.new("RGB", size, colour_code)
@@ -72,12 +80,14 @@ class Art(commands.Cog):
             await ctx.send(file=discord.File(file, filename="colour.png"))
         await ctx.send(embed=em)
 
-    @commands.command(help = "Shows a colour palette from image")
+    @commands.command(help="Shows a colour palette from image")
     async def Palette(self, ctx, *, URL: str):
-        user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+        user_agent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"
         url = URL
-        headers={'User-Agent':user_agent,} 
-        request=urllib.request.Request(url,None,headers)
+        headers = {
+            "User-Agent": user_agent,
+        }
+        request = urllib.request.Request(url, None, headers)
         fd = urllib.request.urlopen(request)
         f = io.BytesIO(fd.read())
         color_thief = ColorThief(f)
@@ -95,63 +105,87 @@ class Art(commands.Cog):
 
         await ctx.send(embed=em)
 
-    #art prompt command
-    @commands.command(name="artprompt",help = "Prompts you to draw")
+    # art prompt command
+    @commands.command(name="artprompt", help="Prompts you to draw")
     async def ArtPrompt_command(self, ctx):
-        lines = open('databases/ArtPrompt.txt').read().splitlines()
-        myline =choice(lines)
-        em = discord.Embed(title="Art Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
+        lines = open("databases/ArtPrompt.txt").read().splitlines()
+        myline = choice(lines)
+        em = discord.Embed(
+            title="Art Prompt. Have fun making", description=f"{myline}", color=0x20BEFF
+        )
         await ctx.send(embed=em)
-    
+
     @discord.slash_command(name="artprompt")
     async def artprompt_slashs(self, ctx):
-        lines = open('databases/ArtPrompt.txt').read().splitlines()
-        myline =choice(lines)
-        em = discord.Embed(title="Art Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
+        lines = open("databases/ArtPrompt.txt").read().splitlines()
+        myline = choice(lines)
+        em = discord.Embed(
+            title="Art Prompt. Have fun making", description=f"{myline}", color=0x20BEFF
+        )
         await ctx.respond(embed=em)
-    
-    #style prompt command
-    @commands.command(name="styleprompt",help = "Prompts you a Style to draw")
+
+    # style prompt command
+    @commands.command(name="styleprompt", help="Prompts you a Style to draw")
     async def StylePrompt_command(self, ctx):
-        lines = open('databases/StylePrompt.txt').read().splitlines()
-        myline =choice(lines)
-        em = discord.Embed(title="Style Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
+        lines = open("databases/StylePrompt.txt").read().splitlines()
+        myline = choice(lines)
+        em = discord.Embed(
+            title="Style Prompt. Have fun making",
+            description=f"{myline}",
+            color=0x20BEFF,
+        )
         await ctx.send(embed=em)
 
     @discord.slash_command(name="styleprompt")
     async def styleprompt_slash(self, ctx):
-        lines = open('databases/StylePrompt.txt').read().splitlines()
-        myline =choice(lines)
-        em = discord.Embed(title="Style Prompt. Have fun making", description=f"{myline}", color=0x20BEFF)
+        lines = open("databases/StylePrompt.txt").read().splitlines()
+        myline = choice(lines)
+        em = discord.Embed(
+            title="Style Prompt. Have fun making",
+            description=f"{myline}",
+            color=0x20BEFF,
+        )
         await ctx.respond(embed=em)
 
-    #show all style prompts
-    @commands.command(name="showstyleprompts",help = "Shows all style prompts")
+    # show all style prompts
+    @commands.command(name="showstyleprompts", help="Shows all style prompts")
     async def ShowStylePrompts_command(self, ctx):
-        em = discord.Embed(title="Style Prompts", description=f"All current Styles DM tea for more to be added", color=0x20BEFF)
-        lines = open('databases/StylePrompt.txt').read().splitlines()
+        em = discord.Embed(
+            title="Style Prompts",
+            description=f"All current Styles DM tea for more to be added",
+            color=0x20BEFF,
+        )
+        lines = open("databases/StylePrompt.txt").read().splitlines()
         for i in range(len(lines)):
             em.add_field(name=f"{i+1}", value=f"{lines[i]}")
 
-           
         await ctx.send(embed=em)
 
     @commands.slash_command(name="showstyleprompts")
     async def showstyleprompts_slash(self, ctx):
-        em = discord.Embed(title="Style Prompts", description=f"All current Styles DM tea for more to be added", color=0x20BEFF)
-        lines = open('databases/StylePrompt.txt').read().splitlines()
+        em = discord.Embed(
+            title="Style Prompts",
+            description=f"All current Styles DM tea for more to be added",
+            color=0x20BEFF,
+        )
+        lines = open("databases/StylePrompt.txt").read().splitlines()
         for i in range(len(lines)):
             em.add_field(name=f"{i+1}", value=f"{lines[i]}")
 
-           
         await ctx.respond(embed=em)
 
     @commands.slash_command()
     async def randomcolour(self, ctx):
-        HEX_random = discord.Colour.from_rgb(random.randint(0,255),random.randint(0,255),random.randint(0,255))
-        em = discord.Embed(title="Random Colour", description=f"{ctx.author.mention} here is your random colour: {HEX_random}", color=random.randint(0,0xffffff))
-        #make image
-        img = Image.new('RGB', (300, 200), (228, 150, 150))
+        HEX_random = discord.Colour.from_rgb(
+            random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+        )
+        em = discord.Embed(
+            title="Random Colour",
+            description=f"{ctx.author.mention} here is your random colour: {HEX_random}",
+            color=random.randint(0, 0xFFFFFF),
+        )
+        # make image
+        img = Image.new("RGB", (300, 200), (228, 150, 150))
         d = BytesIO()
         d.seek(0)
         img.save(d, "PNG")
@@ -160,8 +194,5 @@ class Art(commands.Cog):
         await ctx.respond(embed=em)
 
 
-
-
 def setup(client):
     client.add_cog(Art(client))
-    

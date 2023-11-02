@@ -185,6 +185,7 @@ async def set_announcement_channel(guild_id):
     await set_announcement_channel_tool(guild_id, channel_id)
     return redirect(url_for("dashboard_server", guild_id=guild_id))
 
+
 @app.route("/xp_leaderboard/<int:guild_id>")
 async def xp_leaderboard(guild_id):
     if not await discord.authorized:
@@ -197,7 +198,7 @@ async def xp_leaderboard(guild_id):
         )
     servername = guild["name"]
     name = (await discord.fetch_user()).name
-    #ipc request get xp leaderboard from cog 
+    # ipc request get xp leaderboard from cog
     leaderboard = await ipc_client.request("get_xp_leaderboard", guild_id=guild_id)
     return await render_template(
         "xp_leaderboard.html",
@@ -208,6 +209,5 @@ async def xp_leaderboard(guild_id):
     )
 
 
-
 if __name__ == "__main__":
-    app.run(debug=True,host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

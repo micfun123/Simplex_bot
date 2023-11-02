@@ -1,13 +1,15 @@
-#generate all the databases
+# generate all the databases
 import sqlite3
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 import json
 import os
 
-#rade stuff for the anti cog
+# rade stuff for the anti cog
 con = sqlite3.connect("databases/raids.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE raids(ServerID int, Servertoggle, raiderneed int, currentrade int)")
+cur.execute(
+    "CREATE TABLE raids(ServerID int, Servertoggle, raiderneed int, currentrade int)"
+)
 con.commit()
 con.close()
 print("raids.db created")
@@ -22,7 +24,9 @@ print("autoroles.db created")
 
 con = sqlite3.connect("databases/server_brithdays.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int,birthdaymessage text)")
+cur.execute(
+    "CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int,birthdaymessage text)"
+)
 con.commit()
 con.close()
 print("server_brithdays.db created")
@@ -34,13 +38,15 @@ con.close()
 print("user_brithdays.db created")
 
 #    async with aiosqlite.connect("databases/verification.db") as db:
-    #        await db.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
-    #        await db.commit()
-    #        await db.close()
+#        await db.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
+#        await db.commit()
+#        await db.close()
 
 con = sqlite3.connect("databases/verification.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
+cur.execute(
+    "CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)"
+)
 con.commit()
 con.close()
 print("verification.db created")
@@ -48,11 +54,12 @@ print("verification.db created")
 
 con = sqlite3.connect("databases/counting.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)")
+cur.execute(
+    "CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)"
+)
 con.commit()
 con.close()
 print("counting.db created")
-
 
 
 con = sqlite3.connect("databases/blacklist.db")
@@ -65,13 +72,15 @@ print("blacklist.db created")
 
 con = sqlite3.connect("databases/Goodbye.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE IF NOT EXISTS goodbye (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)")
+cur.execute(
+    "CREATE TABLE IF NOT EXISTS goodbye (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
+)
 con.commit()
 con.close()
 print("Goodbye.db created")
 
 try:
-    DiscordLevelingSystem.create_database_file(r'databases')
+    DiscordLevelingSystem.create_database_file(r"databases")
     print("leveling.db created")
 except:
     print("leveling.db failed to create")
@@ -83,7 +92,7 @@ con.commit()
 con.close()
 print("announcement.db created")
 
-#make the log.json file
+# make the log.json file
 if not os.path.exists("./databases/log.json"):
     with open("./databases/log.json", "w") as f:
         json.dump({}, f, indent=4)
@@ -92,7 +101,9 @@ if not os.path.exists("./databases/log.json"):
 
 con = sqlite3.connect("databases/rss.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)")
+cur.execute(
+    "CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)"
+)
 con.commit()
 con.close()
 print("rss.db created")
@@ -113,7 +124,7 @@ con.commit()
 con.close()
 print("qotd.db created")
 
-con = sqlite3.connect('databases/truthordare.db')
+con = sqlite3.connect("databases/truthordare.db")
 cur = con.cursor()
 cur.execute("CREATE table truthordare (server_id int, toggel int)")
 con.commit()
@@ -122,7 +133,9 @@ print("truthordare.db created")
 
 con = sqlite3.connect("databases/Welcome.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE IF NOT EXISTS welcome (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)")
+cur.execute(
+    "CREATE TABLE IF NOT EXISTS welcome (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
+)
 con.commit()
 con.close()
 print("Welcome.db created")
@@ -137,7 +150,9 @@ print("log.db created")
 
 con = sqlite3.connect("databases/mastodon.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE IF NOT EXISTS mastodon (channel_id int, guild_id int, username text,last_posted text)")
+cur.execute(
+    "CREATE TABLE IF NOT EXISTS mastodon (channel_id int, guild_id int, username text,last_posted text)"
+)
 con.commit()
 con.close()
 print("mastodon.db created")

@@ -6,7 +6,12 @@ from discord.ext import commands
 
 
 def micsid(ctx):
-    return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363 or ctx.author.id == 644266328554995712
+    return (
+        ctx.author.id == 481377376475938826
+        or ctx.author.id == 624076054969188363
+        or ctx.author.id == 644266328554995712
+    )
+
 
 class DMReply(commands.Cog):
     def __init__(self, client):
@@ -29,20 +34,19 @@ class DMReply(commands.Cog):
             await conn.commit()
         await ctx.send(f"Removed {id} from blacklist")
 
-
-    #@commands.is_owner()
-    #@commands.command()
-    #async def blacklistmake(self, ctx):
+    # @commands.is_owner()
+    # @commands.command()
+    # async def blacklistmake(self, ctx):
     #    async with aiosqlite.connect("databases/blacklist.db") as conn:
     #        await conn.execute("CREATE TABLE blacklist(id int)")
     #        await conn.commit()
     #    await ctx.send("Done")
 
-    @commands.command(aliases=['dmr'])
+    @commands.command(aliases=["dmr"])
     @commands.check(micsid)
     async def dmreply(self, ctx, *, msg=None):
         if ctx.message.reference is None:
-          return
+            return
         else:
             await ctx.message.delete()
             id = ctx.message.reference.message_id
@@ -56,20 +60,16 @@ class DMReply(commands.Cog):
         else:
             x = await person.send(msg)
             await x.add_reaction("📩")
-            
 
         if ctx.message.attachments is None:
             return
         else:
             for i in ctx.message.attachments:
-                em = discord.Embed( color=ctx.author.color)
+                em = discord.Embed(color=ctx.author.color)
                 em.timestamp = datetime.datetime.utcnow()
                 em.set_image(url=i.url)
                 x = await person.send(embed=em)
                 await x.add_reaction("📩")
-                
-
-
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -77,9 +77,12 @@ class DMReply(commands.Cog):
             return
 
         if isinstance(message.channel, discord.DMChannel):
-        
             cha = await self.client.fetch_channel(self.dm_channel)
-            em = discord.Embed(title="New DM", description=f"From {message.author.name}", color=message.author.color)
+            em = discord.Embed(
+                title="New DM",
+                description=f"From {message.author.name}",
+                color=message.author.color,
+            )
             em.timestamp = datetime.datetime.utcnow()
 
             if message.content != "":
@@ -88,13 +91,14 @@ class DMReply(commands.Cog):
                 async with conn.execute("SELECT * FROM blacklist") as cursor:
                     async for row in cursor:
                         if message.author.id == row[0]:
-                            await message.author.send("You are blacklisted from messaging the bot")
+                            await message.author.send(
+                                "You are blacklisted from messaging the bot"
+                            )
                             return
-                        
-            await cha.send(content=f"{message.author.id}", embed=em)
-            #react to users message
-            await message.add_reaction("📩")
 
+            await cha.send(content=f"{message.author.id}", embed=em)
+            # react to users message
+            await message.add_reaction("📩")
 
             if message.attachments is not None:
                 for attachment in message.attachments:
@@ -107,12 +111,17 @@ class DMReply(commands.Cog):
                         async with conn.execute("SELECT * FROM blacklist") as cursor:
                             async for row in cursor:
                                 if message.author.id == row[0]:
-                                    await message.author.send("You are blacklisted from messaging the bot")
+                                    await message.author.send(
+                                        "You are blacklisted from messaging the bot"
+                                    )
                                     return
                     await cha.send(embed=em)
                     await message.add_reaction("📩")
         try:
-            if message.channel.id == self.dm_channel and message.author.id == self.client.owner_id:
+            if (
+                message.channel.id == self.dm_channel
+                and message.author.id == self.client.owner_id
+            ):
                 if message.reference is None:
                     return
                 else:
@@ -141,6 +150,7 @@ class DMReply(commands.Cog):
         except Exception as e:
             print(e)
             await message.add_reaction("❌")
+
 
 def setup(client):
     client.add_cog(DMReply(client))

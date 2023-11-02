@@ -7,26 +7,31 @@ import random
 import httpx as requests
 
 
-
 class pokemon(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.first_move = True
 
-    @commands.command(aliases=['pokedex'], help = "This will show you the pokedex of the pokemon", description="Shows you the pokedex of the pokemon")	
+    @commands.command(
+        aliases=["pokedex"],
+        help="This will show you the pokedex of the pokemon",
+        description="Shows you the pokedex of the pokemon",
+    )
     async def pokidex(self, ctx, *, name):
         if len(name.split(" ")) == 1:
             try:
-                response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name.lower()}")
+                response = requests.get(
+                    f"https://pokeapi.co/api/v2/pokemon/{name.lower()}"
+                )
                 data = response.json()
 
                 poke_image = get_image(data)
-                hp = data['base_experience']
-                name = data['name'].title()
-                height = str(data['height'] / 10) + "m"
-                weight = str(data['weight'] / 10) + "kg"
-                category = data['types'][0]['type']['name'].title()
-                ability = [d['ability']['name'].capitalize() for d in data['abilities']]
+                hp = data["base_experience"]
+                name = data["name"].title()
+                height = str(data["height"] / 10) + "m"
+                weight = str(data["weight"] / 10) + "kg"
+                category = data["types"][0]["type"]["name"].title()
+                ability = [d["ability"]["name"].capitalize() for d in data["abilities"]]
 
                 message = discord.Embed(title=name, color=discord.Colour.orange())
 
@@ -40,11 +45,16 @@ class pokemon(commands.Cog):
                 await ctx.send(embed=message)
 
             except:
-                message = discord.Embed(title="Sorry, no Pokemon found", color=discord.Colour.orange())
+                message = discord.Embed(
+                    title="Sorry, no Pokemon found", color=discord.Colour.orange()
+                )
                 await ctx.send(embed=message)
 
         else:
-            message = discord.Embed(title="The name cannot contain two or more words", color=discord.Colour.orange())
+            message = discord.Embed(
+                title="The name cannot contain two or more words",
+                color=discord.Colour.orange(),
+            )
             await ctx.send(embed=message)
 
 
@@ -54,7 +64,7 @@ def check_pokemon(pokemon_name):
     try:
         response = requests.get(URL)
         response = response.json()
-        name = response['name'].title()
+        name = response["name"].title()
         return True
     except:
         return False
@@ -70,24 +80,26 @@ def get_pokemon_data(pokemon_name):
     pokemon_data["health"] = response["stats"][0]["base_stat"]
 
     try:
-        image_url = response['sprites']['other']['official-artwork']['front_default']
+        image_url = response["sprites"]["other"]["official-artwork"]["front_default"]
     except:
-        image_url = response['sprites']['front_shiny']
+        image_url = response["sprites"]["front_shiny"]
 
     poke_moves = []
     move_names = []
 
-    for i, move in enumerate(response['moves']):
+    for i, move in enumerate(response["moves"]):
         url = move["move"]["url"]
         response = requests.get(url)
         response = response.json()
-        if response["power"] is None: power = 20
-        else: power = round(int(response["power"])/3)
+        if response["power"] is None:
+            power = 20
+        else:
+            power = round(int(response["power"]) / 3)
 
         tmp_dict = {
-            "move_name": move['move']['name'],
+            "move_name": move["move"]["name"],
             "damage": power,
-            "move_index": i+1
+            "move_index": i + 1,
         }
         move_names.append(f"{move['move']['name']} - {power}")
         poke_moves.append(tmp_dict)
@@ -95,20 +107,23 @@ def get_pokemon_data(pokemon_name):
         if i == 3:
             break
 
-    pokemon_data['moves'] = poke_moves[:4]
+    pokemon_data["moves"] = poke_moves[:4]
 
-    embed_message = discord.Embed(title=pokemon_data["name"], color=discord.Colour.orange())
+    embed_message = discord.Embed(
+        title=pokemon_data["name"], color=discord.Colour.orange()
+    )
     embed_message.add_field(name="Health", value=pokemon_data["health"])
     embed_message.add_field(name="Moves", value="\n".join(move_names[:4]))
     embed_message.set_thumbnail(url=image_url)
 
     return pokemon_data, embed_message
 
+
 def get_image(data):
     try:
-        image = data['sprites']['other']['official-artwork']['front_default']
+        image = data["sprites"]["other"]["official-artwork"]["front_default"]
     except:
-        image = data['sprites']['front_shiny']
+        image = data["sprites"]["front_shiny"]
     return image
 
 

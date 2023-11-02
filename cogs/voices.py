@@ -8,8 +8,8 @@ import requests
 
 
 class funtranslations(commands.Cog):
-    def __init__(self, client): 
-        self.client = client 
+    def __init__(self, client):
+        self.client = client
 
     @commands.command(help="yoda speak")
     async def yoda(self, ctx, *, text):
@@ -27,7 +27,6 @@ class funtranslations(commands.Cog):
         data = response.json()
         await ctx.send(data["contents"]["translated"])
 
-    
+
 def setup(client):
     client.add_cog(funtranslations(client))
-    

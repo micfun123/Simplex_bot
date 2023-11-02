@@ -322,20 +322,20 @@ class letter_game(commands.Cog):
                             "I do not have permission to remove users from the channel"
                         )
                     return
-            #if this word first letter is one bigger than first letter of last word
+            # if this word first letter is one bigger than first letter of last word
             elif ord(message.content[0].lower()) == ord(lastword.content[-1]) + 1:
-                    await conn.execute(
-                        "insert into wordbank VALUES (?,?)",
-                        (message.guild.id, message.content.lower()),
-                    )
-                    await conn.commit()
-                    await conn.execute(
-                        "UPDATE letter_game_server SET word = ?, last_user_id = ? WHERE guild_id = ?",
-                        (message.content.lower(), message.author.id, message.guild.id),
-                    )
-                    await conn.commit()
-                    await message.add_reaction("✅")
-                    return
+                await conn.execute(
+                    "insert into wordbank VALUES (?,?)",
+                    (message.guild.id, message.content.lower()),
+                )
+                await conn.commit()
+                await conn.execute(
+                    "UPDATE letter_game_server SET word = ?, last_user_id = ? WHERE guild_id = ?",
+                    (message.content.lower(), message.author.id, message.guild.id),
+                )
+                await conn.commit()
+                await message.add_reaction("✅")
+                return
             else:
                 await message.channel.send(
                     "the next word must start {}".format(
@@ -372,8 +372,6 @@ class letter_game(commands.Cog):
                         "I do not have permission to remove users from the channel"
                     )
                 return
-            
-                
 
 
 def setup(client):

@@ -1,6 +1,7 @@
 import discord, random, operator, json
 from discord.ext import commands
 
+
 class WhosPlaying(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -8,7 +9,10 @@ class WhosPlaying(commands.Cog):
     @commands.command(no_pm=True)
     async def whosplaying(self, ctx, *, game):
         if len(game) <= 1:
-            await ctx.send("```The game should be at least 2 characters long...```", delete_after=5.0)
+            await ctx.send(
+                "```The game should be at least 2 characters long...```",
+                delete_after=5.0,
+            )
             return
 
         guild = ctx.message.guild
@@ -26,19 +30,29 @@ class WhosPlaying(commands.Cog):
             if game.lower() in member.activity.name.lower():
                 count_playing += 1
                 if count_playing <= 15:
-                    emote = random.choice([":trident:", ":high_brightness:", ":low_brightness:", ":beginner:", ":diamond_shape_with_a_dot_inside:"])
+                    emote = random.choice(
+                        [
+                            ":trident:",
+                            ":high_brightness:",
+                            ":low_brightness:",
+                            ":beginner:",
+                            ":diamond_shape_with_a_dot_inside:",
+                        ]
+                    )
                     playing_game += f"{emote} {member.name} ({member.activity.name})\n"
 
         if playing_game == "":
-            await ctx.send("```Search results:\nNo users are currently playing that game.```")
+            await ctx.send(
+                "```Search results:\nNo users are currently playing that game.```"
+            )
         else:
             msg = playing_game
             if count_playing > 15:
-                showing = "(Showing 15/{})".format(count_playing)       
+                showing = "(Showing 15/{})".format(count_playing)
             else:
                 showing = "({})".format(count_playing)
 
-            em = discord.Embed(description=msg, colour=discord.Colour(value=0x36393e))
+            em = discord.Embed(description=msg, colour=discord.Colour(value=0x36393E))
             await ctx.send(embed=em)
 
     @commands.command(no_pm=True)
@@ -59,18 +73,20 @@ class WhosPlaying(commands.Cog):
                 freq_list[member.activity.name] = 0
             freq_list[member.activity.name] += 1
 
-        sorted_list = sorted(freq_list.items(),
-                             key=operator.itemgetter(1),
-                             reverse=True)
+        sorted_list = sorted(
+            freq_list.items(), key=operator.itemgetter(1), reverse=True
+        )
 
         if not freq_list:
-            await ctx.send("```Search results:\nNo users are currently playing any games. Odd...```")
+            await ctx.send(
+                "```Search results:\nNo users are currently playing any games. Odd...```"
+            )
         else:
             # Create display and embed
             msg = ""
             max_games = min(len(sorted_list), 10)
 
-            em = discord.Embed(description=msg, colour=discord.Colour(value=0x36393e))
+            em = discord.Embed(description=msg, colour=discord.Colour(value=0x36393E))
             for i in range(max_games):
                 game, freq = sorted_list[i]
                 if int(freq_list[game]) < 2:
@@ -79,8 +95,11 @@ class WhosPlaying(commands.Cog):
                     amount = f"{int(freq_list[game])} people"
                 em.add_field(name=game, value=amount)
             em.set_thumbnail(url=guild.icon.url)
-            em.set_footer(text=f"Do {ctx.prefix}whosplaying <game> to see whos playing a specific game")
+            em.set_footer(
+                text=f"Do {ctx.prefix}whosplaying <game> to see whos playing a specific game"
+            )
             await ctx.send(embed=em)
+
 
 def setup(bot):
     bot.add_cog(WhosPlaying(bot))
