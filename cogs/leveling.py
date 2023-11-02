@@ -47,9 +47,11 @@ async def lb(self, ctx):
     data = await lvl.each_member_data(ctx.guild, sort_by="rank")
     em = discord.Embed(title="Leaderboard")
     n = 0
+    #use fetch to get names of members
     for i in data:
+        username = await self.client.fetch_user(i.id)
         em.add_field(
-            name=f"{i.rank}: {i.name}",
+            name=f"{i.rank}: {username.name}",
             value=f"Level: {i.level}, Total XP: {i.total_xp}",
             inline=False,
         )
@@ -57,7 +59,7 @@ async def lb(self, ctx):
         if n == 10:
             break
     await ctx.send(embed=em)
-
+    
 
 async def biglb(self, ctx):
     data = await lvl.each_member_data(ctx.guild, sort_by="rank")
