@@ -11,7 +11,8 @@ import requests
 import textwrap
 from tools import log
 from datetime import datetime, timedelta, timezone
-
+import random
+import regex
 
 async def get_data():
     with open("./databases/goodbye.json") as f:
@@ -398,6 +399,10 @@ class Goodbye(commands.Cog):
             "{member.roles}", ", ".join([role.name for role in member.roles])
         )
         text = text.replace("{member.guild.owner}", member.guild.owner.name)
+        text = regex.sub(
+            r"\{random\.choices\[(.+?)\]\}", lambda x: random.choice(x.group(1).split(", ")), text
+        )
+        #example: {random.choices[hi, cya, goodbye]}
         em = discord.Embed(title=f"Goodbye {member.name}!", description=text)
         if textorembed == 1:
             await channel.send(f"{text}")
