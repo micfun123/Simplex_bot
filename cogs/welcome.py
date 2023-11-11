@@ -9,6 +9,8 @@ from PIL import Image, ImageDraw, ImageFont
 import textwrap
 import requests
 import textwrap
+import regex
+import random
 
 
 async def get_data():
@@ -346,6 +348,11 @@ class Welcome(commands.Cog):
         text = text.replace(
             "{member.time_in_guild}", str(member.joined_at - member.created_at)
         )
+        # replace {random.choices[usersinput seperated by comma]}
+        text = regex.sub(
+            r"\{random\.choices\[(.+?)\]\}", lambda x: random.choice(x.group(1).split(", ")), text
+        )
+        #example: {random.choices[hi, hello, hey, hola]}
         em = discord.Embed(title=f"Welcome {member.name}!", description=text)
         if textorembed == 1:
             await channel.send(f"{member.mention} \n {text}")
