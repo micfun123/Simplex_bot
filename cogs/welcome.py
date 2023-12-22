@@ -246,6 +246,20 @@ class WelcomeView(discord.ui.View):
                 embed=discord.Embed(title="Welcome Text or Embed:", description=status)
             )
 
+    @discord.ui.button(label="Show text", style=discord.ButtonStyle.green, custom_id="show_text")
+    async def show_text(self, button, interaction):
+        async with aiosqlite.connect("./databases/Welcome.db") as db:
+            async with db.execute(
+                "SELECT * FROM welcome WHERE guild_id = ?", (self.ctx.guild.id,)
+            ) as cursor:
+                data = await cursor.fetchall()
+                if data == []:
+                    await interaction.response.send_message("No text set")
+                else:
+                    await interaction.response.send_message(data[0][2])
+
+                    
+
     @discord.ui.button(label="Reset", style=discord.ButtonStyle.red, custom_id="reset")
     async def reset(self, button, interaction):
         def check(m):
@@ -265,6 +279,8 @@ class WelcomeView(discord.ui.View):
                 await interaction.followup.send("Your database has been reset!")
         else:
             await interaction.followup.send("Cancelled")
+
+    
 
 
 class Welcome(commands.Cog):
