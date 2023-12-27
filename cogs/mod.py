@@ -783,36 +783,41 @@ class Moderation(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def gamertag_gen(self, ctx):
         # Send a message confirming the action
-        await ctx.send("Are you sure you want to nickname everyone to an Xbox-style gamertag? "
+        x = await ctx.send("Are you sure you want to nickname everyone to an Xbox-style gamertag? "
                        "(yes/no) This will take a while and cannot be undone via a command.")
-
-        # Check for "yes" or "no"
+        
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
-
+        
+        # Wait for a response
         try:
-            # Wait for the user's response within 30 seconds
-            user_response = await self.bot.wait_for('message', timeout=30.0, check=check)
-
-            if user_response.content.lower() == 'yes':
-                
+            msg = await self.client.wait_for("message", check=check, timeout=30.0)
+        except asyncio.TimeoutError:
+            await ctx.send("You took too long to respond.")
+        else:
+            if msg.content.lower() == "yes":
+                await ctx.send("Ok, nicknaming everyone now.")
+                # Loop through every member in the guild
                 for member in ctx.guild.members:
-                    string = ""	
+                    # Generate a random string of 5 characters
+                    new_nickname = ""
                     strlen = random.randint(3, 12)
                     for i in range(strlen):
-                        string += random.choice(string.ascii_letters)
+                        new_nickname += random.choice(string.ascii_letters)
 
                     intamount = random.randint(2, 4)
                     for i in range(intamount):
-                        string += random.choice(string.digits)
-                    await member.edit(nick=string)
+                        new_nickname += random.choice(string.digits)
 
-                await ctx.send("Nicknaming everyone to Xbox-style gamertags...")  # Confirmation message
+                    await member.edit(nick=new_nickname)
+                await ctx.send("Everyone has been nicknamed.")
+            elif msg.content.lower() == "no":
+                await ctx.send("Ok, not nicknaming everyone.")
             else:
-                await ctx.send("Action canceled. No changes were made.")
+                await ctx.send("That is not a valid answer. Please use yes or no")
 
-        except asyncio.TimeoutError:
-            await ctx.send("You took too long to respond. Action canceled.")
+
+
 
 
 
