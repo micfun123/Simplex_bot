@@ -625,18 +625,21 @@ class Leveling(commands.Cog):
     async def on_message(self, message):
         level_toggle = await level_on(message.guild.id)
         if level_toggle:
-            async with aiosqlite.connect("./databases/xp_ignore.db") as db:
-                data = await db.execute(
-                    "SELECT * FROM xp_ignore WHERE guild_id = ?", (message.guild.id,)
-                )
-                data = await data.fetchall()
-                if data:
-                    if message.channel.id in [channel[1] for channel in data]:
-                        return
+            try:
+                async with aiosqlite.connect("./databases/xp_ignore.db") as db:
+                    data = await db.execute(
+                        "SELECT * FROM xp_ignore WHERE guild_id = ?", (message.guild.id,)
+                    )
+                    data = await data.fetchall()
+                    if data:
+                        if message.channel.id in [channel[1] for channel in data]:
+                            return
+                        else:
+                            await lvl.award_xp(amount=15, message=message)
                     else:
                         await lvl.award_xp(amount=15, message=message)
-                else:
-                    await lvl.award_xp(amount=15, message=message)
+            except:
+                pass
 
 
 def setup(client):
