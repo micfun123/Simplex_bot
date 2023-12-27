@@ -12,6 +12,7 @@ import random
 import re
 import io
 import chat_exporter
+from english_words import get_english_words_set
 import string
 
 
@@ -783,6 +784,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def gamertag_gen(self, ctx):
         # Send a message confirming the action
+        word_set = get_english_words_set(['web2'], lower=True)
         x = await ctx.send("Are you sure you want to nickname everyone to an Xbox-style gamertag? "
                        "(yes/no) This will take a while and cannot be undone via a command.")
         
@@ -796,25 +798,33 @@ class Moderation(commands.Cog):
             await ctx.send("You took too long to respond.")
         else:
             if msg.content.lower() == "yes":
-                await ctx.send("Ok, nicknaming everyone now.")
+                await ctx.send("Ok, nicknaming everyone now. This will take a while. ||note that this will not work if the user has a role higher than the bot & use .clear_nicks to remove all nick names|| ")
                 # Loop through every member in the guild
                 for member in ctx.guild.members:
-                    # Generate a random string of 5 characters
-                    new_nickname = ""
-                    strlen = random.randint(3, 12)
-                    for i in range(strlen):
-                        new_nickname += random.choice(string.ascii_letters)
-
-                    intamount = random.randint(2, 4)
-                    for i in range(intamount):
-                        new_nickname += random.choice(string.digits)
-
-                    await member.edit(nick=new_nickname)
-                await ctx.send("Everyone has been nicknamed.")
+                    try:
+                        word1 = random.choice(list(word_set))
+                        word2 = random.choice(list(word_set))
+                        dig = random.randint(0, 99)
+                        await member.edit(nick=f"{word1} {word2} {dig}")
+                        
+                    except:
+                        pass 
+                await ctx.send("Everyone has been nicknamed. use .clear_nicks to remove them")
             elif msg.content.lower() == "no":
                 await ctx.send("Ok, not nicknaming everyone.")
             else:
                 await ctx.send("That is not a valid answer. Please use yes or no")
+
+    @commands.command(help="clear_nicks")
+    @commands.has_permissions(administrator=True)
+    async def clear_nicks(self, ctx):
+        await ctx.send("Clearing nicknames")
+        for member in ctx.guild.members:  # loop through every member in the guild
+            try:
+                await member.edit(nick=None)
+            except:
+                await ctx.send(f"cannot reset user {i}")
+        await ctx.send("No more nick names. balence has been restored")
 
 
 
