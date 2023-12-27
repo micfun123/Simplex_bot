@@ -60,7 +60,7 @@ These Terms of Service ("Terms") govern the use of the Simplex bot ("the Bot") p
 
 ## 9. Contact Information:
 
-- For questions or concerns regarding these Terms or the use of the Bot, please contact us at [Your Contact Information].
+- For questions or concerns regarding these Terms or the use of the Bot, please contact us at `Simplexbot@protonmail.com`.
 
 By using the Simplex Bot, you agree to these Terms. If you do not agree to these Terms, please refrain from using the Bot.
 
