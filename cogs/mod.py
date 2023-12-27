@@ -12,6 +12,8 @@ import random
 import re
 import io
 import chat_exporter
+import string
+
 
 
 def micsid(ctx):
@@ -776,6 +778,42 @@ class Moderation(commands.Cog):
         # if file is too big, discord will not send it
 
         await ctx.send(file=transcript_file, content="Here is the transcript")
+
+    @commands.command(help="Nickname all users to have an Xbox-style gamertag")
+    @commands.has_permissions(administrator=True)
+    async def gamertag_gen(self, ctx):
+        # Send a message confirming the action
+        await ctx.send("Are you sure you want to nickname everyone to an Xbox-style gamertag? "
+                       "(yes/no) This will take a while and cannot be undone via a command.")
+
+        # Check for "yes" or "no"
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel
+
+        try:
+            # Wait for the user's response within 30 seconds
+            user_response = await self.bot.wait_for('message', timeout=30.0, check=check)
+
+            if user_response.content.lower() == 'yes':
+                
+                for member in ctx.guild.members:
+                    string = ""	
+                    strlen = random.randint(3, 12)
+                    for i in range(strlen):
+                        string += random.choice(string.ascii_letters)
+
+                    intamount = random.randint(2, 4)
+                    for i in range(intamount):
+                        string += random.choice(string.digits)
+                    await member.edit(nick=string)
+
+                await ctx.send("Nicknaming everyone to Xbox-style gamertags...")  # Confirmation message
+            else:
+                await ctx.send("Action canceled. No changes were made.")
+
+        except asyncio.TimeoutError:
+            await ctx.send("You took too long to respond. Action canceled.")
+
 
 
 def setup(client):
