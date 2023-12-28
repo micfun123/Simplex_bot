@@ -850,9 +850,7 @@ class Moderation(commands.Cog):
                         user_id = member.id
                         new_name = f"User {user_id}"
                     
-                    if int (progress) % 10 == 0:
-                        await progress_message.edit(content=f"Sanitizing names: {progress}%")
-                    
+                    await progress_message.edit(content=f"Sanitizing names: {progress}%")
                     await member.edit(nick=new_name)
                 except discord.Forbidden:
                     await ctx.send(f"Missing permissions to change nickname for {member.display_name}")
