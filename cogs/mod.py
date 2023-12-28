@@ -14,6 +14,7 @@ import io
 import chat_exporter
 from english_words import get_english_words_set
 import string
+import unicodedata
 
 
 def micsid(ctx):
@@ -819,17 +820,15 @@ class Moderation(commands.Cog):
             progress_message = await ctx.send(f"Sanitizing names: {progress}%")
             for member in ctx.guild.members:
                 try:
-                    new_name = ''.join(c for c in member.display_name if c in standard_chars)
-                    
-                    # If the sanitized name is empty or contains only spaces
-                    if new_name.strip() == '':
-                        user_id = member.id
-                        new_name = f"User {user_id}"
+                    sanitized_name = ''.join(
+                        c for c in unicodedata.normalize('NFD', member.display_name)
+                        if unicodedata.category(c) != 'Mn'
+                    )
                     
                     await progress_message.edit(content=f"Sanitizing names: {progress}%")
                     pos += 1
                     progress = round(pos / len(ctx.guild.members) * 100, 2)
-                    await member.edit(nick=new_name)
+                    await member.edit(nick=sanitized_name)
                 except discord.Forbidden:
                     await ctx.send(f"Missing permissions to change nickname for {member.display_name}")
                 except Exception as e:
