@@ -840,6 +840,7 @@ class Moderation(commands.Cog):
             
             standard_chars = string.ascii_letters + string.digits + string.punctuation + " "
             progress = 0 
+            pos = 0
             progress_message = await ctx.send(f"Sanitizing names: {progress}%")
             for member in ctx.guild.members:
                 try:
@@ -851,6 +852,8 @@ class Moderation(commands.Cog):
                         new_name = f"User {user_id}"
                     
                     await progress_message.edit(content=f"Sanitizing names: {progress}%")
+                    pos += 1
+                    progress = round(pos / len(ctx.guild.members) * 100, 2)
                     await member.edit(nick=new_name)
                 except discord.Forbidden:
                     await ctx.send(f"Missing permissions to change nickname for {member.display_name}")
