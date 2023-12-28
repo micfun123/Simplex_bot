@@ -16,7 +16,6 @@ from english_words import get_english_words_set
 import string
 
 
-
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
 
@@ -784,13 +783,15 @@ class Moderation(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def gamertag_gen(self, ctx):
         # Send a message confirming the action
-        word_set = get_english_words_set(['web2'], lower=True)
-        x = await ctx.send("Are you sure you want to nickname everyone to an Xbox-style gamertag? "
-                       "(yes/no) This will take a while and cannot be undone via a command.")
-        
+        word_set = get_english_words_set(["web2"], lower=True)
+        x = await ctx.send(
+            "Are you sure you want to nickname everyone to an Xbox-style gamertag? "
+            "(yes/no) This will take a while and cannot be undone via a command."
+        )
+
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
-        
+
         # Wait for a response
         try:
             msg = await self.client.wait_for("message", check=check, timeout=30.0)
@@ -798,7 +799,9 @@ class Moderation(commands.Cog):
             await ctx.send("You took too long to respond.")
         else:
             if msg.content.lower() == "yes":
-                await ctx.send("Ok, nicknaming everyone now. This will take a while. ||note that this will not work if the user has a role higher than the bot & use .clear_nicks to remove all nick names|| ")
+                await ctx.send(
+                    "Ok, nicknaming everyone now. This will take a while. ||note that this will not work if the user has a role higher than the bot & use .clear_nicks to remove all nick names|| "
+                )
                 # Loop through every member in the guild
                 for member in ctx.guild.members:
                     try:
@@ -806,10 +809,12 @@ class Moderation(commands.Cog):
                         word2 = random.choice(list(word_set))
                         dig = random.randint(0, 99)
                         await member.edit(nick=f"{word1} {word2} {dig}")
-                        
+
                     except:
-                        pass 
-                await ctx.send("Everyone has been nicknamed. use .clear_nicks to remove them")
+                        pass
+                await ctx.send(
+                    "Everyone has been nicknamed. use .clear_nicks to remove them"
+                )
             elif msg.content.lower() == "no":
                 await ctx.send("Ok, not nicknaming everyone.")
             else:
@@ -827,8 +832,36 @@ class Moderation(commands.Cog):
         await ctx.send("No more nick names. balence has been restored")
 
 
+    @commands.slash_command(name="sanatize_names", description="Sanitize all user names (remove all non-standard characters)")
+    @commands.has_permissions(administrator=True)
+    async def sanatize_names(self, ctx):
+        try:
+            await ctx.respond("Sanitizing names")
+            
+            standard_chars = string.ascii_letters + string.digits + string.punctuation + " "
+            
+            for member in ctx.guild.members:
+                try:
+                    new_name = ''.join(c for c in member.display_name if c in standard_chars)
+                    
+                    # If the sanitized name is empty or contains only spaces
+                    if new_name.strip() == '':
+                        user_id = member.id
+                        new_name = f"User {user_id}"
+                    
+                    await member.edit(nick=new_name)
+                except discord.Forbidden:
+                    await ctx.send(f"Missing permissions to change nickname for {member.display_name}")
+                except Exception as e:
+                    await ctx.send(f"Failed to sanitize name for {member.display_name}: {e}")
+            
+            await ctx.send("Names sanitized")
+        except discord.Forbidden:
+            await ctx.send("Missing permissions to perform this action please put me at the top of the role list")
+        except Exception as e:
+            pass
 
-
+    
 
 
 def setup(client):
