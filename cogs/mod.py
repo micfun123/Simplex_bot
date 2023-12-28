@@ -839,7 +839,8 @@ class Moderation(commands.Cog):
             await ctx.respond("Sanitizing names")
             
             standard_chars = string.ascii_letters + string.digits + string.punctuation + " "
-            
+            progress = 0 
+            progress_message = await ctx.send(f"Sanitizing names: {progress}%")
             for member in ctx.guild.members:
                 try:
                     new_name = ''.join(c for c in member.display_name if c in standard_chars)
@@ -848,6 +849,9 @@ class Moderation(commands.Cog):
                     if new_name.strip() == '':
                         user_id = member.id
                         new_name = f"User {user_id}"
+                    
+                    if int (progress) % 10 == 0:
+                        await progress_message.edit(content=f"Sanitizing names: {progress}%")
                     
                     await member.edit(nick=new_name)
                 except discord.Forbidden:
