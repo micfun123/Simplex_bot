@@ -823,7 +823,7 @@ class Moderation(commands.Cog):
             try:
                 await member.edit(nick=None)
             except:
-                await ctx.send(f"cannot reset user {i}")
+                pass
         await ctx.send("No more nick names. balence has been restored")
 
 
