@@ -618,6 +618,20 @@ class utilities(commands.Cog):
     async def _vote_simplex_(self, ctx):
         await ctx.respond("https://top.gg/bot/902240397273743361")
 
+    @commands.slash_command(name="supports", description="gets the list of buy me a coffee supporters")
+    async def _supports_(self, ctx):
+        token = os.getenv("BUYMEACOFFEE")
+        headers = {"Authorization": f"Bearer {token}"}
+        r = requests.get("https://developers.buymeacoffee.com/api/v1/supporters", headers=headers)
+        data = r.json()
+        supporters = []
+        for i in data["data"]:
+            supporters.append(i["name"])
+        await ctx.respond(f"Supporters:\n{', '.join(supporters)}")
+        await ctx.followup.send(f"Total: {len(supporters)}")
+        await ctx.followup.send("To support the bot go to https://www.buymeacoffee.com/Michaelrbparker")
+
+
 
 def setup(bot):
     bot.add_cog(utilities(bot))
