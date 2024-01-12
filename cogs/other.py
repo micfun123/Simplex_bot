@@ -648,6 +648,35 @@ class utilities(commands.Cog):
             except requests.exceptions.RequestException as e:
                 await ctx.send(f"An error occurred: {e}")
 
+    @commands.slash_command(name="supporters", description="gets the list of buy me a coffee supporters")
+    async def _supporters_slash(self, ctx):
+        token = os.getenv("BUYMEACOFFEE")
+        headers = {"Authorization": f"Bearer {token}"}
+        if not token:
+            await ctx.respond("No token found.")
+        else:
+            try:
+                print("Getting supporters...")
+                r = requests.get("https://developers.buymeacoffee.com/api/v1/subscriptions?status=active", headers=headers)
+                
+                r.raise_for_status()  # Raises an HTTPError for bad responses
+                data = r.json()["data"]
+                #print(data)
+
+                if data:
+                    members = []
+                    for entry in data:
+                        payer_name = entry.get('payer_name', 'N/A')  # Default to 'N/A' if 'payer_name' is not present
+                        print(payer_name)
+                        members.append(payer_name)
+                        em = discord.Embed(title="Supporters", description=f"{', '.join(members)}", color=0x8BE002)
+                        em.set_footer(text="Thank you for supporting Simplex, if you would like to support us, please use the donation command")
+                        await ctx.respond(embed=em)
+                else:
+                    await ctx.respond("No active supporters found.")
+            except requests.exceptions.RequestException as e:
+                await ctx.respond(f"An error occurred: {e}")
+
 
 def setup(client):
     client.add_cog(utilities(client))
