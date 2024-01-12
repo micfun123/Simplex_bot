@@ -618,7 +618,6 @@ class utilities(commands.Cog):
     async def _vote_simplex_(self, ctx):
         await ctx.respond("https://top.gg/bot/902240397273743361")
 
-
     @commands.command(description="gets the list of buy me a coffee supporters")
     async def supporters(self, ctx):
         token = os.getenv("BUYMEACOFFEE")
@@ -627,28 +626,39 @@ class utilities(commands.Cog):
             await ctx.send("No token found.")
         else:
             try:
-                print("Getting supporters...")
-                r = requests.get("https://developers.buymeacoffee.com/api/v1/subscriptions?status=active", headers=headers)
-                
+                r = requests.get(
+                    "https://developers.buymeacoffee.com/api/v1/subscriptions?status=active",
+                    headers=headers,
+                )
+
                 r.raise_for_status()  # Raises an HTTPError for bad responses
                 data = r.json()["data"]
-                #print(data)
 
                 if data:
                     members = []
                     for entry in data:
-                        payer_name = entry.get('payer_name', 'N/A')  # Default to 'N/A' if 'payer_name' is not present
-                        print(payer_name)
+                        payer_name = entry.get(
+                            "payer_name", "N/A"
+                        )  # Default to 'N/A' if 'payer_name' is not present
+
                         members.append(payer_name)
-                        em = discord.Embed(title="Supporters", description=f"{', '.join(members)}", color=0x8BE002)
-                        em.set_footer(text="Thank you for supporting Simplex, if you would like to support us, please use the donation command")
+                        em = discord.Embed(
+                            title="Supporters",
+                            description=f"{', '.join(members)}",
+                            color=0x8BE002,
+                        )
+                        em.set_footer(
+                            text="Thank you for supporting Simplex, if you would like to support us, please use the donation command"
+                        )
                         await ctx.send(embed=em)
                 else:
                     await ctx.send("No active supporters found.")
             except requests.exceptions.RequestException as e:
                 await ctx.send(f"An error occurred: {e}")
 
-    @commands.slash_command(name="supporters", description="gets the list of buy me a coffee supporters")
+    @commands.slash_command(
+        name="supporters", description="gets the list of buy me a coffee supporters"
+    )
     async def _supporters_slash(self, ctx):
         token = os.getenv("BUYMEACOFFEE")
         headers = {"Authorization": f"Bearer {token}"}
@@ -656,21 +666,30 @@ class utilities(commands.Cog):
             await ctx.respond("No token found.")
         else:
             try:
-                print("Getting supporters...")
-                r = requests.get("https://developers.buymeacoffee.com/api/v1/subscriptions?status=active", headers=headers)
-                
+                r = requests.get(
+                    "https://developers.buymeacoffee.com/api/v1/subscriptions?status=active",
+                    headers=headers,
+                )
+
                 r.raise_for_status()  # Raises an HTTPError for bad responses
                 data = r.json()["data"]
-                #print(data)
 
                 if data:
                     members = []
                     for entry in data:
-                        payer_name = entry.get('payer_name', 'N/A')  # Default to 'N/A' if 'payer_name' is not present
-                        print(payer_name)
+                        payer_name = entry.get(
+                            "payer_name", "N/A"
+                        )  # Default to 'N/A' if 'payer_name' is not present
+
                         members.append(payer_name)
-                        em = discord.Embed(title="Supporters", description=f"{', '.join(members)}", color=0x8BE002)
-                        em.set_footer(text="Thank you for supporting Simplex, if you would like to support us, please use the donation command")
+                        em = discord.Embed(
+                            title="Supporters",
+                            description=f"{', '.join(members)}",
+                            color=0x8BE002,
+                        )
+                        em.set_footer(
+                            text="Thank you for supporting Simplex, if you would like to support us, please use the donation command"
+                        )
                         await ctx.respond(embed=em)
                 else:
                     await ctx.respond("No active supporters found.")
