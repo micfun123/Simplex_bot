@@ -618,20 +618,36 @@ class utilities(commands.Cog):
     async def _vote_simplex_(self, ctx):
         await ctx.respond("https://top.gg/bot/902240397273743361")
 
-    @commands.commands(description="gets the list of buy me a coffee supporters")
+
+    @commands.command(description="gets the list of buy me a coffee supporters")
     async def supporters(self, ctx):
         token = os.getenv("BUYMEACOFFEE")
         headers = {"Authorization": f"Bearer {token}"}
-        r = requests.get("https://developers.buymeacoffee.com/api/v1/supporters", headers=headers)
-        data = r.json()
-        supporters = []
-        for i in data["data"]:
-            supporters.append(i["name"])
-        await ctx.send(f"Supporters:\n{', '.join(supporters)}")
-        await ctx.send(f"Total: {len(supporters)}")
-        await ctx.send("To support the bot go to https://www.buymeacoffee.com/Michaelrbparker")
+        if not token:
+            await ctx.send("No token found.")
+        else:
+            try:
+                print("Getting supporters...")
+                r = requests.get("https://developers.buymeacoffee.com/api/v1/subscriptions?status=active", headers=headers)
+                
+                r.raise_for_status()  # Raises an HTTPError for bad responses
+                data = r.json()["data"]
+                #print(data)
+
+                if data:
+                    members = []
+                    for entry in data:
+                        payer_name = entry.get('payer_name', 'N/A')  # Default to 'N/A' if 'payer_name' is not present
+                        print(payer_name)
+                        members.append(payer_name)
+                        em = discord.Embed(title="Supporters", description=f"{', '.join(members)}", color=0x8BE002)
+                        em.set_footer(text="Thank you for supporting Simplex, if you would like to support us, please use the donation command")
+                        await ctx.send(embed=em)
+                else:
+                    await ctx.send("No active supporters found.")
+            except requests.exceptions.RequestException as e:
+                await ctx.send(f"An error occurred: {e}")
 
 
-
-def setup(bot):
-    bot.add_cog(utilities(bot))
+def setup(client):
+    client.add_cog(utilities(client))
