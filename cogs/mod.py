@@ -14,7 +14,7 @@ import io
 import chat_exporter
 from english_words import get_english_words_set
 import string
-
+import unicodedata
 
 
 def micsid(ctx):
@@ -518,31 +518,6 @@ class Moderation(commands.Cog):
                 pass
         await ctx.send(f"{role} has been added to all members.")
 
-    # remove role from user
-    @commands.command(help="Remove a role from a user")
-    @commands.has_guild_permissions(manage_roles=True)
-    async def removerole(self, ctx, user: discord.Member, role: discord.Role):
-        """
-        Removes a role from a user.
-        """
-        if role.position > ctx.guild.me.top_role.position:
-            await ctx.send("The role is higher than my highest role.")
-            return
-        await user.remove_roles(role)
-        await ctx.send(f"{role} has been removed from {user}.")
-
-    # add role to user
-    @commands.command(help="Add a role to a user")
-    @commands.has_guild_permissions(manage_roles=True)
-    async def giverole(self, ctx, user: discord.Member, *, role: discord.Role):
-        """
-        Adds a role to a user.
-        """
-        if role.position > ctx.guild.me.top_role.position:
-            await ctx.send("The role is higher than my highest role.")
-            return
-        await user.add_roles(role)
-        await ctx.send(f"{role} has been added to {user}.")
 
     # remove all roles from user
     @commands.command(help="Remove all roles from a user")
@@ -784,13 +759,15 @@ class Moderation(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def gamertag_gen(self, ctx):
         # Send a message confirming the action
-        word_set = get_english_words_set(['web2'], lower=True)
-        x = await ctx.send("Are you sure you want to nickname everyone to an Xbox-style gamertag? "
-                       "(yes/no) This will take a while and cannot be undone via a command.")
-        
+        word_set = get_english_words_set(["web2"], lower=True)
+        x = await ctx.send(
+            "Are you sure you want to nickname everyone to an Xbox-style gamertag? "
+            "(yes/no) This will take a while and cannot be undone via a command."
+        )
+
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
-        
+
         # Wait for a response
         try:
             msg = await self.client.wait_for("message", check=check, timeout=30.0)
@@ -798,7 +775,9 @@ class Moderation(commands.Cog):
             await ctx.send("You took too long to respond.")
         else:
             if msg.content.lower() == "yes":
-                await ctx.send("Ok, nicknaming everyone now. This will take a while. ||note that this will not work if the user has a role higher than the bot & use .clear_nicks to remove all nick names|| ")
+                await ctx.send(
+                    "Ok, nicknaming everyone now. This will take a while. ||note that this will not work if the user has a role higher than the bot & use .clear_nicks to remove all nick names|| "
+                )
                 # Loop through every member in the guild
                 for member in ctx.guild.members:
                     try:
@@ -806,10 +785,12 @@ class Moderation(commands.Cog):
                         word2 = random.choice(list(word_set))
                         dig = random.randint(0, 99)
                         await member.edit(nick=f"{word1} {word2} {dig}")
-                        
+
                     except:
-                        pass 
-                await ctx.send("Everyone has been nicknamed. use .clear_nicks to remove them")
+                        pass
+                await ctx.send(
+                    "Everyone has been nicknamed. use .clear_nicks to remove them"
+                )
             elif msg.content.lower() == "no":
                 await ctx.send("Ok, not nicknaming everyone.")
             else:
@@ -827,8 +808,40 @@ class Moderation(commands.Cog):
         await ctx.send("No more nick names. balence has been restored")
 
 
+    @commands.slash_command(name="sanatize_names", description="Sanitize all user names (remove all non-standard characters)")
+    @commands.has_permissions(administrator=True)
+    async def sanatize_names(self, ctx):
+        try:
+            await ctx.respond("Sanitizing names")
+            
+            standard_chars = string.ascii_letters + string.digits + string.punctuation + " "
+            progress = 0 
+            pos = 0
+            progress_message = await ctx.send(f"Sanitizing names: {progress}%")
+            for member in ctx.guild.members:
+                try:
+                    sanitized_name = ''.join(
+                        c for c in unicodedata.normalize('NFD', member.display_name)
+                        if unicodedata.category(c) != 'Mn'
+                    )
+                    
+                    await progress_message.edit(content=f"Sanitizing names: {progress}%")
+                    pos += 1
+                    progress = round(pos / len(ctx.guild.members) * 100, 2)
+                    if sanitized_name != member.display_name:
+                        await member.edit(nick=sanitized_name)
+                except discord.Forbidden:
+                    await ctx.send(f"Missing permissions to change nickname for {member.display_name}")
+                except Exception as e:
+                    await ctx.send(f"Failed to sanitize name for {member.display_name}: {e}")
+            
+            await ctx.send("Names sanitized")
+        except discord.Forbidden:
+            await ctx.send("Missing permissions to perform this action please put me at the top of the role list")
+        except Exception as e:
+            pass
 
-
+    
 
 
 def setup(client):
