@@ -1,8 +1,6 @@
 # The Everything Discord Bot
 
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/Michaelrbparker)
-![CodeFactor](https://www.codefactor.io/repository/github/micfun123/simplex_bot/badge)
-[![Discord Bots](https://top.gg/api/widget/902240397273743361.svg)](https://top.gg/bot/902240397273743361)
 
 The Everything Discord Bot is an open-source project designed to provide a versatile set of utilities and tools for Discord servers. Contributions are welcome to enhance its functionality and features.
 
