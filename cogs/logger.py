@@ -177,107 +177,110 @@ class Moderationsettings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        if before.nick is not None and after.nick is None:
-            em = discord.Embed(
-                color=discord.Color.blue(),
-                title="Nick Change",
-                description=f"{before.name} has unicked",
-                timestamp=datetime.datetime.utcnow(),
-            )
-            em.add_field(name="Before:", value=before.nick)
-            em.add_field(name="After:", value="No Nick")
-            async with aiosqlite.connect("databases/log.db") as con:
-                cur = await con.execute(
-                    "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
-                )
-                data = await cur.fetchone()
-            if data:
-                channel = self.client.get_channel(data[1])
-                await channel.send(embed=em)
-                return
-            
-
-        if before.nick is None and after.nick is not None:
-            em = discord.Embed(
-                color=discord.Color.blue(),
-                title="Nick Change",
-                description=f"{before.name} Has nicked",
-                timestamp=datetime.datetime.utcnow(),
-            )
-            em.add_field(name="Before:", value="No Nick")
-            em.add_field(name="After:", value=after.nick)
-            async with aiosqlite.connect("databases/log.db") as con:
-                cur = await con.execute(
-                    "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
-                )
-                data = await cur.fetchone()
-            if data:
-                channel = self.client.get_channel(data[1])
-                await channel.send(embed=em)
-                return
-            
-
-        elif before.nick != after.nick:
-            em = discord.Embed(
-                color=discord.Color.blue(),
-                title="Nick Change",
-                description=f"{before.name} Has changed their nick",
-                timestamp=datetime.datetime.utcnow(),
-            )
-            em.add_field(name="Before:", value=before.nick)
-            em.add_field(name="After:", value=after.nick)
-            async with aiosqlite.connect("databases/log.db") as con:
-                cur = await con.execute(
-                    "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
-                )
-                data = await cur.fetchone()
-            if data:
-                channel = self.client.get_channel(data[1])
-                await channel.send(embed=em)
-                return
-            
-        if before.roles != after.roles:
-            if len (before.roles) > len (after.roles):
+        try:
+            if before.nick is not None and after.nick is None:
                 em = discord.Embed(
-                    color=discord.Color.red(),
-                    title="Role removed",
-                    description=f"{before.name} Has lost a role",
+                    color=discord.Color.blue(),
+                    title="Nick Change",
+                    description=f"{before.name} has unicked",
                     timestamp=datetime.datetime.utcnow(),
                 )
-                for i in before.roles:
-                    if i not in after.roles:
-                        em.add_field(name="Role:", value=i.name)
-                        em.set_thumbnail(url=before.avatar.url)
-                        async with aiosqlite.connect("databases/log.db") as con:
-                            cur = await con.execute(
-                                "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
-                            )
-                            data = await cur.fetchone()
-                        if data:
-                            channel = self.client.get_channel(data[1])
-                            await channel.send(embed=em)
-                            return
-                
-            elif len (before.roles) < len (after.roles):
+                em.add_field(name="Before:", value=before.nick)
+                em.add_field(name="After:", value="No Nick")
+                async with aiosqlite.connect("databases/log.db") as con:
+                    cur = await con.execute(
+                        "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
+                    )
+                    data = await cur.fetchone()
+                if data:
+                    channel = self.client.get_channel(data[1])
+                    await channel.send(embed=em)
+                    return
+
+
+            if before.nick is None and after.nick is not None:
                 em = discord.Embed(
-                    color=discord.Color.green(),
-                    title="Role added",
-                    description=f"{before.name} Has gained a role",
+                    color=discord.Color.blue(),
+                    title="Nick Change",
+                    description=f"{before.name} Has nicked",
                     timestamp=datetime.datetime.utcnow(),
                 )
-                for i in after.roles:
-                    if i not in before.roles:
-                        em.add_field(name="Role:", value=i.name)
-                        em.set_thumbnail(url=after.avatar.url)
-                        async with aiosqlite.connect("databases/log.db") as con:
-                            cur = await con.execute(
-                                "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
-                            )
-                            data = await cur.fetchone()
-                        if data:
-                            channel = self.client.get_channel(data[1])
-                            await channel.send(embed=em)
-                            return
+                em.add_field(name="Before:", value="No Nick")
+                em.add_field(name="After:", value=after.nick)
+                async with aiosqlite.connect("databases/log.db") as con:
+                    cur = await con.execute(
+                        "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
+                    )
+                    data = await cur.fetchone()
+                if data:
+                    channel = self.client.get_channel(data[1])
+                    await channel.send(embed=em)
+                    return
+
+
+            elif before.nick != after.nick:
+                em = discord.Embed(
+                    color=discord.Color.blue(),
+                    title="Nick Change",
+                    description=f"{before.name} Has changed their nick",
+                    timestamp=datetime.datetime.utcnow(),
+                )
+                em.add_field(name="Before:", value=before.nick)
+                em.add_field(name="After:", value=after.nick)
+                async with aiosqlite.connect("databases/log.db") as con:
+                    cur = await con.execute(
+                        "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
+                    )
+                    data = await cur.fetchone()
+                if data:
+                    channel = self.client.get_channel(data[1])
+                    await channel.send(embed=em)
+                    return
+
+            if before.roles != after.roles:
+                if len (before.roles) > len (after.roles):
+                    em = discord.Embed(
+                        color=discord.Color.red(),
+                        title="Role removed",
+                        description=f"{before.name} Has lost a role",
+                        timestamp=datetime.datetime.utcnow(),
+                    )
+                    for i in before.roles:
+                        if i not in after.roles:
+                            em.add_field(name="Role:", value=i.name)
+                            em.set_thumbnail(url=before.avatar.url)
+                            async with aiosqlite.connect("databases/log.db") as con:
+                                cur = await con.execute(
+                                    "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
+                                )
+                                data = await cur.fetchone()
+                            if data:
+                                channel = self.client.get_channel(data[1])
+                                await channel.send(embed=em)
+                                return
+
+                elif len (before.roles) < len (after.roles):
+                    em = discord.Embed(
+                        color=discord.Color.green(),
+                        title="Role added",
+                        description=f"{before.name} Has gained a role",
+                        timestamp=datetime.datetime.utcnow(),
+                    )
+                    for i in after.roles:
+                        if i not in before.roles:
+                            em.add_field(name="Role:", value=i.name)
+                            em.set_thumbnail(url=after.avatar.url)
+                            async with aiosqlite.connect("databases/log.db") as con:
+                                cur = await con.execute(
+                                    "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
+                                )
+                                data = await cur.fetchone()
+                            if data:
+                                channel = self.client.get_channel(data[1])
+                                await channel.send(embed=em)
+                                return
+        except:
+            pass
 
             
 
@@ -294,8 +297,11 @@ class Moderationsettings(commands.Cog):
             cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (guild.id,))
             data = await cur.fetchone()
         if data:
-            channel = self.client.get_channel(data[1])
-            await channel.send(embed=em)
+            try:
+                channel = self.client.get_channel(data[1])
+                await channel.send(embed=em)
+            except:
+                pass
         else:
             return
 
@@ -311,8 +317,11 @@ class Moderationsettings(commands.Cog):
             cur = await con.execute("SELECT * FROM log WHERE GuildID=?", (guild.id,))
             data = await cur.fetchone()
         if data:
-            channel = self.client.get_channel(data[1])
-            await channel.send(embed=em)
+            try:
+                channel = self.client.get_channel(data[1])
+                await channel.send(embed=em)
+            except:
+                pass
         else:
             return
 
@@ -388,8 +397,11 @@ class Moderationsettings(commands.Cog):
             ) as cur:
                 data = await cur.fetchone()
                 if data:
-                    channel = self.client.get_channel(data[1])
-                    await channel.send(embed=em)
+                    try:
+                        channel = self.client.get_channel(data[1])
+                        await channel.send(embed=em)
+                    except:
+                        pass
                 else:
                     return
               
