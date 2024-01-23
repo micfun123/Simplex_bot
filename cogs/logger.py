@@ -51,12 +51,12 @@ class Moderationsettings(commands.Cog):
             try:
                 channel = self.client.get_channel(data[1])
                 await channel.send(message)
-            except:
+            except Exception:
                 try:
                     system_channel = i.system_channel
                     await system_channel.send(message)
                     sentto += 1
-                except:
+                except Exception:
                     pass
         await ctx.send(f"Sent to {sentto} servers")
 
@@ -75,7 +75,7 @@ class Moderationsettings(commands.Cog):
                 channel = self.client.get_channel(data[1])
                 await channel.send(message)
                 total += 1
-            except:
+            except Exception:
                 pass
         await ctx.send(f"Sent to {total} out of {self.client.guilds} servers")
 
@@ -97,7 +97,7 @@ class Moderationsettings(commands.Cog):
                 channel = self.client.get_channel(data[1])
                 await channel.send(embed=embed)
                 total += 1
-            except:
+            except Exception:
                 pass
         await ctx.send(f"Sent to {total} out of {self.client.guilds} servers")
 
@@ -279,7 +279,7 @@ class Moderationsettings(commands.Cog):
                                 channel = self.client.get_channel(data[1])
                                 await channel.send(embed=em)
                                 return
-        except:
+        except Exception:
             pass
 
             
@@ -300,7 +300,7 @@ class Moderationsettings(commands.Cog):
             try:
                 channel = self.client.get_channel(data[1])
                 await channel.send(embed=em)
-            except:
+            except Exception:
                 pass
         else:
             return
@@ -320,7 +320,7 @@ class Moderationsettings(commands.Cog):
             try:
                 channel = self.client.get_channel(data[1])
                 await channel.send(embed=em)
-            except:
+            except Exception:
                 pass
         else:
             return
@@ -400,7 +400,7 @@ class Moderationsettings(commands.Cog):
                     try:
                         channel = self.client.get_channel(data[1])
                         await channel.send(embed=em)
-                    except:
+                    except Exception:
                         pass
                 else:
                     return
