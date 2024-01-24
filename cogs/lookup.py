@@ -470,7 +470,13 @@ class lookup(commands.Cog):
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
-            for row in rows:
+            
+            row_c = len(rows)
+
+            for idx, row in enumerate(rows, start=1):
+                if idx % 5 == 0:
+                    await ctx.send(f"Currently at {idx}/{row_c}")
+
                 try:
                     name = row[0]
                     url = row[1]
@@ -538,7 +544,6 @@ class lookup(commands.Cog):
 
                 except Exception as e:
                     pass
-                await asyncio.sleep(5)
         await ctx.send("Done running RSS Loop")
 
     # run at time 00:00 and 12:00
