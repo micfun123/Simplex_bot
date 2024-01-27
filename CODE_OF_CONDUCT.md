@@ -30,7 +30,7 @@ Project maintainers have the right and responsibility to address and report any 
 
 ## Reporting Violations
 
-If you are subject to or witness unacceptable behavior, or have any other concerns, please contact [Simplexbot@protonmail.com]. All complaints will be reviewed and investigated promptly and fairly.
+If you are subject to or witness unacceptable behavior, or have any other concerns, please contact Simplexbot@protonmail.com. All complaints will be reviewed and investigated promptly and fairly.
 
 ## Enforcement Process
 
@@ -42,4 +42,3 @@ This Code of Conduct is adapted from the [Contributor Covenant](https://www.cont
 
 For answers to common questions about this code of conduct, see [https://www.contributor-covenant.org/faq](https://www.contributor-covenant.org/faq).
 
-[Note: Replace maintainer-email@example.com with your actual contact email address.]
