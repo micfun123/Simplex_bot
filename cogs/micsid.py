@@ -1,3 +1,5 @@
+import logging
+
 import imp
 import discord
 from discord.ext import commands
@@ -9,6 +11,20 @@ from datetime import datetime
 import subprocess
 from discordLevelingSystem import DiscordLevelingSystem
 import aiosqlite
+
+DISCORD_LOG_PATH = "other/discord.log"
+
+
+def add_logger():
+    logger = logging.getLogger("discord")
+    logger.setLevel(logging.DEBUG)
+
+    handler = logging.FileHandler(filename=DISCORD_LOG_PATH, encoding="utf-8", mode="w")
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+    )
+
+    logger.addHandler(handler)
 
 
 def micsid(ctx):
@@ -35,11 +51,18 @@ for i in os.listdir("cogs/"):
 class BotMakerCommands(commands.Cog):
     def __init__(self, client):
         self.client = client
+        add_logger()
 
     @commands.command()
     @commands.check(micsid)
     async def logs(self, ctx):
         file = discord.File("./other/log.txt")
+        await ctx.author.send(file=file)
+
+    @commands.command()
+    @commands.check(micsid)
+    async def discord_logs(self, ctx):
+        file = discord.File(DISCORD_LOG_PATH)
         await ctx.author.send(file=file)
 
     @commands.command()
