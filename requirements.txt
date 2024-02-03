@@ -11,7 +11,6 @@ geopy
 nominatim
 google-api-python-client
 googlesearch-python
-gTTS
 lxml
 mutagen
 praw
