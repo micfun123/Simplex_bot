@@ -470,7 +470,7 @@ class lookup(commands.Cog):
         async with aiosqlite.connect("databases/rss.db") as db:
             con = await db.execute("SELECT * FROM rss")
             rows = await con.fetchall()
-            
+
             row_c = len(rows)
 
             for idx, row in enumerate(rows, start=1):

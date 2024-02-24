@@ -197,7 +197,6 @@ class Moderationsettings(commands.Cog):
                     await channel.send(embed=em)
                     return
 
-
             if before.nick is None and after.nick is not None:
                 em = discord.Embed(
                     color=discord.Color.blue(),
@@ -216,7 +215,6 @@ class Moderationsettings(commands.Cog):
                     channel = self.client.get_channel(data[1])
                     await channel.send(embed=em)
                     return
-
 
             elif before.nick != after.nick:
                 em = discord.Embed(
@@ -238,7 +236,7 @@ class Moderationsettings(commands.Cog):
                     return
 
             if before.roles != after.roles:
-                if len (before.roles) > len (after.roles):
+                if len(before.roles) > len(after.roles):
                     em = discord.Embed(
                         color=discord.Color.red(),
                         title="Role removed",
@@ -251,7 +249,8 @@ class Moderationsettings(commands.Cog):
                             em.set_thumbnail(url=before.avatar.url)
                             async with aiosqlite.connect("databases/log.db") as con:
                                 cur = await con.execute(
-                                    "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
+                                    "SELECT * FROM log WHERE GuildID=?",
+                                    (before.guild.id,),
                                 )
                                 data = await cur.fetchone()
                             if data:
@@ -259,7 +258,7 @@ class Moderationsettings(commands.Cog):
                                 await channel.send(embed=em)
                                 return
 
-                elif len (before.roles) < len (after.roles):
+                elif len(before.roles) < len(after.roles):
                     em = discord.Embed(
                         color=discord.Color.green(),
                         title="Role added",
@@ -272,7 +271,8 @@ class Moderationsettings(commands.Cog):
                             em.set_thumbnail(url=after.avatar.url)
                             async with aiosqlite.connect("databases/log.db") as con:
                                 cur = await con.execute(
-                                    "SELECT * FROM log WHERE GuildID=?", (before.guild.id,)
+                                    "SELECT * FROM log WHERE GuildID=?",
+                                    (before.guild.id,),
                                 )
                                 data = await cur.fetchone()
                             if data:
@@ -281,9 +281,6 @@ class Moderationsettings(commands.Cog):
                                 return
         except Exception:
             pass
-
-            
-
 
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
@@ -404,7 +401,7 @@ class Moderationsettings(commands.Cog):
                         pass
                 else:
                     return
-              
+
 
 def setup(client):
     client.add_cog(Moderationsettings(client))

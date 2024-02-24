@@ -46,7 +46,6 @@ intents.voice_states = True
 
 class MyBot(commands.Bot):
     def __init__(self, *args, **kwargs):
-
         super().__init__(*args, **kwargs)
 
         self.ipc = ipc.Server(
@@ -54,13 +53,11 @@ class MyBot(commands.Bot):
         )  # create our IPC Server
 
     async def on_ready(self):
-
         """Called upon the READY event"""
 
         print("Bot is ready.")
 
     async def on_ipc_error(self, endpoint, error):
-
         """Called upon an error being raised within an IPC route"""
 
         print(endpoint, "raised", error)
@@ -71,7 +68,7 @@ client = MyBot(
     intents=intents,
     members=True,
     guilds=True,
-    voice_states = True,
+    voice_states=True,
     case_insensitive=True,
     allowed_mentions=discord.AllowedMentions(everyone=False),
 )
@@ -80,7 +77,6 @@ client = MyBot(
 
 # Custom ending note
 ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n "
-
 
 
 async def update_activity(client):

@@ -47,7 +47,7 @@ async def lb(self, ctx):
     data = await lvl.each_member_data(ctx.guild, sort_by="rank")
     em = discord.Embed(title="Leaderboard")
     n = 0
-    #use fetch to get names of members
+    # use fetch to get names of members
     for i in data:
         username = await self.client.fetch_user(i.id)
         em.add_field(
@@ -59,7 +59,7 @@ async def lb(self, ctx):
         if n == 10:
             break
     await ctx.send(embed=em)
-    
+
 
 async def biglb(self, ctx):
     data = await lvl.each_member_data(ctx.guild, sort_by="rank")
@@ -628,7 +628,8 @@ class Leveling(commands.Cog):
             try:
                 async with aiosqlite.connect("./databases/xp_ignore.db") as db:
                     data = await db.execute(
-                        "SELECT * FROM xp_ignore WHERE guild_id = ?", (message.guild.id,)
+                        "SELECT * FROM xp_ignore WHERE guild_id = ?",
+                        (message.guild.id,),
                     )
                     data = await data.fetchall()
                     if data:

@@ -14,6 +14,7 @@ from datetime import datetime, timedelta, timezone
 import random
 import regex
 
+
 async def get_data():
     with open("./databases/goodbye.json") as f:
         data = json.load(f)
@@ -247,7 +248,9 @@ class GoodbyeView(discord.ui.View):
                 embed=discord.Embed(title="Goodbye Text or Embed:", description=status)
             )
 
-    @discord.ui.button(label="Show text", style=discord.ButtonStyle.green, custom_id="show_text")
+    @discord.ui.button(
+        label="Show text", style=discord.ButtonStyle.green, custom_id="show_text"
+    )
     async def show_text(self, button, interaction):
         async with aiosqlite.connect("./databases/Welcome.db") as db:
             async with db.execute(
@@ -258,8 +261,6 @@ class GoodbyeView(discord.ui.View):
                     await interaction.response.send_message("No text set")
                 else:
                     await interaction.response.send_message(data[0][2])
-
-
 
     @discord.ui.button(label="Reset", style=discord.ButtonStyle.red, custom_id="reset")
     async def reset(self, button, interaction):
@@ -414,9 +415,11 @@ class Goodbye(commands.Cog):
         )
         text = text.replace("{member.guild.owner}", member.guild.owner.name)
         text = regex.sub(
-            r"\{random\.choices\[(.+?)\]\}", lambda x: random.choice(x.group(1).split(", ")), text
+            r"\{random\.choices\[(.+?)\]\}",
+            lambda x: random.choice(x.group(1).split(", ")),
+            text,
         )
-        #example: {random.choices[hi, cya, goodbye]}
+        # example: {random.choices[hi, cya, goodbye]}
         em = discord.Embed(title=f"Goodbye {member.name}!", description=text)
         if textorembed == 1:
             await channel.send(f"{text}")

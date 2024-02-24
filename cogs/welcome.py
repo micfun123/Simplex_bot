@@ -246,7 +246,9 @@ class WelcomeView(discord.ui.View):
                 embed=discord.Embed(title="Welcome Text or Embed:", description=status)
             )
 
-    @discord.ui.button(label="Show text", style=discord.ButtonStyle.green, custom_id="show_text")
+    @discord.ui.button(
+        label="Show text", style=discord.ButtonStyle.green, custom_id="show_text"
+    )
     async def show_text(self, button, interaction):
         async with aiosqlite.connect("./databases/Welcome.db") as db:
             async with db.execute(
@@ -257,8 +259,6 @@ class WelcomeView(discord.ui.View):
                     await interaction.response.send_message("No text set")
                 else:
                     await interaction.response.send_message(data[0][2])
-
-                    
 
     @discord.ui.button(label="Reset", style=discord.ButtonStyle.red, custom_id="reset")
     async def reset(self, button, interaction):
@@ -279,8 +279,6 @@ class WelcomeView(discord.ui.View):
                 await interaction.followup.send("Your database has been reset!")
         else:
             await interaction.followup.send("Cancelled")
-
-    
 
 
 class Welcome(commands.Cog):
@@ -366,9 +364,11 @@ class Welcome(commands.Cog):
         )
         # replace {random.choices[usersinput seperated by comma]}
         text = regex.sub(
-            r"\{random\.choices\[(.+?)\]\}", lambda x: random.choice(x.group(1).split(", ")), text
+            r"\{random\.choices\[(.+?)\]\}",
+            lambda x: random.choice(x.group(1).split(", ")),
+            text,
         )
-        #example: {random.choices[hi, hello, hey, hola]}
+        # example: {random.choices[hi, hello, hey, hola]}
         em = discord.Embed(title=f"Welcome {member.name}!", description=text)
         if textorembed == 1:
             await channel.send(f"{member.mention} \n {text}")

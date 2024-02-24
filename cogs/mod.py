@@ -518,7 +518,6 @@ class Moderation(commands.Cog):
                 pass
         await ctx.send(f"{role} has been added to all members.")
 
-
     # remove all roles from user
     @commands.command(help="Remove all roles from a user")
     @commands.has_guild_permissions(manage_roles=True)
@@ -807,41 +806,52 @@ class Moderation(commands.Cog):
                 pass
         await ctx.send("No more nick names. balence has been restored")
 
-
-    @commands.slash_command(name="sanatize_names", description="Sanitize all user names (remove all non-standard characters)")
+    @commands.slash_command(
+        name="sanatize_names",
+        description="Sanitize all user names (remove all non-standard characters)",
+    )
     @commands.has_permissions(administrator=True)
     async def sanatize_names(self, ctx):
         try:
             await ctx.respond("Sanitizing names")
-            
-            standard_chars = string.ascii_letters + string.digits + string.punctuation + " "
-            progress = 0 
+
+            standard_chars = (
+                string.ascii_letters + string.digits + string.punctuation + " "
+            )
+            progress = 0
             pos = 0
             progress_message = await ctx.send(f"Sanitizing names: {progress}%")
             for member in ctx.guild.members:
                 try:
-                    sanitized_name = ''.join(
-                        c for c in unicodedata.normalize('NFD', member.display_name)
-                        if unicodedata.category(c) != 'Mn'
+                    sanitized_name = "".join(
+                        c
+                        for c in unicodedata.normalize("NFD", member.display_name)
+                        if unicodedata.category(c) != "Mn"
                     )
-                    
-                    await progress_message.edit(content=f"Sanitizing names: {progress}%")
+
+                    await progress_message.edit(
+                        content=f"Sanitizing names: {progress}%"
+                    )
                     pos += 1
                     progress = round(pos / len(ctx.guild.members) * 100, 2)
                     if sanitized_name != member.display_name:
                         await member.edit(nick=sanitized_name)
                 except discord.Forbidden:
-                    await ctx.send(f"Missing permissions to change nickname for {member.display_name}")
+                    await ctx.send(
+                        f"Missing permissions to change nickname for {member.display_name}"
+                    )
                 except Exception as e:
-                    await ctx.send(f"Failed to sanitize name for {member.display_name}: {e}")
-            
+                    await ctx.send(
+                        f"Failed to sanitize name for {member.display_name}: {e}"
+                    )
+
             await ctx.send("Names sanitized")
         except discord.Forbidden:
-            await ctx.send("Missing permissions to perform this action please put me at the top of the role list")
+            await ctx.send(
+                "Missing permissions to perform this action please put me at the top of the role list"
+            )
         except Exception as e:
             pass
-
-    
 
 
 def setup(client):
