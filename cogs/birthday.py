@@ -388,5 +388,11 @@ class Birthday(commands.Cog):
             )
 
 
+    @commands.command()
+    @commands.is_owner()
+    async def force_birthday_announcments(self, ctx):
+        self.birthday_announcments.start()
+        await ctx.send("Done")
+
 def setup(bot):
     bot.add_cog(Birthday(bot))
