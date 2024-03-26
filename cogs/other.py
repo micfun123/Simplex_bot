@@ -656,46 +656,87 @@ class utilities(commands.Cog):
             except requests.exceptions.RequestException as e:
                 await ctx.send(f"An error occurred: {e}")
 
-    @commands.slash_command(
-        name="supporters", description="gets the list of buy me a coffee supporters"
-    )
-    async def _supporters_slash(self, ctx):
-        token = os.getenv("BUYMEACOFFEE")
-        headers = {"Authorization": f"Bearer {token}"}
-        if not token:
-            await ctx.respond("No token found.")
-        else:
-            try:
-                r = requests.get(
-                    "https://developers.buymeacoffee.com/api/v1/subscriptions?status=active",
-                    headers=headers,
-                )
 
-                r.raise_for_status()  # Raises an HTTPError for bad responses
-                data = r.json()["data"]
+    async def fetch_supporters(self, url, headers):
+        supporters = []
+        while url:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            supporters.extend(data['data'])
+            url = data.get('next_page_url')
+        return supporters
+    
 
-                if data:
-                    members = []
-                    for entry in data:
-                        payer_name = entry.get(
-                            "payer_name", "N/A"
-                        )  # Default to 'N/A' if 'payer_name' is not present
+    @commands.command(name="teaboard",description="A leaderboard of the top 10 buy me a coffee supporters")
+    async def teaboard__command(self, ctx):
+        try:
+            token = os.getenv("BUYMEACOFFEE")
+            headers = {"Authorization": f"Bearer {token}"}
+            url = "https://developers.buymeacoffee.com/api/v1/supporters"
+            
+            # Fetch all supporters
+            supporters = await self.fetch_supporters(url, headers)
+            
+            # Aggregate total coffees donated by each supporter
+            supporter_totals = {}
+            for supporter in supporters:
+                supporter_name = supporter['supporter_name']
+                coffees_donated = supporter['support_coffees']
+                supporter_totals[supporter_name] = supporter_totals.get(supporter_name, 0) + coffees_donated
+            
+            # Sort supporters by total coffees donated
+            sorted_supporters = sorted(supporter_totals.items(), key=lambda x: x[1], reverse=True)
+            
+            # Create leaderboard
+            names = [f"{supporter[0]} - {supporter[1]} coffees" for supporter in sorted_supporters[:10]]
+            
+            embed = discord.Embed(
+                title="Top 10 Supporters",
+                description="Thank you to our top 10 supporters for their generous donations!",
+                color=0x8BE002
+            )
+            for i, name in enumerate(names):
+                embed.add_field(name=f"{i + 1}.", value=name, inline=False)
+            await ctx.send(embed=embed)
+            
+        except Exception as e:
+            await ctx.send(f"An error occurred: {e}")
 
-                        members.append(payer_name)
-                        em = discord.Embed(
-                            title="Supporters",
-                            description=f"{', '.join(members)}",
-                            color=0x8BE002,
-                        )
-                        em.set_footer(
-                            text="Thank you for supporting Simplex, if you would like to support us, please use the donation command"
-                        )
-                        await ctx.respond(embed=em)
-                else:
-                    await ctx.respond("No active supporters found.")
-            except requests.exceptions.RequestException as e:
-                await ctx.respond(f"An error occurred: {e}")
-
+    @commands.slash_command(name="teaboard", description="A leaderboard of the top 10 buy me a coffee supporters")
+    async def teaboard_slash(self, ctx):
+        try:
+            token = os.getenv("BUYMEACOFFEE")
+            headers = {"Authorization": f"Bearer {token}"}
+            url = "https://developers.buymeacoffee.com/api/v1/supporters"
+            
+            # Fetch all supporters
+            supporters = await self.fetch_supporters(url, headers)
+            
+            # Aggregate total coffees donated by each supporter
+            supporter_totals = {}
+            for supporter in supporters:
+                supporter_name = supporter['supporter_name']
+                coffees_donated = supporter['support_coffees']
+                supporter_totals[supporter_name] = supporter_totals.get(supporter_name, 0) + coffees_donated
+            
+            # Sort supporters by total coffees donated
+            sorted_supporters = sorted(supporter_totals.items(), key=lambda x: x[1], reverse=True)
+            
+            # Create leaderboard
+            names = [f"{supporter[0]} - {supporter[1]} coffees" for supporter in sorted_supporters[:10]]
+            
+            embed = discord.Embed(
+                title="Top 10 Supporters",
+                description="Thank you to our top 10 supporters for their generous donations!",
+                color=0x8BE002
+            )
+            for i, name in enumerate(names):
+                embed.add_field(name=f"{i + 1}.", value=name, inline=False)
+            await ctx.respond(embed=embed)
+            
+        except Exception as e:
+            await ctx.respond(f"An error occurred: {e}")
 
 def setup(client):
     client.add_cog(utilities(client))
