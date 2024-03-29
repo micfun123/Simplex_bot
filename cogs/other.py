@@ -698,6 +698,9 @@ class utilities(commands.Cog):
             )
             for i, name in enumerate(names):
                 embed.add_field(name=f"{i + 1}.", value=name, inline=False)
+            embed.set_footer(
+                text="Thank you for supporting Simplex, if you would like to support here is the magical link: https://www.buymeacoffee.com/Michaelrbparker"
+            )
             await ctx.send(embed=embed)
             
         except Exception as e:
@@ -733,6 +736,9 @@ class utilities(commands.Cog):
             )
             for i, name in enumerate(names):
                 embed.add_field(name=f"{i + 1}.", value=name, inline=False)
+            embed.set_footer(
+                text="Thank you for supporting Simplex, if you would like to support here is the magical link: https://www.buymeacoffee.com/Michaelrbparker"
+            )
             await ctx.respond(embed=embed)
             
         except Exception as e:
