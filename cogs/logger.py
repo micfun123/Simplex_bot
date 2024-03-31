@@ -62,22 +62,31 @@ class Moderationsettings(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def announcement(self, ctx, *, message):
+    async def announcement(self, ctx, message):
         # get all servers
         con = sqlite3.connect("databases/announcement.db")
         cur = con.cursor()
         total = 0
         for i in self.client.guilds:
-            data = cur.execute(
-                "SELECT * FROM server WHERE ServerID = ?", (i.id,)
-            ).fetchone()
             try:
-                channel = self.client.get_channel(data[1])
-                await channel.send(message)
-                total += 1
-            except Exception:
-                pass
-        await ctx.send(f"Sent to {total} out of {self.client.guilds} servers")
+                data = cur.execute(
+                    "SELECT * FROM server WHERE ServerID = ?", (i.id,)
+                ).fetchone()
+                try:
+                    channel = self.client.get_channel(data[1])
+                    #if there was a image in the message
+                    if ctx.message.attachments:
+                        await channel.send(message, file=await ctx.message.attachments[0].to_file())
+                        
+                    else:
+                        await channel.send(message)
+                    total += 1
+                except Exception as e:
+                    print(f"Failed to send announcement to {i.name}: {e}")
+            except Exception as e:
+                print(f"Failed to fetch data for server {i.name}: {e}")
+
+        await ctx.send(f"Sent to {total} out of {len(self.client.guilds)} servers")
 
     @commands.command()
     @commands.is_owner()
