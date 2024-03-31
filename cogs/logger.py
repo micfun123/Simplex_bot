@@ -77,7 +77,7 @@ class Moderationsettings(commands.Cog):
                     #if there was a image in the message
                     if ctx.message.attachments:
                         await channel.send(message, file=await ctx.message.attachments[0].to_file())
-                        
+
                     else:
                         await channel.send(message)
                     total += 1
@@ -134,6 +134,25 @@ class Moderationsettings(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def set_announcment_channel(self, ctx, channel: discord.TextChannel):
         await ctx.send("This connecting")
+        con = sqlite3.connect("databases/announcement.db")
+        cur = con.cursor()
+        data = cur.execute("SELECT * FROM server WHERE ServerID=?", (ctx.guild.id,))
+        data = data.fetchall()
+        if data:
+            cur.execute(
+                "UPDATE server SET channel=? WHERE ServerID=?",
+                (channel.id, ctx.guild.id),
+            )
+            con.commit()
+            await ctx.send(f"Set announcement channel to {channel.mention}")
+        else:
+            cur.execute("INSERT INTO server VALUES (?, ?)", (ctx.guild.id, channel.id))
+            con.commit()
+            await ctx.send(f"Set announcement channel to {channel.mention}")
+
+    @commands.slash_command()
+    @commands.has_permissions(administrator=True)
+    async def announcement_channel(self, ctx, channel: discord.TextChannel):
         con = sqlite3.connect("databases/announcement.db")
         cur = con.cursor()
         data = cur.execute("SELECT * FROM server WHERE ServerID=?", (ctx.guild.id,))
