@@ -442,7 +442,7 @@ class Fun(commands.Cog):
         name="cat", aliases=["pussy"], help="It shows you a cat photo as well as a fact"
     )  # shows cat photo and fact
     async def cat__prefix(self, ctx):
-        request = requests.get("https://some-random-api.com/img/cat")
+        request = requests.get("    ")
         catjson = request.json()
         # This time we'll get the fact request as well!
         request2 = requests.get("https://some-random-api.com/facts/cat")
@@ -451,7 +451,7 @@ class Fun(commands.Cog):
         embed = discord.Embed(title="Cat!", color=discord.Color.purple())
         embed.set_image(url=catjson["link"])
         embed.set_footer(text=factjson["fact"])
-        await ctx.respond(embed=embed)
+        await ctx.send(embed=embed)
 
     @commands.slash_command(
         name="cat", help="It shows you a cat photo as well as a fact"
