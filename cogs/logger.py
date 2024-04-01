@@ -62,7 +62,7 @@ class Moderationsettings(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def announcement(self, ctx, message):
+    async def announcement(self, ctx, *,message):
         # get all servers
         con = sqlite3.connect("databases/announcement.db")
         cur = con.cursor()
