@@ -44,6 +44,17 @@ intents.guilds = True
 intents.voice_states = True
 
 
+class CustomHelpCommand(commands.DefaultHelpCommand):
+    async def send_error_message(self, error):
+        pass  # Override to prevent sending error messages
+    
+    # Override the command invocation
+    async def send_command_help(self, command):
+        #dms the user the help command
+        user = self.context.author
+        await user.send(command.help)
+        await user.send("If you need more help please join the support server https://discord.gg/d2gjWqFsTP")
+
 class MyBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,6 +73,14 @@ class MyBot(commands.Bot):
 
         print(endpoint, "raised", error)
 
+class NewHelpName(commands.MinimalHelpCommand):
+    async def send_pages(self):
+        destination = self.get_destination()
+        for page in self.paginator.pages:
+            emby = discord.Embed(description=page)
+            await destination.send(embed=emby)
+        await destination.send("For more help feel free to join the support server. https://discord.gg/Y8b9qkJrjG")
+
 
 client = MyBot(
     command_prefix=(get_prefix),
@@ -70,10 +89,11 @@ client = MyBot(
     guilds=True,
     voice_states=True,
     case_insensitive=True,
-    allowed_mentions=discord.AllowedMentions(everyone=False),
-)
-# Custom ending note
+    allowed_mentions=discord.AllowedMentions(everyone=False)
 
+)
+
+client.help_command = NewHelpName()
 
 # Custom ending note
 ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n "
