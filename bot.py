@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from easy_pil import Editor, Canvas, Font, load_image, Text
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 from pycord.ext import ipc
+import asyncio
 
 load_dotenv()
 
@@ -44,17 +45,6 @@ intents.guilds = True
 intents.voice_states = True
 
 
-class CustomHelpCommand(commands.DefaultHelpCommand):
-    async def send_error_message(self, error):
-        pass  # Override to prevent sending error messages
-    
-    # Override the command invocation
-    async def send_command_help(self, command):
-        #dms the user the help command
-        user = self.context.author
-        await user.send(command.help)
-        await user.send("If you need more help please join the support server https://discord.gg/d2gjWqFsTP")
-
 class MyBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -76,10 +66,16 @@ class MyBot(commands.Bot):
 class NewHelpName(commands.MinimalHelpCommand):
     async def send_pages(self):
         destination = self.get_destination()
+        messages = []
         for page in self.paginator.pages:
-            emby = discord.Embed(description=page)
-            await destination.send(embed=emby)
-        await destination.send("For more help feel free to join the support server. https://discord.gg/Y8b9qkJrjG")
+            emby = discord.Embed(description=page, color=discord.Color.random())
+            emby.set_footer(text=ending_note)
+            message = await destination.send(embed=emby)
+            messages.append(message)
+
+        await asyncio.sleep(300)  # Wait for 5 minutes (300 seconds)
+        for message in messages:
+            await message.delete()  # Delete each message after 5 minutes
 
 
 client = MyBot(
@@ -96,7 +92,7 @@ client = MyBot(
 client.help_command = NewHelpName()
 
 # Custom ending note
-ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n "
+ending_note = "Thank you for using simplex!\nIf you have any questions or concerns feel free to DM me.\n or join the support server https://discord.gg/d2gjWqFsTP. This will self destruct in 5 minutes."
 
 
 async def update_activity(client):
