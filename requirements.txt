@@ -2,16 +2,12 @@ aiosqlite
 easy-pil
 qrcode
 python-dotenv
-os-sys
 geopy
 nominatim
 mcstatus
 timezonefinder
 geopy
-nominatim
-google-api-python-client
-googlesearch-python
-lxml
+flask
 mutagen
 praw
 prawcore
