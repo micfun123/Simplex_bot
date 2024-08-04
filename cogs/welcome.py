@@ -317,36 +317,41 @@ class Welcome(commands.Cog):
             return
 
         if card_enabled == 1:
-            background = Image.open("./images/welcome.png")
-            avatar = Image.open(requests.get(member.avatar.url, stream=True).raw)
+            try:    
+                background = Image.open("./images/welcome.png")
+                avatar = Image.open(requests.get(member.display_avatar.url, stream=True).raw)
 
-            avatar = avatar.resize((300, 300))
-            background.paste(avatar, (1000, 200))
-            draw = ImageDraw.Draw(background)
-            font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
-            textlocation = (975, 200)
-            textsize = draw.textsize(member.name, font=font)
-            draw.text(
-                (textlocation[0] - textsize[0] / 2, 550),
-                f"Welcome {member.name}!",
-                (255, 255, 255),
-                font=font,
-            )
-            font = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
-            draw.text(
-                (800, 700),
-                f"You are the {member.guild.member_count}th member!",
-                (255, 255, 255),
-                font=font,
-            )
+                avatar = avatar.resize((300, 300))
+                background.paste(avatar, (1000, 200))
+                draw = ImageDraw.Draw(background)
+                font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
+                textlocation = (975, 200)
+                textsize = draw.textlength(member.name, font=font)
+                textsize = int(textsize)
+                x_coordinate = textlocation[0] - textsize / 2
+                draw.text(
+                    (x_coordinate, 550),
+                    f"Welcome {member.name}!",
+                    (255, 255, 255),
+                    font=font,
+                )
+                font = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
+                draw.text(
+                    (800, 700),
+                    f"You are the {member.guild.member_count}th member!",
+                    (255, 255, 255),
+                    font=font,
+                )
 
-            tosend = BytesIO()
-            background.save(tosend, format="PNG")
-            tosend.seek(0)
-            await member.guild.get_channel(channel).send(
-                file=discord.File(tosend, "welcome.png")
-            )
-
+                tosend = BytesIO()
+                background.save(tosend, format="PNG")
+                tosend.seek(0)
+                await member.guild.get_channel(channel).send(
+                    file=discord.File(tosend, "welcome.png")
+                )
+            except Exception as e:
+                print(f"Error sending welcome card: {e}")
+                
         channel = await self.client.fetch_channel(channel)
 
         text = text.replace("{member.display_name}", member.display_name)
