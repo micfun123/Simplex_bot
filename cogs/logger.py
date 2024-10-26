@@ -126,7 +126,7 @@ class Moderationsettings(commands.Cog):
             con.commit()
             await ctx.send(f"Set log channel to {channel.mention}")
         else:
-            cur.execute("INSERT INTO log VALUES (?, ?)", (ctx.guild.id, channel.id))
+            cur.execute("INSERT INTO log VALUES (?, ?,1)", (ctx.guild.id, channel.id))
             con.commit()
             await ctx.send(f"Set log channel to {channel.mention}")
 
@@ -145,11 +145,11 @@ class Moderationsettings(commands.Cog):
                 "UPDATE log SET ChannelID=? WHERE GuildID=?", (channel.id, ctx.guild.id)
             )
             con.commit()
-            await ctx.send(f"Set log channel to {channel.mention}")
+            await ctx.respond(f"Set log channel to {channel.mention}")
         else:
-            cur.execute("INSERT INTO log VALUES (?, ?)", (ctx.guild.id, channel.id))
+            cur.execute("INSERT INTO log VALUES (?, ?,1)", (ctx.guild.id, channel.id))
             con.commit()
-            await ctx.send(f"Set log channel to {channel.mention}")
+            await ctx.respond(f"Set log channel to {channel.mention}")
 
 
     @commands.command()
