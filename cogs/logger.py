@@ -191,20 +191,6 @@ class Moderationsettings(commands.Cog):
             con.commit()
             await ctx.respond(f"Set announcement channel to {channel.mention}")
 
-
-
-    ## THESE ARE THE LOGGING EVENTS ##
-    @commands.command()
-    @commands.is_owner()
-    async def add_bot_column(self, ctx):
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        cur.execute("ALTER TABLE log ADD COLUMN log_bot boolean")
-        con.commit()
-        await ctx.send("Added bot column")
-        #set all to true
-        cur.execute("UPDATE log SET log_bot = 1")
-        con.commit()
         
     @commands.command(help="Toggle logging for bots")
     @commands.has_permissions(administrator=True)
