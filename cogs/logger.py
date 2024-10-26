@@ -130,6 +130,28 @@ class Moderationsettings(commands.Cog):
             con.commit()
             await ctx.send(f"Set log channel to {channel.mention}")
 
+    
+    @commands.slash_command(description = "Set the log channel for the server. All server logs will be sent to this channel")
+    @commands.has_permissions(administrator=True)
+    async def set_log_channel(self, ctx, channel: discord.TextChannel):
+        # connect to sql
+        con = sqlite3.connect("databases/log.db")
+        cur = con.cursor()
+        data = cur.execute(
+            "SELECT * FROM log WHERE GuildID=?", (ctx.guild.id,)
+        ).fetchone()
+        if data:
+            cur.execute(
+                "UPDATE log SET ChannelID=? WHERE GuildID=?", (channel.id, ctx.guild.id)
+            )
+            con.commit()
+            await ctx.send(f"Set log channel to {channel.mention}")
+        else:
+            cur.execute("INSERT INTO log VALUES (?, ?)", (ctx.guild.id, channel.id))
+            con.commit()
+            await ctx.send(f"Set log channel to {channel.mention}")
+
+
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def set_announcment_channel(self, ctx, channel: discord.TextChannel):
@@ -168,6 +190,14 @@ class Moderationsettings(commands.Cog):
             cur.execute("INSERT INTO server VALUES (?, ?)", (ctx.guild.id, channel.id))
             con.commit()
             await ctx.send(f"Set announcement channel to {channel.mention}")
+
+
+
+    ## THESE ARE THE LOGGING EVENTS ##
+
+
+
+
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
