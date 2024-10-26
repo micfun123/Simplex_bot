@@ -185,15 +185,69 @@ class Moderationsettings(commands.Cog):
                 (channel.id, ctx.guild.id),
             )
             con.commit()
-            await ctx.send(f"Set announcement channel to {channel.mention}")
+            await ctx.respond(f"Set announcement channel to {channel.mention}")
         else:
             cur.execute("INSERT INTO server VALUES (?, ?)", (ctx.guild.id, channel.id))
             con.commit()
-            await ctx.send(f"Set announcement channel to {channel.mention}")
+            await ctx.respond(f"Set announcement channel to {channel.mention}")
 
 
 
     ## THESE ARE THE LOGGING EVENTS ##
+    @commands.command()
+    @commands.is_owner()
+    async def add_bot_column(self, ctx):
+        con = sqlite3.connect("databases/log.db")
+        cur = con.cursor()
+        cur.execute("ALTER TABLE log ADD COLUMN log_bot boolean")
+        con.commit()
+        await ctx.send("Added bot column")
+        #set all to true
+        cur.execute("UPDATE log SET log_bot = 1")
+        con.commit()
+        
+    @commands.command(help="Toggle logging for bots")
+    @commands.has_permissions(administrator=True)
+    async def toggle_bot_loger(self, ctx):
+        con = sqlite3.connect("databases/log.db")
+        cur = con.cursor()
+        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (ctx.guild.id,)).fetchone()
+        if data:
+            if data[2] == 1:
+                cur.execute("UPDATE log SET log_bot = 0 WHERE GuildID=?", (ctx.guild.id,))
+                con.commit()
+                await ctx.send("Disabled bot logging")
+            else:
+                cur.execute("UPDATE log SET log_bot = 1 WHERE GuildID=?", (ctx.guild.id,))
+                con.commit()
+                await ctx.send("Enabled bot logging")
+        else:
+            await ctx.send("Please set a log channel first")
+
+    @commands.slash_command(help="Toggle logging for bots")
+    @commands.has_permissions(administrator=True)
+    async def toggle_bot_logging(self, ctx):
+        con = sqlite3.connect("databases/log.db")
+        cur = con.cursor()
+        data = cur.execute("SELECT * FROM log WHERE GuildID=?", (ctx.guild.id,)).fetchone()
+        if data:
+            if data[2] == 1:
+                cur.execute("UPDATE log SET log_bot = 0 WHERE GuildID=?", (ctx.guild.id,))
+                con.commit()
+                await ctx.respond("Disabled bot logging")
+            else:
+                cur.execute("UPDATE log SET log_bot = 1 WHERE GuildID=?", (ctx.guild.id,))
+                con.commit()
+                await ctx.respond("Enabled bot logging")
+        else:
+            await ctx.respond("Please set a log channel first")
+
+
+
+
+
+
+
 
 
 
@@ -228,6 +282,8 @@ class Moderationsettings(commands.Cog):
             )
             data = await cur.fetchone()
         if data:
+            if data[2] == 0 and after.author.bot:
+                return
             channel = self.client.get_channel(data[1])
             await channel.send(embed=em)
         else:
@@ -251,6 +307,8 @@ class Moderationsettings(commands.Cog):
                     )
                     data = await cur.fetchone()
                 if data:
+                    if data[2] == 0 and before.bot:
+                        return
                     channel = self.client.get_channel(data[1])
                     await channel.send(embed=em)
                     return
@@ -270,6 +328,8 @@ class Moderationsettings(commands.Cog):
                     )
                     data = await cur.fetchone()
                 if data:
+                    if data[2] == 0 and before.bot:
+                        return
                     channel = self.client.get_channel(data[1])
                     await channel.send(embed=em)
                     return
@@ -289,6 +349,8 @@ class Moderationsettings(commands.Cog):
                     )
                     data = await cur.fetchone()
                 if data:
+                    if data[2] == 0 and before.bot:
+                        return
                     channel = self.client.get_channel(data[1])
                     await channel.send(embed=em)
                     return
