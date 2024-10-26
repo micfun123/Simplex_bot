@@ -931,71 +931,26 @@ class Fun(commands.Cog):
                     "Please input text to convert to ascii art. Ex: ``>ascii stuff``"
                 )
 
-    @commands.command(help="It shows Tea photo")
-    async def tea(self, ctx):
-        async with aiohttp.ClientSession() as session:
-            request = await session.get("https://hotbeverage.herokuapp.com/json/tea")
-            teajason = await request.json()
+    #@commands.command(help="It shows Tea photo")
+    #async def tea(self, ctx):
+    #    async with aiohttp.ClientSession() as session:
+    #        request = await session.get("https://hotbeverage.herokuapp.com/json/tea")
+    #        teajason = await request.json()
 
-        embed = discord.Embed(title="TEA!", color=discord.Color.purple())
-        embed.set_image(url=teajason["img_url"])
-        await ctx.send(embed=embed)
+    #    embed = discord.Embed(title="TEA!", color=discord.Color.purple())
+    #    embed.set_image(url=teajason["img_url"])
+    #    await ctx.send(embed=embed)
 
-    @commands.command(help="It shows coffee photo")
-    async def coffee(self, ctx):
-        async with aiohttp.ClientSession() as session:
-            request = await session.get("https://hotbeverage.herokuapp.com/json/coffee")
-            teajason = await request.json()
+    #@commands.command(help="It shows coffee photo")
+    #async def coffee(self, ctx):
+    #    async with aiohttp.ClientSession() as session:
+    #        request = await session.get("https://hotbeverage.herokuapp.com/json/coffee")
+    #        teajason = await request.json()
 
-        embed = discord.Embed(title="coffee!", color=discord.Color.purple())
-        embed.set_image(url=teajason["img_url"])
-        await ctx.send(embed=embed)
+    #    embed = discord.Embed(title="coffee!", color=discord.Color.purple())
+    #    embed.set_image(url=teajason["img_url"])
+    #    await ctx.send(embed=embed)
 
-    @commands.command(name="mctext", help="Prints your message in the minecraft font")
-    async def MCTEXT_(self, ctx, *, message):
-        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
-        text = message.replace(" ", "%20")
-        embed.set_image(
-            url="http://api.michaelparker.ml/api/text/Minecraft?Text={}".format(text)
-        )
-
-        await ctx.send(embed=embed)
-
-    @commands.slash_command(
-        name="mctext", description="Prints your message in the minecraft font"
-    )
-    async def MCTEXT(self, ctx, *, message):
-        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
-        text = message.replace(" ", "%20")
-        embed.set_image(
-            url="http://api.michaelparker.ml/api/text/Minecraft?Text={}".format(text)
-        )
-
-        await ctx.respond(embed=embed)
-
-    @commands.command(
-        name="pokemontext", help="Prints your message in the pokemon font"
-    )
-    async def pokemontext_(self, ctx, *, message):
-        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
-        text = message.replace(" ", "%20")
-        embed.set_image(
-            url="http://api.michaelparker.ml/api/text/pokemon?Text={}".format(text)
-        )
-
-        await ctx.send(embed=embed)
-
-    @commands.slash_command(
-        name="pokemontext", description="Prints your message in the pokemon font"
-    )
-    async def pokemontext(self, ctx, *, message):
-        embed = discord.Embed(title="Here is your text!", color=discord.Color.purple())
-        text = message.replace(" ", "%20")
-        embed.set_image(
-            url="http://api.michaelparker.ml/api/text/pokemon?Text={}".format(text)
-        )
-
-        await ctx.respond(embed=embed)
 
     @commands.command(name="freestuff", help="Shows free stuff")
     async def freestuf_commands(self, ctx):
@@ -1019,85 +974,87 @@ class Fun(commands.Cog):
         f = io.BytesIO(response.read())
         await ctx.send(file=discord.File(f, "pixelate.png"))
 
-    @commands.command(name="i_wish")
-    async def i_wish_(self, ctx, *, message):
-        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
-        text = message.replace(" ", "%20")
-        URL = "http://api.michaelparker.ml/filters/I_wish?text={}".format(text)
-        req = urllib.request.Request(URL, headers=hdr)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.send(file=discord.File(f, "wish.png"))
+    #API is deprecated. Hopes to get it back soon
 
-    @commands.slash_command(name="i_wish")
-    async def i_wish(self, ctx, *, message):
-        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
-        text = message.replace(" ", "%20")
-        URL = "http://api.michaelparker.ml/filters/I_wish?text={}".format(text)
-        req = urllib.request.Request(URL, headers=hdr)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.respond(file=discord.File(f, "wish.png"))
-
-    @commands.command(name="if_they_could_read")
-    async def if_they_could_read_(self, ctx, *, message):
-        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
-        text = message.replace(" ", "%20")
-        URL = "http://api.michaelparker.ml/Memes/if_the_could_read?text={}".format(text)
-        req = urllib.request.Request(URL, headers=hdr)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.send(file=discord.File(f, "read.png"))
-
-    @commands.slash_command(name="if_they_could_read")
-    async def if_they_could_read__s(self, ctx, *, message):
-        text = message.replace(" ", "%20")
-        text = text.replace("’", "%E2%80%99")
-        URL = "http://api.michaelparker.ml/Memes/if_the_could_read?text={}".format(text)
-        req = urllib.request.Request(URL)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.respond(file=discord.File(f, "read.png"))
-
-    @commands.command(name="um_dad")
-    async def um_dad__(self, ctx, *, message):
-        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
-        text = message.replace(" ", "%20")
-        URL = "http://api.michaelparker.ml/Memes/um_dad?text={}".format(text)
-        req = urllib.request.Request(URL, headers=hdr)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.send(file=discord.File(f, "read.png"))
-
-    @commands.slash_command(name="um_dad")
-    async def um_dad___S(self, ctx, *, message):
-        text = message.replace(" ", "%20")
-        text = text.replace("’", "%E2%80%99")
-        URL = "http://api.michaelparker.ml/Memes/um_dad?text={}".format(text)
-        req = urllib.request.Request(URL)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.respond(file=discord.File(f, "read.png"))
-
-    @commands.command(name="headache")
-    async def headache__(self, ctx, *, message):
-        text = message.replace(" ", "%20")
-        text = text.replace("’", "%E2%80%99")
-        URL = "https://michaelapi.herokuapp.com/Memes/headache?text={}".format(text)
-        req = urllib.request.Request(URL)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.send(file=discord.File(f, "read.png"))
-
-    @commands.slash_command(name="headache")
-    async def headache___S(self, ctx, *, message):
-        text = message.replace(" ", "%20")
-        text = text.replace("’", "%E2%80%99")
-        URL = "https://michaelapi.herokuapp.com/Memes/headache?text={}".format(text)
-        req = urllib.request.Request(URL)
-        response = urllib.request.urlopen(req)
-        f = io.BytesIO(response.read())
-        await ctx.respond(file=discord.File(f, "read.png"))
+    #    @commands.command(name="i_wish")
+    #    async def i_wish_(self, ctx, *, message):
+    #        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
+    #        text = message.replace(" ", "%20")
+    #        URL = "http://api.michaelparker.ml/filters/I_wish?text={}".format(text)
+    #        req = urllib.request.Request(URL, headers=hdr)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.send(file=discord.File(f, "wish.png"))
+#
+    #    @commands.slash_command(name="i_wish")
+    #    async def i_wish(self, ctx, *, message):
+    #        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
+    #        text = message.replace(" ", "%20")
+    #        URL = "http://api.michaelparker.ml/filters/I_wish?text={}".format(text)
+    #        req = urllib.request.Request(URL, headers=hdr)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.respond(file=discord.File(f, "wish.png"))
+#
+    #    @commands.command(name="if_they_could_read")
+    #    async def if_they_could_read_(self, ctx, *, message):
+    #        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
+    #        text = message.replace(" ", "%20")
+    #        URL = "http://api.michaelparker.ml/Memes/if_the_could_read?text={}".format(text)
+    #        req = urllib.request.Request(URL, headers=hdr)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.send(file=discord.File(f, "read.png"))
+#
+    #    @commands.slash_command(name="if_they_could_read")
+    #    async def if_they_could_read__s(self, ctx, *, message):
+    #        text = message.replace(" ", "%20")
+    #        text = text.replace("’", "%E2%80%99")
+    #        URL = "http://api.michaelparker.ml/Memes/if_the_could_read?text={}".format(text)
+    #        req = urllib.request.Request(URL)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.respond(file=discord.File(f, "read.png"))
+#
+    #    @commands.command(name="um_dad")
+    #    async def um_dad__(self, ctx, *, message):
+    #        hdr = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64)"}
+    #        text = message.replace(" ", "%20")
+    #        URL = "http://api.michaelparker.ml/Memes/um_dad?text={}".format(text)
+    #        req = urllib.request.Request(URL, headers=hdr)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.send(file=discord.File(f, "read.png"))
+#
+    #    @commands.slash_command(name="um_dad")
+    #    async def um_dad___S(self, ctx, *, message):
+    #        text = message.replace(" ", "%20")
+    #        text = text.replace("’", "%E2%80%99")
+    #        URL = "http://api.michaelparker.ml/Memes/um_dad?text={}".format(text)
+    #        req = urllib.request.Request(URL)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.respond(file=discord.File(f, "read.png"))
+#
+    #    @commands.command(name="headache")
+    #    async def headache__(self, ctx, *, message):
+    #        text = message.replace(" ", "%20")
+    #        text = text.replace("’", "%E2%80%99")
+    #        URL = "https://michaelapi.herokuapp.com/Memes/headache?text={}".format(text)
+    #        req = urllib.request.Request(URL)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.send(file=discord.File(f, "read.png"))
+#
+    #    @commands.slash_command(name="headache")
+    #    async def headache___S(self, ctx, *, message):
+    #        text = message.replace(" ", "%20")
+    #        text = text.replace("’", "%E2%80%99")
+    #        URL = "https://michaelapi.herokuapp.com/Memes/headache?text={}".format(text)
+    #        req = urllib.request.Request(URL)
+    #        response = urllib.request.urlopen(req)
+    #        f = io.BytesIO(response.read())
+    #        await ctx.respond(file=discord.File(f, "read.png"))
 
     @commands.command(hidden=True)
     async def im_blue(self, ctx):
