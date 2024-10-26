@@ -130,28 +130,6 @@ class Moderationsettings(commands.Cog):
             con.commit()
             await ctx.send(f"Set log channel to {channel.mention}")
 
-    @commands.command()
-    @commands.is_owner()
-    async def dm_all_log_servers(self, ctx, *, message):
-        servers = []
-        con = sqlite3.connect("databases/log.db")
-        cur = con.cursor()
-        for i in self.client.guilds:
-            data = cur.execute(
-                "SELECT * FROM log WHERE GuildID=?", (i.id,)
-            ).fetchone()
-            if data:
-                servers.append(i)
-        unique_owner = []
-        for i in servers:
-            if i.owner not in unique_owner:
-                unique_owner.append(i.owner)
-        for i in unique_owner:
-            try:
-                await i.send(message)
-            except Exception:
-                pass
-        await ctx.send(f"Sent to {len(unique_owner)} owners")
     
     @commands.slash_command(description = "Set the log channel for the server. All server logs will be sent to this channel")
     @commands.has_permissions(administrator=True)
