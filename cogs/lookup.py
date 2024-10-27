@@ -463,6 +463,45 @@ class lookup(commands.Cog):
                     else:
                         await ctx.respond("That is not a valid option")
 
+
+
+    @commands.command()
+    @commands.is_owner()
+    async def remove_invalid_rss(self, ctx):
+        await ctx.send("Removing invalid RSS feeds...")
+
+        async with aiosqlite.connect("databases/rss.db") as db:
+            async with db.execute("SELECT * FROM rss WHERE lastpost IS NULL") as con:
+                rows = await con.fetchall()
+                print(f"Found {len(rows)} invalid feeds")
+
+                for row in rows:
+                    url = row[1]  
+
+                    try:
+                        feed = feedparser.parse(url)
+                        # Checking if the feed is valid by examining 'feed.bozo'
+                        if feed.bozo:  # This means the feed parsing failed
+                            try:
+                                channel = await self.client.fetch_channel(row[2])
+                                await channel.send(
+                                    f"RSS feed '{row[1]}' is invalid and has been removed. If you believe this is an error, please dm the bot. \n if you want to know why the feed is invalid please dm the bot or join the support server"
+                                )
+                            except Exception as send_error:
+                                print(f"Failed to notify server owner: {send_error}")
+
+                            # Delete the feed from the database
+                            await db.execute("DELETE FROM rss WHERE name = ?", (row[0],))
+                            await db.commit()
+
+                    except Exception as e:
+                        print(f"Error processing feed {row[0]}: {e}")
+
+                    # Pause to avoid hitting rate limits
+                    await asyncio.sleep(0.5)
+
+        await ctx.send("Done removing invalid RSS feeds.")
+
     @commands.command()
     @commands.is_owner()
     async def forcerss(self, ctx):
