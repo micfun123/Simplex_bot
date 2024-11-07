@@ -322,7 +322,6 @@ def start_bot(client):
             print(f"Loaded {cogs}")
 
         print("\nAll Cogs Loaded\n===============\nLogging into Discord...")
-        client.ipc.start()  # Start the IPC server
         client.run(
             TOKEN
         )  # Token do not change it here. Change it in the .env if you do not have a .env make a file and put DISCORD_TOKEN=Token
