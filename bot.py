@@ -9,7 +9,6 @@ import os
 from dotenv import load_dotenv
 from easy_pil import Editor, Canvas, Font, load_image, Text
 from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
-from pycord.ext import ipc
 import asyncio
 
 load_dotenv()
@@ -49,9 +48,6 @@ class MyBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.ipc = ipc.Server(
-            self, secret_key=os.getenv("SECRET_KEY")
-        )  # create our IPC Server
 
     async def on_ready(self):
         """Called upon the READY event"""
@@ -129,67 +125,6 @@ async def on_guild_remove(guild):  # when the bot is removed from the guild
 
     # get_guild_count
 
-
-@client.ipc.route()
-async def get_guild_count(data):
-    return len(client.guilds)  # returns the len of the guilds to the client
-
-
-@client.ipc.route()
-async def get_guild_ids(data):
-    final = []
-    for guild in client.guilds:
-        final.append(guild.id)
-    return final  # returns the guild ids to the client
-
-
-@client.ipc.route()
-async def get_guild(data):
-    guild = client.get_guild(data.guild_id)
-    if guild is None:
-        return None
-
-    guild_data = {
-        "name": guild.name,
-        "prefix": get_prefixe_guildid(client, guild.id),
-        "id": guild.id,
-        "member_count": guild.member_count,
-    }
-
-    return guild_data
-
-
-@client.ipc.route()
-async def channels(data):
-    guild = client.get_guild(data.guild_id)
-    if guild is None:
-        return None
-    channels = []
-    for channel in guild.channels:
-        channels.append(channel.id)
-    return channels
-
-
-@client.ipc.route()
-async def change_prefix(data):
-    with open("prefixes.json", "r") as f:
-        prefixes = json.load(f)
-
-    prefixes[str(data.guild_id)] = data.prefix
-
-    with open("prefixes.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
-
-    return "Prefix changed to: " + data.prefix
-
-
-@client.ipc.route()
-async def get_channel_name(data):
-    guild = client.get_guild(data.guild_id)
-    if guild is None:
-        return None
-    channel = client.get_channel(data.channel_id)
-    return channel.name
 
 
 @client.command(pass_context=True)
