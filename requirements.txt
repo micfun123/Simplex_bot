@@ -16,9 +16,7 @@ PyNaCl
 pyttsx3
 requests
 urllib3
-youtube-dl
-youtube-search-python
-rsa>=4.7 # not directly required, pinned by Snyk to avoid a vulnerability
+aiofiles
 matplotlib
 python-dotenv
 easy_pil

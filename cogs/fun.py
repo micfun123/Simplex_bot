@@ -3,7 +3,6 @@ import discord
 import random
 from discord.ext import commands
 import re
-import numexpr as ne
 import aiohttp
 import asyncio
 import datetime
