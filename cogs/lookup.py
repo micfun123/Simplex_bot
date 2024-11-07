@@ -1,4 +1,3 @@
-from pydoc import describe
 from discord import Embed
 from discord.ext import commands, tasks
 import json
@@ -286,15 +285,39 @@ class lookup(commands.Cog):
                         Embed.add_field(name=row[0], value=row[1], inline=False)
                     await ctx.respond(embed=Embed)
         elif options == "add":
+
+            
+            amountoffeeds = 0
             async with aiosqlite.connect("databases/rss.db") as db:
-                await db.execute(
-                    "CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text)"
+                con = await db.execute("SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),))
+                rows = await con.fetchall()
+                amountoffeeds = len(rows)
+
+            if amountoffeeds >= 2:
+                tocken = os.getenv("TOPGG_TOKEN")
+                api = requests.get(
+                    f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}",
+                    headers={"Authorization": tocken, "Content-Type": "application/json"},
                 )
-                await db.commit()
+                data = api.json()
+                print(api)
+                print(data)
+                voted = data["voted"]
+                # if the api does not return a 200 status code
+                if api.status_code != 200:
+                    voted = 1
+                    print("api error")
+                if voted == 0:
+                    await ctx.respond(
+                        "You can have as many RSS feeds as you want but you have to have voted in the last 24h. (Its free) Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote",
+                        ephemeral=True,
+                    )
+                    return
+
             await ctx.respond("What is the name of the feed?")
 
             def check(m):
-                return m.author == ctx.author and m.channel == ctx.channel
+                return m.author == ctx.author and m.channel == ctx.channel           
 
             try:
                 name = await self.client.wait_for("message", check=check, timeout=60)
