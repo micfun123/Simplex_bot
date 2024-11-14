@@ -2,6 +2,7 @@
 
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/Michaelrbparker)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![](https://dcbadge.limes.pink/api/server/https://discord.gg/d2gjWqFsTP.png)](https://discord.gg/d2gjWqFsTP)
 
 The Everything Discord Bot is an open-source project designed to provide a versatile set of utilities and tools for Discord servers. Contributions are welcome to enhance its functionality and features.
 
