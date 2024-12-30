@@ -8,13 +8,14 @@ The Everything Discord Bot is an open-source project designed to provide a versa
 Simplex Bot is an open-source Discord bot designed to provide a comprehensive suite of utilities and tools to enhance your Discord server experience.
 Features
 
-  > Moderation Tools: Manage your server efficiently with commands for muting, banning, and kicking members, server logs
-  > Fun Commands: Engage your community with games, memes, counting games, leveling and other interactive features.
-  > Utility Functions: Access useful commands like reminders, polls, and more to facilitate server activities.
-  > RSS Feed Integration: Stay updated with the latest news by integrating RSS feeds directly into your channels.
-  > Mastodon Alets: Gets a notification with every new message
-  > Customizable Prefix: Set a command prefix that suits your server's needs.
-  > And so much more...
+  
+- Moderation Tools: Manage your server efficiently with commands for muting, banning, and kicking members, server logs
+- Fun Commands: Engage your community with games, memes, counting games, leveling and other interactive features.
+- Utility Functions: Access useful commands like reminders, polls, and more to facilitate server activities.
+- RSS Feed Integration: Stay updated with the latest news by integrating RSS feeds directly into your channels.
+- Mastodon Alets: Gets a notification with every new message
+- Customizable Prefix: Set a command prefix that suits your server's needs.
+- And so much more...
 
 ## Getting Started
 
