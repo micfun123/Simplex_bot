@@ -7,6 +7,7 @@ import sqlite3
 from dotenv import load_dotenv
 import requests
 from datetime import datetime, time
+from time import sleep
 
 load_dotenv()
 
@@ -399,9 +400,11 @@ class Birthday(commands.Cog):
     async def force_birthday_announcments(self, ctx):
         print("Birthday announcments")
         await ctx.send("Birthday announcments")
-        for server in self.client.guilds:
+        for number, server in enumerate(self.client.guilds):
             try:
+                sleep(0.5) 
                 print(server)
+                ctx.send(f"Birthday announcments {number}")
                 con = sqlite3.connect("databases/server_brithdays.db")
                 cur = con.cursor()
                 datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (server.id,))
