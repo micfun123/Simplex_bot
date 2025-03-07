@@ -404,7 +404,7 @@ class Birthday(commands.Cog):
             try:
                 sleep(0.5) 
                 print(server)
-                ctx.send(f"Birthday announcments {number}")
+                await ctx.send(f"Birthday announcments {number}")
                 con = sqlite3.connect("databases/server_brithdays.db")
                 cur = con.cursor()
                 datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (server.id,))
