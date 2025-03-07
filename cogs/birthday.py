@@ -298,57 +298,60 @@ class Birthday(commands.Cog):
     async def birthday_announcments(self):
         print("Birthday announcments")
         for server in self.client.guilds:
-            print(server)
-            con = sqlite3.connect("databases/server_brithdays.db")
-            cur = con.cursor()
-            datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (server.id,))
-            datas = cur.fetchall()
-            if datas == []:
-                cur.execute(
-                    "INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)",
-                    (server.id, False, None),
-                )
-                con.commit()
-                con.close()
-            else:
-                pass
-            con = sqlite3.connect("databases/user_brithdays.db")
-            cur = con.cursor()
-            data = cur.execute("SELECT * FROM birthday")
-            data = cur.fetchall()
-            if data == []:
-                print("No birthday")
-                # does not work below here
-            else:
-                for x in data:
-                    if datas[0][1] == True:
-                        if datas[0][2] == None:
-                            pass
-                        else:
-                            try:
-                                user = await self.client.fetch_user(x[0])
-                                if user in server.members:
-                                    channel = await self.client.fetch_channel(datas[0][2])
-                                    message = datas[0][3]
-                                    if message == None:
-                                        message = ":tada:"
-
-                                    print(channel)
-                                    print(x[1])
-                                    print(datetime.now().strftime("%d/%m"))
-                                    if x[1] == datetime.now().strftime("%d/%m"):
-                                        print("Birthday")
-                                        print(x[0])
-                                        await channel.send(
-                                            f"Happy birthday <@{x[0]}>! \n {message}"
-                                        )
-                                else:
-                                    username = await self.client.fetch_user(x[0])
-                                    print(f"User {username} not in server {x[0]} {server}")
-                            except:
+            try:
+                print(server)
+                con = sqlite3.connect("databases/server_brithdays.db")
+                cur = con.cursor()
+                datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (server.id,))
+                datas = cur.fetchall()
+                if datas == []:
+                    cur.execute(
+                        "INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)",
+                        (server.id, False, None),
+                    )
+                    con.commit()
+                    con.close()
+                else:
+                    pass
+                con = sqlite3.connect("databases/user_brithdays.db")
+                cur = con.cursor()
+                data = cur.execute("SELECT * FROM birthday")
+                data = cur.fetchall()
+                if data == []:
+                    print("No birthday")
+                    # does not work below here
+                else:
+                    for x in data:
+                        if datas[0][1] == True:
+                            if datas[0][2] == None:
                                 pass
-                    else:
-                        pass
+                            else:
+                                try:
+                                    user = await self.client.fetch_user(x[0])
+                                    if user in server.members:
+                                        channel = await self.client.fetch_channel(datas[0][2])
+                                        message = datas[0][3]
+                                        if message == None:
+                                            message = ":tada:"
+
+                                        print(channel)
+                                        print(x[1])
+                                        print(datetime.now().strftime("%d/%m"))
+                                        if x[1] == datetime.now().strftime("%d/%m"):
+                                            print("Birthday")
+                                            print(x[0])
+                                            await channel.send(
+                                                f"Happy birthday <@{x[0]}>! \n {message}"
+                                            )
+                                    else:
+                                        username = await self.client.fetch_user(x[0])
+                                        print(f"User {username} not in server {x[0]} {server}")
+                                except:
+                                    pass
+                        else:
+                            pass
+            except Exception as e:
+                print(e)
 
     @commands.command()
     @commands.is_owner()
@@ -397,54 +400,57 @@ class Birthday(commands.Cog):
         print("Birthday announcments")
         await ctx.send("Birthday announcments")
         for server in self.client.guilds:
-            print(server)
-            con = sqlite3.connect("databases/server_brithdays.db")
-            cur = con.cursor()
-            datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (server.id,))
-            datas = cur.fetchall()
-            if datas == []:
-                cur.execute(
-                    "INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)",
-                    (server.id, False, None),
-                )
-                con.commit()
-                con.close()
-            else:
-                pass
-            con = sqlite3.connect("databases/user_brithdays.db")
-            cur = con.cursor()
-            data = cur.execute("SELECT * FROM birthday")
-            data = cur.fetchall()
-            if data == []:
-                print("No birthday")
-                # does not work below here
-            else:
-                for x in data:
-                    if datas[0][1] == True:
-                        if datas[0][2] == None:
-                            pass
-                        else:
-                            user = await self.client.fetch_user(x[0])
-                            if user in server.members:
-                                channel = await self.client.fetch_channel(datas[0][2])
-                                message = datas[0][3]
-                                if message == None:
-                                    message = ":tada:"
-
-                                print(channel)
-                                print(x[1])
-                                print(datetime.now().strftime("%d/%m"))
-                                if x[1] == datetime.now().strftime("%d/%m"):
-                                    print("Birthday")
-                                    print(x[0])
-                                    await channel.send(
-                                        f"Happy birthday <@{x[0]}>! \n {message}"
-                                    )
+            try:
+                print(server)
+                con = sqlite3.connect("databases/server_brithdays.db")
+                cur = con.cursor()
+                datas = cur.execute("SELECT * FROM server WHERE ServerID=?", (server.id,))
+                datas = cur.fetchall()
+                if datas == []:
+                    cur.execute(
+                        "INSERT INTO server(ServerID, Servertoggle, birthdaychannel) VALUES(?, ?, ?)",
+                        (server.id, False, None),
+                    )
+                    con.commit()
+                    con.close()
+                else:
+                    pass
+                con = sqlite3.connect("databases/user_brithdays.db")
+                cur = con.cursor()
+                data = cur.execute("SELECT * FROM birthday")
+                data = cur.fetchall()
+                if data == []:
+                    print("No birthday")
+                    # does not work below here
+                else:
+                    for x in data:
+                        if datas[0][1] == True:
+                            if datas[0][2] == None:
+                                pass
                             else:
-                                username = await self.client.fetch_user(x[0])
-                                print(f"User {username} not in server {x[0]} {server}")
-                    else:
-                        pass
+                                user = await self.client.fetch_user(x[0])
+                                if user in server.members:
+                                    channel = await self.client.fetch_channel(datas[0][2])
+                                    message = datas[0][3]
+                                    if message == None:
+                                        message = ":tada:"
+
+                                    print(channel)
+                                    print(x[1])
+                                    print(datetime.now().strftime("%d/%m"))
+                                    if x[1] == datetime.now().strftime("%d/%m"):
+                                        print("Birthday")
+                                        print(x[0])
+                                        await channel.send(
+                                            f"Happy birthday <@{x[0]}>! \n {message}"
+                                        )
+                                else:
+                                    username = await self.client.fetch_user(x[0])
+                                    print(f"User {username} not in server {x[0]} {server}")
+                        else:
+                            pass
+            except Exception as e:
+                print(e)
         await ctx.send("Done")
         
 
