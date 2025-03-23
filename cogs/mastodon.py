@@ -8,6 +8,7 @@ import requests
 import os
 from dotenv import load_dotenv
 import re
+from typing import Union
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ class mastodon(commands.Cog):
     )
     @commands.has_permissions(manage_channels=True)
     async def mastodon_manage(
-        self, ctx, channel: discord.TextChannel, username: str, action: str
+        self, ctx, channel: Union[discord.TextChannel, discord.NewsChannel], username: str, action: str
     ):
         action = action.lower()
         if action == "add":
