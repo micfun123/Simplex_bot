@@ -11,3 +11,4 @@ welcome.json
 databases/*.*
 prefixes.json
 *.json
+.venv
