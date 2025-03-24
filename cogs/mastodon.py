@@ -24,7 +24,7 @@ class mastodon(commands.Cog):
     )
     @commands.has_permissions(manage_channels=True)
     async def mastodon_manage(
-        self, ctx, channel: Union[discord.TextChannel, discord.NewsChannel], username: str, action: str
+        self, ctx, channel: Union[discord.TextChannel, discord.AnnouncementChannel], username: str, action: str
     ):
         action = action.lower()
         if action == "add":
