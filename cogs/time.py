@@ -67,9 +67,9 @@ class Time(commands.Cog):
     async def countdown(self, ctx, *, message):
         """
         Examples:
-        - `!countdown December 25` → Days until Christmas
-        - `!countdown in 1 hour` → Countdown to 1 hour from now
-        - `!countdown 2026-01-01 00:00 UTC` → New Year's countdown
+        - `.countdown December 25` → Days until Christmas
+        - `.countdown in 1 hour` → Countdown to 1 hour from now
+        - `.countdown 2026-01-01 00:00 UTC` → New Year's countdown
         """
         parsed_time = dateparser.parse(message)
         if not parsed_time:
