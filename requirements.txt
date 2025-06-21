@@ -1,13 +1,9 @@
-aiosqlite
 easy-pil
 qrcode
 python-dotenv
 geopy
 nominatim
-mcstatus
 timezonefinder
-geopy
-flask
 mutagen
 praw
 prawcore
@@ -23,7 +19,4 @@ easy_pil
 discord_pretty_help
 pyfiglet
 mcstatus
-discord-ext-ipc
-pillow>=9.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
-pyyaml>=5.4 # not directly required, pinned by Snyk to avoid a vulnerability
 Base-69
