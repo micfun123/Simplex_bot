@@ -455,12 +455,6 @@ class utilities(commands.Cog):
             name="Buy me a coffee",
             value="[Click here](https://www.buymeacoffee.com/Michaelrbparker)",
         )
-        em.add_field(
-            name="Monaro",
-            value="43rsynRD1qtCA1po9myFsc7ti5havFcXUZPdSZuMexU4DnEyno55TE16eWqFkMLMbwZ7DuRW4ow5kcWzQQYu96NH7XMk6cE",
-        )
-        em.add_field(name="BTC", value="bc1qlp29r6llr8g6afpnwpdcdwlkawk7svzyw24emf")
-        await ctx.send(embed=em)
 
     @commands.command(name="calc", aliases=["calculate"], help="Calculate something")
     async def _calc__(self, ctx, *, equation):

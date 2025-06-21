@@ -39,16 +39,32 @@ bot = commands.Bot(
     allowed_mentions=discord.AllowedMentions(everyone=False),
 )
 
-# Optional: Help command override
 class NewHelp(commands.MinimalHelpCommand):
     async def send_pages(self):
         destination = self.get_destination()
+        # Send the help message and schedule deletion
         for page in self.paginator.pages:
             embed = discord.Embed(description=page, color=discord.Color.blue())
             embed.set_footer(text="Thank you for using Simplex!")
-            await destination.send(embed=embed)
+            help_message = await destination.send(embed=embed)
 
-bot.help_command = NewHelp()
+            # Schedule deletion after 5 minutes (300 seconds)
+            async def delete_later(msg):
+                await asyncio.sleep(300)
+                try:
+                    await msg.delete()
+                except discord.NotFound:
+                    pass
+
+            # Run deletion task in background
+            asyncio.create_task(delete_later(help_message))
+
+    def get_command_signature(self, command):
+        return f"{self.clean_prefix}{command.qualified_name} {command.signature}"
+
+    def format_command(self, command):
+        return f"**{self.get_command_signature(command)}** - {command.short_doc or 'No description'}"
+
 
 # Events
 @bot.event
@@ -144,16 +160,7 @@ async def changeprefix(ctx, prefix):
 
     await ctx.send(f"Prefix changed to: `{prefix}`")
 
-@commands.is_owner()
-@bot.command(pass_context=True)
-async def broadcast(ctx, *, msg):
-    for guild in bot.guilds:
-        for channel in guild.text_channels:
-            try:
-                await channel.send(msg)
-                break
-            except Exception:
-                continue
+
 
 @bot.command(aliases=["purge"])
 @commands.has_permissions(administrator=True)
