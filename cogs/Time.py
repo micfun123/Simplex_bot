@@ -98,5 +98,5 @@ class Time(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-async def setup(client):
-    await client.add_cog(Time(client))
+def setup(client):
+    client.add_cog(Time(client))

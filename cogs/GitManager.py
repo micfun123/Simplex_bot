@@ -64,5 +64,5 @@ class GitManager(commands.Cog):
         except Exception as e:
             await ctx.send(f"❌ Error: `{e}`")
 
-async def setup(bot):
-    await bot.add_cog(GitManager(bot))
+def setup(bot):
+    bot.add_cog(GitManager(bot))

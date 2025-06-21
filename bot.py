@@ -167,7 +167,7 @@ async def load_cogs():
     for file in listdir("./cogs"):
         if file.endswith(".py") and isfile(join("cogs", file)):
             try:
-                await bot.load_extension(f"cogs.{file[:-3]}")
+                bot.load_extension(f"cogs.{file[:-3]}")
                 print(f"🔹 Loaded cog: {file}")
             except Exception as e:
                 print(f"❌ Failed to load cog {file}: {e}")
