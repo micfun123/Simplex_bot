@@ -12,3 +12,4 @@ databases/*.*
 prefixes.json
 *.json
 .venv
+/venv
