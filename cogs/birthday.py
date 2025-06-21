@@ -54,17 +54,6 @@ class Birthday(commands.Cog):
         con.close()
         await ctx.send("Done")
 
-    #
-    # @commands.command(hidden = True)
-    # @commands.is_owner()
-    # async def setallbithday(self,ctx):
-    #    for i in self.client.guilds:
-    #        con = sqlite3.connect("databases/server_brithdays.db")
-    #        cur = con.cursor()
-    #        cur.execute("INSERT INTO server(ServerID, Servertoggle,birthdaychannel) VALUES(?, ?,?)", (i.id, False,None))
-    #        await ctx.send(f"{i} has been set")
-    #        con.commit()
-    #        con.close()
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -162,14 +151,14 @@ class Birthday(commands.Cog):
             voted = 1
             print("api error")
         if voted == 0:
-            await ctx.respond(
+            await ctx.send(
                 "You need to have voted for simplex in the last 24 hours to set your birthday. Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote",
                 ephemeral=True,
             )
             return
         else:
             if day > 31 or day < 1 or month > 12 or month < 1:
-                await ctx.respond("Invalid date.")
+                await ctx.send("Invalid date.")
             else:
                 # force 2 digit date
                 if day < 10:
@@ -201,7 +190,7 @@ class Birthday(commands.Cog):
                     )
                     con.commit()
                     con.close()
-                    await ctx.respond("Your birthday has been updated")
+                    await ctx.send("Your birthday has been updated")
 
     @commands.command(name="setbirthday", help="Set your birthday use day then month")
     async def setbirthday_commands(self, ctx, day: int, month: int):
