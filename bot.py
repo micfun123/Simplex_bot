@@ -24,13 +24,6 @@ def get_prefix(bot, message):
     except Exception:
         return "."
 
-# Basic permission check
-def mic(ctx):
-    try:
-        return ctx.author.id == 481377376475938826
-    except:
-        return False
-
 # Bot setup
 bot = commands.Bot(
     command_prefix=get_prefix,
