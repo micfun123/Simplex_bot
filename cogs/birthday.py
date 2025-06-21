@@ -153,7 +153,6 @@ class Birthday(commands.Cog):
         if voted == 0:
             await ctx.send(
                 "You need to have voted for simplex in the last 24 hours to set your birthday. Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote",
-                ephemeral=True,
             )
             return
         else:
