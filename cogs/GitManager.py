@@ -27,30 +27,32 @@ class GitManager(commands.Cog):
         except Exception as e:
             await ctx.send(f"❌ Error: `{e}`")
 
-    @commands.command(name="reload", help="♻️ Reload a specific cog or all cogs.")
+    @commands.command(name="reload", help="♻️ Reload a specific cog.")
     @commands.check(is_owner)
-    async def reload(self, ctx, cog: str = None):
-        await ctx.send("♻️ Reloading cogs...")
+    async def reload(self, ctx, cog: str):
+        try:
+            await self.bot.reload_extension(f"cogs.{cog}")
+            await ctx.send(f"✅ Successfully reloaded `cogs.{cog}`")
+        except Exception as e:
+            await ctx.send(f"❌ Failed to reload `cogs.{cog}`:\n```{e}```")
 
-        path = "./cogs"
-        failed = []
+    @commands.command(name="load", help="📦 Load a cog.")
+    @commands.check(is_owner)
+    async def load(self, ctx, cog: str):
+        try:
+            await self.bot.load_extension(f"cogs.{cog}")
+            await ctx.send(f"✅ Successfully loaded `cogs.{cog}`")
+        except Exception as e:
+            await ctx.send(f"❌ Failed to load `cogs.{cog}`:\n```{e}```")
 
-        if cog:
-            cogs_to_reload = [f"cogs.{cog}"]
-        else:
-            cogs_to_reload = [f"cogs.{f[:-3]}" for f in os.listdir(path) if f.endswith(".py")]
-
-        for cog_path in cogs_to_reload:
-            try:
-                await self.bot.reload_extension(cog_path)
-            except Exception as e:
-                failed.append((cog_path, str(e)))
-
-        if not failed:
-            await ctx.send("✅ All cogs reloaded successfully!")
-        else:
-            msg = "\n".join(f"❌ `{name}`: {err}" for name, err in failed)
-            await ctx.send(f"Some cogs failed to reload:\n```{msg}```")
+    @commands.command(name="unload", help="📤 Unload a cog.")
+    @commands.check(is_owner)
+    async def unload(self, ctx, cog: str):
+        try:
+            await self.bot.unload_extension(f"cogs.{cog}")
+            await ctx.send(f"✅ Successfully unloaded `cogs.{cog}`")
+        except Exception as e:
+            await ctx.send(f"❌ Failed to unload `cogs.{cog}`:\n```{e}```")
 
     @commands.command(name="diff", help="📝 Show local code changes (git diff).")
     @commands.check(is_owner)
