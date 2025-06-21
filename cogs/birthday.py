@@ -137,6 +137,7 @@ class Birthday(commands.Cog):
         name="setbirthday", description="Set your birthday use day then month"
     )
     async def setbirthday__slash(self, ctx, day: int, month: int):
+        await ctx.respond("processing")
         tocken = os.getenv("TOPGG_TOKEN")
         api = requests.get(
             f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}",
