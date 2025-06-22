@@ -31,7 +31,7 @@ class GitManager(commands.Cog):
     @commands.check(is_owner)
     async def reload(self, ctx, cog: str):
         try:
-            await self.bot.reload_extension(f"cogs.{cog}")
+            self.bot.reload_extension(f"cogs.{cog}")
             await ctx.send(f"✅ Successfully reloaded `cogs.{cog}`")
         except Exception as e:
             await ctx.send(f"❌ Failed to reload `cogs.{cog}`:\n```{e}```")
@@ -40,7 +40,7 @@ class GitManager(commands.Cog):
     @commands.check(is_owner)
     async def load(self, ctx, cog: str):
         try:
-            await self.bot.load_extension(f"cogs.{cog}")
+            self.bot.load_extension(f"cogs.{cog}")
             await ctx.send(f"✅ Successfully loaded `cogs.{cog}`")
         except Exception as e:
             await ctx.send(f"❌ Failed to load `cogs.{cog}`:\n```{e}```")
@@ -49,7 +49,7 @@ class GitManager(commands.Cog):
     @commands.check(is_owner)
     async def unload(self, ctx, cog: str):
         try:
-            await self.bot.unload_extension(f"cogs.{cog}")
+            self.bot.unload_extension(f"cogs.{cog}")
             await ctx.send(f"✅ Successfully unloaded `cogs.{cog}`")
         except Exception as e:
             await ctx.send(f"❌ Failed to unload `cogs.{cog}`:\n```{e}```")

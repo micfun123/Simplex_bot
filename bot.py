@@ -22,7 +22,7 @@ def get_prefix(bot, message):
             prefixes = json.load(f)
         return prefixes.get(str(message.guild.id), ".")
     except Exception:
-        return "."
+        return "!"
 
 # Bot setup
 bot = commands.Bot(
