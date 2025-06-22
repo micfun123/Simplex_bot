@@ -6,7 +6,6 @@ import discord
 from discord.ext import commands
 from discord.commands import SlashCommandGroup
 import httpx as requests  # httpx is async-capable, but you're using it sync here
-import aiohttp
 
 class RSSManager(commands.Cog):
     """📬 Manage your RSS feeds here."""
