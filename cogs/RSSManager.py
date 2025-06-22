@@ -212,7 +212,12 @@ class RSSManager(commands.Cog):
                 await db.execute("UPDATE rss SET lastpost = ? WHERE url = ?", (checkpost, url))
                 await db.commit()
                               
-                
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild):
+        async with aiosqlite.connect("databases/rss.db") as db:
+            await db.execute("DELETE FROM rss WHERE guild = ?", (str(guild.id),))
+            await db.commit()
+        print(f"Removed all RSS feeds for guild {guild.id}")   
 
 def setup(bot):
     bot.add_cog(RSSManager(bot))
