@@ -1,6 +1,5 @@
 # generate all the databases
 import sqlite3
-from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 import json
 import os
 
@@ -73,17 +72,12 @@ print("blacklist.db created")
 con = sqlite3.connect("databases/Goodbye.db")
 cur = con.cursor()
 cur.execute(
-    "CREATE TABLE IF NOT EXISTS goodbye (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
+    "CREATE TABLE IF NOT EXISTS goodbye (guild_id INTEGER PRIMARY KEY, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
 )
 con.commit()
 con.close()
 print("Goodbye.db created")
 
-try:
-    DiscordLevelingSystem.create_database_file(r"databases")
-    print("leveling.db created")
-except:
-    print("leveling.db failed to create")
 
 con = sqlite3.connect("databases/announcement.db")
 cur = con.cursor()
