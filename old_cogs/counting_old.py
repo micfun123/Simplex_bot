@@ -13,7 +13,7 @@ calculator = simpcalc.Calculate()
 # Counting
 
 
-async def counting(msg, guild, channel, m):
+async def counting(msg, guild, channel, message_raw):
     if m.author.bot:
         return
 

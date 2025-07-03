@@ -17,19 +17,6 @@ import string
 import unicodedata
 
 
-def micsid(ctx):
-    return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
-
-
-def log(log):
-    now = datetime.now()
-    timern = now.strftime("%d/%m/%Y %H:%M:%S")
-
-    with open("./other/log.txt", "a") as f:
-        f.write("\n")
-        f.write(f"{timern} | {log}")
-
-
 cogs = []
 for i in os.listdir("cogs/"):
     if i == "__pycache__":
