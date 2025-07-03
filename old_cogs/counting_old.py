@@ -13,7 +13,7 @@ calculator = simpcalc.Calculate()
 # Counting
 
 
-async def counting(msg, guild, channel, message_raw):
+async def counting(msg, guild, channel, m):
     if m.author.bot:
         return
 
@@ -51,12 +51,12 @@ async def counting(msg, guild, channel, message_raw):
                 "SELECT highest FROM counting WHERE Guild_id = ?", (guild.id,)
             )
             highest = await highest.fetchone()
-            attemps = await db.execute(
-                "SELECT attemps FROM counting WHERE Guild_id = ?", (guild.id,)
+            attempts = await db.execute(
+                "SELECT attempts FROM counting WHERE Guild_id = ?", (guild.id,)
             )
-            attemps = await attemps.fetchone()
-            attemps = attemps[0]
-            attemps = int(attemps)
+            attempts = await attempts.fetchone()
+            attempts = attempts[0]
+            attempts = int(attempts)
             if last_number is None:
                 await db.execute(
                     "UPDATE counting SET lastcounter = ? WHERE Guild_id = ?",
@@ -81,7 +81,7 @@ async def counting(msg, guild, channel, message_raw):
                     )
                     await db.commit()
                     async with aiosqlite.connect(
-                        "./databases/user_count_stats.db"
+                        "./databases/counting.db"
                     ) as db_user:
                         failed = await db_user.execute(
                             "SELECT failed FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
@@ -132,7 +132,7 @@ async def counting(msg, guild, channel, message_raw):
                         await channel.send("nice")
 
                     async with aiosqlite.connect(
-                        "./databases/user_count_stats.db"
+                        "./databases/counting.db"
                     ) as db_user:
                         success = await db_user.execute(
                             "SELECT success FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
@@ -170,12 +170,12 @@ async def counting(msg, guild, channel, message_raw):
                     (None, guild.id),
                 )
                 await db.execute(
-                    "UPDATE counting SET attemps = ? WHERE Guild_id = ?",
-                    (attemps + 1, guild.id),
+                    "UPDATE counting SET attempts = ? WHERE Guild_id = ?",
+                    (attempts + 1, guild.id),
                 )
                 await db.commit()
                 async with aiosqlite.connect(
-                    "./databases/user_count_stats.db"
+                    "./databases/counting.db"
                 ) as db_user:
                     failed = await db_user.execute(
                         "SELECT failed FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
@@ -241,7 +241,7 @@ class Counting(commands.Cog):
     # async def makedbtablecounter(self, ctx):
     #    con = sqlite3.connect("./databases/counting.db")
     #    cur = con.cursor()
-    #    cur.execute("CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)")
+    #    cur.execute("CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attempts INTEGER DEFAULT 0)")
     #    con.commit()
     #    for i in self.client.guilds:
     #        cur.execute("INSERT INTO counting VALUES (?, ?, ?, ?,?)", (i.id, None, 0, 0, None))
@@ -252,7 +252,7 @@ class Counting(commands.Cog):
     # @commands.is_owner()
     # @commands.command(name="set_user_count_stats")
     # async def set_user_count_stats(self, ctx):
-    #    async with aiosqlite.connect("./databases/user_count_stats.db") as db:
+    #    async with aiosqlite.connect("./databases/counting.db") as db:
     #        await db.execute("CREATE TABLE IF NOT EXISTS user_count_stats (user_id INTEGER,guild_id INTEGER, failed INTEGER DEFAULT 0, success INTEGER DEFAULT 0)")
     #        await db.commit()
     #    await ctx.send("Done")
@@ -300,10 +300,10 @@ class Counting(commands.Cog):
                     "SELECT highest FROM counting WHERE Guild_id = ?", (ctx.guild.id,)
                 )
                 highest = await highest.fetchone()
-                attemps = await db.execute(
-                    "SELECT attemps FROM counting WHERE Guild_id = ?", (ctx.guild.id,)
+                attempts = await db.execute(
+                    "SELECT attempts FROM counting WHERE Guild_id = ?", (ctx.guild.id,)
                 )
-                attemps = await attemps.fetchone()
+                attempts = await attempts.fetchone()
                 place = await db.execute(
                     "SELECT highest, Guild_id FROM counting ORDER BY highest DESC"
                 )
@@ -317,7 +317,7 @@ class Counting(commands.Cog):
                 embed.add_field(name="Last number", value=last_number[0])
                 embed.add_field(name="Highest number", value=highest[0])
                 embed.add_field(name="Last user", value=f"<@{last_user[0]}>")
-                embed.add_field(name="Attempts", value=attemps[0])
+                embed.add_field(name="Attempts", value=attempts[0])
                 embed.add_field(name="Place in server leaderboard", value=place + 1)
                 await ctx.respond(embed=embed)
 
@@ -395,7 +395,7 @@ class Counting(commands.Cog):
         if user is None:
             user = ctx.author
 
-        async with aiosqlite.connect("./databases/user_count_stats.db") as db_user:
+        async with aiosqlite.connect("./databases/counting.db") as db_user:
             person = await db_user.execute(
                 "SELECT * FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
                 (user.id, ctx.guild.id),

@@ -7,13 +7,14 @@ from base69 import decode_base69
 class Counting(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:
             return
 
         try:
+            # Parse the message content
             msg_content = message.content
             try:
                 if msg_content.startswith("69*|"):
@@ -22,103 +23,131 @@ class Counting(commands.Cog):
                     calc = simpcalc.Calculate()
                     ans = await calc.calculate(msg_content)
                     msg = int(ans)
-                print(f"Parsed message: {msg}")
+                print(f"[DEBUG] Parsed message: {msg}")
             except Exception as e:
-                print(f"Failed to parse message: {msg_content} | Error: {e}")
+                print(f"[ERROR] Failed to parse message: {msg_content} | Error: {e}")
                 return
 
             async with aiosqlite.connect("./databases/counting.db") as db:
-                cursor = await db.execute(
+                # Enable WAL mode for better concurrency
+                await db.execute("PRAGMA journal_mode=WAL")
+
+                # Fetch current counting state
+                async with await db.execute(
                     "SELECT counting_channel, lastcounter, last_user, highest, attempts FROM counting WHERE Guild_id = ?",
                     (message.guild.id,)
-                )
-                row = await cursor.fetchone()
-                if not row:
-                    return
+                ) as cursor:
+                    row = await cursor.fetchone()
+                    if not row:
+                        return
 
-                channel_id, lastcounter, last_user, highest, attempts = row
+                    channel_id, lastcounter, last_user, highest, attempts = row
+                    print(f"[DEBUG] Current state - Last: {lastcounter}, User: {last_user}, Highest: {highest}, Attempts: {attempts}")
 
+                # Verify correct channel
                 if message.channel.id != channel_id:
                     return
 
-                if lastcounter == 0 or last_user is None:
-                    expected = 1
-                    await message.channel.send(
-                        f"Count reset to 0. Next number should be {expected}, {message.author.mention}!"
-                    )
-                else:
-                    expected = lastcounter + 1
-                
-                print(f"Expected number: {expected}, User's number: {msg}")
+                # Determine expected number
+                expected = 1 if lastcounter == 0 or last_user is None else lastcounter + 1
+                print(f"[DEBUG] Expected number: {expected}, User's number: {msg}")
 
+                # Check for failure conditions
                 if msg != expected:
-                    await message.add_reaction("❌")
-                    await message.channel.send(
-                        f"Wrong number! Expected {expected}. Count reset to 0.\n"
-                        f"Next number should be 1, {message.author.mention}!"
-                    )
-                    await db.execute(
-                        "UPDATE counting SET lastcounter = 0, last_user = NULL, attempts = ? WHERE Guild_id = ?",
-                        (attempts + 1, message.guild.id)
-                    )
-                    await db.execute(
+                    print("[DEBUG] Wrong number detected")
+                    try:
+                        await message.add_reaction("❌")
+                        await message.channel.send(
+                            f"Wrong number! Expected {expected}. Count reset to 0.\n"
+                            f"Next number should be 1, {message.author.mention}!"
+                        )
+                    except discord.HTTPException as e:
+                        print(f"[ERROR] Failed to add reaction: {e}")
+
+                    async with await db.execute(
+                        "UPDATE counting SET lastcounter = 0, last_user = NULL, attempts = attempts + 1 WHERE Guild_id = ?",
+                        (message.guild.id,)
+                    ):
+                        await db.commit()
+
+                    # Update user stats
+                    async with await db.execute(
                         """
                         INSERT INTO user_count_stats (user_id, guild_id, success, failed)
                         VALUES (?, ?, 0, 1)
                         ON CONFLICT(user_id, guild_id) DO UPDATE SET failed = failed + 1
                         """,
                         (message.author.id, message.guild.id)
-                    )
-                    await db.commit()
+                    ):
+                        await db.commit()
                     return
 
+                # Check for consecutive counting
                 if last_user == message.author.id:
-                    await message.add_reaction("❌")
-                    await message.channel.send(
-                        f"No consecutive counting, {message.author.mention}!\n"
-                        "Count reset to 0. Next number should be 1."
-                    )
-                    await db.execute(
-                        "UPDATE counting SET lastcounter = 0, last_user = NULL, attempts = ? WHERE Guild_id = ?",
-                        (attempts + 1, message.guild.id)
-                    )
-                    await db.execute(
+                    print("[DEBUG] Consecutive counting detected")
+                    try:
+                        await message.add_reaction("❌")
+                        await message.channel.send(
+                            f"No consecutive counting, {message.author.mention}!\n"
+                            "Count reset to 0. Next number should be 1."
+                        )
+                    except discord.HTTPException as e:
+                        print(f"[ERROR] Failed to add reaction: {e}")
+
+                    async with await db.execute(
+                        "UPDATE counting SET lastcounter = 0, last_user = NULL, attempts = attempts + 1 WHERE Guild_id = ?",
+                        (message.guild.id,)
+                    ):
+                        await db.commit()
+
+                    # Update user stats
+                    async with await db.execute(
                         """
                         INSERT INTO user_count_stats (user_id, guild_id, success, failed)
                         VALUES (?, ?, 0, 1)
                         ON CONFLICT(user_id, guild_id) DO UPDATE SET failed = failed + 1
                         """,
                         (message.author.id, message.guild.id)
-                    )
-                    await db.commit()
+                    ):
+                        await db.commit()
                     return
 
-                await message.add_reaction("✅")
+                # Successful count
+                print("[DEBUG] Successful count")
+                try:
+                    await message.add_reaction("✅")
+                except discord.HTTPException as e:
+                    print(f"[ERROR] Failed to add reaction: {e}")
+
                 new_highest = max(msg, highest)
-
-                await db.execute(
+                async with await db.execute(
                     "UPDATE counting SET lastcounter = ?, last_user = ?, highest = ? WHERE Guild_id = ?",
-                    (msg, message.author.id, new_highest, message.guild.id)
-                )
-                await db.execute(
-                    """
-                    INSERT INTO user_count_stats (user_id, guild_id, success, failed)
-                    VALUES (?, ?, 1, 0)
-                    ON CONFLICT(user_id, guild_id) DO UPDATE SET success = success + 1
-                    """,
-                    (message.author.id, message.guild.id)
-                )
-                await db.commit()
+                    (msg, message.author.id, new_highest, message.guild.id)  
+                ):
+                    await db.commit()
+                    print(f"[DEBUG] Updated counting state - Last: {msg}, User: {message.author.id}, Highest: {new_highest}")
 
-            if msg > 1:
-                await message.channel.send(f"{message.author.mention} counted {msg}!")
+                    # Update user stats
+                    async with await db.execute(
+                        """
+                        INSERT INTO user_count_stats (user_id, guild_id, success, failed)
+                        VALUES (?, ?, 1, 0)
+                        ON CONFLICT(user_id, guild_id) DO UPDATE SET success = success + 1
+                        """,
+                        (message.author.id, message.guild.id)
+                    ):
+                        await db.commit()
+
+                #
+                if msg > 1:
+                    await message.channel.send(f"{message.author.mention} counted {msg}!")
 
         except Exception as e:
-            print(f"Counting error: {e}")
+            print(f"[ERROR] Counting error: {type(e).__name__}: {e}")
             await message.channel.send("⚠️ An error occurred. Please try again.")
 
-        # Ensure commands still work
         await self.bot.process_commands(message)
+
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -131,6 +160,7 @@ class Counting(commands.Cog):
                 VALUES (?, ?, 0, NULL, 0, 0)
             """, (ctx.guild.id, channel.id))
             await db.commit()
+            
         await ctx.send(
             f"✅ Counting channel set to {channel.mention}.\n"
             "The game has been reset. Start from 1!"
@@ -148,6 +178,7 @@ class Counting(commands.Cog):
                 (number - 1, ctx.guild.id)
             )
             await db.commit()
+            
         await ctx.send(f"✅ Next number set. Please count **{number}** next.")
 
     @commands.command()
@@ -187,6 +218,7 @@ class Counting(commands.Cog):
                 (ctx.guild.id,)
             )
             await db.commit()
+            
         await ctx.send("🛑 Counting has been disabled.")
 
 
