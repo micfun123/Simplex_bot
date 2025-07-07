@@ -75,6 +75,12 @@ class DMReply(commands.Cog):
     async def on_message(self, message):
         if message.author.bot:
             return
+        
+        # if the message is a command
+        if message.content.startswith("!"):
+            ctx = await self.client.get_context(message)
+            await self.client.invoke(ctx)
+
 
         if isinstance(message.channel, discord.DMChannel):
             cha = await self.client.fetch_channel(self.dm_channel)
