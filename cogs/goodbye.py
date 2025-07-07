@@ -1,6 +1,5 @@
 import random
 import regex
-import requests
 import textwrap
 import discord
 import aiosqlite
@@ -9,6 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime, timezone
 from discord.ext import commands
 from discord import Option
+import httpx as requests
 
 #model used to set Goodbye messages as futures were unreable 
 

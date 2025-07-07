@@ -1,0 +1,6 @@
+services:
+  simplex-bot:
+    build: .
+    env_file:
+      - .env
+    command: python bot.py

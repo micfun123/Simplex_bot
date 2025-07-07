@@ -4,7 +4,7 @@ import discord.ui
 import aiosqlite
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
-import requests
+import httpx as requests
 import regex
 import random
 

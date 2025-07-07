@@ -1,5 +1,8 @@
 # The Everything Discord Bot
 
+`docker run --env-file .env simplex-bot` 
+
+
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/Michaelrbparker)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 

@@ -77,9 +77,10 @@ class DMReply(commands.Cog):
             return
         
         # if the message is a command
-        if message.content.startswith("!"):
+        if message.content.startswith("."):
             ctx = await self.client.get_context(message)
             await self.client.invoke(ctx)
+            return
 
 
         if isinstance(message.channel, discord.DMChannel):
