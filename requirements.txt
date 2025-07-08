@@ -7,7 +7,7 @@ Base_69 == 0.2.2
 ffmpeg-python == 0.2.0
 frozenlist == 1.7.0
 future == 1.0.0
-idna == 3.10
+aiofiles
 imageio-ffmpeg == 0.6.0
 multidict == 6.6.3
 numpy == 2.3.1
