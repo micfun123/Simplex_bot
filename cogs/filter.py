@@ -23,7 +23,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/jail/"
+        url = f"https://some-random-api.com/canvas/jail/"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -50,7 +50,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/glass/"
+        url = f"https://some-random-api.com/canvas/glass/"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -77,7 +77,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/comrade/"
+        url = f"https://some-random-api.com/canvas/comrade/"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -104,7 +104,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/wasted/"
+        url = f"https://some-random-api.com/canvas/wasted/"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -131,7 +131,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/passed/"
+        url = f"https://some-random-api.com/canvas/passed/"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -158,7 +158,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/triggered/"
+        url = f"https://some-random-api.com/canvas/triggered/"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -185,7 +185,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/greyscale"
+        url = f"https://some-random-api.com/canvas/greyscale"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -212,7 +212,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/sepia"
+        url = f"https://some-random-api.com/canvas/sepia"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -239,7 +239,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/blurple2"
+        url = f"https://some-random-api.com/canvas/blurple2"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -266,7 +266,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/blurple"
+        url = f"https://some-random-api.com/canvas/blurple"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
@@ -339,7 +339,7 @@ class filter(commands.Cog):
             "avatar": member.avatar.url,
         }
 
-        url = f"https://some-random-api.ml/canvas/pixelate"
+        url = f"https://some-random-api.com/canvas/pixelate"
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url, data=data) as resp:
