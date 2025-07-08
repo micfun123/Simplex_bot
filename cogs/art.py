@@ -22,39 +22,6 @@ class Art(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # colour converter
-    @commands.command()
-    async def hextorgb(self, ctx, *, color: str):
-        """Converts a hex color to RGB"""
-        try:
-            color = int(color, 16)
-            red = color >> 16
-            green = (color >> 8) & 255
-            blue = color & 255
-            embed = discord.Embed(
-                title="RGB", description=f"{red}, {green}, {blue}", color=color
-            )
-            await ctx.send(embed=embed)
-        except:
-            await ctx.send("Invalid color")
-
-    # hex converter
-    @commands.command()
-    async def RGBtoHex(self, ctx, *, color: str):
-        """Converts RGB to Hex"""
-        try:
-            color = color.split(",")
-            red = int(color[0])
-            green = int(color[1])
-            blue = int(color[2])
-            embed = discord.Embed(
-                title="Hex",
-                description=f"#{red:02x}{green:02x}{blue:02x}",
-                color=0x00FF00,
-            )
-            await ctx.send(embed=embed)
-        except:
-            await ctx.send("Invalid color")
 
     @commands.command(help="Shows a colour from image")
     async def DominantColour(self, ctx, *, URL: str):
@@ -147,51 +114,6 @@ class Art(commands.Cog):
         )
         await ctx.respond(embed=em)
 
-    # show all style prompts
-    @commands.command(name="showstyleprompts", help="Shows all style prompts")
-    async def ShowStylePrompts_command(self, ctx):
-        em = discord.Embed(
-            title="Style Prompts",
-            description=f"All current Styles DM tea for more to be added",
-            color=0x20BEFF,
-        )
-        lines = open("databases/StylePrompt.txt").read().splitlines()
-        for i in range(len(lines)):
-            em.add_field(name=f"{i+1}", value=f"{lines[i]}")
-
-        await ctx.send(embed=em)
-
-    @commands.slash_command(name="showstyleprompts")
-    async def showstyleprompts_slash(self, ctx):
-        em = discord.Embed(
-            title="Style Prompts",
-            description=f"All current Styles DM tea for more to be added",
-            color=0x20BEFF,
-        )
-        lines = open("databases/StylePrompt.txt").read().splitlines()
-        for i in range(len(lines)):
-            em.add_field(name=f"{i+1}", value=f"{lines[i]}")
-
-        await ctx.respond(embed=em)
-
-    @commands.slash_command()
-    async def randomcolour(self, ctx):
-        HEX_random = discord.Colour.from_rgb(
-            random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
-        )
-        em = discord.Embed(
-            title="Random Colour",
-            description=f"{ctx.author.mention} here is your random colour: {HEX_random}",
-            color=random.randint(0, 0xFFFFFF),
-        )
-        # make image
-        img = Image.new("RGB", (300, 200), (228, 150, 150))
-        d = BytesIO()
-        d.seek(0)
-        img.save(d, "PNG")
-        d.seek(0)
-        await ctx.send(file=discord.File(d, "meme.png"))
-        await ctx.respond(embed=em)
 
 
 def setup(client):

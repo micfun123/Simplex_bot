@@ -24,3 +24,4 @@ feedparser
 dateparser
 httpx
 pillow
+colorthief

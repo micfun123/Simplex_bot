@@ -23,9 +23,7 @@ class Counting(commands.Cog):
                     calc = simpcalc.Calculate()
                     ans = await calc.calculate(msg_content)
                     msg = int(ans)
-                print(f"[DEBUG] Parsed message: {msg}")
             except Exception as e:
-                print(f"[ERROR] Failed to parse message: {msg_content} | Error: {e}")
                 return
 
             async with aiosqlite.connect("./databases/counting.db") as db:
@@ -42,19 +40,15 @@ class Counting(commands.Cog):
                         return
 
                     channel_id, lastcounter, last_user, highest, attempts = row
-                    print(f"[DEBUG] Current state - Last: {lastcounter}, User: {last_user}, Highest: {highest}, Attempts: {attempts}")
-
                 # Verify correct channel
                 if message.channel.id != channel_id:
                     return
 
                 # Determine expected number
                 expected = 1 if lastcounter == 0 or last_user is None else lastcounter + 1
-                print(f"[DEBUG] Expected number: {expected}, User's number: {msg}")
 
                 # Check for failure conditions
                 if msg != expected:
-                    print("[DEBUG] Wrong number detected")
                     try:
                         await message.add_reaction("❌")
                         await message.channel.send(

@@ -1,6 +1,12 @@
+version: "3.8"
+
 services:
   simplex-bot:
     build: .
+    volumes:
+      - .:/app                       # Mount the full project (for code)
+      - ./databases:/app/databases  # Persist SQLite DBs
+      - ./prefixes.json:/app/prefixes.json  # Persist the prefixes config
     env_file:
       - .env
-    command: python bot.py
+    restart: unless-stopped
