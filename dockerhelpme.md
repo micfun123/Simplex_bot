@@ -28,5 +28,6 @@ docker run -d --name simplex_bot -v simplex_data:/app/data --env-file ./.env sim
 
 (Note: I've added the -d flag to run it in the background, which is typical for a bot.)
 
+docker run --name simplex_bot -v simplex_data:/app/data --env-file ./.env simplex_bot_image
 
 5.  docker start simplex_bot

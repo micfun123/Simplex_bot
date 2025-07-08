@@ -18,7 +18,7 @@ intents.members = True
 # Helper function to get prefix from prefixes.json
 def get_prefix(bot, message):
     try:
-        with open("databases/prefixes.json", "r") as f:
+        with open("/app/data/prefixes.json", "r") as f:
             prefixes = json.load(f)
         return prefixes.get(str(message.guild.id), ".")
     except Exception:
@@ -88,17 +88,6 @@ async def on_guild_remove(guild):
             json.dump(prefixes, f, indent=4)
     except FileNotFoundError:
         pass
-
-@bot.event
-async def on_message(message):
-    if message.author.bot:
-        return
-
-    # Easter egg response
-    if "simplex" in message.content.lower() and "love" in message.content.lower():
-        await message.add_reaction("❤")
-
-    await bot.process_commands(message)
 
 # Commands
 @bot.command()
