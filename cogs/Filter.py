@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.commands import SlashCommandGroup # Correct import for this style
 import aiohttp
 import aiofiles
 import os
@@ -8,17 +9,10 @@ import logging
 # Set up basic logging
 logging.basicConfig(level=logging.INFO)
 
-# --- A Note on APIs ---
-# The original script used two APIs:
-# 1. https://some-random-api.com/ - This API is currently active.
-# 2. https://michaelapi.herokuapp.com/ - This API is currently offline and has been for some time.
-#
-# All commands relying on the defunct 'michaelapi' have been removed from this rewritten script
-# to ensure functionality. These included 'wanted', 'trash', and 'ghost'.
-
 class Filter(commands.Cog):
     """
-    Applies fun image filter and overlay effects to user profile pictures.
+    Applies fun image filter and overlay effects to user profile pictures
+    using a slash command group.
     """
     def __init__(self, client: commands.Bot):
         self.client = client
@@ -32,100 +26,102 @@ class Filter(commands.Cog):
         # Gracefully close the aiohttp session when the cog is unloaded.
         self.client.loop.create_task(self.session.close())
 
-    async def _create_image(self, ctx: commands.Context, endpoint: str, member: discord.Member):
+    # Create a slash command group in the style you provided
+    filter = SlashCommandGroup("filter", "Applies an image filter to an avatar.")
+
+    async def _create_image_and_send(self, ctx: discord.ApplicationContext, endpoint: str, member: discord.Member):
         """
         A generalized function to handle API requests, file creation, and sending.
-
+        
         Args:
-            ctx: The command context.
-            endpoint: The specific API endpoint for the desired filter (e.g., 'jail', 'glass').
+            ctx: The discord.ApplicationContext from the command.
+            endpoint: The specific API endpoint for the desired filter.
             member: The Discord member whose avatar will be used.
         """
+        # Acknowledge the command immediately to prevent timeout errors
+        await ctx.defer()
+
         if member is None:
             member = ctx.author
 
-        # Use display_avatar to get server-specific avatars if they exist
         avatar_url = str(member.display_avatar.url)
         api_url = f"https://some-random-api.com/canvas/{endpoint}"
         params = {'avatar': avatar_url}
-        temp_file_path = os.path.join(self.temp_storage_path, f"overlay_{ctx.author.id}_{ctx.command.name}.png")
+        temp_file_path = None # Define here to ensure it's in scope for finally block
 
         try:
             async with self.session.get(api_url, params=params) as resp:
                 if resp.status != 200:
-                    logging.error(f"API Error: {endpoint} endpoint returned status {resp.status}")
-                    await ctx.send(f"😥 The image API isn't working right now. Please try again later. (Status: {resp.status})")
+                    logging.error(f"API Error: '{endpoint}' returned status {resp.status}")
+                    await ctx.followup.send(f"😥 The image API isn't working right now. Please try again later.", ephemeral=True)
                     return
 
-                # Read the image data
-                data = await resp.read()
+                # Determine file extension from Content-Type header
+                content_type = resp.headers.get('Content-Type', '')
+                extension = 'gif' if 'gif' in content_type else 'png'
+                temp_file_path = os.path.join(self.temp_storage_path, f"overlay_{ctx.author.id}_{endpoint}.{extension}")
 
-                # Write data to a temporary file asynchronously
+                data = await resp.read()
                 async with aiofiles.open(temp_file_path, mode="wb") as f:
                     await f.write(data)
 
-            # Send the file to Discord
-            await ctx.send(file=discord.File(temp_file_path))
+            # Send the file as a followup to the deferred response
+            await ctx.followup.send(file=discord.File(temp_file_path))
 
         except aiohttp.ClientError as e:
             logging.error(f"Network error during API call: {e}")
-            await ctx.send("Network error. Could not connect to the image API.")
+            await ctx.followup.send("A network error occurred while connecting to the image API.", ephemeral=True)
         except IOError as e:
             logging.error(f"File write error: {e}")
-            await ctx.send("Error: Could not save the image file on the server.")
+            await ctx.followup.send("An error occurred while saving the image file.", ephemeral=True)
         finally:
             # IMPORTANT: Ensure the temporary file is always deleted
-            if os.path.exists(temp_file_path):
+            if temp_file_path and os.path.exists(temp_file_path):
                 os.remove(temp_file_path)
 
+    # --- Grouped Slash Commands ---
 
-    # --- Overlay Commands ---
+    @filter.command(name="jail", description="Puts a jail overlay on an avatar.")
+    async def jail(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "jail", member)
 
-    @commands.command(help="Puts a jail overlay on an avatar.", usage="[@member]")
-    async def jail(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "jail", member)
+    @filter.command(name="wasted", description="Puts a 'wasted' (GTA) overlay on an avatar.")
+    async def wasted(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "wasted", member)
+        
+    @filter.command(name="comrade", description="Puts a 'comrade' overlay on an avatar.")
+    async def comrade(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "comrade", member)
 
-    @commands.command(help="Puts a 'comrade' overlay on an avatar.", usage="[@member]")
-    async def comrade(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "comrade", member)
+    @filter.command(name="passed", description="Puts a 'passed' (GTA) overlay on an avatar.")
+    async def passed(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "passed", member)
 
-    @commands.command(help="Puts a 'wasted' (GTA) overlay on an avatar.", usage="[@member]")
-    async def wasted(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "wasted", member)
+    @filter.command(name="triggered", description="Creates a 'triggered' GIF from an avatar.")
+    async def triggered(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "triggered", member)
 
-    @commands.command(help="Puts a 'passed' (GTA) overlay on an avatar.", usage="[@member]")
-    async def passed(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "passed", member)
+    @filter.command(name="greyscale", description="Applies a greyscale filter to an avatar.")
+    async def greyscale(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "greyscale", member)
 
-    @commands.command(help="Creates a 'triggered' GIF from an avatar.", usage="[@member]")
-    async def triggered(self, ctx, member: discord.Member = None):
-        # Note: 'triggered' endpoint creates a GIF, so we adjust the file path
-        await self._create_image(ctx, "triggered", member)
+    @filter.command(name="sepia", description="Applies a sepia filter to an avatar.")
+    async def sepia(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "sepia", member)
 
+    @filter.command(name="pixelate", description="Pixelates an avatar.")
+    async def pixelate(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "pixelate", member)
+    
+    @filter.command(name="blurple", description="Applies the new blurple filter to an avatar.")
+    async def blurple(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "blurple2", member)
 
-    # --- Filter Commands ---
-
-    @commands.command(name="greyscale", help="Applies a greyscale filter to an avatar.", usage="[@member]")
-    async def greyscale_cmd(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "greyscale", member)
-
-    @commands.command(help="Applies a sepia filter to an avatar.", usage="[@member]")
-    async def sepia(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "sepia", member)
-
-    @commands.command(name="blurple", help="Applies a blurple filter to an avatar.", usage="[@member]")
-    async def blurple_cmd(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "blurple2", member) # 'blurple2' is the new version
-
-    @commands.command(name="blurpleold", help="Applies the old blurple filter to an avatar.", usage="[@member]")
-    async def blurpleold_cmd(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "blurple", member) # 'blurple' is the old version
-
-    @commands.command(help="Pixelates an avatar.", usage="[@member]")
-    async def pixelate(self, ctx, member: discord.Member = None):
-        await self._create_image(ctx, "pixelate", member)
+    @filter.command(name="blurpleold", description="Applies the old blurple filter to an avatar.")
+    async def blurpleold(self, ctx: discord.ApplicationContext, member: discord.Member = None):
+        await self._create_image_and_send(ctx, "blurple", member)
 
 
-def setup(client: commands.Bot):
+def setup(bot):
     """The setup function to add the cog to the bot."""
-    client.add_cog(Filter(client))
+    bot.add_cog(Filter(bot))

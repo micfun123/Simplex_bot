@@ -5,7 +5,6 @@ import os
 from os import listdir
 from os.path import isfile, join
 import datetime
-import humanfriendly
 import sqlite3
 import asyncio
 import random
@@ -129,19 +128,9 @@ class Moderation(commands.Cog):
         await message.clear_reactions()
         await ctx.send("Removed")
 
+    
     @commands.command()
-    @commands.check(micsid)
-    async def reload(self, ctx, extension):
-        self.client.reload_extension(f"cogs.{extension}")
-        embed = discord.Embed(
-            title="Reload",
-            description=f"{extension} successfully reloaded",
-            color=0x20BEFF,
-        )
-        await ctx.send(embed=embed)
-
-    @commands.command()
-    @commands.check(micsid)
+    @commands.is_owner()
     async def serverlist(self, ctx):
         servers = list(self.client.guilds)
         guild = self.client.get_guild(id)
@@ -172,7 +161,7 @@ class Moderation(commands.Cog):
         await ctx.respond("Done", ephemeral=True)
 
     @commands.command(aliases=["sendmsg"])
-    @commands.check(micsid)
+    @commands.is_owner()
     async def dm(self, ctx, member: discord.Member, *, message):
         await ctx.message.delete()
         embeddm = discord.Embed(title=message)
@@ -241,51 +230,6 @@ class Moderation(commands.Cog):
                 )
             )
 
-    @commands.command(aliases=["sm", "slowdown"])
-    @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
-    async def slowmode(ctx, seconds: int):
-        """
-        Sets slowmode for the current channel.
-        """
-        try:
-            if seconds > 21600:
-                await ctx.send("Slowmode cannot be more than 6 hours.")
-                return
-            elif seconds < 0:
-                await ctx.send("Slowmode cannot be less than 0.")
-                return
-            elif seconds == 0:
-                await ctx.channel.edit(slowmode_delay=0)
-                await ctx.send("Slowmode has been disabled.")
-                return
-
-            await ctx.channel.edit(slowmode_delay=seconds)
-            await ctx.send(f"Slowmode set to {seconds} seconds.")
-
-        except discord.Forbidden:
-            await ctx.send("I don't have permission to manage this channel.")
-
-    @commands.command(aliases=["mute"])
-    @commands.guild_only()
-    @commands.has_guild_permissions(moderate_members=True)
-    @commands.bot_has_permissions(moderate_members=True)
-    async def timeout(self, ctx, member: discord.Member, time, *, reason=None):
-        """
-        Timeouts a user for a set amount of time.
-        Use 5m for 5 minutes, 1h for 1 hour, etc.
-        """
-        if reason is None:
-            reason = "No reason provided"
-        time = humanfriendly.parse_timespan(time)
-        await member.timeout(
-            until=discord.utils.utcnow() + datetime.timedelta(seconds=time),
-            reason=reason,
-        )
-        await ctx.send(
-            f"{member.mention} has been muted for {time} seconds.\nReason: {reason}"
-        )
-
     @commands.command(aliases=["sn"])
     @commands.guild_only()
     @commands.has_guild_permissions(manage_nicknames=True)
@@ -333,44 +277,6 @@ class Moderation(commands.Cog):
         except discord.NotFound:
             await ctx.send("Member not found.")
 
-    @commands.command()
-    async def invites(self, ctx, user: discord.Member = None):
-        if user is None:
-            total_invites = 0
-            for i in await ctx.guild.invites():
-                if i.inviter == ctx.author:
-                    total_invites += i.uses
-            await ctx.send(
-                f"You've invited {total_invites} member{'' if total_invites == 1 else 's'} to the server!"
-            )
-        else:
-            total_invites = 0
-            for i in await ctx.guild.invites():
-                if i.inviter == user:
-                    total_invites += i.uses
-
-            await ctx.send(
-                f"{user} has invited {total_invites} member{'' if total_invites == 1 else 's'} to the server!"
-            )
-
-    @commands.command(help="Shows a leaderboard of the most invites on ther server")
-    async def inviteslb(self, ctx, user: discord.Member = None):
-        em = discord.Embed(title="Leaderboard")
-        total_invites = {}
-        for invite in await ctx.guild.invites():
-            try:
-                total_invites[invite.inviter.name] += invite.uses
-            except KeyError:
-                total_invites[invite.inviter.name] = invite.uses
-        total_invites = dict(
-            sorted(total_invites.items(), reverse=True, key=lambda item: item[1])
-        )
-        fields = [
-            em.add_field(name=k, value=v, inline=False)
-            for k, v in total_invites.items()
-        ]
-
-        await ctx.send(embed=em)
 
     @commands.command(
         help="Moves a message across servers or channels. Must use command on channel with the message"
