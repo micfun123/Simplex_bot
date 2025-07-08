@@ -1,6 +1,7 @@
 import os
 import aiosqlite
 import asyncio
+import sqlite3
 
 async def create_tables():
     os.makedirs("./databases", exist_ok=True)
@@ -33,3 +34,13 @@ async def create_tables():
 
 if __name__ == "__main__":
     asyncio.run(create_tables())
+
+    con = sqlite3.connect("databases/rss.db")
+    cur = con.cursor()
+    cur.execute(
+        "CREATE TABLE IF NOT EXISTS rss (name text, url text, channel text,guild text,lastpost text)"
+    )
+    con.commit()
+    con.close()
+    print("rss.db created")
+

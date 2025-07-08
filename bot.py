@@ -18,7 +18,7 @@ intents.members = True
 # Helper function to get prefix from prefixes.json
 def get_prefix(bot, message):
     try:
-        with open("prefixes.json", "r") as f:
+        with open("databases/prefixes.json", "r") as f:
             prefixes = json.load(f)
         return prefixes.get(str(message.guild.id), ".")
     except Exception:
