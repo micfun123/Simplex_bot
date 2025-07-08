@@ -10,7 +10,7 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 # Load intents
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.message_content = True
 intents.guilds = True
 intents.members = True
