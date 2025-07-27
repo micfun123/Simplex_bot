@@ -310,6 +310,44 @@ class BotMakerCommands(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command()
+    @commands.is_owner()
+    async def prisonids(self, ctx):
+        await ctx.send("Clearing nicknames...")
+        # clear all members nicknames
+        for member in ctx.guild.members:
+            try:
+                await member.edit(nick=None)
+            except discord.Forbidden:
+                await ctx.send(f"Could not clear nickname for {member.name}")
+            except discord.HTTPException:
+                await ctx.send(f"HTTP Exception for {member.name}")
+            except Exception as e:
+                await ctx.send(f"Error for {member.name}: {e}")
+                continue
+        currentnium = "000000"
+        await ctx.send("Setting nicknames to IDs...")
+        # give all members a ID nickname thats 6 digits long incrementing by 1
+        for member in ctx.guild.members:
+            try:
+                await member.edit(nick=currentnium)
+            except discord.Forbidden:
+                await ctx.send(f"Could not set nickname for {member.name}")
+            except discord.HTTPException:
+                await ctx.send(f"HTTP Exception for {member.name}")
+            except Exception as e:
+                await ctx.send(f"Error for {member.name}: {e}")
+                continue
+            currentnium = str(int(currentnium) + 1).zfill(6)
+        await ctx.send("All nicknames set to IDs")
+        await log(
+            f"Prison IDs set at {datetime.now().strftime('%d/%m/%Y %H:%M:%S')} by {ctx.author.name}#{ctx.author.discriminator}"
+        )
+        await ctx.send("All nicknames set to IDs")
+        await ctx.send(
+            "All nicknames set to IDs. If you want to reset them, use the `!resetnicknames` command."
+        )
+
 
 def setup(client):
     client.add_cog(BotMakerCommands(client))
