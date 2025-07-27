@@ -311,7 +311,7 @@ class BotMakerCommands(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    @commands.is_owner()
+    @commands.has_permissions(administrator=True)
     async def prisonids(self, ctx):
         await ctx.send("Clearing nicknames...")
         # clear all members nicknames
@@ -325,7 +325,8 @@ class BotMakerCommands(commands.Cog):
             except Exception as e:
                 await ctx.send(f"Error for {member.name}: {e}")
                 continue
-        currentnium = "000000"
+        idlength = len(str(len(ctx.guild.members +1)))
+        currentnium = "0" * idlength
         await ctx.send("Setting nicknames to IDs...")
         # give all members a ID nickname thats 6 digits long incrementing by 1
         for member in ctx.guild.members:
@@ -338,7 +339,7 @@ class BotMakerCommands(commands.Cog):
             except Exception as e:
                 await ctx.send(f"Error for {member.name}: {e}")
                 continue
-            currentnium = str(int(currentnium) + 1).zfill(6)
+            currentnium = str(int(currentnium) + 1).zfill(idlength)
         await ctx.send("All nicknames set to IDs")
         await log(
             f"Prison IDs set at {datetime.now().strftime('%d/%m/%Y %H:%M:%S')} by {ctx.author.name}#{ctx.author.discriminator}"
