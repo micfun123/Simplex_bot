@@ -1,6 +1,4 @@
 import logging
-
-import imp
 import discord
 from discord.ext import commands
 import json
@@ -325,10 +323,10 @@ class BotMakerCommands(commands.Cog):
             except Exception as e:
                 await ctx.send(f"Error for {member.name}: {e}")
                 continue
-        idlength = len(str(len(ctx.guild.members +1)))
+        idlength = len(str(len(ctx.guild.members) + 1))
         currentnium = "0" * idlength
         await ctx.send("Setting nicknames to IDs...")
-        # give all members a ID nickname thats 6 digits long incrementing by 1
+        # give all members a ID nickname that's idlength digits long incrementing by 1
         for member in ctx.guild.members:
             try:
                 await member.edit(nick=currentnium)
@@ -340,11 +338,9 @@ class BotMakerCommands(commands.Cog):
                 await ctx.send(f"Error for {member.name}: {e}")
                 continue
             currentnium = str(int(currentnium) + 1).zfill(idlength)
-        await ctx.send("All nicknames set to IDs")
         await log(
             f"Prison IDs set at {datetime.now().strftime('%d/%m/%Y %H:%M:%S')} by {ctx.author.name}#{ctx.author.discriminator}"
         )
-        await ctx.send("All nicknames set to IDs")
         await ctx.send(
             "All nicknames set to IDs. If you want to reset them, use the `!resetnicknames` command."
         )
