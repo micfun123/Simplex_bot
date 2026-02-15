@@ -18,133 +18,6 @@ class lookup(commands.Cog):
         # start the rss looper task
         self.rsslooper.start()
 
-    @commands.command()
-    async def covid(self, ctx, *, country):
-        x = country.replace(" ", "%20")
-        """
-        Get Covid-19 stats from a country or the world.
-        """
-        try:
-            url = f"https://coronavirus-19-api.herokuapp.com/countries/{x}"
-            stats = requests.get(url)
-            json_stats = stats.json()
-            country = json_stats["country"]
-            totalCases = json_stats["cases"]
-            todayCases = json_stats["todayCases"]
-            totalDeaths = json_stats["deaths"]
-            todayDeaths = json_stats["todayDeaths"]
-            recovered = json_stats["recovered"]
-            active = json_stats["active"]
-            critical = json_stats["critical"]
-            casesPerOneMil = json_stats["casesPerOneMillion"]
-            deathsPerOneMil = json_stats["deathsPerOneMillion"]
-            totalTests = json_stats["totalTests"]
-            testsPerOneMil = json_stats["testsPerOneMillion"]
-
-            e = discord.Embed(
-                title=f"Covid-19 stats of {country}",
-                description="This is not live info. Therefore it might not be as accurate, but is approximate info.",
-                color=discord.Colour.red(),
-            )
-            e.add_field(name="Total Cases", value=totalCases, inline=True)
-            e.add_field(name="Today's Cases", value=todayCases, inline=True)
-            e.add_field(name="Total Deaths", value=totalDeaths, inline=True)
-            e.add_field(name="Today's Deaths", value=todayDeaths, inline=True)
-            e.add_field(name="Recovered", value=recovered, inline=True)
-            e.add_field(name="Active", value=active, inline=True)
-            e.add_field(name="Critical", value=critical, inline=True)
-            e.add_field(name="Cases per one million", value=casesPerOneMil, inline=True)
-            e.add_field(
-                name="Deaths per one million", value=deathsPerOneMil, inline=True
-            )
-            e.add_field(name="Tests per one million", value=testsPerOneMil, inline=True)
-            e.add_field(name="Total tests", value=totalTests, inline=True)
-            e.set_thumbnail(
-                url="https://www.osce.org/files/imagecache/10_large_gallery/f/images/hires/8/a/448717.jpg"
-            )
-
-            await ctx.send(embed=e)
-        except:
-            await ctx.send(f" Invalid country name or API error! Try again later.")
-
-    @commands.command()
-    async def randomimg(self, ctx):
-        """
-        Get a random image from unsplash.com
-        """
-        url = "https://source.unsplash.com/random"
-        r = requests.get(url)
-        Embed = discord.Embed(
-            title="Random Image",
-            description="Random Image from unsplash.com",
-            color=0x00FF00,
-        )
-        Embed.set_image(url=r.url)
-        await ctx.send(embed=Embed)
-
-    @commands.command()
-    async def nyt_top(self, ctx):
-        """
-        Get a most populare articale from the New York Times
-        """
-        url = "https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key={}".format(
-            os.environ.get("NYT_API_KEY")
-        )
-        r = requests.get(url)
-        json_data = r.json()
-        title = json_data["results"][0]["title"]
-        url = json_data["results"][0]["url"]
-        Embed = discord.Embed(
-            title="Most Popular Article",
-            description="Most Popular Article from the New York Times",
-            color=0x00FF00,
-        )
-        Embed.add_field(name="Title", value=title, inline=False)
-        Embed.add_field(name="Link", value=url, inline=False)
-        await ctx.send(embed=Embed)
-
-    @commands.command()
-    async def nyt_search(self, ctx, *, query):
-        """
-        Search for an article from the New York Times
-        """
-        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q={}&api-key={}".format(
-            query, os.environ.get("NYT_API_KEY")
-        )
-        r = requests.get(url)
-        json_data = r.json()
-        title = json_data["response"]["docs"][0]["headline"]["main"]
-        url = json_data["response"]["docs"][0]["web_url"]
-        Embed = discord.Embed(
-            title="Search Result",
-            description="Search Result from the New York Times",
-            color=0x00FF00,
-        )
-        Embed.add_field(name="Title", value=title, inline=False)
-        Embed.add_field(name="Link", value=url, inline=False)
-        await ctx.send(embed=Embed)
-
-    @commands.command()
-    async def nyt_random(self, ctx):
-        """
-        Get a random article from the New York Times
-        """
-        url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key={}".format(
-            os.environ.get("NYT_API_KEY")
-        )
-        r = requests.get(url)
-        json_data = r.json()
-        title = json_data["response"]["docs"][0]["headline"]["main"]
-        url = json_data["response"]["docs"][0]["web_url"]
-        Embed = discord.Embed(
-            title="Random Article",
-            description="Random Article from the New York Times",
-            color=0x00FF00,
-        )
-        Embed.add_field(name="Title", value=title, inline=False)
-        Embed.add_field(name="Link", value=url, inline=False)
-        await ctx.send(embed=Embed)
-
     # feet to cm
     @commands.command(help="Convert feet to cm")
     async def ftocm(self, ctx, *, feet):
@@ -285,35 +158,6 @@ class lookup(commands.Cog):
                         Embed.add_field(name=row[0], value=row[1], inline=False)
                     await ctx.respond(embed=Embed)
         elif options == "add":
-
-            
-            amountoffeeds = 0
-            async with aiosqlite.connect("databases/rss.db") as db:
-                con = await db.execute("SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),))
-                rows = await con.fetchall()
-                amountoffeeds = len(rows)
-
-            if amountoffeeds >= 2:
-                tocken = os.getenv("TOPGG_TOKEN")
-                api = requests.get(
-                    f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}",
-                    headers={"Authorization": tocken, "Content-Type": "application/json"},
-                )
-                data = api.json()
-                print(api)
-                print(data)
-                voted = data["voted"]
-                # if the api does not return a 200 status code
-                if api.status_code != 200:
-                    voted = 1
-                    print("api error")
-                if voted == 0:
-                    await ctx.respond(
-                        "You can have as many RSS feeds as you want but you have to have voted in the last 24h. (Its free) Please vote and then try again, you can vote here: https://top.gg/bot/902240397273743361/vote",
-                        ephemeral=True,
-                    )
-                    return
-
             await ctx.respond("What is the name of the feed?")
 
             def check(m):
@@ -376,7 +220,7 @@ class lookup(commands.Cog):
                                 "This is a test message to make sure the feed works. We will check your rss feed every few hours (we check once every 12 hours) to see if there is a new post. If there is a new post we will send it here."
                             )
                             await ctx.respond(
-                                "Done sending test message if you did not recieve a message please check the channel you selected and make sure the bot has permissions to send messages in that channel"
+                                "Done sending test message if you did not recieve a message please check the channel you selected and make sure the bot has permissions to send messages in that channel \n If you like this feature and want to help cover the costs of running the bot please consider donating at https://buymeacoffee.com/michaelrbparker"
                             )
 
         elif options == "remove":
