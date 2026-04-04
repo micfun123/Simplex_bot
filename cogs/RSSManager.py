@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 from discord.commands import SlashCommandGroup
 from discord.ext import tasks
-import httpx as requests  # httpx is async-capable, but you're using it sync here
+import httpx
 
 class RSSManager(commands.Cog):
     """📬 Manage your RSS feeds here."""
@@ -15,15 +15,14 @@ class RSSManager(commands.Cog):
         self.bot = bot
         self.rss_loop.start()
 
-        def cog_unload(self):
-            self.rss_loop.cancel()
+    def cog_unload(self):
+        self.rss_loop.cancel()
 
     rss = SlashCommandGroup("rss", "RSS related commands")
 
     @rss.command(name="add", description="Add RSS feeds to your server")
     @commands.has_permissions(manage_guild=True)
     async def add(self, ctx, name, channel, feed):
-        print(name,channel,feed)
         feed_URL = feed
         async with aiosqlite.connect("databases/rss.db") as db:
             cursor = await db.execute("SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),))
@@ -31,39 +30,46 @@ class RSSManager(commands.Cog):
 
         if len(feeds) >= 2:
             token = os.getenv("TOPGG_TOKEN")
-            try:
-                response = requests.get(
-                    f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}",
-                    headers={"Authorization": token}
-                )
-                data = response.json()
-                voted = data.get("voted", 0)
-            except Exception as e:
-                print(f"TopGG API error: {e}")
-                voted = 1
-            if response.status_code != 200 or voted == 0:
+            voted = 1 # Default to 1 if no token
+            if token:
+                try:
+                    async with httpx.AsyncClient() as client:
+                        response = await client.get(
+                            f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}",
+                            headers={"Authorization": token},
+                            timeout=10.0
+                        )
+                        if response.status_code == 200:
+                            data = response.json()
+                            voted = data.get("voted", 0)
+                except Exception as e:
+                    print(f"TopGG API error: {e}")
+                    voted = 1
+            
+            if voted == 0:
                 await ctx.respond(
                     "You can have more than 2 RSS feeds only if you've voted in the last 24h. Vote here: https://top.gg/bot/902240397273743361/vote",
                     ephemeral=True
                 )
                 return
 
-       
         channel_id_str = channel.replace("<#", "").replace(">", "")
         try:
             channel_id = int(channel_id_str)
-            channel = self.bot.get_channel(channel_id)
-            if channel is None:
-                raise ValueError
+            target_channel = self.bot.get_channel(channel_id)
+            if target_channel is None:
+                target_channel = await self.bot.fetch_channel(channel_id)
         except Exception:
             await ctx.respond("That channel does not exist or is not accessible.")
             return
 
         # Validate RSS feed
         try:
-            feed = feedparser.parse(feed)
-            if not feed.entries:
-                raise ValueError
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(feed_URL, timeout=10.0)
+                feed_data = feedparser.parse(resp.text)
+                if not feed_data.entries:
+                    raise ValueError
         except Exception:
             await ctx.respond("That is not a valid RSS feed.")
             return
@@ -71,19 +77,18 @@ class RSSManager(commands.Cog):
         # Save to DB
         async with aiosqlite.connect("databases/rss.db") as db:
             await db.execute(
-                "INSERT INTO rss VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO rss (name, url, channel, guild, lastpost) VALUES (?, ?, ?, ?, ?)",
                 (name, feed_URL, str(channel_id), str(ctx.guild.id), None)
             )
             await db.commit()
 
-        await ctx.respond("Done adding feed. Sending a test message to the selected channel...")
+        await ctx.respond("Done adding feed. Sending a test message...")
         try:
-            await channel.send(
-                "This is a test message. We'll check this feed every 12 hours and post new entries here."
+            await target_channel.send(
+                "✅ RSS feed added successfully! New entries will be posted here."
             )
-            await ctx.respond("Test message sent! Make sure the bot has permission to send messages in that channel.")
-        except Exception as e:
-            await ctx.respond(f"Failed to send test message: {e}")
+        except:
+            pass
 
     @rss.command(name="list", description="Lists all RSS feeds in this server")
     @commands.has_permissions(manage_guild=True)
@@ -103,121 +108,56 @@ class RSSManager(commands.Cog):
     @rss.command(name="remove", description="Removes an RSS feed from this server")
     @commands.has_permissions(manage_guild=True)
     async def remove(self, ctx, feedname: str):
+        async with aiosqlite.connect("databases/rss.db") as db:
+            await db.execute(
+                "DELETE FROM rss WHERE name = ? AND guild = ?",
+                (feedname, str(ctx.guild.id))
+            )
+            await db.commit()
+        await ctx.respond(f"Feed '{feedname}' has been removed.")
+
+    @tasks.loop(minutes=30)
+    async def rss_loop(self):
         try:
             async with aiosqlite.connect("databases/rss.db") as db:
-                await db.execute(
-                    "DELETE FROM rss WHERE name = ? AND guild = ?",
-                    (feedname, str(ctx.guild.id))
-                )
-                await db.commit()
-                await db.close()
+                async with db.execute("SELECT name, url, channel, guild, lastpost FROM rss") as cursor:
+                    rows = await cursor.fetchall()
+                
+                async with httpx.AsyncClient() as client:
+                    for row in rows:
+                        name, url, channel_id, guild_id, lastpost = row
+                        try:
+                            resp = await client.get(url, timeout=15.0)
+                            feed = feedparser.parse(resp.text)
+                            if not feed.entries:
+                                continue
 
-            await ctx.respond(f"Feed '{feedname}' has been removed.")
-        except:
-            await ctx.respond(f"Unable to find feed. please check spelling and spacing of your rss feeds name")
+                            latest_entry = feed.entries[0]
+                            checkpost = latest_entry.get("link")
 
-    @commands.command()
-    @commands.is_owner()
-    async def remove_invalid_rss(self, ctx):
-        removed = 0
-        await ctx.send("🔍 Removing invalid RSS feeds...")
+                            if not checkpost or checkpost == lastpost:
+                                continue
 
-        async with aiosqlite.connect("databases/rss.db") as db:
-            #Remove feeds with NULL lastpost that are invalid
-            async with db.execute("SELECT * FROM rss WHERE lastpost IS NULL") as cursor:
-                rows = await cursor.fetchall()
-                print(f"Found {len(rows)} invalid feeds")
+                            title = latest_entry.get("title", "No title")
+                            message = f"**{title}**\n{checkpost}"
 
-                for row in rows:
-                    name, url, channel_id, server_id = row[0], row[1], row[2], row[3]
-                    try:
-                        feed = feedparser.parse(url)
-                        if feed.bozo:
-                            try:
-                                # Notify channel about invalid feed
-                                channel = await self.bot.fetch_channel(channel_id)
-                                await channel.send(
-                                    f"⚠️ RSS feed `{url}` is invalid and has been removed.\n"
-                                    "If you believe this is an error, please DM the bot or join the support server."
-                                )
-                            except Exception as send_error:
-                                print(f"Failed to notify channel {channel_id}: {send_error}")
-
-                            await db.execute(
-                                "DELETE FROM rss WHERE name = ? AND guild = ?",
-                                (name, server_id)
-                            )
+                            target_channel = self.bot.get_channel(int(channel_id))
+                            if not target_channel:
+                                target_channel = await self.bot.fetch_channel(int(channel_id))
+                            
+                            await target_channel.send(message)
+                            await db.execute("UPDATE rss SET lastpost = ? WHERE url = ? AND guild = ?", (checkpost, url, guild_id))
                             await db.commit()
-                            removed += 1
-                    except Exception as e:
-                        print(f"Error processing feed '{url}' in guild {server_id}: {e}")
-                    await asyncio.sleep(0.5)
+                        except Exception as e:
+                            print(f"RSS Loop error for {url}: {e}")
+                        
+                        await asyncio.sleep(1) # Small delay between feeds
+        except Exception as e:
+            print(f"Main RSS Loop error: {e}")
 
-            await ctx.send("✅ Removed invalid feeds. Now checking for feeds from servers I'm no longer in...")
-
-            #Removing feeds for servers the bot is not in any more
-            async with db.execute("SELECT * FROM rss") as cursor:
-                rows = await cursor.fetchall()
-
-                for row in rows:
-                    name, _, _, server_id = row[0], row[1], row[2], row[3]
-                    try:
-                        guild = self.bot.get_guild(int(server_id))
-                        if guild is None:
-                            await db.execute(
-                                "DELETE FROM rss WHERE name = ? AND guild = ?",
-                                (name, server_id)
-                            )
-                            await db.commit()
-                            removed += 1
-                    except Exception as e:
-                        print(f"Error checking guild {server_id}: {e}")
-                    await asyncio.sleep(0.5)
-
-        await ctx.send(f"✅ Cleanup complete. {removed} feeds removed.")
-        await ctx.send("✅ Finished removing invalid RSS feeds.")
-
-    @tasks.loop(hours=6)
-    async def rss_loop(self):
-        async with aiosqlite.connect("databases/rss.db") as db:
-            con = await db.execute("SELECT * FROM rss")
-            rows = await con.fetchall()
-            for row in rows:
-                name = row[0]
-                url = row[1]
-                channel = row[2]
-                guild = row[3]
-                lastpost = row[4]
-
-                feed = feedparser.parse(url)
-
-                if not feed.entries:
-                    continue  # No entries in the feed
-
-                latest_entry = feed.entries[0]
-                checkpost = latest_entry.get("link")  # Safe access
-
-                if not checkpost or checkpost == lastpost:
-                    continue
-
-                title = latest_entry.get("title", "No title")  # Safe access
-                message = f"**{title}**\n{checkpost}"
-
-                try:
-                    target_channel = await self.bot.fetch_channel(channel)
-                    await target_channel.send(message)
-                except Exception as e:
-                    print(f"Failed to send message to channel {channel}: {e}")
-
-                await db.execute("UPDATE rss SET lastpost = ? WHERE url = ?", (checkpost, url))
-                await db.commit()
-                              
-    @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
-        async with aiosqlite.connect("databases/rss.db") as db:
-            await db.execute("DELETE FROM rss WHERE guild = ?", (str(guild.id),))
-            await db.commit()
-        print(f"Removed all RSS feeds for guild {guild.id}")   
+    @rss_loop.before_loop
+    async def before_rss_loop(self):
+        await self.bot.wait_until_ready()
 
 def setup(bot):
     bot.add_cog(RSSManager(bot))

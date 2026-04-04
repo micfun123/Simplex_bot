@@ -9,4 +9,5 @@ services:
       - ./prefixes.json:/app/prefixes.json  # Persist the prefixes config
     env_file:
       - .env
+    command: watchmedo auto-restart --pattern="*.py" --recursive -- python bot.py
     restart: unless-stopped

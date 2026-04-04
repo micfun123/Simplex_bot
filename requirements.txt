@@ -10,7 +10,7 @@ future == 1.0.0
 aiofiles
 Mastodon.py
 multidict == 6.6.3
-numpy == 2.3.1
+numpy == 2.2.6
 pip == 23.2.1
 propcache == 0.3.2
 py-cord == 2.6.1
@@ -25,3 +25,4 @@ dateparser
 httpx
 pillow
 colorthief
+watchdog

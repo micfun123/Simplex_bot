@@ -3,6 +3,9 @@ import sqlite3
 import json
 import os
 
+os.makedirs("./databases", exist_ok=True)
+
+
 # rade stuff for the anti cog
 con = sqlite3.connect("databases/raids.db")
 cur = con.cursor()
@@ -50,15 +53,22 @@ con.commit()
 con.close()
 print("verification.db created")
 
-
+# Ensure counting.db exists with a clean schema
 con = sqlite3.connect("databases/counting.db")
 cur = con.cursor()
-cur.execute(
-    "CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)"
-)
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS counting (
+        guild_id INTEGER PRIMARY KEY,
+        channel_id INTEGER,
+        current_number INTEGER DEFAULT 0,
+        last_user_id INTEGER,
+        highest_number INTEGER DEFAULT 0
+    )
+""")
 con.commit()
 con.close()
 print("counting.db created")
+
 
 
 con = sqlite3.connect("databases/blacklist.db")

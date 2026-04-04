@@ -18,11 +18,11 @@ intents.members = True
 # Helper function to get prefix from prefixes.json
 def get_prefix(bot, message):
     try:
-        with open("/app/data/prefixes.json", "r") as f:
+        with open("prefixes.json", "r") as f:
             prefixes = json.load(f)
         return prefixes.get(str(message.guild.id), ".")
     except Exception:
-        return "!"
+        return "."
 
 # Bot setup
 bot = commands.Bot(
@@ -88,6 +88,19 @@ async def on_guild_remove(guild):
             json.dump(prefixes, f, indent=4)
     except FileNotFoundError:
         pass
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+
+    if bot.user.mentioned_in(message) and not message.mention_everyone:
+        # Check if the message is JUST a mention or contains a mention
+        # This regex or check ensures we only trigger on actual mentions of the bot
+        prefix = get_prefix(bot, message)
+        await message.channel.send(f"hello im simplex. my prefix is `{prefix}` use `{prefix}help` for a list of my commands")
+
+    await bot.process_commands(message)
 
 # Commands
 @bot.command()

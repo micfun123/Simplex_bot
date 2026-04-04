@@ -1,5 +1,5 @@
 # Use lightweight official Python 3.12 slim image
-FROM python:3.12-slim
+FROM python:3.10-slim
 
 # Prevent Python from writing pyc files and buffering stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE=1
