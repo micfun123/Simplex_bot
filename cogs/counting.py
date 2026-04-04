@@ -75,6 +75,14 @@ class Counting(commands.Cog):
                     if last_user == message.author.id:
                         await message.channel.send(f"❌ {message.author.mention}, you can't count twice in a row! Count reset to 0.")
                         await db.execute("UPDATE counting SET current_number = 0, last_user_id = NULL WHERE guild_id = ?", (message.guild.id,))
+                        
+                        # Increment user failures
+                        await db.execute("""
+                            INSERT INTO user_counts (guild_id, user_id, count, failures)
+                            VALUES (?, ?, 0, 1)
+                            ON CONFLICT(guild_id, user_id) DO UPDATE SET failures = failures + 1
+                        """, (message.guild.id, message.author.id))
+                        
                         await db.commit()
                         reaction_is = "❌"
                     
@@ -82,6 +90,14 @@ class Counting(commands.Cog):
                     elif msg_number != expected:
                         await message.channel.send(f"❌ **Wrong number!** {message.author.mention} reset the count to 0. Expected **{expected}**.")
                         await db.execute("UPDATE counting SET current_number = 0, last_user_id = NULL WHERE guild_id = ?", (message.guild.id,))
+                        
+                        # Increment user failures
+                        await db.execute("""
+                            INSERT INTO user_counts (guild_id, user_id, count, failures)
+                            VALUES (?, ?, 0, 1)
+                            ON CONFLICT(guild_id, user_id) DO UPDATE SET failures = failures + 1
+                        """, (message.guild.id, message.author.id))
+                        
                         await db.commit()
                         reaction_is = "❌"
 
@@ -94,8 +110,8 @@ class Counting(commands.Cog):
                         )
                         # Update user stats
                         await db.execute("""
-                            INSERT INTO user_counts (guild_id, user_id, count)
-                            VALUES (?, ?, 1)
+                            INSERT INTO user_counts (guild_id, user_id, count, failures)
+                            VALUES (?, ?, 1, 0)
                             ON CONFLICT(guild_id, user_id) DO UPDATE SET count = count + 1
                         """, (message.guild.id, message.author.id))
                         
@@ -132,14 +148,26 @@ class Counting(commands.Cog):
         async with aiosqlite.connect(self.db_path) as db:
             async with db.execute("SELECT current_number, highest_number, channel_id FROM counting WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
                 row = await cursor.fetchone()
+            
+            # Calculate total accuracy
+            async with db.execute("SELECT SUM(count), SUM(failures) FROM user_counts WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
+                accuracy_row = await cursor.fetchone()
 
         if not row or row[2] is None:
             return await ctx.respond("❌ Counting is not set up on this server.")
 
         current, highest, channel_id = row
+        total_count = accuracy_row[0] or 0
+        total_failures = accuracy_row[1] or 0
+        total_attempts = total_count + total_failures
+        accuracy = (total_count / total_attempts * 100) if total_attempts > 0 else 0
+
         embed = discord.Embed(title=f"📊 {ctx.guild.name} Counting Stats", color=discord.Color.blue())
         embed.add_field(name="Current Count", value=f"**{current}**", inline=True)
         embed.add_field(name="Highest Ever", value=f"**{highest}**", inline=True)
+        embed.add_field(name="Total Attempts", value=f"**{total_attempts}**", inline=True)
+        embed.add_field(name="Accuracy", value=f"**{accuracy:.1f}%**", inline=True)
+        
         channel = ctx.guild.get_channel(channel_id)
         embed.add_field(name="Channel", value=channel.mention if channel else "Unknown", inline=False)
         await ctx.respond(embed=embed)
@@ -149,12 +177,18 @@ class Counting(commands.Cog):
         """Show counting statistics for a specific user."""
         user = user or ctx.author
         async with aiosqlite.connect(self.db_path) as db:
-            async with db.execute("SELECT count FROM user_counts WHERE guild_id = ? AND user_id = ?", (ctx.guild.id, user.id)) as cursor:
+            async with db.execute("SELECT count, failures FROM user_counts WHERE guild_id = ? AND user_id = ?", (ctx.guild.id, user.id)) as cursor:
                 row = await cursor.fetchone()
 
         count = row[0] if row else 0
+        failures = row[1] if row else 0
+        total = count + failures
+        accuracy = (count / total * 100) if total > 0 else 0
+
         embed = discord.Embed(title=f"👤 {user.display_name}'s Counting Stats", color=discord.Color.green())
-        embed.add_field(name="Correct Counts", value=f"**{count}**")
+        embed.add_field(name="Correct Counts", value=f"**{count}**", inline=True)
+        embed.add_field(name="Failures", value=f"**{failures}**", inline=True)
+        embed.add_field(name="Accuracy", value=f"**{accuracy:.1f}%**", inline=True)
         embed.set_thumbnail(url=user.display_avatar.url)
         await ctx.respond(embed=embed)
 
@@ -163,7 +197,7 @@ class Counting(commands.Cog):
         """Show the top counters in this server."""
         async with aiosqlite.connect(self.db_path) as db:
             async with db.execute(
-                "SELECT user_id, count FROM user_counts WHERE guild_id = ? ORDER BY count DESC LIMIT 10", 
+                "SELECT user_id, count, failures FROM user_counts WHERE guild_id = ? ORDER BY count DESC LIMIT 10", 
                 (ctx.guild.id,)
             ) as cursor:
                 rows = await cursor.fetchall()
@@ -173,10 +207,12 @@ class Counting(commands.Cog):
 
         embed = discord.Embed(title=f"🏆 {ctx.guild.name} Counting Leaderboard", color=discord.Color.gold())
         description = ""
-        for i, (user_id, count) in enumerate(rows, 1):
+        for i, (user_id, count, failures) in enumerate(rows, 1):
             user = self.bot.get_user(user_id)
             user_name = user.mention if user else f"Unknown User ({user_id})"
-            description += f"{i}. {user_name} — **{count}**\n"
+            total = count + failures
+            accuracy = (count / total * 100) if total > 0 else 0
+            description += f"{i}. {user_name} — **{count}** counts ({accuracy:.0f}% accuracy)\n"
         
         embed.description = description
         await ctx.respond(embed=embed)

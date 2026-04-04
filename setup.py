@@ -65,6 +65,15 @@ cur.execute("""
         highest_number INTEGER DEFAULT 0
     )
 """)
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS user_counts (
+        guild_id INTEGER,
+        user_id INTEGER,
+        count INTEGER DEFAULT 0,
+        failures INTEGER DEFAULT 0,
+        PRIMARY KEY (guild_id, user_id)
+    )
+""")
 con.commit()
 con.close()
 print("counting.db created")
