@@ -58,16 +58,6 @@ class NewHelp(commands.MinimalHelpCommand):
         return f"**{self.get_command_signature(command)}** - {command.short_doc or 'No description'}"
 
 
-# Events
-@bot.event
-async def on_ready():
-    print("------------------------------------")
-    print(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
-    print("------------------------------------")
-    # Set initial presence
-    await update_status()
-    print(f"🔹 Presence set: {len(bot.guilds)} servers")
-
 
 @bot.event
 async def on_message(message):
@@ -82,12 +72,6 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-
-async def update_status():
-    while True:
-        await bot.change_presence(
-            activity=discord.Game(name=f"been a good boy on {len(bot.guilds)} servers!")
-        )
 
 # Commands
 @bot.command()
