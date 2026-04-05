@@ -61,32 +61,13 @@ class NewHelp(commands.MinimalHelpCommand):
 # Events
 @bot.event
 async def on_ready():
-    print(f"✅ Bot is online as {bot.user} (ID: {bot.user.id})")
-    await bot.change_presence(activity=discord.Game(name=f"on {len(bot.guilds)} servers | .help"))
+    print("------------------------------------")
+    print(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
+    print("------------------------------------")
+    # Set initial presence
+    await update_status()
+    print(f"🔹 Presence set: {len(bot.guilds)} servers")
 
-@bot.event
-async def on_guild_join(guild):
-    try:
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
-    except FileNotFoundError:
-        prefixes = {}
-
-    prefixes[str(guild.id)] = "."
-
-    with open("prefixes.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
-
-@bot.event
-async def on_guild_remove(guild):
-    try:
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
-        prefixes.pop(str(guild.id), None)
-        with open("prefixes.json", "w") as f:
-            json.dump(prefixes, f, indent=4)
-    except FileNotFoundError:
-        pass
 
 @bot.event
 async def on_message(message):
@@ -100,6 +81,13 @@ async def on_message(message):
         await message.channel.send(f"hello im simplex. my prefix is `{prefix}` use `{prefix}help` for a list of my commands")
 
     await bot.process_commands(message)
+
+
+async def update_status():
+    while True:
+        await bot.change_presence(
+            activity=discord.Game(name=f"been a good boy on {len(bot.guilds)} servers!")
+        )
 
 # Commands
 @bot.command()
@@ -172,6 +160,7 @@ async def load_cogs():
                 print(f"🔹 Loaded cog: {file}")
             except Exception as e:
                 print(f"❌ Failed to load cog {file}: {e}")
+
 
 
 # Start bot
