@@ -26,35 +26,7 @@ for i in os.listdir("cogs/"):
         print(i[:-3])
 
 
-class RickrollLangCodeInput(discord.ui.Modal):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.request_data = None
 
-        self.add_item(
-            discord.ui.InputText(
-                label="Source Code:",
-                placeholder="The code that will be run",
-                style=discord.InputTextStyle.paragraph,
-                required=True,
-            )
-        )
-        self.add_item(
-            discord.ui.InputText(
-                label="Standard Input:",
-                placeholder="Will be provided as input",
-                style=discord.InputTextStyle.short,
-                required=False,
-            )
-        )
-        self.add_item(
-            discord.ui.InputText(
-                label="Enviroment Variables (Seperate by new line):",
-                placeholder="Add each variable in the format:\n<KEY>=<VALUE>\nExamples:\nName=Simplex\nAge=2",
-                style=discord.InputTextStyle.paragraph,
-                required=False,
-            )
-        )
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.send_message("Processing input...", ephemeral=True)
@@ -83,39 +55,8 @@ class Slash(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.slash_command(
-        name="invite", description="Creates 10 day invite for this server"
-    )
-    async def invite(self, ctx):
-        link = await ctx.channel.create_invite(max_age=10)
-        await ctx.respond(link)
 
-    @commands.slash_command(
-        name="botinvite", description="Invite simplex to your server :)"
-    )
-    async def botinvite(self, ctx):
-        await ctx.respond(
-            embed=discord.Embed(
-                title="Invite **'Simplex'?** to your server:",
-                description="https://discord.com/api/oauth2/authorize?client_id=896932646846885898&permissions=8&scope=bot%20applications.commands",
-            )
-        )
 
-    @slash_command(name="suggest", description="Suggest something for Simplex")
-    async def suggest(
-        self, ctx, suggestion: Option(str, "The suggestion", required=True)
-    ):
-        sid = await self.client.fetch_channel(908969607266730005)
-        em = discord.Embed(
-            title="Suggestion:",
-            description=f"By: {ctx.author.name}\n\n{suggestion}",
-            color=discord.Color.random(),
-        )
-        x = await sid.send(embed=em, content=ctx.author.id)
-        await x.add_reaction("✅")
-        await x.add_reaction("❌")
-
-        await ctx.respond("Thank you for you suggestion!")
 
     @commands.slash_command(name="ping", description="shows you the bots ping")
     async def ping(self, ctx):
@@ -160,18 +101,7 @@ class Slash(commands.Cog):
         em.add_field(name="Bot Choice", value=cpu_choice)
         await ctx.respond(embed=em)
 
-    @slash_command(name="reload", description="reloads a cog")
-    @commands.check(mic)
-    async def reload(
-        self, ctx, extension: Option(str, "Cog Name", required=True, choices=cogs)
-    ):
-        self.client.reload_extension(f"cogs.{extension}")
-        embed = discord.Embed(
-            title="Reload",
-            description=f"{extension} successfully reloaded",
-            color=0xFF00C8,
-        )
-        await ctx.respond(embed=embed)
+
 
     @slash_command()
     async def donations(self, ctx):
