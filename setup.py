@@ -10,7 +10,7 @@ os.makedirs("./databases", exist_ok=True)
 con = sqlite3.connect("databases/raids.db")
 cur = con.cursor()
 cur.execute(
-    "CREATE TABLE raids(ServerID int, Servertoggle, raiderneed int, currentrade int)"
+    "CREATE TABLE IF NOT EXISTS raids(ServerID int, Servertoggle, raiderneed int, currentrade int)"
 )
 con.commit()
 con.close()
