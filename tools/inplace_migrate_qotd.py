@@ -31,8 +31,13 @@ def migrate():
                 )
             """)
             
-            # Copy data from old table to new table
-            cursor.execute("INSERT INTO qotd_new (server_id, channel_id, role_id) SELECT server_id, channel_id, role_id FROM qotd")
+            # Copy data from old table to new table, deduplicating by server_id
+            cursor.execute("""
+                INSERT INTO qotd_new (server_id, channel_id, role_id) 
+                SELECT server_id, channel_id, role_id 
+                FROM qotd 
+                GROUP BY server_id
+            """)
             
             # Drop old table and rename new one
             cursor.execute("DROP TABLE qotd")

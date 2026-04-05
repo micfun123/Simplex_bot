@@ -132,7 +132,7 @@ class QOTD(commands.Cog):
                     if not channel:
                         continue
 
-                    embed = discord.Embed(title="🎲 Question of the Day", description=f"**{question}**", color=0x00FF00)
+                    embed = discord.Embed(title="Question of the Day", description=f"**{question}**", color=0x00FF00)
                     embed.add_field(
                         name="Options",
                         value="\n".join([f"• {opt}" for opt in options]),
