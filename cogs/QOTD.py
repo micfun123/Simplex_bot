@@ -14,7 +14,7 @@ logger = logging.getLogger("simplex.qotd")
 TRIVIA_URL = "https://the-trivia-api.com/api/questions?categories=society_and_culture,arts_and_literature,film_and_tv,food_and_drink,general_knowledge,geography,history,music,science&limit=1&difficulty=medium"
 
 class QOTD(commands.Cog):
-    """🎲 Daily trivia questions for your server!"""
+    """Daily trivia questions for your server!"""
 
     def __init__(self, bot):
         self.bot = bot
