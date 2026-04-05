@@ -31,20 +31,25 @@ con.commit()
 con.close()
 print("autoroles.db created")
 
-con = sqlite3.connect("databases/server_brithdays.db")
+con = sqlite3.connect("databases/birthdays.db")
 cur = con.cursor()
-cur.execute(
-    "CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int,birthdaymessage text)"
-)
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS guild_config (
+        guild_id INTEGER PRIMARY KEY,
+        enabled INTEGER DEFAULT 0,
+        channel_id INTEGER,
+        message TEXT
+    )
+""")
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS user_birthdays (
+        user_id INTEGER PRIMARY KEY,
+        birthday TEXT
+    )
+""")
 con.commit()
 con.close()
-print("server_brithdays.db created")
-con = sqlite3.connect("databases/user_brithdays.db")
-cur = con.cursor()
-cur.execute("CREATE TABLE birthday(UsersID int, birthday)")
-con.commit()
-con.close()
-print("user_brithdays.db created")
+print("birthdays.db created")
 
 #    async with aiosqlite.connect("databases/verification.db") as db:
 #        await db.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
