@@ -54,7 +54,8 @@ class Counting(commands.Cog):
         # Check if message is in a counting channel first to avoid unnecessary API calls
         async with self.get_lock(message.guild.id):
             async with aiosqlite.connect(self.db_path) as db:
-                async with db.execute("SELECT channel_id, current_number, last_user_id, highest_number FROM counting WHERE guild_id = ?", (message.guild.id,)) as cursor:
+                # Actual columns: guild_id, counting_channel, lastcounter, highest, last_user, attemps, channel_id
+                async with db.execute("SELECT counting_channel, lastcounter, last_user, highest FROM counting WHERE guild_id = ?", (message.guild.id,)) as cursor:
                     row = await cursor.fetchone()
 
                 if not row or row[0] != message.channel.id:
@@ -74,7 +75,7 @@ class Counting(commands.Cog):
                     # 1. Check if it's the same user
                     if last_user == message.author.id:
                         await message.channel.send(f"❌ {message.author.mention}, you can't count twice in a row! Count reset to 0.")
-                        await db.execute("UPDATE counting SET current_number = 0, last_user_id = NULL WHERE guild_id = ?", (message.guild.id,))
+                        await db.execute("UPDATE counting SET lastcounter = 0, last_user = NULL WHERE guild_id = ?", (message.guild.id,))
                         
                         # Increment user failures
                         await db.execute("""
@@ -89,7 +90,7 @@ class Counting(commands.Cog):
                     # 2. Check if the number is correct
                     elif msg_number != expected:
                         await message.channel.send(f"❌ **Wrong number!** {message.author.mention} reset the count to 0. Expected **{expected}**.")
-                        await db.execute("UPDATE counting SET current_number = 0, last_user_id = NULL WHERE guild_id = ?", (message.guild.id,))
+                        await db.execute("UPDATE counting SET lastcounter = 0, last_user = NULL WHERE guild_id = ?", (message.guild.id,))
                         
                         # Increment user failures
                         await db.execute("""
@@ -105,7 +106,7 @@ class Counting(commands.Cog):
                     else:
                         new_highest = max(msg_number, highest_num)
                         await db.execute(
-                            "UPDATE counting SET current_number = ?, last_user_id = ?, highest_number = ? WHERE guild_id = ?",
+                            "UPDATE counting SET lastcounter = ?, last_user = ?, highest = ? WHERE guild_id = ?",
                             (msg_number, message.author.id, new_highest, message.guild.id)
                         )
                         # Update user stats
@@ -135,9 +136,9 @@ class Counting(commands.Cog):
         """Set the counting channel for this server."""
         async with aiosqlite.connect(self.db_path) as db:
             await db.execute("""
-                INSERT INTO counting (guild_id, channel_id, current_number, last_user_id, highest_number)
+                INSERT INTO counting (guild_id, counting_channel, lastcounter, last_user, highest)
                 VALUES (?, ?, 0, NULL, 0)
-                ON CONFLICT(guild_id) DO UPDATE SET channel_id = EXCLUDED.channel_id, current_number = 0, last_user_id = NULL
+                ON CONFLICT(guild_id) DO UPDATE SET counting_channel = EXCLUDED.counting_channel, lastcounter = 0, last_user = NULL
             """, (ctx.guild.id, channel.id))
             await db.commit()
         await ctx.respond(f"✅ Counting channel set to {channel.mention}. Game reset! Start with **1**.")
@@ -146,7 +147,7 @@ class Counting(commands.Cog):
     async def stats_slash(self, ctx):
         """Show the server's counting statistics."""
         async with aiosqlite.connect(self.db_path) as db:
-            async with db.execute("SELECT current_number, highest_number, channel_id FROM counting WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
+            async with db.execute("SELECT lastcounter, highest, counting_channel FROM counting WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
                 row = await cursor.fetchone()
             
             # Calculate total accuracy
