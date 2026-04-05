@@ -1,27 +1,102 @@
 
 import discord
 from discord.ext import commands
+from discord import option
 import os
-
+import aiosqlite
+import asyncio
 
 def micsid(ctx):
     return ctx.author.id == 481377376475938826 or ctx.author.id == 624076054969188363
 
-
-
-cogs = []
-for i in os.listdir("cogs/"):
-    if i == "__pycache__":
-        pass
-    else:
-        print(i[:-3])
-
-
 class BotMakerCommands(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.db_path = "databases/announcement.db"
 
-    @commands.command()
+    # --- Owner Announcement Commands ---
+
+    @commands.command(name="announce", help="Send a message to all announcement channels")
+    @commands.is_owner()
+    async def announce(self, ctx, *, message):
+        """Sends a message (with optional attachments) to all configured announcement channels."""
+        await ctx.send("🔄 Sending announcements...")
+        total = 0
+        
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT ServerID, channel FROM server") as cursor:
+                configs = await cursor.fetchall()
+        
+        config_map = {guild_id: channel_id for guild_id, channel_id in configs}
+
+        for guild in self.client.guilds:
+            channel_id = config_map.get(guild.id)
+            target = None
+            
+            if channel_id:
+                target = guild.get_channel(channel_id)
+            
+            if not target:
+                target = guild.system_channel
+
+            if target:
+                try:
+                    if ctx.message.attachments:
+                        file = await ctx.message.attachments[0].to_file()
+                        await target.send(message, file=file)
+                    else:
+                        await target.send(message)
+                    total += 1
+                except:
+                    pass
+            
+            await asyncio.sleep(0.05) # Rate limit protection
+
+        await ctx.send(f"✅ Sent to {total} out of {len(self.client.guilds)} servers")
+
+    @commands.command(name="announce_embed")
+    @commands.is_owner()
+    async def announce_embed(self, ctx, title, *, message):
+        """Sends an embed announcement to all configured channels."""
+        await ctx.send("🔄 Sending embed announcements...")
+        total = 0
+        embed = discord.Embed(title=title, description=message, color=0x00FF00)
+        
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT ServerID, channel FROM server") as cursor:
+                configs = await cursor.fetchall()
+        
+        config_map = {guild_id: channel_id for guild_id, channel_id in configs}
+
+        for guild in self.client.guilds:
+            channel_id = config_map.get(guild.id)
+            target = guild.get_channel(channel_id) if channel_id else guild.system_channel
+            
+            if target:
+                try:
+                    await target.send(embed=embed)
+                    total += 1
+                except:
+                    pass
+            await asyncio.sleep(0.05)
+
+        await ctx.send(f"✅ Sent to {total} out of {len(self.client.guilds)} servers")
+
+    # --- Guild Setup Slash Command ---
+
+    @discord.slash_command(name="announcement_setup", description="Set the channel for bot announcements")
+    @commands.has_permissions(administrator=True)
+    @option("channel", discord.TextChannel, description="The channel where bot news will be posted")
+    async def announce_setup_slash(self, ctx, channel: discord.TextChannel):
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.execute("""
+                INSERT INTO server (ServerID, channel) VALUES (?, ?)
+                ON CONFLICT(ServerID) DO UPDATE SET channel = EXCLUDED.channel
+            """, (ctx.guild.id, channel.id))
+            await db.commit()
+        await ctx.respond(f"✅ Announcement channel set to {channel.mention}")
+
+    # --- Original BotOwner Commands ---
     @commands.check(micsid)
     async def msgserver(self, ctx, id: int, *, message):
         for guild in self.client.guilds:
