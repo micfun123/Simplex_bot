@@ -28,30 +28,6 @@ class RSSManager(commands.Cog):
             cursor = await db.execute("SELECT * FROM rss WHERE guild = ?", (str(ctx.guild.id),))
             feeds = await cursor.fetchall()
 
-        if len(feeds) >= 2:
-            token = os.getenv("TOPGG_TOKEN")
-            voted = 1 # Default to 1 if no token
-            if token:
-                try:
-                    async with httpx.AsyncClient() as client:
-                        response = await client.get(
-                            f"https://top.gg/api/bots/902240397273743361/check?userId={ctx.author.id}",
-                            headers={"Authorization": token},
-                            timeout=10.0
-                        )
-                        if response.status_code == 200:
-                            data = response.json()
-                            voted = data.get("voted", 0)
-                except Exception as e:
-                    print(f"TopGG API error: {e}")
-                    voted = 1
-            
-            if voted == 0:
-                await ctx.respond(
-                    "You can have more than 2 RSS feeds only if you've voted in the last 24h. Vote here: https://top.gg/bot/902240397273743361/vote",
-                    ephemeral=True
-                )
-                return
 
         channel_id_str = channel.replace("<#", "").replace(">", "")
         try:
@@ -85,7 +61,7 @@ class RSSManager(commands.Cog):
         await ctx.respond("Done adding feed. Sending a test message...")
         try:
             await target_channel.send(
-                "✅ RSS feed added successfully! New entries will be posted here."
+                "✅ RSS feed added successfully! New entries will be posted here. \n If you like this feature, consider donating to support the bot: https://buymeacoffee.com/michaelrbparker"
             )
         except:
             pass
