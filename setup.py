@@ -173,6 +173,15 @@ con.commit()
 con.close()
 print("log.db created")
 
+con = sqlite3.connect("databases/leveling.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS guild_config (guild_id INTEGER PRIMARY KEY, enabled INTEGER DEFAULT 1, wipe_on_leave INTEGER DEFAULT 0)")
+cur.execute("CREATE TABLE IF NOT EXISTS ignored_channels (guild_id INTEGER, channel_id INTEGER, PRIMARY KEY (guild_id, channel_id))")
+cur.execute("CREATE TABLE IF NOT EXISTS user_levels (guild_id INTEGER, user_id INTEGER, xp INTEGER DEFAULT 0, level INTEGER DEFAULT 0, total_xp INTEGER DEFAULT 0, PRIMARY KEY (guild_id, user_id))")
+con.commit()
+con.close()
+print("leveling.db created")
+
 con = sqlite3.connect("databases/mastodon.db")
 cur = con.cursor()
 cur.execute("""

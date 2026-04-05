@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 class Time(commands.Cog):
-    """⏰ Time-related commands with timezone support and natural language parsing."""
+    """Time-related commands with timezone support and natural language parsing."""
     
     def __init__(self, client):
         self.client = client

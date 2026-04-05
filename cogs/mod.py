@@ -153,5 +153,16 @@ class Moderation(commands.Cog):
         except:
             await ctx.respond("❌ Failed to remove some roles.", ephemeral=True)
 
+    @commands.Cog.listener()
+    async def on_application_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
+        """Global error handler for application commands in this cog."""
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.respond(f"❌ You don't have the required permissions: `{', '.join(error.missing_permissions)}`", ephemeral=True)
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.respond(f"❌ I'm missing permissions to do that: `{', '.join(error.missing_permissions)}`", ephemeral=True)
+        else:
+            # For other errors, we can log them or let the global bot handler take over
+            pass
+
 def setup(bot):
     bot.add_cog(Moderation(bot))
