@@ -17,9 +17,16 @@ con.close()
 print("raids.db created")
 
 
+con = sqlite3.connect("databases/reactionroles.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS reactionroles(guild_id int, role_id int, emoji text)")
+con.commit()
+con.close()
+print("reactionroles.db created")
+
 con = sqlite3.connect("databases/autoroles.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE autoroles(guild_id int, role_id int)")
+cur.execute("CREATE TABLE IF NOT EXISTS autoroles(guild_id int, role_id int)")
 con.commit()
 con.close()
 print("autoroles.db created")
