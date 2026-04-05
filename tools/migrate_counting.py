@@ -2,7 +2,10 @@ import sqlite3
 import os
 
 DB_PATH = "databases/counting.db"
-OLD_STATS_DB = "Old_DB/user_count_stats.db"
+# Potential stats database locations
+OLD_STATS_LOCATIONS = ["Old_DB/user_count_stats.db", "databases/user_count_stats.db"]
+# Potential old counting database location
+OLD_COUNTING_DB = "Old_DB/counting.db"
 
 def migrate():
     if not os.path.exists(DB_PATH):
@@ -12,7 +15,7 @@ def migrate():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # 1. Check if 'channel_id' exists in 'counting' table
+    # 1. Ensure 'channel_id' exists in 'counting' table
     cursor.execute("PRAGMA table_info(counting)")
     columns = [row[1] for row in cursor.fetchall()]
     
@@ -27,11 +30,40 @@ def migrate():
     else:
         print("ℹ️ 'channel_id' already exists in 'counting' table.")
 
-    # 2. Migrate user stats from Old_DB if available
-    if os.path.exists(OLD_STATS_DB):
-        print(f"🔹 Migrating stats from {OLD_STATS_DB}...")
+    # 2. Migrate server settings from old counting DB if available
+    if os.path.exists(OLD_COUNTING_DB):
+        print(f"🔹 Found old counting database at {OLD_COUNTING_DB}. Migrating settings...")
         try:
-            old_conn = sqlite3.connect(OLD_STATS_DB)
+            old_c_conn = sqlite3.connect(OLD_COUNTING_DB)
+            old_c_cursor = old_c_conn.cursor()
+            
+            # Check old schema - using guild_id based on schema check
+            old_c_cursor.execute("SELECT guild_id, channel_id FROM counting")
+            old_settings = old_c_cursor.fetchall()
+            
+            for guild_id, channel_id in old_settings:
+                cursor.execute("""
+                    INSERT OR IGNORE INTO counting (guild_id, channel_id, current_number, last_user_id, highest_number)
+                    VALUES (?, ?, 0, NULL, 0)
+                """, (guild_id, channel_id))
+            
+            conn.commit()
+            old_c_conn.close()
+            print(f"✅ Migrated {len(old_settings)} server settings.")
+        except Exception as e:
+            print(f"⚠️ Failed to migrate settings from {OLD_COUNTING_DB}: {e}")
+
+    # 3. Migrate user stats from Old_DB if available
+    stats_db_path = None
+    for loc in OLD_STATS_LOCATIONS:
+        if os.path.exists(loc):
+            stats_db_path = loc
+            break
+
+    if stats_db_path:
+        print(f"🔹 Found stats database at {stats_db_path}. Migrating user stats...")
+        try:
+            old_conn = sqlite3.connect(stats_db_path)
             old_cursor = old_conn.cursor()
             
             old_cursor.execute("SELECT user_id, guild_id, failed, success FROM user_count_stats")
@@ -53,10 +85,11 @@ def migrate():
         except Exception as e:
             print(f"❌ Failed to migrate user stats: {e}")
     else:
-        print(f"ℹ️ {OLD_STATS_DB} not found, skipping user stats migration.")
+        print(f"ℹ️ user_count_stats.db not found in {OLD_STATS_LOCATIONS}, skipping stats migration.")
 
     conn.close()
     print("🏁 Migration complete.")
 
 if __name__ == "__main__":
     migrate()
+
