@@ -10,9 +10,8 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
 # Load intents
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 intents.message_content = True
-intents.guilds = True
 intents.members = True
 
 # Helper function to get prefix from prefixes.json
