@@ -139,7 +139,7 @@ print("ticket_channel_id.db created")
 
 con = sqlite3.connect("databases/qotd.db")
 cur = con.cursor()
-cur.execute("CREATE table qotd (server_id int, channel_id int)")
+cur.execute("CREATE TABLE IF NOT EXISTS qotd (server_id INTEGER PRIMARY KEY, channel_id INTEGER, role_id INTEGER)")
 con.commit()
 con.close()
 print("qotd.db created")
