@@ -1,454 +1,233 @@
 import discord
-import discord
 from discord.ext import commands
-import json
-from simpcalc import simpcalc
-import asyncio
-import sqlite3
+from discord import option
 import aiosqlite
-from base69 import decode_base69
+import asyncio
+import logging
+from simpcalc.simpcalc import Calculate
 
-calculator = simpcalc.Calculate()
-
-# Counting
-
-
-async def counting(msg, guild, channel, m):
-    if m.author.bot:
-        return
-
-    try:
-        if msg.startswith("69*|"):
-            # use base69
-            msg = decode_base69(msg)
-        else:
-            # use simpcalc
-            calc = simpcalc.Calculate()
-            ans = await calc.calculate(msg)
-            msg = int(ans)
-    except:
-        return
-
-    async with aiosqlite.connect("./databases/counting.db") as db:
-        counting_channel = await db.execute(
-            "SELECT counting_channel FROM counting WHERE Guild_id = ?", (guild.id,)
-        )
-        counting_channel = await counting_channel.fetchone()
-        if counting_channel is None:
-            return
-        if counting_channel[0] != channel.id:
-            return
-        else:
-            last_number = await db.execute(
-                "SELECT lastcounter FROM counting WHERE Guild_id = ?", (guild.id,)
-            )
-            last_number = await last_number.fetchone()
-            last_user = await db.execute(
-                "SELECT last_user FROM counting WHERE Guild_id = ?", (guild.id,)
-            )
-            last_user = await last_user.fetchone()
-            highest = await db.execute(
-                "SELECT highest FROM counting WHERE Guild_id = ?", (guild.id,)
-            )
-            highest = await highest.fetchone()
-            attemps = await db.execute(
-                "SELECT attemps FROM counting WHERE Guild_id = ?", (guild.id,)
-            )
-            attemps = await attemps.fetchone()
-            attemps = attemps[0]
-            attemps = int(attemps)
-            if last_number is None:
-                await db.execute(
-                    "UPDATE counting SET lastcounter = ? WHERE Guild_id = ?",
-                    (msg, guild.id),
-                )
-                await db.commit()
-                return
-            if msg == last_number[0] + 1:
-                if last_user[0] == m.author.id:
-                    await m.add_reaction("❌")
-                    em = discord.Embed(
-                        title=f"{m.author.display_name}, You ruined it!",
-                        description="Take it in turns and stop being selfish\nCount reset to zero",
-                    )
-                    await db.execute(
-                        "UPDATE counting SET lastcounter = ? WHERE Guild_id = ?",
-                        (0, guild.id),
-                    )
-                    await db.execute(
-                        "UPDATE counting SET last_user = ? WHERE Guild_id = ?",
-                        (None, guild.id),
-                    )
-                    await db.commit()
-                    async with aiosqlite.connect(
-                        "./databases/user_count_stats.db"
-                    ) as db_user:
-                        failed = await db_user.execute(
-                            "SELECT failed FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
-                            (m.author.id, guild.id),
-                        )
-                        failed = await failed.fetchone()
-                        if failed is None:
-                            await db_user.execute(
-                                "INSERT INTO user_count_stats (user_id, guild_id, success, failed) VALUES (?, ?, ?, ?)",
-                                (m.author.id, guild.id, 0, 1),
-                            )
-                            await db_user.commit()
-                        else:
-                            failed = failed[0]
-                            failed = int(failed)
-                            failed += 1
-                            await db_user.execute(
-                                "UPDATE user_count_stats SET failed = ? WHERE user_id = ? AND guild_id = ?",
-                                (failed, m.author.id, guild.id),
-                            )
-                            await db_user.commit()
-                    return await channel.send(embed=em)
-                else:
-                    await db.execute(
-                        "UPDATE counting SET lastcounter = ? WHERE Guild_id = ?",
-                        (msg, guild.id),
-                    )
-                    await db.execute(
-                        "UPDATE counting SET last_user = ? WHERE Guild_id = ?",
-                        (m.author.id, guild.id),
-                    )
-                    if msg == highest[0] + 1:
-                        await db.execute(
-                            "UPDATE counting SET highest = ? WHERE Guild_id = ?",
-                            (msg, guild.id),
-                        )
-                        await m.add_reaction("☑")
-                    else:
-                        await m.add_reaction("✅")
-                    await db.commit()
-                    if msg == 42:
-                        await channel.send(
-                            "I see you found the answer to ultimate question of life, the universe, and everything"
-                        )
-                    if msg == 69:
-                        await channel.send("nice")
-                    if msg == 420:
-                        await channel.send("nice")
-
-                    async with aiosqlite.connect(
-                        "./databases/user_count_stats.db"
-                    ) as db_user:
-                        success = await db_user.execute(
-                            "SELECT success FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
-                            (m.author.id, guild.id),
-                        )
-                        success = await success.fetchone()
-                        if success is None:
-                            await db_user.execute(
-                                "INSERT INTO user_count_stats (user_id, guild_id, success, failed) VALUES (?, ?, ?, ?)",
-                                (m.author.id, guild.id, 1, 0),
-                            )
-                            await db_user.commit()
-                        else:
-                            success = success[0]
-                            success = int(success)
-                            success += 1
-                            await db_user.execute(
-                                "UPDATE user_count_stats SET success = ? WHERE user_id = ? AND guild_id = ?",
-                                (success, m.author.id, guild.id),
-                            )
-                            await db_user.commit()
-                    return
-            else:
-                await m.add_reaction("❌")
-                em = discord.Embed(
-                    title=f"{m.author.display_name}, You ruined it!",
-                    description=f"Count reset to zero. you were supposed to count {last_number[0] + 1}",
-                )
-                await db.execute(
-                    "UPDATE counting SET lastcounter = ? WHERE Guild_id = ?",
-                    (0, guild.id),
-                )
-                await db.execute(
-                    "UPDATE counting SET last_user = ? WHERE Guild_id = ?",
-                    (None, guild.id),
-                )
-                await db.execute(
-                    "UPDATE counting SET attemps = ? WHERE Guild_id = ?",
-                    (attemps + 1, guild.id),
-                )
-                await db.commit()
-                async with aiosqlite.connect(
-                    "./databases/user_count_stats.db"
-                ) as db_user:
-                    failed = await db_user.execute(
-                        "SELECT failed FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
-                        (m.author.id, guild.id),
-                    )
-                    failed = await failed.fetchone()
-                    if failed is None:
-                        await db_user.execute(
-                            "INSERT INTO user_count_stats (user_id, guild_id, success, failed) VALUES (?, ?, ?, ?)",
-                            (m.author.id, guild.id, 0, 1),
-                        )
-                        await db_user.commit()
-                    else:
-                        failed = failed[0]
-                        failed = int(failed)
-                        failed += 1
-                        await db_user.execute(
-                            "UPDATE user_count_stats SET failed = ? WHERE user_id = ? AND guild_id = ?",
-                            (failed, m.author.id, guild.id),
-                        )
-                        await db_user.commit()
-
-                return await channel.send(embed=em)
-
+# Setup logging
+logger = logging.getLogger("simplex.counting")
 
 class Counting(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    """🎲 A fun counting game for each server!"""
+    
+    def __init__(self, bot):
+        self.bot = bot
+        self.db_path = "./databases/counting.db"
+        self.guild_locks = {}   # {guild_id: asyncio.Lock}
+        self.calc = Calculate()
 
-    @commands.slash_command(
-        name="counting_serverlb",
-        description="Shows the server leaderboard for counting",
-    )
-    async def counting_serverlb(self, ctx):
-        async with aiosqlite.connect("./databases/counting.db") as db:
-            highestserver = await db.execute(
-                "SELECT highest, Guild_id FROM counting ORDER BY highest DESC LIMIT 10"
-            )
-            highestserver = await highestserver.fetchall()
-            if highestserver is None:
-                return await ctx.respond("No one has counted yet")
-            em = discord.Embed(
-                title="Counting Leaderboard", description="Top 10 highest counts"
-            )
-            for i in highestserver:
-                try:
-                    if i[0] is None:
-                        continue
-                    guild = await self.client.fetch_guild(i[1])
-                    if guild is None:
-                        continue
-                    em.add_field(name=f"{guild.name}", value=f"{i[0]}", inline=False)
-                except:
-                    pass
-            await ctx.respond(embed=em)
-            await ctx.followup.send(
-                "Thank you for using simplex. please consider voting or donating so I can stay running.",
-                ephemeral=True,
-            )
+    def get_lock(self, guild_id):
+        if guild_id not in self.guild_locks:
+            self.guild_locks[guild_id] = asyncio.Lock()
+        return self.guild_locks[guild_id]
 
-    # @commands.is_owner()
-    # @commands.command()
-    # async def makedbtablecounter(self, ctx):
-    #    con = sqlite3.connect("./databases/counting.db")
-    #    cur = con.cursor()
-    #    cur.execute("CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)")
-    #    con.commit()
-    #    for i in self.client.guilds:
-    #        cur.execute("INSERT INTO counting VALUES (?, ?, ?, ?,?)", (i.id, None, 0, 0, None))
-    #    con.commit()
-    #    con.close()
-    #    await ctx.send("Done")
-    #
-    # @commands.is_owner()
-    # @commands.command(name="set_user_count_stats")
-    # async def set_user_count_stats(self, ctx):
-    #    async with aiosqlite.connect("./databases/user_count_stats.db") as db:
-    #        await db.execute("CREATE TABLE IF NOT EXISTS user_count_stats (user_id INTEGER,guild_id INTEGER, failed INTEGER DEFAULT 0, success INTEGER DEFAULT 0)")
-    #        await db.commit()
-    #    await ctx.send("Done")
+    async def parse_number(self, content):
+        """Uses simpcalc to parse the number from message content."""
+        try:
+            # Strip potential code block formatting or whitespace
+            expr = content.strip().strip('`').strip()
+            # simpcalc is async and uses math.js API
+            result_str = await self.calc.calculate(expr)
+            
+            # math.js can return complex numbers or other strings, we want a clean float/int
+            # remove quotes if any
+            result_str = result_str.strip('"').strip("'")
+            
+            try:
+                result = float(result_str)
+                # Ensure it's a whole number for counting
+                if result == int(result):
+                    return int(result)
+            except ValueError:
+                return None
+            return None
+        except Exception:
+            return None
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        channel = message.channel
-        msg = message.content
-        guild = message.guild
+        if message.author.bot or not message.guild:
+            return
 
-        await counting(msg, guild, channel, message)
+        # Check if message is in a counting channel first to avoid unnecessary API calls
+        async with self.get_lock(message.guild.id):
+            async with aiosqlite.connect(self.db_path) as db:
+                async with db.execute("SELECT channel_id, current_number, last_user_id, highest_number FROM counting WHERE guild_id = ?", (message.guild.id,)) as cursor:
+                    row = await cursor.fetchone()
 
-    def mic(ctx):
-        return ctx.author.id == 481377376475938826
+                if not row or row[0] != message.channel.id:
+                    return # Not a counting channel
 
-    @commands.slash_command(
-        name="counting_stats", description="Get the stats of the counting channel"
-    )
-    async def counting_stats(self, ctx):
-        async with aiosqlite.connect("./databases/counting.db") as db:
-            counting_channel = await db.execute(
-                "SELECT counting_channel FROM counting WHERE Guild_id = ?",
-                (ctx.guild.id,),
-            )
-            counting_channel = await counting_channel.fetchone()
-            if counting_channel is None:
-                return await ctx.respond(
-                    "There is no counting channel set up. To set one up use `.setcountchannel`"
-                )
-            if counting_channel[0] is None:
-                return await ctx.respond(
-                    "There is no counting channel set up. To set one up use `.setcountchannel`"
-                )
-            else:
-                last_number = await db.execute(
-                    "SELECT lastcounter FROM counting WHERE Guild_id = ?",
-                    (ctx.guild.id,),
-                )
-                last_number = await last_number.fetchone()
-                last_user = await db.execute(
-                    "SELECT last_user FROM counting WHERE Guild_id = ?", (ctx.guild.id,)
-                )
-                last_user = await last_user.fetchone()
-                highest = await db.execute(
-                    "SELECT highest FROM counting WHERE Guild_id = ?", (ctx.guild.id,)
-                )
-                highest = await highest.fetchone()
-                attemps = await db.execute(
-                    "SELECT attemps FROM counting WHERE Guild_id = ?", (ctx.guild.id,)
-                )
-                attemps = await attemps.fetchone()
-                place = await db.execute(
-                    "SELECT highest, Guild_id FROM counting ORDER BY highest DESC"
-                )
-                place = await place.fetchall()
-                place = place.index((highest[0], ctx.guild.id))
-                embed = discord.Embed(
-                    title=f"Counting Stats for {ctx.guild.name}",
-                    description=f"Counting channel: <#{counting_channel[0]}>",
-                    color=discord.Color.green(),
-                )
-                embed.add_field(name="Last number", value=last_number[0])
-                embed.add_field(name="Highest number", value=highest[0])
-                embed.add_field(name="Last user", value=f"<@{last_user[0]}>")
-                embed.add_field(name="Attempts", value=attemps[0])
-                embed.add_field(name="Place in server leaderboard", value=place + 1)
-                await ctx.respond(embed=embed)
+                current_num, last_user, highest_num = row[1], row[2], row[3]
+                
+                # Now parse the number since we know it's a counting channel
+                msg_number = await self.parse_number(message.content)
+                if msg_number is None:
+                    return
 
-    @commands.is_owner()
-    @commands.command()
-    async def set_num(self, ctx, nums):
-        con = sqlite3.connect("./databases/counting.db")
-        cur = con.cursor()
-        cur.execute("SELECT * FROM counting WHERE guild_id = ?", (ctx.guild.id,))
-        data = cur.fetchone()
-        num = int(nums)
-        cur.execute(
-            "UPDATE counting SET lastcounter = ? WHERE guild_id = ?",
-            (nums, ctx.guild.id),
-        )
-        con.commit()
-        con.close()
-        await ctx.send(f"Numb set to {nums}")
+                expected = current_num + 1
+                reaction_is = None
 
-    @commands.command()
+                try:
+                    # 1. Check if it's the same user
+                    if last_user == message.author.id:
+                        await message.channel.send(f"❌ {message.author.mention}, you can't count twice in a row! Count reset to 0.")
+                        await db.execute("UPDATE counting SET current_number = 0, last_user_id = NULL WHERE guild_id = ?", (message.guild.id,))
+                        
+                        # Increment user failures
+                        await db.execute("""
+                            INSERT INTO user_counts (guild_id, user_id, count, failures)
+                            VALUES (?, ?, 0, 1)
+                            ON CONFLICT(guild_id, user_id) DO UPDATE SET failures = failures + 1
+                        """, (message.guild.id, message.author.id))
+                        
+                        await db.commit()
+                        reaction_is = "❌"
+                    
+                    # 2. Check if the number is correct
+                    elif msg_number != expected:
+                        await message.channel.send(f"❌ **Wrong number!** {message.author.mention} reset the count to 0. Expected **{expected}**.")
+                        await db.execute("UPDATE counting SET current_number = 0, last_user_id = NULL WHERE guild_id = ?", (message.guild.id,))
+                        
+                        # Increment user failures
+                        await db.execute("""
+                            INSERT INTO user_counts (guild_id, user_id, count, failures)
+                            VALUES (?, ?, 0, 1)
+                            ON CONFLICT(guild_id, user_id) DO UPDATE SET failures = failures + 1
+                        """, (message.guild.id, message.author.id))
+                        
+                        await db.commit()
+                        reaction_is = "❌"
+
+                    # 3. Correct!
+                    else:
+                        new_highest = max(msg_number, highest_num)
+                        await db.execute(
+                            "UPDATE counting SET current_number = ?, last_user_id = ?, highest_number = ? WHERE guild_id = ?",
+                            (msg_number, message.author.id, new_highest, message.guild.id)
+                        )
+                        # Update user stats
+                        await db.execute("""
+                            INSERT INTO user_counts (guild_id, user_id, count, failures)
+                            VALUES (?, ?, 1, 0)
+                            ON CONFLICT(guild_id, user_id) DO UPDATE SET count = count + 1
+                        """, (message.guild.id, message.author.id))
+                        
+                        await db.commit()
+                        reaction_is = "✅"
+                except Exception as e:
+                    print(f"❌ Error in counting logic: {e}")
+
+        if reaction_is:
+            try:
+                await message.add_reaction(reaction_is)
+            except Exception as e:
+                print(f"❌ Failed to add reaction: {e}")
+
+    # Slash Command Group
+    counting = discord.SlashCommandGroup("counting", "Counting game commands")
+
+    @counting.command(name="setchannel")
+    @commands.has_permissions(administrator=True)
+    async def setchannel_slash(self, ctx, channel: discord.TextChannel):
+        """Set the counting channel for this server."""
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.execute("""
+                INSERT INTO counting (guild_id, channel_id, current_number, last_user_id, highest_number)
+                VALUES (?, ?, 0, NULL, 0)
+                ON CONFLICT(guild_id) DO UPDATE SET channel_id = EXCLUDED.channel_id, current_number = 0, last_user_id = NULL
+            """, (ctx.guild.id, channel.id))
+            await db.commit()
+        await ctx.respond(f"✅ Counting channel set to {channel.mention}. Game reset! Start with **1**.")
+
+    @counting.command(name="stats")
+    async def stats_slash(self, ctx):
+        """Show the server's counting statistics."""
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT current_number, highest_number, channel_id FROM counting WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
+                row = await cursor.fetchone()
+            
+            # Calculate total accuracy
+            async with db.execute("SELECT SUM(count), SUM(failures) FROM user_counts WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
+                accuracy_row = await cursor.fetchone()
+
+        if not row or row[2] is None:
+            return await ctx.respond("❌ Counting is not set up on this server.")
+
+        current, highest, channel_id = row
+        total_count = accuracy_row[0] or 0
+        total_failures = accuracy_row[1] or 0
+        total_attempts = total_count + total_failures
+        accuracy = (total_count / total_attempts * 100) if total_attempts > 0 else 0
+
+        embed = discord.Embed(title=f"📊 {ctx.guild.name} Counting Stats", color=discord.Color.blue())
+        embed.add_field(name="Current Count", value=f"**{current}**", inline=True)
+        embed.add_field(name="Highest Ever", value=f"**{highest}**", inline=True)
+        embed.add_field(name="Total Attempts", value=f"**{total_attempts}**", inline=True)
+        embed.add_field(name="Accuracy", value=f"**{accuracy:.1f}%**", inline=True)
+        
+        channel = ctx.guild.get_channel(channel_id)
+        embed.add_field(name="Channel", value=channel.mention if channel else "Unknown", inline=False)
+        await ctx.respond(embed=embed)
+
+    @counting.command(name="userstats")
+    async def userstats_slash(self, ctx, user: discord.Member = None):
+        """Show counting statistics for a specific user."""
+        user = user or ctx.author
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT count, failures FROM user_counts WHERE guild_id = ? AND user_id = ?", (ctx.guild.id, user.id)) as cursor:
+                row = await cursor.fetchone()
+
+        count = row[0] if row else 0
+        failures = row[1] if row else 0
+        total = count + failures
+        accuracy = (count / total * 100) if total > 0 else 0
+
+        embed = discord.Embed(title=f"👤 {user.display_name}'s Counting Stats", color=discord.Color.green())
+        embed.add_field(name="Correct Counts", value=f"**{count}**", inline=True)
+        embed.add_field(name="Failures", value=f"**{failures}**", inline=True)
+        embed.add_field(name="Accuracy", value=f"**{accuracy:.1f}%**", inline=True)
+        embed.set_thumbnail(url=user.display_avatar.url)
+        await ctx.respond(embed=embed)
+
+    @counting.command(name="leaderboard")
+    async def leaderboard_slash(self, ctx):
+        """Show the top counters in this server."""
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute(
+                "SELECT user_id, count, failures FROM user_counts WHERE guild_id = ? ORDER BY count DESC LIMIT 10", 
+                (ctx.guild.id,)
+            ) as cursor:
+                rows = await cursor.fetchall()
+
+        if not rows:
+            return await ctx.respond("❌ No one has started counting yet!")
+
+        embed = discord.Embed(title=f"🏆 {ctx.guild.name} Counting Leaderboard", color=discord.Color.gold())
+        description = ""
+        for i, (user_id, count, failures) in enumerate(rows, 1):
+            user = self.bot.get_user(user_id)
+            user_name = user.mention if user else f"Unknown User ({user_id})"
+            total = count + failures
+            accuracy = (count / total * 100) if total > 0 else 0
+            description += f"{i}. {user_name} — **{count}** counts ({accuracy:.0f}% accuracy)\n"
+        
+        embed.description = description
+        await ctx.respond(embed=embed)
+
+    # Keep original prefix commands for compatibility
+    @commands.command(name="setcountchannel")
     @commands.has_permissions(administrator=True)
     async def setcountchannel(self, ctx, channel: discord.TextChannel):
-        con = sqlite3.connect("./databases/counting.db")
-        cur = con.cursor()
-        cur.execute("SELECT * FROM counting WHERE guild_id = ?", (ctx.guild.id,))
-        data = cur.fetchone()
-        if data is None:
-            cur.execute(
-                "INSERT INTO counting VALUES (?, ?, ?, ?, ?,?)",
-                (ctx.guild.id, channel.id, 0, 0, None, 0),
-            )
-            con.commit()
-            con.close()
-            await ctx.send(f"Counting channel set to {channel.mention}")
-        else:
-            cur.execute(
-                "UPDATE counting SET counting_channel = ? WHERE guild_id = ?",
-                (channel.id, ctx.guild.id),
-            )
-            con.commit()
-            con.close()
-            await ctx.send(f"Counting channel set to {channel.mention}")
+        """Set the counting channel for this server."""
+        await self.setchannel_slash(ctx, channel)
 
-    @commands.command()
-    @commands.has_permissions(administrator=True)
-    async def countingoff(self, ctx):
-        con = sqlite3.connect("./databases/counting.db")
-        cur = con.cursor()
-        cur.execute(
-            "UPDATE counting SET counting_channel = ? WHERE guild_id = ?",
-            (None, ctx.guild.id),
-        )
-        con.commit()
-        con.close()
-        await ctx.send(f"Counting channel turned off")
+    @commands.command(name="countstats")
+    async def countstats(self, ctx):
+        """Show the server's counting high score."""
+        await self.stats_slash(ctx)
 
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        con = sqlite3.connect("./databases/counting.db")
-        cur = con.cursor()
-        data = cur.execute(
-            "SELECT * FROM counting WHERE guild_id = ?", (guild.id,)
-        ).fetchall()
-        if not data:
-            cur.execute(
-                "INSERT INTO counting VALUES (?, ?, ?, ?)", (guild.id, None, None, 0)
-            )
-            con.commit()
-        con.close()
-
-    @commands.slash_command(
-        name="user_counting_stats", description="Get the stats for the counting user"
-    )
-    async def user_counting_stats(self, ctx, user: discord.User = None):
-        if user is None:
-            user = ctx.author
-
-        async with aiosqlite.connect("./databases/user_count_stats.db") as db_user:
-            person = await db_user.execute(
-                "SELECT * FROM user_count_stats WHERE user_id = ? AND guild_id = ?",
-                (user.id, ctx.guild.id),
-            )
-            person = await person.fetchone()
-            if person is None:
-                await ctx.respond("User has not counted yet on this server")
-
-            else:
-                username = await self.client.fetch_user(person[0])
-                guild = await self.client.fetch_guild(person[1])
-                username = username.name
-                guild = guild.name
-                embed = discord.Embed(
-                    title=f"Counting stats for {username} in {guild}",
-                    color=discord.Color.green(),
-                )
-                faileds = person[2]
-                success = person[3]
-                embed.add_field(name="Servers Success Counts", value=success)
-                embed.add_field(name="Servers Failed Counts", value=faileds)
-                accuracy = success / (success + faileds)
-                embed.add_field(
-                    name="Accuracy", value=f"{str(round(accuracy*100, 2))}%"
-                )
-
-                await ctx.respond(embed=embed)
-
-            # users total stats
-            data = await db_user.execute(
-                "SELECT * FROM user_count_stats WHERE user_id = ?", (user.id,)
-            )
-            data = await data.fetchall()
-            if data is None:
-                await ctx.respond("User has not counted yet")
-            else:
-                success = 0
-                failed = 0
-                for i in data:
-                    success += i[3]
-                    failed += i[2]
-                embed = discord.Embed(
-                    title=f"Counting stats for {username} across all servers",
-                    color=discord.Color.green(),
-                )
-                embed.add_field(name="Global Success Counts", value=success)
-                embed.add_field(name="Global Failed counts", value=failed)
-                accuracy = success / (success + failed)
-                embed.add_field(
-                    name="Accuracy", value=f"{str(round(accuracy*100, 2))}%"
-                )
-                await ctx.respond(embed=embed)
-
-
-def setup(client):
-    client.add_cog(Counting(client))
+def setup(bot):
+    bot.add_cog(Counting(bot))

@@ -1,8 +1,10 @@
 # generate all the databases
 import sqlite3
-from discordLevelingSystem import DiscordLevelingSystem, RoleAward, LevelUpAnnouncement
 import json
 import os
+
+os.makedirs("./databases", exist_ok=True)
+
 
 # rade stuff for the anti cog
 con = sqlite3.connect("databases/raids.db")
@@ -15,27 +17,39 @@ con.close()
 print("raids.db created")
 
 
+con = sqlite3.connect("databases/reactionroles.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS reactionroles(guild_id int, role_id int, emoji text)")
+con.commit()
+con.close()
+print("reactionroles.db created")
+
 con = sqlite3.connect("databases/autoroles.db")
 cur = con.cursor()
-cur.execute("CREATE TABLE autoroles(guild_id int, role_id int)")
+cur.execute("CREATE TABLE IF NOT EXISTS autoroles(guild_id int, role_id int)")
 con.commit()
 con.close()
 print("autoroles.db created")
 
-con = sqlite3.connect("databases/server_brithdays.db")
+con = sqlite3.connect("databases/birthdays.db")
 cur = con.cursor()
-cur.execute(
-    "CREATE TABLE server(ServerID int, Servertoggle, birthdaychannel int,birthdaymessage text)"
-)
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS guild_config (
+        guild_id INTEGER PRIMARY KEY,
+        enabled INTEGER DEFAULT 0,
+        channel_id INTEGER,
+        message TEXT
+    )
+""")
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS user_birthdays (
+        user_id INTEGER PRIMARY KEY,
+        birthday TEXT
+    )
+""")
 con.commit()
 con.close()
-print("server_brithdays.db created")
-con = sqlite3.connect("databases/user_brithdays.db")
-cur = con.cursor()
-cur.execute("CREATE TABLE birthday(UsersID int, birthday)")
-con.commit()
-con.close()
-print("user_brithdays.db created")
+print("birthdays.db created")
 
 #    async with aiosqlite.connect("databases/verification.db") as db:
 #        await db.execute("CREATE TABLE verification(ServerID int, ServerToggle, verifyChannel int, verifycode int, verifyedRole int)")
@@ -51,15 +65,31 @@ con.commit()
 con.close()
 print("verification.db created")
 
-
+# Ensure counting.db exists with a clean schema
 con = sqlite3.connect("databases/counting.db")
 cur = con.cursor()
-cur.execute(
-    "CREATE TABLE counting (guild_id INTEGER, counting_channel INTEGER, lastcounter INTEGER,highest INTEGER, last_user INTEGER,attemps INTEGER DEFAULT 0)"
-)
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS counting (
+        guild_id INTEGER PRIMARY KEY,
+        channel_id INTEGER,
+        current_number INTEGER DEFAULT 0,
+        last_user_id INTEGER,
+        highest_number INTEGER DEFAULT 0
+    )
+""")
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS user_counts (
+        guild_id INTEGER,
+        user_id INTEGER,
+        count INTEGER DEFAULT 0,
+        failures INTEGER DEFAULT 0,
+        PRIMARY KEY (guild_id, user_id)
+    )
+""")
 con.commit()
 con.close()
 print("counting.db created")
+
 
 
 con = sqlite3.connect("databases/blacklist.db")
@@ -73,17 +103,12 @@ print("blacklist.db created")
 con = sqlite3.connect("databases/Goodbye.db")
 cur = con.cursor()
 cur.execute(
-    "CREATE TABLE IF NOT EXISTS goodbye (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
+    "CREATE TABLE IF NOT EXISTS goodbye (guild_id INTEGER PRIMARY KEY, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
 )
 con.commit()
 con.close()
 print("Goodbye.db created")
 
-try:
-    DiscordLevelingSystem.create_database_file(r"databases")
-    print("leveling.db created")
-except:
-    print("leveling.db failed to create")
 
 con = sqlite3.connect("databases/announcement.db")
 cur = con.cursor()
@@ -119,7 +144,7 @@ print("ticket_channel_id.db created")
 
 con = sqlite3.connect("databases/qotd.db")
 cur = con.cursor()
-cur.execute("CREATE table qotd (server_id int, channel_id int)")
+cur.execute("CREATE TABLE IF NOT EXISTS qotd (server_id INTEGER PRIMARY KEY, channel_id INTEGER, role_id INTEGER)")
 con.commit()
 con.close()
 print("qotd.db created")
@@ -134,7 +159,7 @@ print("truthordare.db created")
 con = sqlite3.connect("databases/Welcome.db")
 cur = con.cursor()
 cur.execute(
-    "CREATE TABLE IF NOT EXISTS welcome (guild_id integer, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
+    "CREATE TABLE IF NOT EXISTS welcome (guild_id INTEGER PRIMARY KEY, channel integer, text text, card_enabled integer,textorembed integer, enabled integer)"
 )
 con.commit()
 con.close()
@@ -148,11 +173,28 @@ con.commit()
 con.close()
 print("log.db created")
 
+con = sqlite3.connect("databases/leveling.db")
+cur = con.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS guild_config (guild_id INTEGER PRIMARY KEY, enabled INTEGER DEFAULT 1, wipe_on_leave INTEGER DEFAULT 0)")
+cur.execute("CREATE TABLE IF NOT EXISTS ignored_channels (guild_id INTEGER, channel_id INTEGER, PRIMARY KEY (guild_id, channel_id))")
+cur.execute("CREATE TABLE IF NOT EXISTS user_levels (guild_id INTEGER, user_id INTEGER, xp INTEGER DEFAULT 0, level INTEGER DEFAULT 0, total_xp INTEGER DEFAULT 0, PRIMARY KEY (guild_id, user_id))")
+con.commit()
+con.close()
+print("leveling.db created")
+
 con = sqlite3.connect("databases/mastodon.db")
 cur = con.cursor()
-cur.execute(
-    "CREATE TABLE IF NOT EXISTS mastodon (channel_id int, guild_id int, username text,last_posted text)"
-)
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS mastodon (
+        channel_id INTEGER,
+        guild_id INTEGER,
+        username TEXT,
+        instance TEXT DEFAULT 'mastodon.social',
+        mastodon_user_id TEXT,
+        last_posted TEXT,
+        PRIMARY KEY (channel_id, username, instance)
+    )
+""")
 con.commit()
 con.close()
 print("mastodon.db created")

@@ -1,160 +1,102 @@
 import discord
-import json
 from discord.ext import commands
-from datetime import datetime
+from discord import option
 import aiosqlite
+import logging
 
+# Setup logging
+logger = logging.getLogger("simplex.autorole")
 
-class Autorole(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+class AutoRole(commands.Cog):
+    """🛠️ Automatically assign roles to new members when they join!"""
+    
+    def __init__(self, bot):
+        self.bot = bot
+        self.db_path = "databases/autoroles.db"
 
-    # @commands.command()
-    # @commands.is_owner()
-    # async def make_tabe(self, ctx,):
-    #    async with aiosqlite.connect("databases/autoroles.db") as db:
-    #        await db.execute("CREATE TABLE IF NOT EXISTS autoroles (guild_id int, role_id int)")
-    #        await db.commit()
-    #        await ctx.send("Table created")
+    # Slash Command Group for AutoRole
+    ar = discord.SlashCommandGroup("autorole", "Manage roles given automatically on join")
 
-    @commands.slash_command(name="add_autorole", description="Adds a role to autoroles")
-    @commands.has_permissions(administrator=True)
-    async def add_autoroles__slashcommand(self, ctx, role: discord.Role):
-        # if role is above the bot's highest role
+    @ar.command(name="add", description="Add a role to be given automatically when someone joins")
+    @commands.has_permissions(manage_roles=True)
+    @option("role", discord.Role, description="The role to give on join")
+    async def add_autorole(self, ctx, role: discord.Role):
+        """Add a role to the join-role list."""
         if role.position >= ctx.guild.me.top_role.position:
-            return await ctx.send("The role is above my highest role")
-        roleid = role.id
-        guildid = ctx.guild.id
-        try:
-            async with aiosqlite.connect("databases/autoroles.db") as db:
-                await db.execute(
-                    "INSERT INTO autoroles VALUES (?,?)", (guildid, roleid)
-                )
-                await db.commit()
-            await ctx.respond(f"Added {role} to autoroles")
-        except:
-            ctx.respond("Failed for unknown reason")
+            return await ctx.respond("❌ That role is above my highest role! I can't give it to anyone.", ephemeral=True)
 
-    @commands.slash_command(
-        name="remove_autorole", description="Removes a role from autoroles"
-    )
-    @commands.has_permissions(administrator=True)
-    async def remove_autoroles__slashcommand(self, ctx, role: discord.Role):
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            await db.execute(
-                "DELETE FROM autoroles WHERE guild_id = ? AND role_id = ?",
-                (ctx.guild.id, role.id),
-            )
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT * FROM autoroles WHERE guild_id = ? AND role_id = ?", (ctx.guild.id, role.id)) as cursor:
+                if await cursor.fetchone():
+                    return await ctx.respond(f"❌ **{role.name}** is already in the join-role list.", ephemeral=True)
+            
+            await db.execute("INSERT INTO autoroles (guild_id, role_id) VALUES (?, ?)", (ctx.guild.id, role.id))
             await db.commit()
-        await ctx.respond(f"Removed {role.name} from autoroles")
+            
+        await ctx.respond(f"✅ **{role.name}** will now be given to all new members automatically.")
 
-    @commands.command(name="add_autorole", description="Adds a role to autoroles")
-    @commands.has_permissions(administrator=True)
-    async def add_autoroles__command(self, ctx, role: discord.Role):
-        # if role is above the bot's highest role
-        if role.position >= ctx.guild.me.top_role.position:
-            return await ctx.send("The role is above my highest role")
-        roleid = role.id
-        guildid = ctx.guild.id
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            await db.execute("INSERT INTO autoroles VALUES (?,?)", (guildid, roleid))
+    @ar.command(name="remove", description="Remove a role from the join-role list")
+    @commands.has_permissions(manage_roles=True)
+    @option("role", discord.Role, description="The role to remove")
+    async def remove_autorole(self, ctx, role: discord.Role):
+        """Remove a role from the join-role list."""
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT * FROM autoroles WHERE guild_id = ? AND role_id = ?", (ctx.guild.id, role.id)) as cursor:
+                if not await cursor.fetchone():
+                    return await ctx.respond(f"❌ **{role.name}** is not in the join-role list.", ephemeral=True)
+            
+            await db.execute("DELETE FROM autoroles WHERE guild_id = ? AND role_id = ?", (ctx.guild.id, role.id))
             await db.commit()
-        await ctx.send(f"Added {role} to autoroles")
+            
+        await ctx.respond(f"✅ Removed **{role.name}** from the join-role list.")
 
-    @commands.command(
-        name="remove_autorole", description="Removes a role from autoroles"
-    )
-    @commands.has_permissions(administrator=True)
-    async def remove_autoroles__command(self, ctx, role: discord.Role):
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            await db.execute(
-                "DELETE FROM autoroles WHERE guild_id = ? AND role_id = ?",
-                (ctx.guild.id, role.id),
-            )
-            await db.commit()
-        await ctx.send(f"Removed {role.name} from autoroles")
-
-    @commands.command(name="list_autoroles", description="Lists the autoroles")
-    @commands.has_permissions(administrator=True)
-    async def list_autoroles_commands(self, ctx):
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            cursor = await db.execute(
-                "SELECT role_id FROM autoroles WHERE guild_id = ?", (ctx.guild.id,)
-            )
-            roles = await cursor.fetchall()
-        if not roles:
-            return await ctx.send("No autoroles set")
-        role_names = [ctx.guild.get_role(role[0]).name for role in roles]
-        await ctx.send("Autoroles: " + ", ".join(role_names))
-
-    @commands.slash_command(name="list_autoroles", description="Lists the autoroles")
-    @commands.has_permissions(administrator=True)
-    async def list_autoroles_slash(self, ctx):
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            cursor = await db.execute(
-                "SELECT role_id FROM autoroles WHERE guild_id = ?", (ctx.guild.id,)
-            )
-            roles = await cursor.fetchall()
-        if not roles:
-            return await ctx.respond("No autoroles set")
-        role_names = [ctx.guild.get_role(role[0]).name for role in roles]
-        await ctx.respond("Autoroles: " + ", ".join(role_names))
-
-    # @commands.is_owner()
-    # @commands.command()
-    # async def json_to_sql(self, ctx):
-    #    with open("databases/autorole.json", "r") as f:
-    #        data = json.load(f)
-    #    async with aiosqlite.connect("databases/autoroles.db") as db:
-    #        for i in data:
-    #            await db.execute("INSERT INTO autoroles VALUES (?,?)", (i, data[i]))
-    #            await db.commit()
-    #    await ctx.send("Done")
-
-    # @commands.command(help="Sets the autorole for the server")
-    # @commands.has_permissions(administrator=True)
-    # async def autorole(self, ctx, role:discord.Role):
-    #    role_id = role.id
-    #    guild_id = str(ctx.guild.id)
-    #
-    #    with open("./databases/autorole.json") as f:
-    #        data = json.load(f)
-    #
-    #    data[guild_id] = role_id
-    #
-    #    with open("./databases/autorole.json", 'w') as f:
-    #        json.dump(data, f, indent=4)
-    #
-    #    await ctx.send(embed=discord.Embed(title=f"{role.mention} has been set as the autorole for this server"))
-    #
-    # @commands.command()
-    # @commands.has_permissions(administrator=True)
-    # async def autorolereset(self, ctx):
-    #    guild_id = str(ctx.guild.id)
-    #
-    #    with open("./databases/autorole.json") as f:
-    #        data = json.load(f)
-    #
-    #    data[guild_id] = None
-    #
-    #    with open("./databases/autorole.json", 'w') as f:
-    #        json.dump(data, f, indent=4)
-    #
-    #    await ctx.send(embed=discord.Embed(title="Autorole reset"))
+    @ar.command(name="list", description="List all roles given on join")
+    @commands.has_permissions(manage_roles=True)
+    async def list_autoroles(self, ctx):
+        """Show all roles currently configured to be given on join."""
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT role_id FROM autoroles WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
+                rows = await cursor.fetchall()
+                
+        if not rows:
+            return await ctx.respond("❌ No automatic join-roles have been set up yet.")
+            
+        embed = discord.Embed(title=f"📋 Auto-Join Roles for {ctx.guild.name}", color=discord.Color.blue())
+        description = ""
+        for (role_id,) in rows:
+            role = ctx.guild.get_channel(role_id) # Using get_role would be better but let's be safe
+            role = ctx.guild.get_role(role_id)
+            if role:
+                description += f"- {role.mention}\n"
+            else:
+                description += f"- Unknown Role (`{role_id}`)\n"
+        
+        embed.description = description
+        await ctx.respond(embed=embed)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        async with aiosqlite.connect("databases/autoroles.db") as db:
-            cursor = await db.execute(
-                "SELECT role_id FROM autoroles WHERE guild_id = ?", (member.guild.id,)
-            )
-            roles = await cursor.fetchall()
-        if roles is None:
-            return
-        else:
-            for role in roles:
-                await member.add_roles(member.guild.get_role(role[0]))
+        """Automatically add roles to new members."""
+        if member.bot: return
+        
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute("SELECT role_id FROM autoroles WHERE guild_id = ?", (member.guild.id,)) as cursor:
+                rows = await cursor.fetchall()
+        
+        if not rows: return
+        
+        roles_to_add = []
+        for (role_id,) in rows:
+            role = member.guild.get_role(role_id)
+            # Only add roles if the bot has permission (role is below bot's top role)
+            if role and role.position < member.guild.me.top_role.position:
+                roles_to_add.append(role)
+        
+        if roles_to_add:
+            try:
+                await member.add_roles(*roles_to_add, reason="Simplex AutoRole System")
+            except Exception as e:
+                logger.error(f"Failed to add autoroles for {member.name}: {e}")
 
-
-def setup(client):
-    client.add_cog(Autorole(client))
+def setup(bot):
+    bot.add_cog(AutoRole(bot))
