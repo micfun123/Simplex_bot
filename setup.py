@@ -175,9 +175,17 @@ print("log.db created")
 
 con = sqlite3.connect("databases/mastodon.db")
 cur = con.cursor()
-cur.execute(
-    "CREATE TABLE IF NOT EXISTS mastodon (channel_id int, guild_id int, username text,last_posted text)"
-)
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS mastodon (
+        channel_id INTEGER,
+        guild_id INTEGER,
+        username TEXT,
+        instance TEXT DEFAULT 'mastodon.social',
+        mastodon_user_id TEXT,
+        last_posted TEXT,
+        PRIMARY KEY (channel_id, username, instance)
+    )
+""")
 con.commit()
 con.close()
 print("mastodon.db created")
