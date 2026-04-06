@@ -6,6 +6,8 @@ import asyncio
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import httpx
+import re as regex
+import random
 
 class Goodbye(commands.Cog):
     def __init__(self, bot):
@@ -131,6 +133,10 @@ class Goodbye(commands.Cog):
                 }
                 for key, value in replacements.items():
                     text = text.replace(key, str(value))
+
+                text = regex.sub(r"\{random\.choices\[(.+?)\]\}", lambda x: random.choice(x.group(1).split(", ")), text)
+
+
                 
                 if not textorembed: # Plain Text
                     await channel.send(text)
