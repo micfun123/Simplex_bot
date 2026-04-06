@@ -130,6 +130,7 @@ class Goodbye(commands.Cog):
                     "{member.id}": str(member.id),
                     "{member.guild.name}": member.guild.name,
                     "{member.guild.member_count}": str(member.guild.member_count),
+                    "{member.time_in_guild}": str((discord.utils.utcnow() - member.joined_at).days) + " days" if member.joined_at else "Unknown",
                 }
                 for key, value in replacements.items():
                     text = text.replace(key, str(value))
