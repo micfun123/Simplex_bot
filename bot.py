@@ -28,6 +28,7 @@ bot = commands.Bot(
     command_prefix=get_prefix,
     intents=intents,
     case_insensitive=True,
+    chunk_guilds_at_startup=False,
     allowed_mentions=discord.AllowedMentions(everyone=False),
 )
 

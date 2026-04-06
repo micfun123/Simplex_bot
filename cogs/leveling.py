@@ -143,6 +143,36 @@ class Leveling(commands.Cog):
             msg = random.choice(responses).format(user=message.author.mention, level=lvl)
             await message.channel.send(embed=discord.Embed(description=msg, color=discord.Color.green()))
 
+    def generate_rank_card(self, member_name, avatar_bytes, xp, req_xp, level, rank, pct):
+        """Synchronous image generation logic, to be run in a thread."""
+        img = Image.new("RGBA", (934, 282), (35, 39, 42))
+        draw = ImageDraw.Draw(img)
+        draw.rounded_rectangle((20, 20, 914, 262), radius=15, fill=(42, 46, 53))
+        
+        avatar = Image.open(BytesIO(avatar_bytes)).convert("RGBA").resize((160, 160))
+        mask = Image.new("L", (160, 160), 0)
+        ImageDraw.Draw(mask).ellipse((0, 0, 160, 160), fill=255)
+        img.paste(avatar, (50, 50), mask)
+        
+        draw.rounded_rectangle((260, 180, 890, 220), radius=20, fill=(72, 75, 78))
+        if pct > 0:
+            draw.rounded_rectangle((260, 180, 260 + int(630 * (pct/100)), 220), radius=20, fill=(0, 250, 129))
+        
+        try:
+            f_l = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 40)
+            f_m = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 30)
+        except: 
+            f_l = f_m = ImageFont.load_default()
+        
+        draw.text((270, 120), member_name, font=f_l, fill=(0, 250, 129))
+        draw.text((890 - draw.textlength(f"{xp}/{req_xp} XP", f_m), 125), f"{xp}/{req_xp} XP", font=f_m, fill=(255, 255, 255))
+        draw.text((890 - draw.textlength(f"Rank #{rank}  Lvl {level}", f_m), 40), f"Rank #{rank}  Lvl {level}", font=f_m, fill=(0, 250, 129))
+        
+        buf = BytesIO()
+        img.save(buf, format="PNG")
+        buf.seek(0)
+        return buf
+
     @commands.slash_command(name="rank", description="Check your level and XP")
     async def rank_slash(self, ctx, member: discord.Member = None):
         member = member or ctx.author
@@ -160,34 +190,16 @@ class Leveling(commands.Cog):
         pct = min(int((xp / req_xp) * 100), 100) if req_xp > 0 else 0
 
         try:
-            img = Image.new("RGBA", (934, 282), (35, 39, 42))
-            draw = ImageDraw.Draw(img)
-            draw.rounded_rectangle((20, 20, 914, 262), radius=15, fill=(42, 46, 53))
-            
             async with httpx.AsyncClient() as client:
                 resp = await client.get(member.display_avatar.url)
-                avatar = Image.open(BytesIO(resp.content)).convert("RGBA").resize((160, 160))
+                avatar_bytes = resp.content
             
-            mask = Image.new("L", (160, 160), 0)
-            ImageDraw.Draw(mask).ellipse((0, 0, 160, 160), fill=255)
-            img.paste(avatar, (50, 50), mask)
+            # Offload blocking image generation to a thread
+            buf = await asyncio.to_thread(
+                self.generate_rank_card, 
+                member.display_name, avatar_bytes, xp, req_xp, level, rank, pct
+            )
             
-            draw.rounded_rectangle((260, 180, 890, 220), radius=20, fill=(72, 75, 78))
-            if pct > 0:
-                draw.rounded_rectangle((260, 180, 260 + int(630 * (pct/100)), 220), radius=20, fill=(0, 250, 129))
-            
-            try:
-                f_l = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 40)
-                f_m = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 30)
-            except: f_l = f_m = ImageFont.load_default()
-            
-            draw.text((270, 120), member.display_name, font=f_l, fill=(0, 250, 129))
-            draw.text((890 - draw.textlength(f"{xp}/{req_xp} XP", f_m), 125), f"{xp}/{req_xp} XP", font=f_m, fill=(255, 255, 255))
-            draw.text((890 - draw.textlength(f"Rank #{rank}  Lvl {level}", f_m), 40), f"Rank #{rank}  Lvl {level}", font=f_m, fill=(0, 250, 129))
-            
-            buf = BytesIO()
-            img.save(buf, format="PNG")
-            buf.seek(0)
             await ctx.respond(file=discord.File(buf, filename="rank.png"))
         except Exception as e:
             logger.error(f"Rank error: {e}")

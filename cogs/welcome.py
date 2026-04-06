@@ -5,7 +5,7 @@ import aiosqlite
 import asyncio
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
-import requests
+import httpx
 import regex
 import random
 
@@ -13,6 +13,28 @@ class Welcome(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.db_path = "./databases/Welcome.db"
+
+    def generate_welcome_card(self, member_name, member_count, avatar_bytes):
+        """Synchronous image generation logic, to be run in a thread."""
+        with Image.open("./images/welcome.png") as background:
+            avatar = Image.open(BytesIO(avatar_bytes)).convert("RGBA")
+            avatar = avatar.resize((300, 300))
+            background.paste(avatar, (1000, 200), avatar)
+            
+            draw = ImageDraw.Draw(background)
+            try:
+                font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
+                font_small = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
+            except:
+                font = font_small = ImageFont.load_default()
+                
+            draw.text((450, 550), f"Welcome {member_name}!", (255, 255, 255), font=font)
+            draw.text((450, 700), f"You are the {member_count}th member!", (255, 255, 255), font=font_small)
+            
+            tosend = BytesIO()
+            background.save(tosend, format="PNG")
+            tosend.seek(0)
+            return tosend
 
     # Slash Command Group for Welcome
     welcome_group = discord.SlashCommandGroup("welcome", "Welcome system configuration")
@@ -113,20 +135,16 @@ class Welcome(commands.Cog):
 
         if card_enabled == 1:
             try:    
-                background = Image.open("./images/welcome.png")
-                avatar_url = member.display_avatar.url
-                avatar_resp = requests.get(avatar_url, stream=True)
-                avatar = Image.open(avatar_resp.raw).convert("RGBA")
-                avatar = avatar.resize((300, 300))
-                background.paste(avatar, (1000, 200), avatar)
-                draw = ImageDraw.Draw(background)
-                font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
-                draw.text((450, 550), f"Welcome {member.name}!", (255, 255, 255), font=font)
-                font_small = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
-                draw.text((450, 700), f"You are the {member.guild.member_count}th member!", (255, 255, 255), font=font_small)
-                tosend = BytesIO()
-                background.save(tosend, format="PNG")
-                tosend.seek(0)
+                async with httpx.AsyncClient() as client:
+                    avatar_resp = await client.get(member.display_avatar.url)
+                    avatar_bytes = avatar_resp.content
+                
+                # Offload blocking PIL processing to a thread
+                tosend = await asyncio.to_thread(
+                    self.generate_welcome_card,
+                    member.name, member.guild.member_count, avatar_bytes
+                )
+                
                 await channel.send(file=discord.File(tosend, "welcome.png"))
             except Exception as e:
                 print(f"Error sending welcome card: {e}")

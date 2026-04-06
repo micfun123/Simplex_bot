@@ -12,6 +12,27 @@ class Goodbye(commands.Cog):
         self.bot = bot
         self.db_path = "./databases/Goodbye.db"
 
+    def generate_goodbye_card(self, member_name, member_count, avatar_bytes):
+        """Synchronous image generation logic, to be run in a thread."""
+        with Image.open("./images/goodbye.png") as bg:
+            with Image.open(BytesIO(avatar_bytes)) as avatar:
+                avatar = avatar.convert("RGBA").resize((300, 300))
+                bg.paste(avatar, (1000, 200), avatar)
+                draw = ImageDraw.Draw(bg)
+                try:
+                    font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
+                    font_small = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
+                except:
+                    font = font_small = ImageFont.load_default()
+                    
+                draw.text((450, 550), f"Goodbye {member_name}!", fill="white", font=font)
+                draw.text((450, 700), f"There are now {member_count} members!", fill="white", font=font_small)
+                
+                buf = BytesIO()
+                bg.save(buf, format="PNG")
+                buf.seek(0)
+                return buf
+
     # Slash Command Group for Goodbye
     goodbye = discord.SlashCommandGroup("goodbye", "Goodbye system configuration")
 
@@ -87,22 +108,15 @@ class Goodbye(commands.Cog):
                 try:
                     async with httpx.AsyncClient() as client:
                         resp = await client.get(member.display_avatar.url)
-                        avatar_bytes = BytesIO(resp.content)
+                        avatar_bytes = resp.content
                     
-                    with Image.open("./images/goodbye.png") as bg:
-                        with Image.open(avatar_bytes) as avatar:
-                            avatar = avatar.convert("RGBA").resize((300, 300))
-                            bg.paste(avatar, (1000, 200), avatar)
-                            draw = ImageDraw.Draw(bg)
-                            font = ImageFont.truetype("./fonts/Roboto-Bold.ttf", 100)
-                            draw.text((450, 550), f"Goodbye {member.name}!", fill="white", font=font)
-                            font_small = ImageFont.truetype("./fonts/Roboto-Regular.ttf", 60)
-                            draw.text((450, 700), f"There are now {member.guild.member_count} members!", fill="white", font=font_small)
-                            
-                            buf = BytesIO()
-                            bg.save(buf, format="PNG")
-                            buf.seek(0)
-                            await channel.send(file=discord.File(buf, "goodbye.png"))
+                    # Offload blocking PIL processing to a thread
+                    buf = await asyncio.to_thread(
+                        self.generate_goodbye_card,
+                        member.name, member.guild.member_count, avatar_bytes
+                    )
+                    
+                    await channel.send(file=discord.File(buf, "goodbye.png"))
                 except Exception as e:
                     print(f"[Goodbye Card Error] {e}")
 
