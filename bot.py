@@ -71,6 +71,8 @@ async def on_message(message):
         prefix = get_prefix(bot, message)
         await message.channel.send(f"hello im simplex. my prefix is `{prefix}` use `{prefix}help` for a list of my commands")
 
+    await bot.process_commands(message)
+
 
 # Commands
 @bot.command()

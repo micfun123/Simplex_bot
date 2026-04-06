@@ -92,6 +92,41 @@ class RSSManager(commands.Cog):
             await db.commit()
         await ctx.respond(f"Feed '{feedname}' has been removed.")
 
+    @commands.command(name="removeinvalid", help="Removes any invalid RSS feeds from this server")
+    @commands.has_permissions(manage_guild=True)
+    async def remove_invalid(self, ctx):
+        await ctx.defer()
+        invalid_feeds = []
+        async with aiosqlite.connect("databases/rss.db") as db:
+            cursor = await db.execute("SELECT name, url FROM rss WHERE guild = ?", (str(ctx.guild.id),))
+            rows = await cursor.fetchall()
+            
+            if not rows:
+                await ctx.respond("No feeds have been added yet.")
+                return
+            
+            async with httpx.AsyncClient() as client:
+                for name, url in rows:
+                    is_invalid = False
+                    try:
+                        resp = await client.get(url, timeout=10.0)
+                        feed_data = feedparser.parse(resp.text)
+                        if not feed_data.entries:
+                            is_invalid = True
+                    except Exception:
+                        is_invalid = True
+                        
+                    if is_invalid:
+                        invalid_feeds.append(name)
+                        await db.execute("DELETE FROM rss WHERE name = ? AND guild = ?", (name, str(ctx.guild.id)))
+            
+            if invalid_feeds:
+                await db.commit()
+                removed_list = ", ".join(invalid_feeds)
+                await ctx.respond(f"Removed invalid feeds: {removed_list}")
+            else:
+                await ctx.respond("No invalid feeds found.")
+
     @tasks.loop(minutes=30)
     async def rss_loop(self):
         try:
@@ -126,6 +161,10 @@ class RSSManager(commands.Cog):
                             await db.commit()
                         except Exception as e:
                             print(f"RSS Loop error for {url}: {e}")
+                            # remove invalid feed from database 
+                            await db.execute("DELETE FROM rss WHERE url = ? AND guild = ?", (url, guild_id))
+                            await db.commit()
+                            
                         
                         await asyncio.sleep(1) # Small delay between feeds
         except Exception as e:

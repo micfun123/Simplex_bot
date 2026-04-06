@@ -23,11 +23,6 @@ class Events(commands.Cog):
         print("------------------------------------")
         await self.update_status()
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.author.bot:
-            return
-        await self.bot.process_commands(message)
 
     async def update_status(self):
             await self.bot.change_presence(
