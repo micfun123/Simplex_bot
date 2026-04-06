@@ -158,6 +158,7 @@ class Welcome(commands.Cog):
                 "{member.guild.name}": member.guild.name,
                 "{member.guild.member_count}": str(member.guild.member_count),
                 "{member.account_age}": str(member.created_at.strftime("%Y-%m-%d")),
+                "{member.joined_at}": str(member.joined_at.strftime("%Y-%m-%d")) if member.joined_at else "Unknown",
             }
             for key, val in replacements.items():
                 text = text.replace(key, val)
