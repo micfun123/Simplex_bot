@@ -130,18 +130,27 @@ class Counting(commands.Cog):
     # Slash Command Group
     counting = discord.SlashCommandGroup("counting", "Counting game commands")
 
+
     @counting.command(name="setchannel")
-    @commands.has_permissions(administrator=True)
-    async def setchannel_slash(self, ctx, channel: discord.TextChannel):
+    @commands.has_permissions(manage_guild=True)
+    async def setcountingchannel_slash(self, ctx, channel: discord.TextChannel):
         """Set the counting channel for this server."""
         async with aiosqlite.connect(self.db_path) as db:
-            await db.execute("""
-                INSERT INTO counting (guild_id, counting_channel, lastcounter, last_user, highest)
-                VALUES (?, ?, 0, NULL, 0)
-                ON CONFLICT(guild_id) DO UPDATE SET counting_channel = EXCLUDED.counting_channel, lastcounter = 0, last_user = NULL
-            """, (ctx.guild.id, channel.id))
+            async with db.execute("SELECT 1 FROM counting WHERE guild_id = ?", (ctx.guild.id,)) as cursor:
+                exists = await cursor.fetchone()
+
+            if exists:
+                await db.execute(
+                    "UPDATE counting SET counting_channel = ? WHERE guild_id = ?",
+                    (channel.id, ctx.guild.id)
+                )
+            else:
+                await db.execute(
+                    "INSERT INTO counting (guild_id, counting_channel, lastcounter, highest, last_user) VALUES (?, ?, 0, 0, NULL)",
+                    (ctx.guild.id, channel.id)
+                )
             await db.commit()
-        await ctx.respond(f"✅ Counting channel set to {channel.mention}. Game reset! Start with **1**.")
+        await ctx.respond(f"✅ Counting channel has been set to {channel.mention}.")
 
     @counting.command(name="stats")
     async def stats_slash(self, ctx):
@@ -218,12 +227,6 @@ class Counting(commands.Cog):
         embed.description = description
         await ctx.respond(embed=embed)
 
-    # Keep original prefix commands for compatibility
-    @commands.command(name="setcountchannel")
-    @commands.has_permissions(administrator=True)
-    async def setcountchannel(self, ctx, channel: discord.TextChannel):
-        """Set the counting channel for this server."""
-        await self.setchannel_slash(ctx, channel)
 
     @commands.command(name="countstats")
     async def countstats(self, ctx):
