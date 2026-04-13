@@ -60,8 +60,10 @@ class MastodonFeed(commands.Cog):
 
         try:
             # Verify user exists and get their ID
+            # account_search is a blocking call — run it in a thread
             client = self.get_client(instance)
-            results = client.account_search(username)
+            loop = asyncio.get_event_loop()
+            results = await loop.run_in_executor(None, client.account_search, username)
             if not results:
                 return await ctx.respond(f"❌ Could not find user **{username}** on **{instance}**.", ephemeral=True)
             
@@ -130,9 +132,10 @@ class MastodonFeed(commands.Cog):
         for channel_id, username, instance, user_id, last_posted in rows:
             try:
                 client = self.get_client(instance)
-                
-                # Fetch newest status
-                statuses = client.account_statuses(user_id, limit=1)
+
+                # account_statuses is a blocking call — run it in a thread
+                loop = asyncio.get_event_loop()
+                statuses = await loop.run_in_executor(None, lambda: client.account_statuses(user_id, limit=1))
                 if not statuses:
                     continue
                 
