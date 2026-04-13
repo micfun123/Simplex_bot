@@ -4,7 +4,6 @@ from discord import option
 import aiosqlite
 import asyncio
 import logging
-from simpcalc.simpcalc import Calculate
 
 # Setup logging
 logger = logging.getLogger("simplex.counting")
@@ -16,7 +15,7 @@ class Counting(commands.Cog):
         self.bot = bot
         self.db_path = "./databases/counting.db"
         self.guild_locks = {}   # {guild_id: asyncio.Lock}
-        self.calc = Calculate()
+
 
     def get_lock(self, guild_id):
         if guild_id not in self.guild_locks:
@@ -25,30 +24,15 @@ class Counting(commands.Cog):
 
     async def parse_number(self, content):
         """Uses simpcalc to parse the number from message content."""
-        try:
-            # Strip potential code block formatting or whitespace
-            expr = content.strip().strip('`').strip()
-            # simpcalc is async and uses math.js API
-            result_str = await self.calc.calculate(expr)
-            
-            # math.js can return complex numbers or other strings, we want a clean float/int
-            # remove quotes if any
-            result_str = result_str.strip('"').strip("'")
-            
-            try:
-                result = float(result_str)
-                # Ensure it's a whole number for counting
-                if result == int(result):
-                    return int(result)
-            except ValueError:
-                return None
-            return None
-        except Exception:
-            return None
+        return int(content.strip())
 
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot or not message.guild:
+            return
+
+        ctx = await self.bot.get_context(message)
+        if ctx.valid:
             return
 
         # Check if message is in a counting channel first to avoid unnecessary API calls
@@ -121,11 +105,20 @@ class Counting(commands.Cog):
                 except Exception as e:
                     print(f"❌ Error in counting logic: {e}")
 
+        
         if reaction_is:
             try:
-                await message.add_reaction(reaction_is)
+                await asyncio.wait_for(message.add_reaction(reaction_is), timeout=4.0)
+                print(f"✅ Successfully reacted {reaction_is} in {message.guild.id}")
+                
+            except asyncio.TimeoutError:
+                logger.warning(f"⏰ Reaction timed out in guild {message.guild.id}")
+            except discord.Forbidden:
+                logger.warning(f"🚫 Missing 'Add Reactions' or 'Read Message History' in {message.guild.id}")
+            except discord.HTTPException as e:
+                logger.warning(f"❌ HTTP Error {e.status} ({e.text}) in {message.guild.id}")
             except Exception as e:
-                print(f"❌ Failed to add reaction: {e}")
+                logger.warning(f"❓ Unexpected error: {type(e).__name__}: {e}")
 
     # Slash Command Group
     counting = discord.SlashCommandGroup("counting", "Counting game commands")
