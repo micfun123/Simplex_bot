@@ -130,6 +130,9 @@ class MastodonFeed(commands.Cog):
                 rows = await cursor.fetchall()
 
         for channel_id, username, instance, user_id, last_posted in rows:
+            # Skip rows that haven't been fully set up yet
+            if not user_id:
+                continue
             try:
                 client = self.get_client(instance)
 
