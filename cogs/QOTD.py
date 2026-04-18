@@ -35,13 +35,23 @@ class QOTD(commands.Cog):
     async def setup_qotd(self, ctx, channel: discord.TextChannel, role: discord.Role = None):
         """Enable or update QOTD for this server."""
         async with aiosqlite.connect(self.db_path) as db:
-            await db.execute("""
-                INSERT INTO qotd (server_id, channel_id, role_id)
-                VALUES (?, ?, ?)
-                ON CONFLICT(server_id) DO UPDATE SET
-                    channel_id = EXCLUDED.channel_id,
-                    role_id = EXCLUDED.role_id
-            """, (ctx.guild.id, channel.id, role.id if role else None))
+            # Delete existing to prevent duplicates without requiring a PRIMARY KEY
+            await db.execute("DELETE FROM qotd WHERE server_id = ?", (ctx.guild.id,))
+            
+            # Check if role_id column exists
+            cursor = await db.execute("PRAGMA table_info(qotd)")
+            columns = [row[1] for row in await cursor.fetchall()]
+            
+            if "role_id" in columns:
+                await db.execute("""
+                    INSERT INTO qotd (server_id, channel_id, role_id)
+                    VALUES (?, ?, ?)
+                """, (ctx.guild.id, channel.id, role.id if role else None))
+            else:
+                await db.execute("""
+                    INSERT INTO qotd (server_id, channel_id)
+                    VALUES (?, ?)
+                """, (ctx.guild.id, channel.id))
             await db.commit()
             
         embed = discord.Embed(title="✅ QOTD Enabled", color=discord.Color.green())
@@ -81,7 +91,7 @@ class QOTD(commands.Cog):
             )
 
         async with aiosqlite.connect(self.db_path) as db:
-            async with db.execute("SELECT * FROM qotd WHERE server_id = ?", (ctx.guild.id,)) as cursor:
+            async with db.execute("SELECT server_id FROM qotd WHERE server_id = ?", (ctx.guild.id,)) as cursor:
                 if not await cursor.fetchone():
                     return await ctx.respond("❌ QOTD is already disabled on this server!", ephemeral=True)
             
@@ -123,8 +133,18 @@ class QOTD(commands.Cog):
 
             # Iterate through servers
             async with aiosqlite.connect(self.db_path) as db:
-                async with db.execute("SELECT server_id, channel_id, role_id FROM qotd") as cursor:
-                    servers = await cursor.fetchall()
+                # Check columns dynamically
+                cursor = await db.execute("PRAGMA table_info(qotd)")
+                columns = [row[1] for row in await cursor.fetchall()]
+                
+                if "role_id" in columns:
+                    async with db.execute("SELECT DISTINCT server_id, channel_id, role_id FROM qotd") as cursor:
+                        servers = await cursor.fetchall()
+                else:
+                    async with db.execute("SELECT DISTINCT server_id, channel_id FROM qotd") as cursor:
+                        rows = await cursor.fetchall()
+                        # Add a None for role_id to match expected structure
+                        servers = [(row[0], row[1], None) for row in rows]
 
             for server_id, channel_id, role_id in servers:
                 try:
