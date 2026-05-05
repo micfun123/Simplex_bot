@@ -6,6 +6,8 @@ import asyncio
 import string
 import unicodedata
 import re
+import io
+import json
 
 class Moderation(commands.Cog):
     """🛠️ Essential Moderation and Role management tools."""
@@ -152,6 +154,63 @@ class Moderation(commands.Cog):
             await ctx.respond(f"✅ Cleared {len(roles_to_remove)} roles from {member.mention}.")
         except:
             await ctx.respond("❌ Failed to remove some roles.", ephemeral=True)
+
+    # --- Export Group ---
+
+    export_grp = SlashCommandGroup("export", "Chat export commands (admin only)")
+
+    @export_grp.command(name="chat", description="Export chat history from a channel as a file")
+    @commands.has_permissions(administrator=True)
+    @option("channel", discord.TextChannel, description="Channel to export (defaults to current)", required=False)
+    @option("limit", int, description="Number of messages to export", default=1000, min_value=1, max_value=10000)
+    @option("format", str, description="Export format", choices=["txt", "json"], default="txt")
+    async def export_chat(self, ctx: discord.ApplicationContext, channel: discord.TextChannel, limit: int, format: str):
+        await ctx.defer(ephemeral=True)
+        target = channel or ctx.channel
+
+        messages = []
+        async for msg in target.history(limit=limit, oldest_first=True):
+            messages.append(msg)
+
+        if not messages:
+            return await ctx.followup.send("❌ No messages found to export.", ephemeral=True)
+
+        if format == "json":
+            data = [
+                {
+                    "id": str(msg.id),
+                    "author": str(msg.author),
+                    "author_id": str(msg.author.id),
+                    "content": msg.content,
+                    "timestamp": msg.created_at.isoformat(),
+                    "edited_at": msg.edited_at.isoformat() if msg.edited_at else None,
+                    "attachments": [a.url for a in msg.attachments],
+                    "embeds": len(msg.embeds),
+                    "reactions": [f"{r.emoji} x{r.count}" for r in msg.reactions],
+                }
+                for msg in messages
+            ]
+            content = json.dumps({"channel": target.name, "guild": ctx.guild.name, "messages": data}, indent=2)
+            filename = f"{ctx.guild.name}_{target.name}_export.json"
+        else:
+            header = f"Export of #{target.name} in {ctx.guild.name} — {len(messages)} messages\n{'='*60}\n\n"
+            lines = []
+            for msg in messages:
+                ts = msg.created_at.strftime("%Y-%m-%d %H:%M:%S")
+                line = f"[{ts}] {msg.author.display_name}: {msg.content}"
+                if msg.attachments:
+                    line += "\n  " + "\n  ".join(a.url for a in msg.attachments)
+                lines.append(line)
+            content = header + "\n".join(lines)
+            filename = f"{ctx.guild.name}_{target.name}_export.txt"
+
+        file_bytes = io.BytesIO(content.encode("utf-8"))
+        file = discord.File(file_bytes, filename=filename)
+        await ctx.followup.send(
+            f"✅ Exported **{len(messages)}** messages from {target.mention}.",
+            file=file,
+            ephemeral=True,
+        )
 
     @commands.Cog.listener()
     async def on_application_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
