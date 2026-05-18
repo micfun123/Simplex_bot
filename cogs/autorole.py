@@ -22,18 +22,32 @@ class AutoRole(commands.Cog):
     @option("role", discord.Role, description="The role to give on join")
     async def add_autorole(self, ctx, role: discord.Role):
         """Add a role to the join-role list."""
-        if role.position >= ctx.guild.me.top_role.position:
-            return await ctx.respond("❌ That role is above my highest role! I can't give it to anyone.", ephemeral=True)
+        try:
+            me = ctx.guild.me
+            if me and role.position >= me.top_role.position:
+                return await ctx.respond("❌ That role is above my highest role! I can't give it to anyone.", ephemeral=True)
 
-        async with aiosqlite.connect(self.db_path) as db:
-            async with db.execute("SELECT * FROM autoroles WHERE guild_id = ? AND role_id = ?", (ctx.guild.id, role.id)) as cursor:
-                if await cursor.fetchone():
-                    return await ctx.respond(f"❌ **{role.name}** is already in the join-role list.", ephemeral=True)
-            
-            await db.execute("INSERT INTO autoroles (guild_id, role_id) VALUES (?, ?)", (ctx.guild.id, role.id))
-            await db.commit()
-            
-        await ctx.respond(f"✅ **{role.name}** will now be given to all new members automatically.")
+            async with aiosqlite.connect(self.db_path) as db:
+                await db.execute(
+                    "CREATE TABLE IF NOT EXISTS autoroles (guild_id INTEGER, role_id INTEGER)"
+                )
+                async with db.execute(
+                    "SELECT 1 FROM autoroles WHERE guild_id = ? AND role_id = ?",
+                    (ctx.guild.id, role.id),
+                ) as cursor:
+                    if await cursor.fetchone():
+                        return await ctx.respond(f"❌ **{role.name}** is already in the join-role list.", ephemeral=True)
+
+                await db.execute(
+                    "INSERT INTO autoroles (guild_id, role_id) VALUES (?, ?)",
+                    (ctx.guild.id, role.id),
+                )
+                await db.commit()
+
+            await ctx.respond(f"✅ **{role.name}** will now be given to all new members automatically.")
+        except Exception as e:
+            logger.error(f"add_autorole failed in guild {ctx.guild.id}: {e}")
+            await ctx.respond("❌ Something went wrong while adding that role. Please try again.", ephemeral=True)
 
     @ar.command(name="remove", description="Remove a role from the join-role list")
     @commands.has_permissions(manage_roles=True)
