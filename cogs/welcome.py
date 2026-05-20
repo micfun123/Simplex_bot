@@ -47,19 +47,16 @@ class Welcome(commands.Cog):
     @option("use_embed", bool, description="Whether to send the message as an embed", default=False)
     async def setup_welcome(self, ctx, channel: discord.TextChannel, text: str, card: bool, use_embed: bool):
         """Set up the welcome system for this server."""
-        async with aiosqlite.connect(self.db_path) as db:
-            await db.execute("""
-                INSERT INTO welcome (guild_id, channel, text, card_enabled, textorembed, enabled)
-                VALUES (?, ?, ?, ?, ?, 1)
-                ON CONFLICT(guild_id) DO UPDATE SET 
-                    channel = EXCLUDED.channel,
-                    text = EXCLUDED.text,
-                    card_enabled = EXCLUDED.card_enabled,
-                    textorembed = EXCLUDED.textorembed,
-                    enabled = 1
-            """, (ctx.guild.id, channel.id, text, 1 if card else 0, 0 if use_embed else 1))
-            await db.commit()
-        
+        try:
+            async with aiosqlite.connect(self.db_path) as db:
+                await db.execute(
+                    "INSERT OR REPLACE INTO welcome (guild_id, channel, text, card_enabled, textorembed, enabled) VALUES (?, ?, ?, ?, ?, 1)",
+                    (ctx.guild.id, channel.id, text, 1 if card else 0, 0 if use_embed else 1)
+                )
+                await db.commit()
+        except Exception as e:
+            return await ctx.respond(f"❌ Failed to save settings: {e}", ephemeral=True)
+
         embed = discord.Embed(title="✅ Welcome System Configured", color=discord.Color.green())
         embed.add_field(name="Channel", value=channel.mention)
         embed.add_field(name="Card Enabled", value="Yes" if card else "No")
