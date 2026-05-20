@@ -86,8 +86,26 @@ class Welcome(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def test_welcome(self, ctx):
         """Test the welcome system with your own profile."""
-        await ctx.respond("Testing welcome message...")
-        await self.on_member_join(ctx.author)
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute(
+                "SELECT channel, enabled FROM welcome WHERE guild_id = ?", (ctx.guild.id,)
+            ) as cursor:
+                row = await cursor.fetchone()
+
+        if not row:
+            return await ctx.respond("❌ Welcome system is not set up. Use `/welcome setup` first.")
+        if row[1] == 0:
+            return await ctx.respond("❌ Welcome system is disabled. Use `/welcome toggle` to enable it.")
+
+        channel = ctx.guild.get_channel(row[0])
+        if not channel:
+            return await ctx.respond(f"❌ Configured channel (ID: `{row[0]}`) not found. Re-run `/welcome setup`.")
+
+        await ctx.respond(f"Testing welcome message in {channel.mention}...")
+        try:
+            await self.on_member_join(ctx.author)
+        except Exception as e:
+            await ctx.send(f"❌ Error during welcome test: `{e}`")
 
     @commands.command(name="welcome")
     @commands.has_permissions(manage_guild=True)
@@ -147,27 +165,31 @@ class Welcome(commands.Cog):
                 print(f"Error sending welcome card: {e}")
                 
         if text:
-            replacements = {
-                "{member.display_name}": member.display_name,
-                "{member.name}": member.name,
-                "{member.mention}": member.mention,
-                "{member.id}": str(member.id),
-                "{member.guild.name}": member.guild.name,
-                "{member.guild.member_count}": str(member.guild.member_count),
-                "{member.account_age}": str(member.created_at.strftime("%Y-%m-%d")),
-                "{member.joined_at}": str(member.joined_at.strftime("%Y-%m-%d")) if member.joined_at else "Unknown",
-            }
-            for key, val in replacements.items():
-                text = text.replace(key, val)
+            try:
+                replacements = {
+                    "{member.display_name}": member.display_name,
+                    "{member.name}": member.name,
+                    "{member.mention}": member.mention,
+                    "{member.id}": str(member.id),
+                    "{member.guild.name}": member.guild.name,
+                    "{member.guild.member_count}": str(member.guild.member_count),
+                    "{member.account_age}": str(member.created_at.strftime("%Y-%m-%d")),
+                    "{member.joined_at}": str(member.joined_at.strftime("%Y-%m-%d")) if member.joined_at else "Unknown",
+                }
+                for key, val in replacements.items():
+                    text = text.replace(key, val)
 
-            text = regex.sub(r"\{random\.choices\[(.+?)\]\}", lambda x: random.choice(x.group(1).split(", ")), text)
+                text = regex.sub(r"\{random\.choices\[(.+?)\]\}", lambda x: random.choice(x.group(1).split(", ")), text)
 
-            if text_mode == 1:
-                await channel.send(f"{member.mention}\n{text}")
-            else:
-                em = discord.Embed(title=f"Welcome to {member.guild.name}!", description=text, color=discord.Color.blue())
-                em.set_thumbnail(url=member.display_avatar.url)
-                await channel.send(content=member.mention, embed=em)
+                if text_mode == 1:
+                    await channel.send(f"{member.mention}\n{text}")
+                else:
+                    em = discord.Embed(title=f"Welcome to {member.guild.name}!", description=text, color=discord.Color.blue())
+                    em.set_thumbnail(url=member.display_avatar.url)
+                    await channel.send(content=member.mention, embed=em)
+            except Exception as e:
+                print(f"Error sending welcome text: {e}")
+                raise
 
 def setup(bot):
     bot.add_cog(Welcome(bot))
