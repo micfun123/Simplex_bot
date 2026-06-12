@@ -154,7 +154,13 @@ async def load_cogs():
 # Start bot
 if __name__ == "__main__":
     async def main():
-        await load_cogs()
-        await bot.start(TOKEN)
+        # `async with bot` runs Client.__aenter__, which rebinds http.loop to the
+        # running loop. Without it, the rate-limit lock release scheduled via
+        # loop.call_later() targets the import-time loop and never fires, so the
+        # first reaction in a channel deadlocks its bucket and all later reactions
+        # in that channel silently hang.
+        async with bot:
+            await load_cogs()
+            await bot.start(TOKEN)
 
     asyncio.run(main())

@@ -129,7 +129,7 @@ class RSSManager(commands.Cog):
             else:
                 await ctx.respond("No invalid feeds found.")
 
-    @tasks.loop(hours=12)
+    @tasks.loop(hours=1)
     async def rss_loop(self):
         try:
             async with aiosqlite.connect("databases/rss.db") as db:
