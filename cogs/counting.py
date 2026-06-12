@@ -108,11 +108,8 @@ class Counting(commands.Cog):
         
         if reaction_is:
             try:
-                await asyncio.wait_for(message.add_reaction(reaction_is), timeout=4.0)
+                await message.add_reaction(reaction_is)
                 print(f"✅ Successfully reacted {reaction_is} in {message.guild.id}")
-                
-            except asyncio.TimeoutError:
-                logger.warning(f"⏰ Reaction timed out in guild {message.guild.id}")
             except discord.Forbidden:
                 logger.warning(f"🚫 Missing 'Add Reactions' or 'Read Message History' in {message.guild.id}")
             except discord.HTTPException as e:
