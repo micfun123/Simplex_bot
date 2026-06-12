@@ -41,9 +41,10 @@ class RSSManager(commands.Cog):
 
         # Validate RSS feed
         try:
+            loop = asyncio.get_event_loop()
             async with httpx.AsyncClient() as client:
                 resp = await client.get(feed_URL, timeout=10.0)
-                feed_data = feedparser.parse(resp.text)
+                feed_data = await loop.run_in_executor(None, feedparser.parse, resp.text)
                 if not feed_data.entries:
                     raise ValueError
         except Exception:
@@ -105,12 +106,13 @@ class RSSManager(commands.Cog):
                 await ctx.respond("No feeds have been added yet.")
                 return
             
+            loop = asyncio.get_event_loop()
             async with httpx.AsyncClient() as client:
                 for name, url in rows:
                     is_invalid = False
                     try:
                         resp = await client.get(url, timeout=10.0)
-                        feed_data = feedparser.parse(resp.text)
+                        feed_data = await loop.run_in_executor(None, feedparser.parse, resp.text)
                         if not feed_data.entries:
                             is_invalid = True
                     except Exception:
@@ -127,52 +129,54 @@ class RSSManager(commands.Cog):
             else:
                 await ctx.respond("No invalid feeds found.")
 
-    @tasks.loop(minutes=30)
+    @tasks.loop(hours=12)
     async def rss_loop(self):
         try:
             async with aiosqlite.connect("databases/rss.db") as db:
                 async with db.execute("SELECT name, url, channel, guild, lastpost FROM rss") as cursor:
                     rows = await cursor.fetchall()
-                
-                async with httpx.AsyncClient() as client:
-                    for row in rows:
-                        name, url, channel_id, guild_id, lastpost = row
-                        try:
-                            resp = await client.get(url, timeout=15.0)
-                            feed = feedparser.parse(resp.text)
-                            if not feed.entries:
-                                continue
 
-                            latest_entry = feed.entries[0]
-                            checkpost = latest_entry.get("link")
+            loop = asyncio.get_event_loop()
+            async with httpx.AsyncClient() as client:
+                for name, url, channel_id, guild_id, lastpost in rows:
+                    try:
+                        resp = await client.get(url, timeout=15.0)
+                        if resp.status_code in (301, 302, 404, 402, 410):
+                            async with aiosqlite.connect("databases/rss.db") as db:
+                                await db.execute("DELETE FROM rss WHERE url = ? AND guild = ?", (url, guild_id))
+                                await db.commit()
+                            print(f"RSS: removed dead feed {url} (HTTP {resp.status_code})")
+                            continue
+                        feed = await loop.run_in_executor(None, feedparser.parse, resp.text)
+                        if not feed.entries:
+                            continue
 
-                            if not checkpost or checkpost == lastpost:
-                                continue
+                        latest_entry = feed.entries[0]
+                        checkpost = latest_entry.get("link")
+                        if not checkpost or checkpost == lastpost:
+                            continue
 
-                            title = latest_entry.get("title", "No title")
-                            message = f"**{title}**\n{checkpost}"
+                        title = latest_entry.get("title", "No title")
+                        msg = f"**{title}**\n{checkpost}"
 
-                            target_channel = self.bot.get_channel(int(channel_id))
-                            if not target_channel:
-                                target_channel = await self.bot.fetch_channel(int(channel_id))
-                            
-                            await target_channel.send(message)
+                        target_channel = self.bot.get_channel(int(channel_id))
+                        if not target_channel:
+                            target_channel = await self.bot.fetch_channel(int(channel_id))
+
+                        await target_channel.send(msg)
+                        async with aiosqlite.connect("databases/rss.db") as db:
                             await db.execute("UPDATE rss SET lastpost = ? WHERE url = ? AND guild = ?", (checkpost, url, guild_id))
                             await db.commit()
-                        except Exception as e:
-                            print(f"RSS Loop error for {url}: {e}")
-                            # remove invalid feed from database 
-                            await db.execute("DELETE FROM rss WHERE url = ? AND guild = ?", (url, guild_id))
-                            await db.commit()
-                            
-                        
-                        await asyncio.sleep(1) # Small delay between feeds
+                    except Exception as e:
+                        print(f"RSS Loop error for {url}: {e}")
+                    await asyncio.sleep(0)
         except Exception as e:
             print(f"Main RSS Loop error: {e}")
 
     @rss_loop.before_loop
     async def before_rss_loop(self):
         await self.bot.wait_until_ready()
+        await asyncio.sleep(300)
 
 def setup(bot):
     bot.add_cog(RSSManager(bot))
