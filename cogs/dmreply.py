@@ -120,7 +120,7 @@ class DMReply(commands.Cog):
         try:
             if (
                 message.channel.id == self.dm_channel
-                and message.author.id == self.client.owner_id
+                and await self.client.is_owner(message.author)
             ):
                 if message.reference is None:
                     return
