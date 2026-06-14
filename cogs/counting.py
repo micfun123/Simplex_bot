@@ -99,9 +99,9 @@ class Counting(commands.Cog):
                             VALUES (?, ?, 1, 0)
                             ON CONFLICT(guild_id, user_id) DO UPDATE SET count = count + 1
                         """, (message.guild.id, message.author.id))
-                        
+
                         await db.commit()
-                        reaction_is = "✅"
+                        reaction_is = "☑️" if new_highest > highest_num else "✅"
                 except Exception as e:
                     print(f"❌ Error in counting logic: {e}")
 
