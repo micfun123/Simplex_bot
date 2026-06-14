@@ -129,11 +129,21 @@ class RSSManager(commands.Cog):
             else:
                 await ctx.respond("No invalid feeds found.")
 
-    @tasks.loop(hours=1)
-    async def rss_loop(self):
+    async def _check_feeds(self, guild_id_filter=None):
+        """Check every stored feed (optionally scoped to one guild) and post new entries.
+
+        Returns the number of new posts sent.
+        """
+        posted = 0
         try:
             async with aiosqlite.connect("databases/rss.db") as db:
-                async with db.execute("SELECT name, url, channel, guild, lastpost FROM rss") as cursor:
+                if guild_id_filter is None:
+                    query = "SELECT name, url, channel, guild, lastpost FROM rss"
+                    params = ()
+                else:
+                    query = "SELECT name, url, channel, guild, lastpost FROM rss WHERE guild = ?"
+                    params = (str(guild_id_filter),)
+                async with db.execute(query, params) as cursor:
                     rows = await cursor.fetchall()
 
             loop = asyncio.get_event_loop()
@@ -164,6 +174,7 @@ class RSSManager(commands.Cog):
                             target_channel = await self.bot.fetch_channel(int(channel_id))
 
                         await target_channel.send(msg)
+                        posted += 1
                         async with aiosqlite.connect("databases/rss.db") as db:
                             await db.execute("UPDATE rss SET lastpost = ? WHERE url = ? AND guild = ?", (checkpost, url, guild_id))
                             await db.commit()
@@ -172,6 +183,19 @@ class RSSManager(commands.Cog):
                     await asyncio.sleep(0)
         except Exception as e:
             print(f"Main RSS Loop error: {e}")
+        return posted
+
+    @tasks.loop(hours=1)
+    async def rss_loop(self):
+        await self._check_feeds()
+
+    @rss.command(name="force", description="Force-check this server's RSS feeds right now")
+    @commands.has_permissions(manage_guild=True)
+    async def force(self, ctx):
+        """Immediately check this server's RSS feeds for new posts."""
+        await ctx.defer()
+        posted = await self._check_feeds(guild_id_filter=ctx.guild.id)
+        await ctx.respond(f"✅ RSS check complete — posted {posted} new {'entry' if posted == 1 else 'entries'}.")
 
     @rss_loop.before_loop
     async def before_rss_loop(self):
