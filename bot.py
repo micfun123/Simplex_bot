@@ -13,20 +13,31 @@ faulthandler.enable()
 # Load environment variables
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+if not TOKEN:
+    raise SystemExit("❌ DISCORD_TOKEN is not set. Add it to .env or the environment.")
 
 # Load intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-# Helper function to get prefix from prefixes.json
-def get_prefix(bot, message):
+# Load custom prefixes once at startup; changeprefix keeps this in sync with the file
+def load_prefixes():
     try:
         with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
-        return prefixes.get(str(message.guild.id), ".")
-    except Exception:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"❌ Failed to read prefixes.json: {e}")
+        return {}
+
+prefixes = load_prefixes()
+
+def get_prefix(bot, message):
+    if message.guild is None:
         return "."
+    return prefixes.get(str(message.guild.id), ".")
 
 # Bot setup
 bot = commands.Bot(
@@ -108,21 +119,15 @@ async def bond(ctx):
 
 @bot.command(hidden=True)
 async def echo(ctx, *, content: str):
-    await ctx.send(f"{content}\n\n||Sent by {ctx.author}||")
+    await ctx.send(f"{content}\n\n||Sent by {ctx.author}||", allowed_mentions=discord.AllowedMentions.none())
 
 @bot.command(hidden=True)
 async def easter_egg(ctx):
     await ctx.send("Did you think I'd just give you the easter eggs? Have fun finding them!")
 
-@bot.command(pass_context=True)
+@bot.command()
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
-    try:
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
-    except FileNotFoundError:
-        prefixes = {}
-
     prefixes[str(ctx.guild.id)] = prefix
 
     with open("prefixes.json", "w") as f:
@@ -135,6 +140,9 @@ async def changeprefix(ctx, prefix):
 @bot.command(aliases=["purge"])
 @commands.has_permissions(administrator=True)
 async def clear(ctx, amount: int = 5):
+    if amount < 1:
+        await ctx.send("Amount must be at least 1.")
+        return
     await ctx.channel.purge(limit=amount + 1)
 
 async def load_cogs():
