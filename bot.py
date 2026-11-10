@@ -21,12 +21,17 @@ intents.members = True
 
 # Helper function to get prefix from prefixes.json
 def get_prefix(bot, message):
+    if message.guild is None:
+        return "."
     try:
         with open("prefixes.json", "r") as f:
             prefixes = json.load(f)
-        return prefixes.get(str(message.guild.id), ".")
-    except Exception:
+    except FileNotFoundError:
         return "."
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"❌ Failed to read prefixes.json: {e}")
+        return "."
+    return prefixes.get(str(message.guild.id), ".")
 
 # Bot setup
 bot = commands.Bot(
