@@ -13,6 +13,8 @@ faulthandler.enable()
 # Load environment variables
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+if not TOKEN:
+    raise SystemExit("❌ DISCORD_TOKEN is not set. Add it to .env or the environment.")
 
 # Load intents
 intents = discord.Intents.default()
