@@ -123,7 +123,7 @@ async def echo(ctx, *, content: str):
 async def easter_egg(ctx):
     await ctx.send("Did you think I'd just give you the easter eggs? Have fun finding them!")
 
-@bot.command(pass_context=True)
+@bot.command()
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
     prefixes[str(ctx.guild.id)] = prefix
