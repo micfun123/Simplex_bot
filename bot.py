@@ -140,6 +140,9 @@ async def changeprefix(ctx, prefix):
 @bot.command(aliases=["purge"])
 @commands.has_permissions(administrator=True)
 async def clear(ctx, amount: int = 5):
+    if amount < 1:
+        await ctx.send("Amount must be at least 1.")
+        return
     await ctx.channel.purge(limit=amount + 1)
 
 async def load_cogs():
