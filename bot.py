@@ -117,7 +117,7 @@ async def bond(ctx):
 
 @bot.command(hidden=True)
 async def echo(ctx, *, content: str):
-    await ctx.send(f"{content}\n\n||Sent by {ctx.author}||")
+    await ctx.send(f"{content}\n\n||Sent by {ctx.author}||", allowed_mentions=discord.AllowedMentions.none())
 
 @bot.command(hidden=True)
 async def easter_egg(ctx):
