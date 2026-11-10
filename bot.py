@@ -19,17 +19,21 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-# Helper function to get prefix from prefixes.json
-def get_prefix(bot, message):
-    if message.guild is None:
-        return "."
+# Load custom prefixes once at startup; changeprefix keeps this in sync with the file
+def load_prefixes():
     try:
         with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
+            return json.load(f)
     except FileNotFoundError:
-        return "."
+        return {}
     except (OSError, json.JSONDecodeError) as e:
         print(f"❌ Failed to read prefixes.json: {e}")
+        return {}
+
+prefixes = load_prefixes()
+
+def get_prefix(bot, message):
+    if message.guild is None:
         return "."
     return prefixes.get(str(message.guild.id), ".")
 
@@ -122,12 +126,6 @@ async def easter_egg(ctx):
 @bot.command(pass_context=True)
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
-    try:
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
-    except FileNotFoundError:
-        prefixes = {}
-
     prefixes[str(ctx.guild.id)] = prefix
 
     with open("prefixes.json", "w") as f:
